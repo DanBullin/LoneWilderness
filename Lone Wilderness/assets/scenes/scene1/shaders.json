@@ -1,0 +1,50 @@
+{
+	"programs": 
+	[
+		{ 
+			"name": "blinnPhong", 
+			"vertexShader": "assets/shaders/blinnPhong/vertex.vs", 
+			"fragmentShader": "assets/shaders/blinnPhong/fragment.fs", 
+			"geometryShader": "",
+			"tessControlShader": "",
+			"tessEvaluationShader": "",
+			"uniforms": [ "u_diffuseMap" ]
+		},
+		{ 
+			"name": "blinnPhong2", 
+			"vertexShader": "assets/shaders/blinnPhong2/vertex.vs", 
+			"fragmentShader": "assets/shaders/blinnPhong2/fragment.fs", 
+			"geometryShader": "",
+			"tessControlShader": "",
+			"tessEvaluationShader": "",
+			"uniforms": [ "u_diffuseMap" ]
+		},
+		{ 
+			"name": "blinnPhong3", 
+			"vertexShader": "assets/shaders/blinnPhong3/vertex.vs", 
+			"fragmentShader": "assets/shaders/blinnPhong3/fragment.fs", 
+			"geometryShader": "",
+			"tessControlShader": "",
+			"tessEvaluationShader": "",
+			"uniforms": [ "u_diffuseMap" ]
+		},
+		{ 
+			"name": "quad", 
+			"vertexShader": "assets/shaders/quad/vertex.vs", 
+			"fragmentShader": "assets/shaders/quad/fragment.fs", 
+			"geometryShader": "",
+			"tessControlShader": "",
+			"tessEvaluationShader": "",
+			"uniforms": [ "u_diffuseMap" ]
+		},
+		{ 
+			"name": "quad1", 
+			"vertexShader": "assets/shaders/quad1/vertex.vs", 
+			"fragmentShader": "assets/shaders/quad1/fragment.fs", 
+			"geometryShader": "",
+			"tessControlShader": "",
+			"tessEvaluationShader": "",
+			"uniforms": [ "u_diffuseMap" ]
+		}
+	]	
+}

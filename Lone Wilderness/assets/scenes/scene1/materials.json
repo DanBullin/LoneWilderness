@@ -1,0 +1,77 @@
+{
+	"materials": 
+	[
+		{ 
+			"name": "cyborgMaterial",
+			"subTextures": [
+				"cyborgSubTexture"
+			], 
+			"shader": "blinnPhong", 
+			"tint": [ 1.0, 1.0, 1.0, 1.0 ] 
+		},
+		{ 
+			"name": "cyborgMaterial2",
+			"subTextures": [
+				"cyborgSubTexture"
+			], 
+			"shader": "blinnPhong2", 
+			"tint": [ 1.0, 1.0, 1.0, 1.0 ] 
+		},
+		{ 
+			"name": "gridMaterial",
+			"subTextures": [
+				"gridSubTexture"
+			], 
+			"shader": "blinnPhong", 
+			"tint": [ 1.0, 1.0, 1.0, 1.0 ] 
+		},
+		{ 
+			"name": "grassMaterial", 
+			"subTextures": [
+				"grassSubTexture"
+			],  
+			"shader": "blinnPhong", 
+			"tint": [ 1.0, 1.0, 1.0, 1.0 ] 
+		},
+		{ 
+			"name": "textMaterial", 
+			"subTextures": [
+				"textSubTexture"
+			],  
+			"shader": "quad", 
+			"tint": [ 1.0, 1.0, 1.0, 1.0 ] 
+		},
+		{ 
+			"name": "recMaterial1", 
+			"subTextures": [
+				"numberSubTexture"
+			],
+			"shader": "quad", 
+			"tint": [ 1.0, 0.0, 1.0, 1.0 ] 
+		},
+		{ 
+			"name": "alignMaterial", 
+			"subTextures": [
+				"alignSubTexture"
+			],
+			"shader": "blinnPhong", 
+			"tint": [ 1.0, 1.0, 1.0, 1.0 ] 
+		},
+		{ 
+			"name": "planeMaterial", 
+			"subTextures": [
+				"numberSubTexture", "gridSubTexture"
+			],
+			"shader": "blinnPhong3", 
+			"tint": [ 1.0, 1.0, 1.0, 1.0 ] 
+		},
+		{ 
+			"name": "screenMaterial", 
+			"subTextures": [
+				"screenQuadSubTexture", "gridSubTexture"
+			],
+			"shader": "quad1", 
+			"tint": [ 1.0, 1.0, 1.0, 1.0 ] 
+		}
+	]
+}

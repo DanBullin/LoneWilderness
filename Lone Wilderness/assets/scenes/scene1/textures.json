@@ -1,0 +1,33 @@
+{
+	"textures2D": 
+	[
+				
+		{ "name": "default", "filePath": "assets/textures/default.png", "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
+			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
+		
+		{ "name": "border", "filePath": "assets/textures/border.png", "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
+			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
+			
+		{ "name": "grid", "filePath": "assets/textures/grid.png", "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
+			"minFilter": "LinearMipmapLinear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": true},
+			
+		{ "name": "grass", "filePath": "assets/textures/grass/grass.png", "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
+			"minFilter": "LinearMipmapLinear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": true},
+			
+		{ "name": "text", "filePath": "assets/textures/text.png", "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
+			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
+			
+		
+		{ "name": "cyborg_diffuse", "filePath": "assets/textures/cyborg/cyborg_diffuse.png", "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
+			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
+			
+		{ "name": "logo", "filePath": "assets/textures/logo.png", "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
+			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
+			
+		{ "name": "numbers", "filePath": "assets/textures/letterAndNumberCube.png", "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
+			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
+
+		{ "name": "align", "filePath": "assets/textures/align512.png", "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
+			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false}
+	]
+}

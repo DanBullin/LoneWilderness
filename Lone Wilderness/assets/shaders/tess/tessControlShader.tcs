@@ -1,0 +1,138 @@
+#version 450 core
+// Outputting 1 CP per output patch, because we store a struct containing the ten CPs needed for PN triangles
+layout (vertices = 1) out;
+
+// Forward declarations
+float GetTessLevel(float Distance0, float Distance1) ;
+void CalcPositions();
+vec3 ProjectToPlane(vec3 Point, vec3 PlanePoint, vec3 PlaneNormal) ;
+vec3 getNormal(vec3 a, vec3 b, vec3 c) ;
+
+// Input data from vertex shader, in arrays [0-2]
+in vec3 posVS[];
+in vec3 normVS[];
+
+uniform vec3 viewPos;
+
+// Our ten CPs in a output patch
+struct OutputPatch
+{
+	// Positions in world space of each CP
+    vec3 WorldPos_B030;
+    vec3 WorldPos_B021;
+    vec3 WorldPos_B012;
+    vec3 WorldPos_B003;
+    vec3 WorldPos_B102;
+    vec3 WorldPos_B201;
+    vec3 WorldPos_B300;
+    vec3 WorldPos_B210;
+    vec3 WorldPos_B120;
+    vec3 WorldPos_B111;
+    vec3 tc_norms[3];
+};
+
+// Attributes of the output CPs
+out patch OutputPatch oPatch;
+
+void main()
+{
+	// Pass on any vertex data from VS, for instance, normals
+	for (int i = 0 ; i < 3 ; i++)
+	{
+       oPatch.tc_norms[i] = normVS[i];
+    }
+
+	// 
+	CalcPositions();
+	
+	// No need for gl_Inovation check as this is only being called once anyway
+	// Calculate the distance dependant tessellation as normal
+	float eyeToVertexDist0 = distance(viewPos, posVS[0]);
+	float eyeToVertexDist1 = distance(viewPos, posVS[1]);
+	float eyeToVertexDist2 = distance(viewPos, posVS[2]);
+	gl_TessLevelOuter[0] = GetTessLevel(eyeToVertexDist1, eyeToVertexDist2);
+	gl_TessLevelOuter[1] = GetTessLevel(eyeToVertexDist2, eyeToVertexDist0);
+	gl_TessLevelOuter[2] = GetTessLevel(eyeToVertexDist0, eyeToVertexDist1);
+	gl_TessLevelInner[0] = GetTessLevel(eyeToVertexDist0, eyeToVertexDist1);
+}
+
+vec3 getNormal(vec3 a, vec3 b, vec3 c)
+{
+	// Surface normal calculation
+    vec3 e1 = vec3(b - a);
+    vec3 e2 = vec3(c - a);
+    return normalize(cross(e1, e2));
+}
+
+void CalcPositions()
+{
+    // The original vertices stay the same
+    oPatch.WorldPos_B030 = posVS[0];
+    oPatch.WorldPos_B003 = posVS[1];
+    oPatch.WorldPos_B300 = posVS[2];
+
+    // Edges are names according to the opposing vertex
+	// Calculate the edge vector by subtracting one of the connected vertices
+	// from the other. See PN Triangle.png for the diagram.
+	// End - Start
+    vec3 EdgeB300 = oPatch.WorldPos_B003 - oPatch.WorldPos_B030;
+    vec3 EdgeB030 = oPatch.WorldPos_B300 - oPatch.WorldPos_B003;
+    vec3 EdgeB003 = oPatch.WorldPos_B030 - oPatch.WorldPos_B300;
+
+    // Generate two midpoints on each edge
+	// We can add the edge vector of size (1/3 or 2/3) to the start vertex of that edge
+	// to find the midpoint's position in world space
+    oPatch.WorldPos_B021 = oPatch.WorldPos_B030 + EdgeB300 / 3.0;
+    oPatch.WorldPos_B012 = oPatch.WorldPos_B030 + EdgeB300 * 2.0 / 3.0;
+    oPatch.WorldPos_B102 = oPatch.WorldPos_B003 + EdgeB030 / 3.0;
+    oPatch.WorldPos_B201 = oPatch.WorldPos_B003 + EdgeB030 * 2.0 / 3.0;
+    oPatch.WorldPos_B210 = oPatch.WorldPos_B300 + EdgeB003 / 3.0;
+    oPatch.WorldPos_B120 = oPatch.WorldPos_B300 + EdgeB003 * 2.0 / 3.0;
+
+    // Project each midpoint on the plane defined by the nearest vertex and its normal
+    oPatch.WorldPos_B021 = ProjectToPlane(oPatch.WorldPos_B021, oPatch.WorldPos_B030, oPatch.tc_norms[0]);
+	oPatch.WorldPos_B120 = ProjectToPlane(oPatch.WorldPos_B120, oPatch.WorldPos_B030, oPatch.tc_norms[0]);
+    oPatch.WorldPos_B012 = ProjectToPlane(oPatch.WorldPos_B012, oPatch.WorldPos_B003, oPatch.tc_norms[1]);
+    oPatch.WorldPos_B102 = ProjectToPlane(oPatch.WorldPos_B102, oPatch.WorldPos_B003, oPatch.tc_norms[1]);
+    oPatch.WorldPos_B201 = ProjectToPlane(oPatch.WorldPos_B201, oPatch.WorldPos_B300, oPatch.tc_norms[2]);
+    oPatch.WorldPos_B210 = ProjectToPlane(oPatch.WorldPos_B210, oPatch.WorldPos_B300, oPatch.tc_norms[2]);
+
+    // Handle the center
+	// Calculate the centre by average the three input vertices
+    vec3 Center = (oPatch.WorldPos_B003 + oPatch.WorldPos_B030 + oPatch.WorldPos_B300) / 3.0;
+	
+	// Set the position to the average the six midpoint positions
+    oPatch.WorldPos_B111 = (oPatch.WorldPos_B021 + oPatch.WorldPos_B012 + oPatch.WorldPos_B102 +
+                          oPatch.WorldPos_B201 + oPatch.WorldPos_B210 + oPatch.WorldPos_B120) / 6.0;
+						  
+	// Add the current position - the centred average divided by 2
+    oPatch.WorldPos_B111 += (oPatch.WorldPos_B111 - Center)/ 2;
+}
+
+vec3 ProjectToPlane(vec3 Point, vec3 PlanePoint, vec3 PlaneNormal)
+{
+	// Calculate a vector from the midpoint to the nearest vertex
+    vec3 v = Point - PlanePoint;
+	// Calculate the dot product of the new vector along the normal
+    float Len = dot(v, PlaneNormal);
+	// Works out the projection
+    vec3 d = Len * PlaneNormal;
+    return (Point - d);
+}
+
+float GetTessLevel(float Distance0, float Distance1)
+{
+	// Get the average distance of the two distances
+	float AvgDistance = (Distance0 + Distance1) / 2.0;
+	
+	if (AvgDistance <= 2.0)
+        return 20.0;
+    else if (AvgDistance <= 4.0)
+        return 10.0;
+	else if (AvgDistance <= 5.0)
+        return 3.0;
+	else if (AvgDistance <= 6.0)
+        return 2.0;
+    else
+        return 1.0;
+}

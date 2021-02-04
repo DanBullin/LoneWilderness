@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{5CA6F5C0-1614-4A2E-822C-6FEBB34A1E19}</ProjectGuid>
+    <RootNamespace>Engine</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>include;include/independent;../vendor/freetype/include;../vendor/json/single_include/nlohmann;../vendor;../vendor/assimp/include;../vendor/glm;../vendor/spdlog/include;../vendor/glfw/include;../vendor/glad/include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>include;include/independent;../vendor/freetype/include;../vendor/json/single_include/nlohmann;../vendor;../vendor/assimp/include;../vendor/glm;../vendor/spdlog/include;../vendor/glfw/include;../vendor/glad/include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>NG_PLATFORM_WINDOWS;_CRT_SECURE_NO_WARNINGS;NG_DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>NG_PLATFORM_WINDOWS;_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\vendor\glad\glad.c" />
+    <ClCompile Include="src\independent\core\application.cpp" />
+    <ClCompile Include="src\independent\entities\components\camera.cpp" />
+    <ClCompile Include="src\independent\entities\components\eventListener.cpp" />
+    <ClCompile Include="src\independent\entities\components\meshRender2D.cpp" />
+    <ClCompile Include="src\independent\entities\components\meshRender3D.cpp" />
+    <ClCompile Include="src\independent\entities\components\text.cpp" />
+    <ClCompile Include="src\independent\entities\components\transform2D.cpp" />
+    <ClCompile Include="src\independent\entities\components\transform3D.cpp" />
+    <ClCompile Include="src\independent\entities\entity.cpp" />
+    <ClCompile Include="src\independent\entities\entityComponent.cpp" />
+    <ClCompile Include="src\independent\events\inputPoller.cpp" />
+    <ClCompile Include="src\independent\layers\layer.cpp" />
+    <ClCompile Include="src\independent\layers\layerManager.cpp" />
+    <ClCompile Include="src\independent\rendering\frameBuffer.cpp" />
+    <ClCompile Include="src\independent\rendering\geometry\indexBuffer.cpp" />
+    <ClCompile Include="src\independent\rendering\geometry\indirectBuffer.cpp" />
+    <ClCompile Include="src\independent\rendering\geometry\mesh3D.cpp" />
+    <ClCompile Include="src\independent\rendering\geometry\model3D.cpp" />
+    <ClCompile Include="src\independent\rendering\geometry\vertexArray.cpp" />
+    <ClCompile Include="src\independent\rendering\geometry\vertexBuffer.cpp" />
+    <ClCompile Include="src\independent\rendering\materials\material.cpp" />
+    <ClCompile Include="src\independent\rendering\renderAPI.cpp" />
+    <ClCompile Include="src\independent\rendering\renderBuffer.cpp" />
+    <ClCompile Include="src\independent\rendering\renderers\renderer2D.cpp" />
+    <ClCompile Include="src\independent\rendering\renderers\renderer3D.cpp" />
+    <ClCompile Include="src\independent\rendering\renderPasses\passes\defaultPass.cpp" />
+    <ClCompile Include="src\independent\rendering\renderPasses\passes\secondPass.cpp" />
+    <ClCompile Include="src\independent\rendering\renderPasses\renderPass.cpp" />
+    <ClCompile Include="src\independent\rendering\renderUtils.cpp" />
+    <ClCompile Include="src\independent\rendering\shaders\shaderProgram.cpp" />
+    <ClCompile Include="src\independent\rendering\textures\subTexture.cpp" />
+    <ClCompile Include="src\independent\rendering\textures\texture.cpp" />
+    <ClCompile Include="src\independent\rendering\textures\textureAtlas.cpp" />
+    <ClCompile Include="src\independent\rendering\textures\textureUnitManager.cpp" />
+    <ClCompile Include="src\independent\rendering\uniformBuffer.cpp" />
+    <ClCompile Include="src\independent\systems\components\font.cpp" />
+    <ClCompile Include="src\independent\systems\components\scene.cpp" />
+    <ClCompile Include="src\independent\systems\components\timer.cpp" />
+    <ClCompile Include="src\independent\systems\components\window.cpp" />
+    <ClCompile Include="src\independent\systems\components\windowProperties.cpp" />
+    <ClCompile Include="src\independent\systems\system.cpp" />
+    <ClCompile Include="src\independent\systems\systemManager.cpp" />
+    <ClCompile Include="src\independent\systems\systems\eventManager.cpp" />
+    <ClCompile Include="src\independent\systems\systems\fontManager.cpp" />
+    <ClCompile Include="src\independent\systems\systems\log.cpp" />
+    <ClCompile Include="src\independent\systems\systems\randomiser.cpp" />
+    <ClCompile Include="src\independent\systems\systems\renderSystem.cpp" />
+    <ClCompile Include="src\independent\systems\systems\resourceManager.cpp" />
+    <ClCompile Include="src\independent\systems\systems\sceneManager.cpp" />
+    <ClCompile Include="src\independent\systems\systems\timerSystem.cpp" />
+    <ClCompile Include="src\independent\systems\systems\windowManager.cpp" />
+    <ClCompile Include="src\independent\utils\assimpLoader.cpp" />
+    <ClCompile Include="src\independent\utils\mathUtils.cpp" />
+    <ClCompile Include="src\independent\utils\memoryUtils.cpp" />
+    <ClCompile Include="src\independent\utils\nameUtils.cpp" />
+    <ClCompile Include="src\platform\GLFW\GLFWGLGraphicsContext.cpp" />
+    <ClCompile Include="src\platform\GLFW\GLFWInputPoller.cpp" />
+    <ClCompile Include="src\platform\GLFW\GLFWWindowImplementation.cpp" />
+    <ClCompile Include="src\platform\GLFW\systems\GLFWSystem.cpp" />
+    <ClCompile Include="src\platform\OpenGL\geometry\openGLIndexBuffer.cpp" />
+    <ClCompile Include="src\platform\OpenGL\geometry\openGLIndirectBuffer.cpp" />
+    <ClCompile Include="src\platform\OpenGL\geometry\openGLVertexArray.cpp" />
+    <ClCompile Include="src\platform\OpenGL\geometry\openGLVertexBuffer.cpp" />
+    <ClCompile Include="src\platform\OpenGL\openGLFrameBuffer.cpp" />
+    <ClCompile Include="src\platform\OpenGL\openGLRenderBuffer.cpp" />
+    <ClCompile Include="src\platform\OpenGL\openGLRenderUtils.cpp" />
+    <ClCompile Include="src\platform\OpenGL\openGLUniformBuffer.cpp" />
+    <ClCompile Include="src\platform\OpenGL\shaders\openGLShaderProgram.cpp" />
+    <ClCompile Include="src\platform\OpenGL\textures\openGLTexture.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\vendor\stb_image.h" />
+    <ClInclude Include="include\entryPoint.h" />
+    <ClInclude Include="include\independent\core\application.h" />
+    <ClInclude Include="include\independent\core\common.h" />
+    <ClInclude Include="include\independent\core\graphicsContext.h" />
+    <ClInclude Include="include\independent\entities\components\camera.h" />
+    <ClInclude Include="include\independent\entities\components\eventListener.h" />
+    <ClInclude Include="include\independent\entities\components\meshRender2D.h" />
+    <ClInclude Include="include\independent\entities\components\meshRender3D.h" />
+    <ClInclude Include="include\independent\entities\components\text.h" />
+    <ClInclude Include="include\independent\entities\components\transform2D.h" />
+    <ClInclude Include="include\independent\entities\components\transform3D.h" />
+    <ClInclude Include="include\independent\entities\entity.h" />
+    <ClInclude Include="include\independent\entities\entityComponent.h" />
+    <ClInclude Include="include\independent\events\codes.h" />
+    <ClInclude Include="include\independent\events\event.h" />
+    <ClInclude Include="include\independent\events\events.h" />
+    <ClInclude Include="include\independent\events\inputPoller.h" />
+    <ClInclude Include="include\independent\events\keyEvents.h" />
+    <ClInclude Include="include\independent\events\mouseEvents.h" />
+    <ClInclude Include="include\independent\events\windowEvents.h" />
+    <ClInclude Include="include\independent\layers\layer.h" />
+    <ClInclude Include="include\independent\layers\layerManager.h" />
+    <ClInclude Include="include\independent\rendering\frameBuffer.h" />
+    <ClInclude Include="include\independent\rendering\geometry\bufferLayout.h" />
+    <ClInclude Include="include\independent\rendering\geometry\indexBuffer.h" />
+    <ClInclude Include="include\independent\rendering\geometry\indirectBuffer.h" />
+    <ClInclude Include="include\independent\rendering\geometry\mesh3D.h" />
+    <ClInclude Include="include\independent\rendering\geometry\model3D.h" />
+    <ClInclude Include="include\independent\rendering\geometry\quad.h" />
+    <ClInclude Include="include\independent\rendering\geometry\vertex.h" />
+    <ClInclude Include="include\independent\rendering\geometry\vertexArray.h" />
+    <ClInclude Include="include\independent\rendering\geometry\vertexBuffer.h" />
+    <ClInclude Include="include\independent\rendering\materials\material.h" />
+    <ClInclude Include="include\independent\rendering\renderAPI.h" />
+    <ClInclude Include="include\independent\rendering\renderBuffer.h" />
+    <ClInclude Include="include\independent\rendering\renderers\renderer2D.h" />
+    <ClInclude Include="include\independent\rendering\renderers\renderer3D.h" />
+    <ClInclude Include="include\independent\rendering\renderers\rendererData.h" />
+    <ClInclude Include="include\independent\rendering\renderPasses\passes\defaultPass.h" />
+    <ClInclude Include="include\independent\rendering\renderPasses\passes\secondPass.h" />
+    <ClInclude Include="include\independent\rendering\renderPasses\renderPass.h" />
+    <ClInclude Include="include\independent\rendering\renderUtils.h" />
+    <ClInclude Include="include\independent\rendering\shaders\shaderDataType.h" />
+    <ClInclude Include="include\independent\rendering\shaders\shaderProgram.h" />
+    <ClInclude Include="include\independent\rendering\textures\subTexture.h" />
+    <ClInclude Include="include\independent\rendering\textures\texture.h" />
+    <ClInclude Include="include\independent\rendering\textures\textureAtlas.h" />
+    <ClInclude Include="include\independent\rendering\textures\textureUnitManager.h" />
+    <ClInclude Include="include\independent\rendering\uniformBuffer.h" />
+    <ClInclude Include="include\independent\systems\components\font.h" />
+    <ClInclude Include="include\independent\systems\components\scene.h" />
+    <ClInclude Include="include\independent\systems\components\timer.h" />
+    <ClInclude Include="include\independent\systems\components\window.h" />
+    <ClInclude Include="include\independent\systems\components\windowProperties.h" />
+    <ClInclude Include="include\independent\systems\system.h" />
+    <ClInclude Include="include\independent\systems\systemManager.h" />
+    <ClInclude Include="include\independent\systems\systems\eventManager.h" />
+    <ClInclude Include="include\independent\systems\systems\fontManager.h" />
+    <ClInclude Include="include\independent\systems\systems\log.h" />
+    <ClInclude Include="include\independent\systems\systems\randomiser.h" />
+    <ClInclude Include="include\independent\systems\systems\renderSystem.h" />
+    <ClInclude Include="include\independent\systems\systems\resourceManager.h" />
+    <ClInclude Include="include\independent\systems\systems\sceneManager.h" />
+    <ClInclude Include="include\independent\systems\systems\timerSystem.h" />
+    <ClInclude Include="include\independent\systems\systems\windowManager.h" />
+    <ClInclude Include="include\independent\utils\assimpLoader.h" />
+    <ClInclude Include="include\independent\utils\mathUtils.h" />
+    <ClInclude Include="include\independent\utils\memoryUtils.h" />
+    <ClInclude Include="include\independent\utils\nameUtils.h" />
+    <ClInclude Include="include\platform\GLFW\events\GLFWCodes.h" />
+    <ClInclude Include="include\platform\GLFW\GLFWGLGraphicsContext.h" />
+    <ClInclude Include="include\platform\GLFW\GLFWInputPoller.h" />
+    <ClInclude Include="include\platform\GLFW\GLFWWindowImplementation.h" />
+    <ClInclude Include="include\platform\GLFW\systems\GLFWSystem.h" />
+    <ClInclude Include="include\platform\OpenGL\geometry\openGLIndexBuffer.h" />
+    <ClInclude Include="include\platform\OpenGL\geometry\openGLIndirectBuffer.h" />
+    <ClInclude Include="include\platform\OpenGL\geometry\openGLVertexArray.h" />
+    <ClInclude Include="include\platform\OpenGL\geometry\openGLVertexBuffer.h" />
+    <ClInclude Include="include\platform\OpenGL\openGLFrameBuffer.h" />
+    <ClInclude Include="include\platform\OpenGL\openGLRenderBuffer.h" />
+    <ClInclude Include="include\platform\OpenGL\openGLRenderUtils.h" />
+    <ClInclude Include="include\platform\OpenGL\openGLUniformBuffer.h" />
+    <ClInclude Include="include\platform\OpenGL\shaders\openGLShaderProgram.h" />
+    <ClInclude Include="include\platform\OpenGL\textures\openGLTexture.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,239 @@
+{
+	"entities": 
+	[
+		{
+			"name": "Player1",
+			"type": "Player",
+			"layer": "Default",
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform3D",
+					"position": [ 0.0, 4.0, 5.0],
+					"rotation": [ 0.0, 0.0, 0.0],
+					"scale": [ 1.0, 1.0, 1.0 ]
+				},
+				{
+					"name": "Camera",
+					"type": "Camera",
+					"localPosition": [ 5.0, 5.0, 0.0 ],
+					"front": [ 0.0, 0.0, -1.0],
+					"up": [ 0.0, 1.0, 0.0],
+					"worldUp": [ 0.0, 1.0, 0.0],
+					"Yaw": 270.0,
+					"Pitch": 0.0,
+					"Speed": 5.0,
+					"Sensitivity": 0.15,
+					"Zoom": 45.0,
+					"setMainCamera": true
+				},
+				{
+					"name": "EventListener",
+					"type": "EventListener"
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender3D",
+					"modelName": "cyborg",
+					"materialName": "cyborgMaterial",
+					"localPosition": [ 0.0, 0.0, 0.0 ],
+					"localRotation": [ 0.0, 0.0, 0.0 ],
+					"localScale": [ 1.0, 1.0, 1.0 ]
+				}
+			]
+		},
+		{
+			"name": "Cyborg1",
+			"type": "Cyborg",
+			"layer": "Default",
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform3D",
+					"position": [ 6.0, 0.0, -6.0],
+					"rotation": [ 0.0, 0.0, 0.0],
+					"scale": [ 2.0, 2.0, 2.0]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender3D",
+					"modelName": "cyborg",
+					"materialName": "cyborgMaterial",
+					"localPosition": [ 5.0, 0.0, 0.0 ],
+					"localRotation": [ 0.0, 90.0, 0.0 ],
+					"localScale": [ 0.5, 0.5, 0.5 ]
+				},
+				{
+					"name": "MeshRender2",
+					"type": "MeshRender3D",
+					"modelName": "cyborg",
+					"materialName": "cyborgMaterial",
+					"localPosition": [ 0.0, 0.0, 0.0 ],
+					"localRotation": [ 0.0, 0.0, 0.0 ],
+					"localScale": [ 1.0, 1.0, 1.0 ]
+				},
+				{
+					"name": "EventListener",
+					"type": "EventListener"
+				},
+				{
+					"name": "Camera1",
+					"type": "Camera",
+					"localPosition": [ 0.0, 9.0, -6.0 ],
+					"front": [ 0.0, 0.0, -1.0],
+					"up": [ 0.0, 1.0, 0.0],
+					"worldUp": [ 0.0, 1.0, 0.0],
+					"Yaw": 90.0,
+					"Pitch": -30.0,
+					"Speed": 5.0,
+					"Sensitivity": 0.15,
+					"Zoom": 45.0,
+					"setMainCamera": false
+				}
+			]
+		},
+		{
+			"name": "Cyborg2",
+			"type": "Cyborg",
+			"layer": "Default",
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform3D",
+					"position": [ 0.0, 0.0, -4.0],
+					"rotation": [ 0.0, 0.0, 0.0],
+					"scale": [ 2.0, 2.0, 2.0]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender3D",
+					"modelName": "cyborg",
+					"materialName": "cyborgMaterial2",
+					"localPosition": [ 0.0, 0.0, 0.0 ],
+					"localRotation": [ 0.0, 0.0, 0.0 ],
+					"localScale": [ 1.0, 1.0, 1.0 ]
+				},
+				{
+					"name": "EventListener",
+					"type": "EventListener"
+				}
+			]
+		},
+		{
+			"name": "Plane1",
+			"type": "Cyborg",
+			"layer": "Default",
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform3D",
+					"position": [ 7.0, 0.0, -4.0],
+					"rotation": [ 0.0, 0.0, 0.0],
+					"scale": [ 2.0, 2.0, 2.0]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender3D",
+					"modelName": "plane",
+					"materialName": "planeMaterial",
+					"localPosition": [ 0.0, 0.0, 0.0 ],
+					"localRotation": [ 0.0, 0.0, 0.0 ],
+					"localScale": [ 1.0, 1.0, 1.0 ]
+				},
+				{
+					"name": "EventListener",
+					"type": "EventListener"
+				}
+			]
+		},
+		{
+			"name": "ScreenQuadd",
+			"type": "Rectangle",
+			"layer": "Default",
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform2D",
+					"position": [ 0.0, 0.0 ],
+					"rotation": 0.0,
+					"scale": [ 1.0, 1.0 ]
+				},
+				{
+					"name": "MeshRender",
+					"type": "MeshRender2D",
+					"materialName": "screenMaterial",
+					"localPosition": [ 400.0, 300.0 ],
+					"localRotation": 0.0,
+					"localScale": [ 800.0, 600.0 ]
+				},
+				{
+					"name": "EventListener",
+					"type": "EventListener"
+				}
+			]
+		},
+		{
+			"name": "Quad",
+			"type": "Rectangle",
+			"layer": "UI",
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform2D",
+					"position": [ 0.0, 0.0 ],
+					"rotation": 0.0,
+					"scale": [ 1.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "Lone Wilderness!",
+					"colour": [ 1.0, 0.0, 0.0, 1.0 ],
+					"fontName": "Arial",
+					"localPosition": [ 150.0, 250.0 ],
+					"localRotation": 0.0,
+					"localScale": [ 0.0, 0.0 ]
+				},
+				{
+					"name": "EventListener",
+					"type": "EventListener"
+				}
+			]
+		},
+		{
+			"name": "FPSText",
+			"type": "FPSCounter",
+			"layer": "UI",
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform2D",
+					"position": [ 0.0, 0.0 ],
+					"rotation": 0.0,
+					"scale": [ 1.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "",
+					"colour": [ 1.0, 0.0, 1.0, 1.0 ],
+					"fontName": "Arial",
+					"localPosition": [ 50.0, 50.0 ],
+					"localRotation": 0.0,
+					"localScale": [ 400.0, 400.0 ]
+				},
+				{
+					"name": "EventListener",
+					"type": "EventListener"
+				}
+			]
+		}
+	]
+}
