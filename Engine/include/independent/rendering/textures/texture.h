@@ -117,7 +117,27 @@ namespace Engine
 			/*!< \param slot a const uint32_t - Bind the texture to texture unit */
 
 		static Texture2D* create(const Texture2DProperties& properties, const uint32_t channels, unsigned char* data); //!< Create a texture providing the pixel data
-		static Texture2D* create(const char* filePath, Engine::Texture2DProperties properties = Texture2DProperties()); //!< Create a texture from file
+		static Texture2D* create(const char* filePath, Texture2DProperties properties = Texture2DProperties()); //!< Create a texture from file
+	};
+
+	/*! \class CubeMapTexture
+	* \brief An API agnostic Cubemap texture
+	*/
+	class CubeMapTexture
+	{
+	protected:
+		uint32_t m_textureID; //!< Texture ID
+	public:
+		CubeMapTexture() {} //!< Constructor
+		virtual ~CubeMapTexture() = default; //!< Destructor
+
+		virtual inline const uint32_t getID() const { return m_textureID; } //!< Get the texture ID
+			/*!< \return a const uint32_t - The ID of the texture */
+
+		virtual void bind(const uint32_t slot = 0) = 0; //!< Bind the texture to a texture unit
+			/*!< \param slot a const uint32_t - Bind the texture to texture unit */
+
+		static CubeMapTexture* create(const std::string& folderPath, const std::string& fileType); //!< Create a texture from file
 	};
 }
 #endif

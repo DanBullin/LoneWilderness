@@ -16,6 +16,7 @@ namespace Engine
 	Map<std::string, Model3D> ResourceManager::s_loaded3DModels = Map<std::string, Model3D>(); //!< Initialise empty list
 	Map<std::string, ShaderProgram> ResourceManager::s_loadedShaders = Map<std::string, ShaderProgram>(); //!< Initialise empty list
 	Map<std::string, Texture2D> ResourceManager::s_loadedTextures2D = Map<std::string, Texture2D>(); //!< Initialise empty list
+	Map<std::string, CubeMapTexture> ResourceManager::s_loadedCubemaps = Map<std::string, CubeMapTexture>(); //!< Initialise empty list
 	Map<std::string, SubTexture2D> ResourceManager::s_loadedSubTextures2D = Map<std::string, SubTexture2D>(); //!< Initialise empty list
 	Map<std::string, Material> ResourceManager::s_loadedMaterials = Map<std::string, Material>(); //!< Initialise empty list
 	Map<std::string, UniformBuffer> ResourceManager::s_loadedUniformBuffers = Map<std::string, UniformBuffer>(); //!< Initialise empty list
@@ -52,6 +53,7 @@ namespace Engine
 			destroyResource<ShaderProgram>();
 			destroyResource<Material>();
 			destroyResource<SubTexture2D>();
+			destroyResource<CubeMapTexture>();
 			destroyResource<Texture2D>();
 			destroyResource<Model3D>();
 			s_enabled = false;
@@ -137,6 +139,25 @@ namespace Engine
 			}
 			else
 				ENGINE_ERROR("[ResourceManager::registerTexture2D] This resource name has already been taken by another resource. Name: {0}.", resourceName);
+		}
+	}
+
+	//! registerCubemap()
+	/*!
+	\param resourceName a const char* - The name of the resource
+	\param res a const std::shared_ptr<CubeMapTexture>& - A reference to the resource
+	*/
+	void ResourceManager::registerCubemap(const char* resourceName, const Shared<CubeMapTexture>& res)
+	{
+		if (s_enabled)
+		{
+			// Cubemap texture is being added
+			if (s_loadedCubemaps.find(resourceName) == s_loadedCubemaps.end())
+			{
+				s_loadedCubemaps[resourceName] = res;
+			}
+			else
+				ENGINE_ERROR("[ResourceManager::registerCubemap] This resource name has already been taken by another resource. Name: {0}.", resourceName);
 		}
 	}
 
@@ -301,6 +322,28 @@ namespace Engine
 		return nullptr;
 	}
 
+	//! getCubemap()
+	/*!
+	\param cubeMapTextureName a const char* - The name of the cubemap texture desired
+	\return a const std::shared_ptr<CubeMapTexture> - A pointer to the cubemap texture
+	*/
+	const Shared<CubeMapTexture> ResourceManager::getCubemap(const char* cubeMapTextureName)
+	{
+		if (s_enabled)
+		{
+			// Check if cubemap texture name exists
+			if (s_loadedCubemaps.find(cubeMapTextureName) != s_loadedCubemaps.end())
+				return s_loadedCubemaps[cubeMapTextureName];
+
+			// Could not find cubemap texture with name
+			ENGINE_ERROR("[ResourceManager::getCubemap] Cubemap Texture name: {0} could not be found.", cubeMapTextureName);
+		}
+		else
+			ENGINE_ERROR("[ResourceManager::getCubemap] This system has not been enabled.");
+
+		return nullptr;
+	}
+
 	//! getSubTexture2D()
 	/*!
 	\param subTextureName a const char* - The name of the 2D subtexture desired
@@ -420,6 +463,17 @@ namespace Engine
 		if (!s_enabled)
 			ENGINE_ERROR("[ResourceManager::getTextures2DList] This system has not been enabled.");
 		return s_loadedTextures2D;
+	}
+
+	//! getCubemapTextureList()
+	/*!
+	\return a const std::map<std::string, std::shared_ptr<CubeMapTexture>>& - A reference to the list
+	*/
+	const Map<std::string, CubeMapTexture>& ResourceManager::getCubemapTextureList()
+	{
+		if (!s_enabled)
+			ENGINE_ERROR("[ResourceManager::getCubemapTextureList] This system has not been enabled.");
+		return s_loadedCubemaps;
 	}
 
 	//! getSubTextures2DList()

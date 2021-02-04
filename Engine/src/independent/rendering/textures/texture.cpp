@@ -79,4 +79,37 @@ namespace Engine
 		}
 		return nullptr;
 	}
+
+	//! create()
+	/*!
+	\param folderPath a const std::string& - The path to the folder containing the individual files
+	\param fileType a const std::string& - The file type of the textures
+	\return a CubeMapTexture* - The cubmeap texture of type defined by the graphics API chosen
+	*/
+	CubeMapTexture* CubeMapTexture::create(const std::string& folderPath, const std::string& fileType)
+	{
+		switch (RenderAPI::getAPI())
+		{
+			case GraphicsAPI::None:
+			{
+				ENGINE_ERROR("[CubeMapTexture::create] No rendering API selected.");
+				break;
+			}
+			case GraphicsAPI::OpenGL:
+			{
+				return new OpenGLCubemapTexture(folderPath, fileType);
+			}
+			case GraphicsAPI::Direct3D:
+			{
+				ENGINE_ERROR("[CubeMapTexture::create] Direct3D not supported.");
+				break;
+			}
+			case GraphicsAPI::Vulkan:
+			{
+				ENGINE_ERROR("[CubeMapTexture::create] Vulkan not supported.");
+				break;
+			}
+		}
+		return nullptr;
+	}
 }

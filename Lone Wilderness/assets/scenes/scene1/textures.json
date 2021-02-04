@@ -29,5 +29,10 @@
 
 		{ "name": "align", "filePath": "assets/textures/align512.png", "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
 			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false}
+	],
+	
+	"cubeMaps": 
+	[
+		{ "name": "sky", "folderPath": "assets/textures/skybox/", "fileType": ".jpg" }
 	]
 }

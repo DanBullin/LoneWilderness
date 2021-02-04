@@ -26,5 +26,17 @@ namespace Engine
 		virtual void edit(const uint32_t offsetX, const uint32_t offsetY, const uint32_t width, const uint32_t height, const unsigned char* data) override; //!< Edit the texture data
 		virtual void bind(const uint32_t slot = 0) override; //!< Bind the texture to a texture unit
 	};
+
+	/*! \class OpenGLCubemapTexture
+	* \brief An OpenGL cubemap texture object
+	*/
+	class OpenGLCubemapTexture : public CubeMapTexture
+	{
+	public:
+		OpenGLCubemapTexture(const std::string& folderPath, const std::string& fileType); //!< Constructor
+		~OpenGLCubemapTexture(); //!< Destructor
+
+		virtual void bind(const uint32_t slot = 0) override; //!< Bind the texture to a texture unit
+	};
 }
 #endif

@@ -163,4 +163,71 @@ namespace Engine
 		glActiveTexture(GL_TEXTURE0 + slot);
 		glBindTexture(GL_TEXTURE_2D, m_textureID);
 	}
+
+	//! OpenGLCubemapTexture()
+	/*!
+	\param folderPath a const std::string& - The path to the folder containing the individual files
+	\param fileType a const std::string& - The file type of the textures
+	*/
+	OpenGLCubemapTexture::OpenGLCubemapTexture(const std::string& folderPath, const std::string& fileType)
+	{
+		stbi_set_flip_vertically_on_load(false);
+
+		// Directory path to the last folder is provided, add file names and type
+		std::vector<std::string> faces = { "right" + fileType, "left" + fileType, "top" + fileType, "bottom" + fileType, "back" + fileType,
+										   "front" + fileType };
+
+		glGenTextures(1, &m_textureID);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_textureID);
+
+		int width, height, channels;
+
+		// Loop through each face for the cubemap
+		for (unsigned int i = 0; i < faces.size(); i++)
+		{
+			std::string file = folderPath + faces[i];
+			// Load texture image from file
+			unsigned char *data = stbi_load(file.c_str(), &width, &height, &channels, 0);
+
+			// If data is valid, then create the texture
+			if (data)
+			{
+				if (channels == 3) glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+				else if (channels == 4) glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+				else return;
+			}
+			else
+			{
+				ENGINE_ERROR("[OpenGLCubemapTexture::OpenGLCubemapTexture] Could not load the texture from folder: {0}", folderPath);
+				glDeleteTextures(1, &m_textureID);
+			}
+			stbi_image_free(data);
+		}
+
+		// Set texture parameters
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	}
+
+	//! ~OpenGLCubemapTexture()
+	OpenGLCubemapTexture::~OpenGLCubemapTexture()
+	{
+		ENGINE_INFO("[OpenGLCubemapTexture::~OpenGLCubemapTexture] Deleting cubemap texture with ID: {0}", m_textureID);
+		glDeleteTextures(1, &m_textureID);
+	}
+
+	//! bind()
+	/*!
+	\param slot a const uint32_t - Bind the texture to texture unit
+	*/
+	void OpenGLCubemapTexture::bind(const uint32_t slot)
+	{
+		glActiveTexture(GL_TEXTURE0 + slot);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_textureID);
+	}
 }

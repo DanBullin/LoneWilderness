@@ -36,6 +36,7 @@ namespace Engine
 		static Map<std::string, Model3D> s_loaded3DModels; //!< The 3D models which have been loaded
 		static Map<std::string, ShaderProgram> s_loadedShaders; //!< The Shader programs which have been loaded
 		static Map<std::string, Texture2D> s_loadedTextures2D; //!< The 2D textures which have been loaded
+		static Map<std::string, CubeMapTexture> s_loadedCubemaps; //!< The Cubemaps which have been loaded
 		static Map<std::string, SubTexture2D> s_loadedSubTextures2D; //!< The 2D subtextures which have been loaded
 		static Map<std::string, Material> s_loadedMaterials; //!< The Materials which have been loaded
 		static Map<std::string, UniformBuffer> s_loadedUniformBuffers; //!< The Uniform buffers which have been loaded
@@ -52,6 +53,7 @@ namespace Engine
 
 		static void register3DModel(const char* resourceName, const Shared<Model3D>& res); //!< Register a 3D model into the resource manager
 		static void registerTexture2D(const char* resourceName, const Shared<Texture2D>& res); //!< Register a 2D texture into the resource manager
+		static void registerCubemap(const char* resourceName, const Shared<CubeMapTexture>& res); //!< Register a cubemap texture into the resource manager
 		static void registerSubTexture2D(const char* resourceName, const Shared<SubTexture2D>& res); //!< Register a 2D subtexture into the resource manager
 		static void registerMaterial(const char* resourceName, const Shared<Material>& res); //!< Register a Material into the resource manager
 		static void registerShader(const char* resourceName, const Shared<ShaderProgram>& res); //!< Register a shader program into the resource manager
@@ -61,6 +63,7 @@ namespace Engine
 		static const Shared<Model3D> get3DModel(const char* modelName); //!< Get a model by name
 		static const Shared<ShaderProgram> getShader(const char* shaderName); //!< Get a shader by name
 		static const Shared<Texture2D> getTexture2D(const char* textureName); //!< Get a 2D texture by name
+		static const Shared<CubeMapTexture> getCubemap(const char* cubeMapTextureName); //!< Get a cubemap texture by name
 		static const Shared<SubTexture2D> getSubTexture2D(const char* subTextureName); //!< Get a 2D sub texture by name
 		static const Shared<Material> getMaterial(const char* materialName); //!< Get a material by name
 		static const Shared<UniformBuffer> getUniformBuffer(const char* uniformBufferName); //!< Get a UBO by name
@@ -69,6 +72,7 @@ namespace Engine
 		static const Map<std::string, Model3D>& get3DModelList(); //!< Get the list of 3D models
 		static const Map<std::string, ShaderProgram>& getShadersList(); //!< Get the list of shader programs
 		static const Map<std::string, Texture2D>& getTextures2DList(); //!< Get the list of 2D textures
+		static const Map<std::string, CubeMapTexture>& getCubemapTextureList(); //!< Get the list of cubemap textures
 		static const Map<std::string, SubTexture2D>& getSubTextures2DList(); //!< Get the list of 2D subtextures
 		static const Map<std::string, Material>& getMaterialList(); //!< Get the list of materials
 		static const Map<std::string, UniformBuffer>& getUniformBufferList(); //!< Get the list of uniform buffer objects
@@ -190,6 +194,23 @@ namespace Engine
 					else
 						ENGINE_ERROR("[ResourceManager::loadResourcesByFilePath] 2D Texture name already taken. Name: {0}", name);
 				}
+
+				// Go through each texture for cubemap and load it
+				for (auto& texture : textureData["cubeMaps"])
+				{
+					// Get the texture name
+					std::string name = texture["name"].get<std::string>();
+					// Check if it exists
+					if (s_loadedCubemaps.find(name.c_str()) == s_loadedCubemaps.end())
+					{
+						// Create new cubemap texture
+						Shared<CubeMapTexture> newTexture;
+						newTexture.reset(CubeMapTexture::create(texture["folderPath"].get<std::string>().c_str(), texture["fileType"].get<std::string>().c_str()));
+						s_loadedCubemaps[name] = newTexture;
+					}
+					else
+						ENGINE_ERROR("[ResourceManager::loadResourcesByFilePath] Cubemap name already taken. Name: {0}", name);
+				}
 			}
 			else if (typeid(T) == typeid(SubTexture2D))
 			{
@@ -271,6 +292,8 @@ namespace Engine
 				s_loadedUniformBuffers.clear();
 			else if (typeid(T) == typeid(Texture2D))
 				s_loadedTextures2D.clear();
+			else if (typeid(T) == typeid(CubeMapTexture))
+				s_loadedCubemaps.clear();
 			else if (typeid(T) == typeid(SubTexture2D))
 				s_loadedSubTextures2D.clear();
 			else if (typeid(T) == typeid(Material))
@@ -314,6 +337,11 @@ namespace Engine
 			{
 				if (s_loadedTextures2D.find(resourceName) != s_loadedTextures2D.end())
 					s_loadedTextures2D.erase(resourceName);
+			}
+			else if (typeid(T) == typeid(CubeMapTexture))
+			{
+				if (s_loadedCubemaps.find(resourceName) != s_loadedCubemaps.end())
+					s_loadedCubemaps.erase(resourceName);
 			}
 			else if (typeid(T) == typeid(SubTexture2D))
 			{
