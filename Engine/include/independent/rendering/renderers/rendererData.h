@@ -53,9 +53,10 @@ namespace Engine
 		std::vector<DrawElementsIndirectCommand> batchCommandsQueue; //!< The list of batch commands
 
 		std::vector<glm::mat4> modelInstanceData; //!< The model matrix instance data
-		std::vector<uint32_t> texUnitInstanceData; //!< The texture unit 1 instance data
+		std::vector<uint32_t> texUnitInstanceData; //!< The texture unit instance data
 		std::vector<uint32_t> tintInstanceData; //!< The tint instance data
 		std::vector<glm::vec4> subTextureUVs; //!< The Start and End UV coordinates of the subtexture
+		std::vector<uint32_t> cubeTexUnitInstanceData; //!< The cubemap unit instance data
 
 		std::shared_ptr<TextureUnitManager> unitManager; //!< The texture unit manager
 		std::array<int32_t, 16> unit; //!< The texture units

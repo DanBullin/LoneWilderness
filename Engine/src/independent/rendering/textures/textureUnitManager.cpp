@@ -111,4 +111,16 @@ namespace Engine
 			if (m_buffer[i] == texture->getID())
 				texture->bind(i);
 	}
+
+	//! bindToUnit()
+	/*!
+	\param texture a CubeMapTexture* - The texture to bind
+	*/
+	void TextureUnitManager::bindToUnit(CubeMapTexture* texture)
+	{
+		// Find the texture unit the texture is bound to, and bind it
+		for (int i = 0; i < m_buffer.size(); i++)
+			if (m_buffer[i] == texture->getID())
+				texture->bind(i);
+	}
 }

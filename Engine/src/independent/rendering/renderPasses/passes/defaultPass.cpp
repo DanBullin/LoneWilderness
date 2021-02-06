@@ -52,7 +52,7 @@ namespace Engine
 		cameraUBO->uploadData("u_view", static_cast<void*>(&m_attachedScene->getMainCamera()->getViewMatrix(true)));
 		cameraUBO->uploadData("u_projection", static_cast<void*>(&m_attachedScene->getMainCamera()->getProjectionMatrix(true)));
 
-		Renderer3D::begin(nullptr, { {"Camera", ResourceManager::getUniformBuffer("Camera")} });
+		Renderer3D::begin(nullptr, { {"Camera", ResourceManager::getUniformBuffer("Camera")} }, { ResourceManager::getCubemap("sky").get() });
 
 		for (auto& entity : entities)
 			entity->onRender(Renderers::Renderer3D);

@@ -76,10 +76,10 @@ namespace Engine
 		s_rendererData->VAO->addVertexBuffer(modelVBO);
 
 		// Texture unit which is an integer
-		std::shared_ptr<VertexBuffer> textureUnit1VBO;
+		std::shared_ptr<VertexBuffer> textureUnitVBO;
 		VertexBufferLayout unitLayout = { {ShaderDataType::FlatInt, false, 1 }, {ShaderDataType::FlatInt, false, 1 }, {ShaderDataType::FlatInt, false, 1 }, {ShaderDataType::FlatInt, false, 1 } };
-		textureUnit1VBO.reset(VertexBuffer::create(nullptr, batchCapacity * (sizeof(uint32_t) * 4), unitLayout, VertexBufferUsage::StaticDraw));
-		s_rendererData->VAO->addVertexBuffer(textureUnit1VBO);
+		textureUnitVBO.reset(VertexBuffer::create(nullptr, batchCapacity * (sizeof(uint32_t) * 4), unitLayout, VertexBufferUsage::StaticDraw));
+		s_rendererData->VAO->addVertexBuffer(textureUnitVBO);
 
 		// Tint which is a unsigned 32bit integer (4 bytes normalised)
 		std::shared_ptr<VertexBuffer> tintVBO;
@@ -93,6 +93,12 @@ namespace Engine
 		subTextureUVVBO.reset(VertexBuffer::create(nullptr, batchCapacity * sizeof(glm::vec4), subTextureLayout, VertexBufferUsage::StaticDraw));
 		s_rendererData->VAO->addVertexBuffer(subTextureUVVBO);
 
+		// Cubemap Texture unit which is an integer
+		std::shared_ptr<VertexBuffer> cubeTextureUnitVBO;
+		VertexBufferLayout cubeUnitLayout = { {ShaderDataType::FlatInt, false, 1 } };
+		cubeTextureUnitVBO.reset(VertexBuffer::create(nullptr, batchCapacity * sizeof(uint32_t), cubeUnitLayout, VertexBufferUsage::StaticDraw));
+		s_rendererData->VAO->addVertexBuffer(cubeTextureUnitVBO);
+
 		// Create indirect buffer
 		s_rendererData->commands.reset(IndirectBuffer::create(nullptr, batchCapacity));
 
@@ -105,10 +111,22 @@ namespace Engine
 	/*!
 	\param shaderProgram a ShaderProgram* - A pointer to the shader program
 	\param sceneWideUniforms a const SceneWideUniforms& - A reference to the scene wide uniforms
+	\param cubemaps a CubeMapTexture* - A cubemap to bind
 	*/
-	void Renderer3D::begin(ShaderProgram* shaderProgram, const SceneWideUniforms& sceneWideUniforms)
+	void Renderer3D::begin(ShaderProgram* shaderProgram, const SceneWideUniforms& sceneWideUniforms, CubeMapTexture* cubemap)
 	{
 		// FBO Already bound by this point
+
+		// Check to see if we can bind cubemaps (Should as nothing should be in the queue at this time)
+		if (s_rendererData->unitManager->getRemainingUnitCount() < 1)
+			flushBatch();
+
+		// Bind cubemap texture
+		int32_t unit = 0;
+		if (s_rendererData->unitManager->getUnit(cubemap->getID(), unit))
+			s_rendererData->unitManager->bindToUnit(cubemap);
+
+		s_rendererData->cubeTexUnitInstanceData.push_back(unit);
 
 		s_overridingShader = shaderProgram;
 		s_rendererData->sceneWideUniforms = sceneWideUniforms;
@@ -225,7 +243,7 @@ namespace Engine
 			// All submissions for one shader entry done, flush if we have something to flush
 			if (runningInstanceCount > 0)
 			{
-				flushBatchCommands(shaderEntry.first, runningInstanceCount);
+				flushBatchCommands(shader, runningInstanceCount);
 				runningInstanceCount = 0;
 				clearBatch();
 			}
@@ -260,6 +278,7 @@ namespace Engine
 		s_rendererData->VAO->getVertexBuffers().at(2)->edit(s_rendererData->texUnitInstanceData.data(), (sizeof(uint32_t) * 4) * instanceCount, 0);
 		s_rendererData->VAO->getVertexBuffers().at(3)->edit(s_rendererData->tintInstanceData.data(), sizeof(uint32_t) * instanceCount, 0);
 		s_rendererData->VAO->getVertexBuffers().at(4)->edit(s_rendererData->subTextureUVs.data(), sizeof(glm::vec4) * instanceCount, 0);
+		s_rendererData->VAO->getVertexBuffers().at(5)->edit(s_rendererData->cubeTexUnitInstanceData.data(), sizeof(uint32_t) * instanceCount, 0);
 		
 		// Bind VAO
 		s_rendererData->VAO->bind();

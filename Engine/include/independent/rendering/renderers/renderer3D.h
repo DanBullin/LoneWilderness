@@ -25,7 +25,7 @@ namespace Engine
 		static void clearBatch(); //!< Clear current batch
 	public:
 		static void initialise(const uint32_t batchCapacity, const uint32_t vertexCapacity, const uint32_t indexCapacity); //!< Initialise the renderer
-		static void begin(ShaderProgram* shaderProgram, const SceneWideUniforms& sceneWideUniforms); //!< Begin a new 3D scene
+		static void begin(ShaderProgram* shaderProgram, const SceneWideUniforms& sceneWideUniforms, CubeMapTexture* cubemap); //!< Begin a new 3D scene
 		static void submit(Geometry3D geometry, Material* material, const glm::mat4& modelMatrix); //!< Submit a piece of geometry to render
 
 		static void flushBatch(); //!< Flush the current batch queue

@@ -38,6 +38,7 @@ namespace Engine
 		void setReservedUnit(const uint32_t reservedSlot, const uint32_t textureID); //!< Set the unit of a reserved slot
 		uint32_t getRemainingUnitCount(); //!< Get the count of free units
 		void bindToUnit(Texture2D* texture); //!< Bind texture to unit
+		void bindToUnit(CubeMapTexture* texture); //!< Bind cubmeap texture to unit
 	};
 }
 #endif
