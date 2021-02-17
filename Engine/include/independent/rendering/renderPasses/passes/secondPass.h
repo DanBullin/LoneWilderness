@@ -17,11 +17,14 @@ namespace Engine
 	*/
 	class SecondPass : public RenderPass
 	{
+	private:
+		FrameBuffer* m_frameBuffer; //!< A framebuffer
 	public:
 		SecondPass(); //!< Constructor
-		virtual ~SecondPass(); //!< Destructor
+		~SecondPass(); //!< Destructor
 
-		virtual void onRender(std::vector<Entity*>& entities) override; //!< The rendering to perform for this pass
+		void onRender(std::vector<Entity*>& entities) override; //!< The rendering to perform for this pass
+		FrameBuffer* getFrameBuffer() override; //!< Get the framebuffer of this render pass
 	};
 }
 #endif

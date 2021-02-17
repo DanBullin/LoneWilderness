@@ -5,7 +5,6 @@
 * \author Daniel Bullin
 *
 */
-
 #include "independent/systems/systems/timerSystem.h"
 #include "independent/systems/systems/log.h"
 
@@ -15,7 +14,7 @@ namespace Engine
 	std::map<const char*, std::pair<Timer*, float>> TimerSystem::s_timers = std::map<const char*, std::pair<Timer*, float>>(); //!< All running timers
 
 	//! TimerSystem
-	TimerSystem::TimerSystem() : System(Systems::Type::TimerSystem)
+	TimerSystem::TimerSystem() : System(SystemType::TimerSystem)
 	{
 	}
 

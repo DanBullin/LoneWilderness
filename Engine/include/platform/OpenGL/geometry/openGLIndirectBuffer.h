@@ -18,9 +18,9 @@ namespace Engine
 	class OpenGLIndirectBuffer : public IndirectBuffer
 	{
 	public:
-		OpenGLIndirectBuffer(DrawElementsIndirectCommand* commands, const uint32_t count); //!< Constructor
-		virtual ~OpenGLIndirectBuffer(); //!< Destructor
-		virtual void edit(DrawElementsIndirectCommand* commands, const uint32_t count, const uint32_t offset); //!< Edit the buffer contents
+		OpenGLIndirectBuffer(const std::string& indirectBufferName, DrawElementsIndirectCommand* commands, const uint32_t count); //!< Constructor
+		~OpenGLIndirectBuffer(); //!< Destructor
+		void edit(DrawElementsIndirectCommand* commands, const uint32_t count, const uint32_t offset) override; //!< Edit the buffer contents
 	};
 }
 #endif

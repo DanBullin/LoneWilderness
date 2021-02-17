@@ -11,11 +11,13 @@
 #include "independent/events/event.h"
 #include <glm/glm.hpp>
 
-namespace Engine {
+namespace Engine 
+{
 	/*! \class MouseEvent
 	* \brief A base event class for mouse events
 	*/
-	class MouseEvent : public Event {
+	class MouseEvent : public Event 
+	{
 	public:
 		virtual inline const int32_t getCategoryFlags() const override { return EventCategoryMouse | EventCategoryInput; }
 			/*!< \return a const int32_t - The mouse's event category flags */
@@ -24,7 +26,8 @@ namespace Engine {
 	/*! \class MouseMovedEvent
 	* \brief A mouse moved event
 	*/
-	class MouseMovedEvent : public MouseEvent {
+	class MouseMovedEvent : public MouseEvent 
+	{
 	private:
 		float m_mousePosX; //!<	x Position of the mouse
 		float m_mousePosY; //!< y Position of the mouse
@@ -47,7 +50,8 @@ namespace Engine {
 	/*! \class MouseScrolledEvent
 	* \brief A mouse scrolled event
 	*/
-	class MouseScrolledEvent : public MouseEvent {
+	class MouseScrolledEvent : public MouseEvent 
+	{
 	private:
 		float m_xOffset; //!< The x offset of the mouse wheel
 		float m_yOffset; //!< The y offset of the mouse wheel
@@ -68,7 +72,8 @@ namespace Engine {
 	/*! \class MousePressedEvent
 	* \brief A mouse pressed event
 	*/
-	class MousePressedEvent : public MouseEvent {
+	class MousePressedEvent : public MouseEvent 
+	{
 	private:
 		int32_t m_button; //!< The button pressed
 	public:
@@ -85,7 +90,8 @@ namespace Engine {
 	/*! \class MouseReleasedEvent
 	* \brief A mouse released event
 	*/
-	class MouseReleasedEvent : public MouseEvent {
+	class MouseReleasedEvent : public MouseEvent 
+	{
 	private:
 		int32_t m_button; //!< The button released
 	public:

@@ -12,27 +12,24 @@
 
 namespace Engine
 {
-	namespace RenderParameters
+	/*! \enum RenderParameter
+	* \brief The parameters associated with rendering API
+	*/
+	enum class RenderParameter
 	{
-		/*! \enum RenderParameter
-		* \brief The parameters associated with rendering API
-		*/
-		enum RenderParameter
-		{
-			None = 0,
-			COLOR_BUFFER_BIT = 1,
-			DEPTH_BUFFER_BIT = 2,
-			COLOR_AND_DEPTH_BUFFER_BIT = 3,
-			NEVER = 4,
-			LESS = 5,
-			EQUAL = 6,
-			LESS_THAN_OR_EQUAL = 7,
-			GREATER = 8,
-			NOTEQUAL = 9,
-			GREATER_THAN_OR_EQUAL = 10,
-			ALWAYS = 11
-		};
-	}
+		None,
+		COLOR_BUFFER_BIT,
+		DEPTH_BUFFER_BIT,
+		COLOR_AND_DEPTH_BUFFER_BIT,
+		NEVER,
+		LESS,
+		EQUAL,
+		LESS_THAN_OR_EQUAL,
+		GREATER,
+		NOTEQUAL,
+		GREATER_THAN_OR_EQUAL,
+		ALWAYS
+	};
 
 	/*! \class RenderUtils
 	* \brief A utility class which issues calls to the rendering API
@@ -46,9 +43,9 @@ namespace Engine
 		static void enableDepthWriting(const bool enable); //!< Enable/Disable depth writing
 		static void enableBlending(const bool enable); //!< Enable/Disable blending
 
-		static void clearBuffers(const RenderParameters::RenderParameter buffers, const glm::vec4& colour = glm::vec4(0.f, 0.f, 0.f, 1.f)); //!< Clear the buffers
+		static void clearBuffers(const RenderParameter buffers, const glm::vec4& colour = glm::vec4(0.f, 0.f, 0.f, 1.f)); //!< Clear the buffers
 
-		static void setDepthComparison(const RenderParameters::RenderParameter comparison); //!< Set the depth buffer comparison value
+		static void setDepthComparison(const RenderParameter comparison); //!< Set the depth buffer comparison value
 		static void setViewport(const int x, const int y, const int width, const int height); //!< Resize the viewport
 
 		static void draw(const uint32_t drawCount); //!< Draw the geometry

@@ -5,15 +5,17 @@
 * \author Daniel Bullin
 *
 */
-
-#include "independent/systems/systems/log.h"
 #include "independent/rendering/geometry/model3D.h"
+#include "independent/systems/systems/log.h"
 #include "independent/utils/memoryUtils.h"
 
 namespace Engine
 {
 	//! Model3D()
-	Model3D::Model3D()
+	/*
+	\param modelName a const std::string& - The name of the 3D model
+	*/
+	Model3D::Model3D(const std::string& modelName) : Resource(modelName, ResourceType::Model3D)
 	{
 	}
 
@@ -39,7 +41,7 @@ namespace Engine
 		// Clear the mesh list
 		if (m_meshes.size() != 0)
 		{
-			ENGINE_INFO("[Model3D::destroy] Deleting model.");
+			ENGINE_INFO("[Model3D::destroy] Deleting model with name: {0}.", m_name);
 			m_meshes.clear();
 		}
 	}

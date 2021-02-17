@@ -5,27 +5,22 @@
 * \author DMU Course material
 *
 */
-
 #include <glad/glad.h>
 #include "independent/systems/systems/log.h"
 #include "platform/OpenGL/textures/openGLTexture.h"
-
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include <stb_image.h>
 
 namespace Engine
 {
-	namespace TextureParameters
+	//! toGLType()
+	/*!
+	\param type a const TextureParameter - The parameter type
+	\return an uint32_t - The OpenGL parameter value
+	*/
+	static uint32_t toGLType(const TextureParameter type)
 	{
-		//! toGLType()
-		/*!
-		\param type a const TextureParameters::TextureParameter - The parameter type
-		\return an uint32_t - The OpenGL parameter value
-		*/
-		static uint32_t toGLType(const TextureParameters::TextureParameter type)
+		switch (type)
 		{
-			switch (type)
-			{
 			case TextureParameter::ClampToBorder: return GL_CLAMP_TO_BORDER;
 			case TextureParameter::ClampToEdge: return GL_CLAMP_TO_EDGE;
 			case TextureParameter::Repeat: return GL_REPEAT;
@@ -37,7 +32,6 @@ namespace Engine
 			case TextureParameter::NearestMipmapLinear: return GL_NEAREST_MIPMAP_LINEAR;
 			case TextureParameter::LinearMipmapLinear: return GL_LINEAR_MIPMAP_LINEAR;
 			default: return GL_INVALID_ENUM;
-			}
 		}
 	}
 
@@ -53,32 +47,43 @@ namespace Engine
 		glBindTexture(GL_TEXTURE_2D, m_textureID);
 
 		// Set texture properties
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, TextureParameters::toGLType(m_textureProperties.WrapS));
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, TextureParameters::toGLType(m_textureProperties.WrapT));
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, TextureParameters::toGLType(m_textureProperties.WrapR));
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, toGLType(m_textureProperties.WrapS));
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, toGLType(m_textureProperties.WrapT));
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, toGLType(m_textureProperties.WrapR));
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, TextureParameters::toGLType(m_textureProperties.MinFilter));
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, TextureParameters::toGLType(m_textureProperties.MaxFilter));
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, toGLType(m_textureProperties.MinFilter));
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, toGLType(m_textureProperties.MaxFilter));
 
 		// Set the data format, based on the number of channels loaded and whether the image is
 		// gamma corrected
 		GLenum internalFormat;
 		GLenum dataFormat;
+		GLenum type;
 		if (channels == 1)
+		{
 			internalFormat = dataFormat = GL_RED;
+			type = GL_UNSIGNED_BYTE;
+		}
+		else if (channels == 2)
+		{
+			internalFormat = dataFormat = GL_DEPTH_COMPONENT;
+			type = GL_FLOAT;
+		}
 		else if (channels == 3)
 		{
 			internalFormat = m_textureProperties.GammaCorrect ? GL_SRGB : GL_RGB;
 			dataFormat = GL_RGB;
+			type = GL_UNSIGNED_BYTE;
 		}
 		else if (channels == 4)
 		{
 			internalFormat = m_textureProperties.GammaCorrect ? GL_SRGB_ALPHA : GL_RGBA;
 			dataFormat = GL_RGBA;
+			type = GL_UNSIGNED_BYTE;
 		}
 
 		// Load data to GPU
-		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, m_textureProperties.Width, m_textureProperties.Height, 0, dataFormat, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, m_textureProperties.Width, m_textureProperties.Height, 0, dataFormat, type, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
 		// Store texture properties
@@ -88,11 +93,12 @@ namespace Engine
 
 	//! OpenGLTexture2D()
 	/*!
+	\param textureName a const std::string& - The name of the texture
 	\param filePath a const char* - The filepath of the texture
 	\param properties a TextureProperties& - A reference to the texture properties
 	*/
-	OpenGLTexture2D::OpenGLTexture2D(const char* filePath, Texture2DProperties& properties)
-		: Texture2D(properties)
+	OpenGLTexture2D::OpenGLTexture2D(const std::string& textureName, const char* filePath, TextureProperties& properties)
+		: Texture2D(textureName, properties)
 	{
 		int width, height, channels;
 
@@ -116,12 +122,13 @@ namespace Engine
 
 	//! OpenGLTexture2D()
 	/*!
+	\param textureName a const std::string& - The name of the texture
 	\param properties a const TextureProperties& - A reference to the texture properties
 	\param channels a const uint32_t - The number of channels of the data format
 	\param data an unsigned char* - A pointer to the data to store
 	*/
-	OpenGLTexture2D::OpenGLTexture2D(const Texture2DProperties& properties, const uint32_t channels, unsigned char* data)
-		: Texture2D(properties)
+	OpenGLTexture2D::OpenGLTexture2D(const std::string& textureName, const TextureProperties& properties, const uint32_t channels, unsigned char* data)
+		: Texture2D(textureName, properties)
 	{
 		init(data, channels);
 	}
@@ -129,7 +136,7 @@ namespace Engine
 	//! ~OpenGLTexture2D()
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
-		ENGINE_INFO("[OpenGLTexture2D::~OpenGLTexture2D] Deleting texture with ID: {0}", m_textureID);
+		ENGINE_INFO("[OpenGLTexture2D::~OpenGLTexture2D] Deleting texture with ID: {0}, Name: {1}.", m_textureID, m_name);
 		glDeleteTextures(1, &m_textureID);
 	}
 
@@ -164,18 +171,19 @@ namespace Engine
 		glBindTexture(GL_TEXTURE_2D, m_textureID);
 	}
 
-	//! OpenGLCubemapTexture()
+	//! OpenGLCubeMapTexture()
 	/*!
+	\param textureName a const std::string& - The name of the texture
 	\param folderPath a const std::string& - The path to the folder containing the individual files
 	\param fileType a const std::string& - The file type of the textures
 	*/
-	OpenGLCubemapTexture::OpenGLCubemapTexture(const std::string& folderPath, const std::string& fileType)
+	OpenGLCubeMapTexture::OpenGLCubeMapTexture(const std::string& textureName, const std::string& folderPath, const std::string& fileType) : CubeMapTexture(textureName)
 	{
 		stbi_set_flip_vertically_on_load(false);
 
 		// Directory path to the last folder is provided, add file names and type
-		std::vector<std::string> faces = { "right" + fileType, "left" + fileType, "top" + fileType, "bottom" + fileType, "back" + fileType,
-										   "front" + fileType };
+		std::vector<std::string> faces = { "right" + fileType, "left" + fileType, "top" + fileType, "bottom" + fileType, "front" + fileType,
+										   "back" + fileType };
 
 		glGenTextures(1, &m_textureID);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, m_textureID);
@@ -198,7 +206,7 @@ namespace Engine
 			}
 			else
 			{
-				ENGINE_ERROR("[OpenGLCubemapTexture::OpenGLCubemapTexture] Could not load the texture from folder: {0}", folderPath);
+				ENGINE_ERROR("[OpenGLCubeMapTexture::OpenGLCubeMapTexture] Could not load the texture from folder: {0}", folderPath);
 				glDeleteTextures(1, &m_textureID);
 			}
 			stbi_image_free(data);
@@ -214,10 +222,10 @@ namespace Engine
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 
-	//! ~OpenGLCubemapTexture()
-	OpenGLCubemapTexture::~OpenGLCubemapTexture()
+	//! ~OpenGLCubeMapTexture()
+	OpenGLCubeMapTexture::~OpenGLCubeMapTexture()
 	{
-		ENGINE_INFO("[OpenGLCubemapTexture::~OpenGLCubemapTexture] Deleting cubemap texture with ID: {0}", m_textureID);
+		ENGINE_INFO("[OpenGLCubeMapTexture::~OpenGLCubeMapTexture] Deleting cubemap texture with ID: {0}, Name: {1}.", m_textureID, m_name);
 		glDeleteTextures(1, &m_textureID);
 	}
 
@@ -225,7 +233,7 @@ namespace Engine
 	/*!
 	\param slot a const uint32_t - Bind the texture to texture unit
 	*/
-	void OpenGLCubemapTexture::bind(const uint32_t slot)
+	void OpenGLCubeMapTexture::bind(const uint32_t slot)
 	{
 		glActiveTexture(GL_TEXTURE0 + slot);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, m_textureID);

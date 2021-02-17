@@ -5,7 +5,6 @@
 * \author Daniel Bullin
 *
 */
-
 #include "independent/entities/components/meshRender2D.h"
 #include "independent/entities/entity.h"
 #include "independent/systems/systems/log.h"
@@ -14,13 +13,13 @@ namespace Engine
 {
 	//! MeshRender2D()
 	/*!
-	\param localPos a const glm::vec2& - The local position
+	\param localPos a const glm::vec3& - The local position
 	\param localOrientation a const float - The local orientation
 	\param localScale a const glm::vec2& - The local scale
-	\param material a const Shared<Material>& - A pointer to the material
+	\param material a Material* - A pointer to the material
 	*/
-	MeshRender2D::MeshRender2D(const glm::vec2& localPos, const float localOrientation, const glm::vec2& localScale, const Shared<Material>& material) 
-		: EntityComponent(ComponentType::MeshRender2D), m_material(material.get()), m_localPosition(localPos), m_localOrientation(localOrientation), m_localScale(localScale)
+	MeshRender2D::MeshRender2D(const glm::vec3& localPos, const float localOrientation, const glm::vec2& localScale, Material* material) 
+		: EntityComponent(ComponentType::MeshRender2D), m_material(material), m_localPosition(localPos), m_localOrientation(localOrientation), m_localScale(localScale)
 	{
 	}
 
@@ -38,23 +37,6 @@ namespace Engine
 	//! onDetach
 	void MeshRender2D::onDetach()
 	{
-	}
-
-	//! containsPoint()
-	/*!
-	\param coordinate a const glm::vec2& - The coordinate to check
-	\return a bool - Is this coordinate within this bounding box
-	*/
-	bool MeshRender2D::containsPoint(const glm::vec2& coordinate)
-	{
-		glm::vec2 topLeft = (getParent()->getComponent<Transform2D>()->getPosition() + m_localPosition) - (m_localScale / 2.f);
-		glm::vec2 bottomRight = (getParent()->getComponent<Transform2D>()->getPosition() + m_localPosition) + (m_localScale / 2.f);
-
-		if (coordinate.x >= topLeft.x && coordinate.x <= bottomRight.x)
-			if (coordinate.y >= topLeft.y && coordinate.y <= bottomRight.y)
-				return true;
-
-		return false;
 	}
 
 	//! onUpdate()
@@ -81,12 +63,12 @@ namespace Engine
 
 	//!	setMaterial()
 	/*!
-	\param material a const std::shared_ptr<Material>& - A pointer to the material
+	\param material a Material* - A pointer to the material
 	*/
-	void MeshRender2D::setMaterial(const Shared<Material>& material)
+	void MeshRender2D::setMaterial(Material* material)
 	{
-		if (material.get())
-			m_material = material.get();
+		if (material)
+			m_material = material;
 		else
 			ENGINE_ERROR("[MeshRender2D::setMaterial] An invalid material was provided.");
 	}
@@ -100,20 +82,37 @@ namespace Engine
 		return m_material;
 	}
 
+	//! containsPoint()
+	/*!
+	\param coordinate a const glm::vec2& - The coordinate to check
+	\return a bool - Is this coordinate within this bounding box
+	*/
+	bool MeshRender2D::containsPoint(const glm::vec2& coordinate)
+	{
+		glm::vec2 topLeft = (getParent()->getComponent<Transform2D>()->getPosition() + glm::vec2(m_localPosition)) - (m_localScale / 2.f);
+		glm::vec2 bottomRight = (getParent()->getComponent<Transform2D>()->getPosition() + glm::vec2(m_localPosition)) + (m_localScale / 2.f);
+
+		if (coordinate.x >= topLeft.x && coordinate.x <= bottomRight.x)
+			if (coordinate.y >= topLeft.y && coordinate.y <= bottomRight.y)
+				return true;
+
+		return false;
+	}
+
 	//! setLocalPosition()
 	/*!
-	\param newPos a const glm::vec2& - The new position
+	\param newPos a const glm::vec3& - The new position
 	*/
-	void MeshRender2D::setLocalPosition(const glm::vec2& newPos)
+	void MeshRender2D::setLocalPosition(const glm::vec3& newPos)
 	{
 		m_localPosition = newPos;
 	}
 
 	//!	getLocalPosition()
 	/*!
-	\return a glm::vec2 - The local position of the mesh render
+	\return a glm::vec3 - The local position of the mesh render
 	*/
-	glm::vec2 MeshRender2D::getLocalPosition()
+	glm::vec3 MeshRender2D::getLocalPosition()
 	{
 		return m_localPosition;
 	}
@@ -164,7 +163,7 @@ namespace Engine
 		// Order: Translate then Rotation then Scale
 		glm::mat4 model = glm::mat4(1.f);
 		model = glm::translate(model, glm::vec3(trans->getPosition(), 0.f));
-		model = glm::translate(model, glm::vec3(m_localPosition, 0.f));
+		model = glm::translate(model, m_localPosition);
 		model = glm::rotate(model, glm::radians(trans->getOrientation()), glm::vec3(0.f, 0.f, 1.f));
 		model = glm::rotate(model, glm::radians(m_localOrientation), glm::vec3(0.f, 0.f, 1.f));
 		model = glm::scale(model, glm::vec3(trans->getScale(), 0.f));

@@ -10,11 +10,13 @@
 
 #include "independent/core/common.h"
 
-namespace Engine {
+namespace Engine 
+{
 	/*! \class GLFWInputPoller
 	* \brief GFLW specific Input poller for getting current keyboard/mouse state
 	*/
-	class GLFWInputPoller {
+	class GLFWInputPoller 
+	{
 	public:
 		static std::vector<uint32_t> isAnyKeyPressed(); //!< Is any key pressed, returns list of all keys currently pressed
 		static std::vector<uint32_t> isAnyMouseButtonPressed(); //!< Is any mouse button pressed, returns list of all mouse buttons currently pressed

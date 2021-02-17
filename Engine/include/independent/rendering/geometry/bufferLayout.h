@@ -38,14 +38,14 @@ namespace Engine
 	class UniformBufferElement
 	{
 	public:
-		const char* m_name; //!< Name of the uniform buffer
+		std::string m_name; //!< Name of the uniform buffer element
 		ShaderDataType m_dataType; //!< The data type of the element
 		uint32_t m_size; //!< The size of memory of the data type
 		uint32_t m_offset; //!< The offset in memory from the beginning
 		UniformBufferElement() = default; //!< Default constructor
-		UniformBufferElement(const char* name, ShaderDataType type) : m_name(name), m_dataType(type), m_size(SDT::getST140Alignment(type)),
+		UniformBufferElement(const std::string& name, ShaderDataType type) : m_name(name), m_dataType(type), m_size(SDT::getST140Alignment(type)),
 			m_offset(0) {}; //!< Constructor
-			/*!< \param name a const char* - The name of the uniform buffer element
+			/*!< \param name a const std::string& - The name of the uniform buffer element
 				 \param type a ShaderDataType - The data type of the element */
 	};
 
@@ -69,6 +69,7 @@ namespace Engine
 		inline const std::vector<T>& getElements() const { return m_elements; } //!< Get the elements in the buffer layout
 			/*!< \return a const std::vector<T>& - The elements in the buffer layout */
 		void addElement(const T element); //!< Add an element to the layout
+		void recalculateStride(const uint32_t overrideStride = 0); //!< Recalculate the stride
 		inline typename std::vector<T>::iterator begin() { return m_elements.begin(); } //!< Get the begin iterator for the elements
 			/*!< \return a std::vector<T>::iterator - The begin iterator of the elements list */
 		inline typename std::vector<T>::iterator end() { return m_elements.end(); } //!< Get the end iterator for the elements
@@ -105,6 +106,27 @@ namespace Engine
 		// Add the element to the back of the list and recalculate the buffer layout
 		m_elements.push_back(element);
 		calculateBufferLayout();
+	}
+
+	template <class T>
+	//! recalculateStride()
+	/*!
+	\param overrideStride a const uint32_t - The overriding stride value
+	*/
+	void BufferLayout<T>::recalculateStride(const uint32_t overrideStride)
+	{
+		if (overrideStride != 0)
+			m_stride = overrideStride;
+		else
+		{
+			uint32_t stride = 0;
+
+			// Calculate the stride by adding all element sizes
+			for (auto& element : m_elements)
+				stride += element.m_size;
+
+			m_stride = stride;
+		}
 	}
 
 	using VertexBufferLayout = BufferLayout<VertexBufferElement>; //!< Type alias

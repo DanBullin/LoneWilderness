@@ -5,7 +5,6 @@
 * \author Daniel Bullin
 *
 */
-
 #include <glad/glad.h>
 #include "independent/systems/systems/log.h"
 #include "independent/systems/systems/resourceManager.h"
@@ -50,23 +49,44 @@ namespace Engine
 		return shaderID;
 	}
 
+	//! OpenGLShaderProgram()
+	/*
+	\param shaderName a const std::string& - The name of the shader program
+	*/
+	OpenGLShaderProgram::OpenGLShaderProgram(const std::string& shaderName) : ShaderProgram(shaderName)
+	{
+	}
+
 	//! ~OpenGLShaderProgram()
 	OpenGLShaderProgram::~OpenGLShaderProgram()
 	{
-		ENGINE_INFO("[OpenGLShaderProgram::~OpenGLShaderProgram] Deleting shader program with ID: {0}", m_programID);
+		ENGINE_INFO("[OpenGLShaderProgram::~OpenGLShaderProgram] Deleting shader program with ID: {0}, Name: {1}.", m_programID, m_name);
 		glDeleteProgram(m_programID);
+
+		if (m_vertexArray) m_vertexArray->decreaseCount();
+		m_vertexArray = nullptr;
+
+		for (auto& ubo : m_uniformBuffers)
+			ubo.second->decreaseCount();
+
+		m_uniformBuffers.clear();
 	}
 
 	//! build()
 	/*!
+	\param vertexArray a VertexArray* - A pointer to the vertex array
 	\param vertexPath a const std::string& - The vertex shader file path
 	\param fragmentPath a const std::string& - The fragment shader file path
 	\param geometryPath a const std::string& -The geometry shader file path
 	\param tessControlPath a const std::string& - The tessellation control shader file path
 	\param tessEvalPath a const std::string& - The tessellation evaluation shader file path
 	*/
-	void OpenGLShaderProgram::build(const std::string& vertexPath, const std::string& fragmentPath, const std::string& geometryPath, const std::string& tessControlPath, const std::string& tessEvalPath)
+	void OpenGLShaderProgram::build(VertexArray* vertexArray, const std::string& vertexPath, const std::string& fragmentPath, const std::string& geometryPath, const std::string& tessControlPath, const std::string& tessEvalPath)
 	{
+		if (m_programID != 0) return;
+
+		if (vertexArray) m_vertexArray = vertexArray;
+
 		// Create the shader objects by providing path
 		// buildShader creates, loads src code, compiles and returns id
 		GLuint VertexID = constructShaders(GL_VERTEX_SHADER, vertexPath.c_str());
@@ -115,6 +135,12 @@ namespace Engine
 
 		if (tessEvalPath != "")
 			glDeleteShader(TessEvaluationID);
+
+		m_vertexPath = vertexPath;
+		m_fragmentPath = fragmentPath;
+		m_geometryPath = geometryPath;
+		m_tessellationControlPath = tessControlPath;
+		m_tessellationEvalPath = tessEvalPath;
 	}
 
 	//! setUniforms()
@@ -135,6 +161,15 @@ namespace Engine
 			else
 				m_uniforms[name] = uniformLocation;
 		}
+	}
+
+	//! setUniformBuffers()
+	/*!
+	\param uniformBuffers a const std::unordered_map<std::string, UniformBuffer*>& - The uniform buffers associated with this shader program
+	*/
+	void OpenGLShaderProgram::setUniformBuffers(const std::unordered_map<std::string, UniformBuffer*>& uniformBuffers)
+	{
+		m_uniformBuffers = uniformBuffers;
 	}
 
 	//! start()
@@ -169,10 +204,10 @@ namespace Engine
 	}
 
 	//! sendIntArray()
-	/*!< 
+	/*!<
 	\param uniformName a const std::string& - The uniform name
 	\param values a int32_t* - The uniform values
-	\param count a const uint32_t - The number of elements 
+	\param count a const uint32_t - The number of elements
 	*/
 	void OpenGLShaderProgram::sendIntArray(const std::string& uniformName, int32_t* values, const uint32_t count)
 	{

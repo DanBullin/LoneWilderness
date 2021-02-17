@@ -5,17 +5,16 @@
 * \author Daniel Bullin
 *
 */
-
 #include "platform/GLFW/GLFWWindowImplementation.h"
 #include "platform/GLFW/GLFWGLGraphicsContext.h"
-#include "independent/systems/systems/eventManager.h"
 #include "independent/systems/systems/log.h"
-#include "independent/rendering/renderUtils.h"
+#include "independent/systems/systems/eventManager.h"
 
+#define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-namespace Engine {
-
+namespace Engine 
+{
 	//! GLFWWindowImplementation()
 	/*!
 	\param windowName a const char* - The name of the window
@@ -47,13 +46,16 @@ namespace Engine {
 		setCursorInputMode(m_properties.getCursorInputMode());
 		setVSync(m_properties.getVSync());
 		
+		// If the window is hidden, hide it otherwise show
 		if (properties.getHidden())
 			hide();
 		else
 			show();
 
+		// Set the window event callbacks
 		setEventCallbacks();
 
+		// If the window is to be fullscreen, tmp set it to false and set the window to fullscreen
 		if (m_properties.getFullScreen())
 		{
 			m_properties.setFullScreen(false);
@@ -72,7 +74,7 @@ namespace Engine {
 
 	//! getNativeWindow()
 	/*!
-	return a void* - A pointer to the native GLFW window
+	\return a void* - A pointer to the native GLFW window
 	*/
 	void* GLFWWindowImplementation::getNativeWindow() const
 	{
@@ -151,9 +153,9 @@ namespace Engine {
 	//! close()
 	void GLFWWindowImplementation::close()
 	{
-		if (m_native && !m_delete)
+		if (m_native && !getDestroyed())
 		{
-			m_delete = true;
+			destroy();
 		}
 	}
 
@@ -179,6 +181,30 @@ namespace Engine {
 		}
 		);
 
+		glfwSetWindowFocusCallback(m_native,
+			[](GLFWwindow* window, int focused)
+		{
+			if (focused)
+			{
+				WindowFocusEvent e;
+				EventManager::onWindowFocus(static_cast<GLFWWindowImplementation*>(glfwGetWindowUserPointer(window)), e);
+			}
+			else
+			{
+				WindowLostFocusEvent e;
+				EventManager::onWindowLostFocus(static_cast<GLFWWindowImplementation*>(glfwGetWindowUserPointer(window)), e);
+			}
+		}
+		);
+
+		glfwSetWindowPosCallback(m_native,
+			[](GLFWwindow* window, int xpos, int ypos)
+		{
+			WindowMovedEvent e(xpos, ypos);
+			EventManager::onWindowMoved(static_cast<GLFWWindowImplementation*>(glfwGetWindowUserPointer(window)), e);
+		}
+		);
+
 		glfwSetKeyCallback(m_native,
 			[](GLFWwindow* window, int key, int scancode, int action, int mods)
 		{
@@ -188,6 +214,14 @@ namespace Engine {
 				KeyReleasedEvent e(key);
 				EventManager::onKeyReleased(static_cast<GLFWWindowImplementation*>(glfwGetWindowUserPointer(window)), e);
 			}
+		}
+		);
+
+		glfwSetCharCallback(m_native,
+			[](GLFWwindow* window, unsigned int codepoint)
+		{
+			KeyTypedEvent e(codepoint);
+			EventManager::onKeyTyped(static_cast<GLFWWindowImplementation*>(glfwGetWindowUserPointer(window)), e);
 		}
 		);
 
@@ -218,37 +252,6 @@ namespace Engine {
 		}
 		);
 
-		glfwSetWindowFocusCallback(m_native,
-			[](GLFWwindow* window, int focused)
-		{
-			if (focused)
-			{
-				WindowFocusEvent e;
-				EventManager::onWindowFocus(static_cast<GLFWWindowImplementation*>(glfwGetWindowUserPointer(window)), e);
-			}
-			else
-			{
-				WindowLostFocusEvent e;
-				EventManager::onWindowLostFocus(static_cast<GLFWWindowImplementation*>(glfwGetWindowUserPointer(window)), e);
-			}
-		}
-		);
-
-		glfwSetWindowPosCallback(m_native,
-			[](GLFWwindow* window, int xpos, int ypos)
-		{
-			WindowMovedEvent e(xpos, ypos);
-			EventManager::onWindowMoved(static_cast<GLFWWindowImplementation*>(glfwGetWindowUserPointer(window)), e);
-		}
-		);
-
-		glfwSetCharCallback(m_native,
-			[](GLFWwindow* window, unsigned int codepoint)
-		{
-			KeyTypedEvent e(codepoint);
-			EventManager::onKeyTyped(static_cast<GLFWWindowImplementation*>(glfwGetWindowUserPointer(window)), e);
-		}
-		);
 #endif
 	}
 
@@ -273,6 +276,7 @@ namespace Engine {
 	{
 		if (m_native)
 		{
+			// Size property will be updated automatically
 			glfwSetWindowSize(m_native, size.x, size.y);
 		}
 	}
@@ -285,6 +289,7 @@ namespace Engine {
 	{
 		if (m_native)
 		{
+			// Position property will be updated automatically
 			glfwSetWindowPos(m_native, newPosition.x, newPosition.y);
 		}
 	}
@@ -387,6 +392,8 @@ namespace Engine {
 		if (m_native)
 		{
 			glfwFocusWindow(m_native);
+			WindowFocusEvent e;
+			onWindowFocus(e);
 		}
 	}
 
@@ -438,11 +445,6 @@ namespace Engine {
 					glfwMode = GLFW_CURSOR_DISABLED;
 					break;
 				}
-				default:
-				{
-					glfwMode = GLFW_CURSOR_NORMAL;
-					break;
-				}
 			}
 
 			// Tell GLFW the input mode
@@ -478,18 +480,10 @@ namespace Engine {
 		if (m_native)
 		{
 			int width, height, channels;
-
 			unsigned char *data = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
 
 			if (channels == 4)
-			{
-				GLFWimage icon;
-				icon.width = width;
-				icon.height = height;
-				icon.pixels = data;
-
-				glfwSetWindowIcon(m_native, 1, &icon);
-			}
+				setIcon(width, height, data);
 			else
 				ENGINE_ERROR("[GLFWWindowImplementation::setIcon] The icon being loaded is not a 4 channel texture. Texture filepath: {0}.", filePath);
 
@@ -513,8 +507,8 @@ namespace Engine {
 		ENGINE_TRACE("Opacity: {0}", m_properties.getOpacity());
 		ENGINE_TRACE("Focused: {0}", m_properties.getFocused());
 		ENGINE_TRACE("Hidden: {0}", m_properties.getHidden());
-		ENGINE_TRACE("CursorInputMode: {0}", m_properties.getCursorInputMode());
-		ENGINE_TRACE("Scheduled for Deletion: {0}", m_delete);
+		ENGINE_TRACE("CursorInputMode: {0}", static_cast<int>(m_properties.getCursorInputMode()));
+		ENGINE_TRACE("Scheduled for Deletion: {0}", getDestroyed());
 		ENGINE_TRACE("Address of Graphics Context: {0}", (void*)m_graphicsContext.get());
 		ENGINE_TRACE("Non-fullscreen window position: {0}, {1}", m_nonFullscreenWindowPosition.x, m_nonFullscreenWindowPosition.y);
 		ENGINE_TRACE("Non-fullscreen window size: {0}, {1}", m_nonFullscreenWindowSize.x, m_nonFullscreenWindowSize.y);

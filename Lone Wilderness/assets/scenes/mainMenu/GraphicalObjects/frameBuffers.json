@@ -1,0 +1,12 @@
+{
+	"frameBuffers": 
+	[
+		{ 
+			"name": "frameBuffer1",
+			"useDefault": true,
+			"layout": [ ],
+			"dimensions": [],
+			"useWindowDimensions": true
+		}
+	]	
+}

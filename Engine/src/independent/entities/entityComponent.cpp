@@ -5,7 +5,6 @@
 * \author Daniel Bullin
 *
 */
-
 #include "independent/entities/entityComponent.h"
 #include "independent/entities/entity.h"
 #include "independent/systems/systems/log.h"
@@ -44,8 +43,6 @@ namespace Engine
 	*/
 	Entity* EntityComponent::getParent()
 	{
-		if (!m_parentEntity)
-			ENGINE_ERROR("[EntityComponent::getParent] The parent entity is a null pointer. Component Name: {0}.", m_name);
 		return m_parentEntity;
 	}
 
@@ -76,4 +73,5 @@ namespace Engine
 	{
 		return m_componentType;
 	}
+
 }

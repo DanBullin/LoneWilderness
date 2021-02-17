@@ -12,7 +12,8 @@
 #include "independent/systems/system.h"
 #include "independent/systems/components/window.h"
 
-namespace Engine {
+namespace Engine 
+{
 	/*! \class WindowManager
 	* \brief A window manager which manages windows
 	*/
@@ -24,9 +25,10 @@ namespace Engine {
 	public:
 		WindowManager(); //!< Constructor
 		~WindowManager(); //!< Destructor
-		virtual void start() override; //!< Start the system
-		virtual void stop() override; //!< Stop the system
+		void start() override; //!< Start the system
+		void stop() override; //!< Stop the system
 
+		static const bool windowExists(const std::string& windowName); //!< Check if the window name exists
 		static void registerWindow(const char* name, const WindowProperties& props); //!< Register a window with the window manager
 		static void deregisterWindow(const char* name); //!< Deregister a window with the window manager
 		static void deregisterScheduledWindows(); //!< Deregister all windows scheduled for deletion

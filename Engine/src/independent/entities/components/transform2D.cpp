@@ -5,7 +5,6 @@
 * \author Daniel Bullin
 *
 */
-
 #include "independent/entities/components/transform2D.h"
 #include "independent/entities/entity.h"
 #include "independent/systems/systems/log.h"
@@ -59,23 +58,6 @@ namespace Engine
 		ENGINE_TRACE("Orientation: {0}", m_orientation);
 		ENGINE_TRACE("Scale: {0}, {1}", m_scale.x, m_scale.y);
 		ENGINE_TRACE("==========================================");
-	}
-
-	//! containsPoint()
-	/*!
-	\param coordinate a const glm::vec2& - The coordinate to check
-	\return a bool - Is this coordinate within this bounding box
-	*/
-	bool Transform2D::containsPoint(const glm::vec2& coordinate)
-	{
-		glm::vec2 topLeft = m_position - (m_scale / 2.f);
-		glm::vec2 bottomRight = m_position + (m_scale / 2.f);
-
-		if (coordinate.x >= topLeft.x && coordinate.x <= bottomRight.x)
-			if (coordinate.y >= topLeft.y && coordinate.y <= bottomRight.y)
-				return true;
-
-		return false;
 	}
 
 	//! getPosition()

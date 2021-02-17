@@ -8,7 +8,10 @@
 #ifndef EVENTS_H
 #define EVENTS_H
 
-#include "independent/events/codes.h"
+#ifdef NG_PLATFORM_WINDOWS
+#include "platform/GLFW/events/GLFWCodes.h"
+#endif
+
 #include "independent/events/windowEvents.h"
 #include "independent/events/keyEvents.h"
 #include "independent/events/mouseEvents.h"

@@ -24,6 +24,23 @@ namespace Engine
 		DepthAndStencil
 	};
 
+	namespace BufferAttachments
+	{
+		//! convertStringToAttachment()
+		/*!
+		\param attachmentLiteral a const std::string& - The attachment name as a string literal
+		\return an AttachmentType - The attachment type
+		*/
+		static AttachmentType convertStringToAttachment(const std::string& attachmentLiteral)
+		{
+			if (attachmentLiteral == "Colour") return AttachmentType::Colour;
+			else if (attachmentLiteral == "Depth") return AttachmentType::Depth;
+			else if (attachmentLiteral == "Stencil") return AttachmentType::Stencil;
+			else if (attachmentLiteral == "DepthAndStencil") return AttachmentType::DepthAndStencil;
+			else return AttachmentType::None;
+		}
+	}
+
 	using Attachment = std::pair<AttachmentType, bool>; //!< The attachment type and whether its a sampled attachment
 
 	/*! \class RenderBuffer
@@ -36,18 +53,17 @@ namespace Engine
 		AttachmentType m_type; //!< The render buffer attachment type
 		glm::ivec2 m_size; //!< The dimensions of the render buffer
 	public:
-		virtual ~RenderBuffer() = default; //!< Destructor
+		static RenderBuffer* create(AttachmentType type, const glm::ivec2& size); //!< Create a render buffer
 
-		virtual inline const uint32_t getID() const { return m_bufferID; } //!< Get the render buffer ID
+		RenderBuffer(); //!< Constructor
+		virtual ~RenderBuffer(); //!< Destructor
+
+		inline const uint32_t getID() const { return m_bufferID; } //!< Get the render buffer ID
 			/*!< \return a const uint32_t - The render buffer ID */
-
-		virtual inline const AttachmentType getAttachmentType() const { return m_type; } //!< Get the render buffer attachment type
+		inline const AttachmentType getAttachmentType() const { return m_type; } //!< Get the render buffer attachment type
 			/*!< \return a const AttachmentType - The attachment type */
-
 		inline glm::ivec2 getSize() const { return m_size; } //!< Get the dimensions of the renderbuffer
 			/*!< \return a glm::ivec2 - The dimensions of the renderbuffer */
-		
-		static RenderBuffer* create(AttachmentType type, const glm::ivec2& size); //!< Create a render buffer
 	};
 }
 #endif

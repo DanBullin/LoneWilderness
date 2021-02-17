@@ -5,26 +5,46 @@
 * \author Daniel Bullin
 *
 */
-
 #include "independent/rendering/renderers/renderer3D.h"
 #include "independent/systems/systems/log.h"
 #include "independent/systems/systems/resourceManager.h"
 
 namespace Engine
 {
-	Renderer3DData* Renderer3D::s_rendererData = nullptr; //!< Initialise with null pointer
-	ShaderProgram* Renderer3D::s_overridingShader = nullptr; //!< Initialise with null pointer
+	uint32_t Renderer3D::s_batchCapacity = 0; //!< Initialise to 0
+	uint32_t Renderer3D::s_vertexCapacity = 0; //!< Initialise to 0
+	uint32_t Renderer3D::s_indexCapacity = 0; //!< Initialise to 0
+	std::map<VertexBuffer*, uint32_t> Renderer3D::s_nextVertex; //!< Initialise to 0
+	uint32_t Renderer3D::s_nextIndex = 0; //!< Initialise to 0
+	TextureUnitManager* Renderer3D::s_unitManager = nullptr; //!< Initialise to null pointer
+	std::array<int32_t, 16> Renderer3D::s_unit; //!< Initialise to empty list
+	IndirectBuffer* Renderer3D::s_indirectBuffer = nullptr; //!< Initialise to null pointer
+	std::map<VertexBuffer*, std::vector<DrawElementsIndirectCommand>> Renderer3D::s_batchCommandsQueue; //!< Initialise to empty list
+	std::map<ShaderProgram*, std::vector<BatchEntry3D>> Renderer3D::s_batchQueue; //!< Initialise to empty map
 
 	//! clearBatch()
 	void Renderer3D::clearBatch()
 	{
-		s_rendererData->modelInstanceData.clear();
-		s_rendererData->texUnitInstanceData.clear();
-		s_rendererData->tintInstanceData.clear();
-		s_rendererData->subTextureUVs.clear();
+		for (auto& buffer : s_batchCommandsQueue)
+		{
+			for (auto& command : buffer.second)
+				command.InstanceCount = 0;
+		}
+	}
 
-		for (auto& command : s_rendererData->batchCommandsQueue)
-			command.InstanceCount = 0;
+	//! generateInstanceData()
+	/*
+	\param shader a ShaderProgram* - A pointer to the shader program
+	\param batchEntries a std::vector<BatchEntry3D>& - A list of batch entries
+	*/
+	void Renderer3D::generateInstanceData(ShaderProgram* shader, std::vector<BatchEntry3D>& batchEntries, const uint32_t instanceCount)
+	{
+		// Generate a list of the instance data and edit the appropriate vertex buffers in the vao
+
+		if (shader->getVertexArray() == ResourceManager::getResource<VertexArray>("vertexArray1"))
+			generateBasic3D(shader, batchEntries, instanceCount);
+		else if (shader->getVertexArray() == ResourceManager::getResource<VertexArray>("vertexArray2"))
+			generateSkybox(shader, batchEntries, instanceCount);
 	}
 
 	//! initialise()
@@ -37,99 +57,20 @@ namespace Engine
 	{
 		ENGINE_INFO("[Renderer3D::initialise] Initialising the 3D renderer.");
 		// Initialise new renderer data
-		s_rendererData = new Renderer3DData;
+
 		// Set capacity values
-		s_rendererData->batchCapacity = batchCapacity;
-		s_rendererData->vertexCapacity = vertexCapacity;
-		s_rendererData->indexCapacity = indexCapacity;
-		s_rendererData->nextVertex = 0;
-		s_rendererData->nextIndex = 0;
+		s_batchCapacity = batchCapacity;
+		s_vertexCapacity = vertexCapacity;
+		s_indexCapacity = indexCapacity;
 
-		// Reserve sizes
-		s_rendererData->modelInstanceData.reserve(batchCapacity);
-		s_rendererData->texUnitInstanceData.reserve(batchCapacity);
-		s_rendererData->tintInstanceData.reserve(batchCapacity);
-		s_rendererData->subTextureUVs.reserve(batchCapacity);
-
-		// Set up the vertex array
-		s_rendererData->VAO.reset(VertexArray::create());
-
-		// Create vertex and index buffer
-		std::shared_ptr<VertexBuffer> verticesVBO;
-		std::shared_ptr<IndexBuffer> indicesBO;
-
-		// Layout of a Vertex3D
-		VertexBufferLayout layout = { {ShaderDataType::Float3, ShaderDataType::Float2, { ShaderDataType::Short3, true }, { ShaderDataType::Short3, true }, { ShaderDataType::Short3, true } }, sizeof(Vertex3D) };
-
-		verticesVBO.reset(VertexBuffer::create(nullptr, static_cast<const uint32_t>(s_rendererData->vertexCapacity * sizeof(Vertex3D)), layout, VertexBufferUsage::StaticDraw));
-		indicesBO.reset(IndexBuffer::create(nullptr, static_cast<const uint32_t>(s_rendererData->indexCapacity)));
-
-		s_rendererData->VAO->addVertexBuffer(verticesVBO);
-		s_rendererData->VAO->setIndexBuffer(indicesBO);
-
-		// Add Instance buffers to array
-
-		// Model matrix which is a mat4
-		std::shared_ptr<VertexBuffer> modelVBO;
-		VertexBufferLayout modelLayout = { {ShaderDataType::Mat4, false, 1 } };
-		modelVBO.reset(VertexBuffer::create(nullptr, batchCapacity * sizeof(glm::mat4), modelLayout, VertexBufferUsage::StaticDraw));
-		s_rendererData->VAO->addVertexBuffer(modelVBO);
-
-		// Texture unit which is an integer
-		std::shared_ptr<VertexBuffer> textureUnitVBO;
-		VertexBufferLayout unitLayout = { {ShaderDataType::FlatInt, false, 1 }, {ShaderDataType::FlatInt, false, 1 }, {ShaderDataType::FlatInt, false, 1 }, {ShaderDataType::FlatInt, false, 1 } };
-		textureUnitVBO.reset(VertexBuffer::create(nullptr, batchCapacity * (sizeof(uint32_t) * 4), unitLayout, VertexBufferUsage::StaticDraw));
-		s_rendererData->VAO->addVertexBuffer(textureUnitVBO);
-
-		// Tint which is a unsigned 32bit integer (4 bytes normalised)
-		std::shared_ptr<VertexBuffer> tintVBO;
-		VertexBufferLayout tintLayout = { {ShaderDataType::Byte4, true, 1 } };
-		tintVBO.reset(VertexBuffer::create(nullptr, batchCapacity * sizeof(uint32_t), tintLayout, VertexBufferUsage::StaticDraw));
-		s_rendererData->VAO->addVertexBuffer(tintVBO);
-
-		// The SubTexture UVs to recalculate geomery UVs in the shader program
-		std::shared_ptr<VertexBuffer> subTextureUVVBO;
-		VertexBufferLayout subTextureLayout = { { ShaderDataType::Float4, true, 1 } };
-		subTextureUVVBO.reset(VertexBuffer::create(nullptr, batchCapacity * sizeof(glm::vec4), subTextureLayout, VertexBufferUsage::StaticDraw));
-		s_rendererData->VAO->addVertexBuffer(subTextureUVVBO);
-
-		// Cubemap Texture unit which is an integer
-		std::shared_ptr<VertexBuffer> cubeTextureUnitVBO;
-		VertexBufferLayout cubeUnitLayout = { {ShaderDataType::FlatInt, false, 1 } };
-		cubeTextureUnitVBO.reset(VertexBuffer::create(nullptr, batchCapacity * sizeof(uint32_t), cubeUnitLayout, VertexBufferUsage::StaticDraw));
-		s_rendererData->VAO->addVertexBuffer(cubeTextureUnitVBO);
-
-		// Create indirect buffer
-		s_rendererData->commands.reset(IndirectBuffer::create(nullptr, batchCapacity));
-
-		// Unbind VAO for safety
-		s_rendererData->VAO->unbind();
-
+		// Set the indirect buffer by retrieving it from the resource manager
+		s_indirectBuffer = ResourceManager::getResourceAndRef<IndirectBuffer>("indirectBuffer");
 	}
 
 	//! begin()
-	/*!
-	\param shaderProgram a ShaderProgram* - A pointer to the shader program
-	\param sceneWideUniforms a const SceneWideUniforms& - A reference to the scene wide uniforms
-	\param cubemaps a CubeMapTexture* - A cubemap to bind
-	*/
-	void Renderer3D::begin(ShaderProgram* shaderProgram, const SceneWideUniforms& sceneWideUniforms, CubeMapTexture* cubemap)
+	void Renderer3D::begin()
 	{
 		// FBO Already bound by this point
-
-		// Check to see if we can bind cubemaps (Should as nothing should be in the queue at this time)
-		if (s_rendererData->unitManager->getRemainingUnitCount() < 1)
-			flushBatch();
-
-		// Bind cubemap texture
-		int32_t unit = 0;
-		if (s_rendererData->unitManager->getUnit(cubemap->getID(), unit))
-			s_rendererData->unitManager->bindToUnit(cubemap);
-
-		s_rendererData->cubeTexUnitInstanceData.push_back(unit);
-
-		s_overridingShader = shaderProgram;
-		s_rendererData->sceneWideUniforms = sceneWideUniforms;
 	}
 
 	//! submit()
@@ -140,31 +81,40 @@ namespace Engine
 	*/
 	void Renderer3D::submit(Geometry3D geometry, Material* material, const glm::mat4& modelMatrix)
 	{
-		// Check queue size and add submission
+		// Submit the geometry
 
-		// Get total submission count for all shaders, etc
-		uint32_t submissionCount = 0;
+		// Check what shader we're submitting with
+		ShaderProgram* shader;
+		shader = material->getShader();
 
-		// Count all current submissions in the current queue
-		for (auto& shader : s_rendererData->batchQueue)
-			submissionCount += static_cast<uint32_t>(shader.second.size());
-
-		// If the count has reached capacity, flush
-		if (submissionCount >= s_rendererData->batchCapacity)
+		// Now we have the shader to submit our 3D geometry under, check if that shader's list of submissions is full or would be full if we were to submit
+		if (s_batchQueue[shader].size() >= s_batchCapacity)
+		{
+			// Our number of entries under this shader program matches or exceeds the number of 3D submissions we've set as our limit
+			// So flush the current contents of the queue
 			flushBatch();
+		}
 		else
 		{
-			ShaderProgram* shader;
-			// Add geometry render under material shader or if an overriding shader has been set, under that shader
-			if (s_overridingShader) shader = s_overridingShader;
-			else shader = material->getShader();
+			// Get a vector of all the subtextures in the material
+			std::vector<SubTexture*> tmpList;
+			tmpList.reserve(material->getSubTextures().size());
+			for (auto& subtexture : material->getSubTextures())
+				tmpList.push_back(subtexture);
 
-			// If new shader entry, reserve batch queue size
-			if (s_rendererData->batchQueue.find(shader) == s_rendererData->batchQueue.end())
-				s_rendererData->batchQueue[shader].reserve(s_rendererData->batchCapacity);
+			// Get a vector of all the cubemap textures in the material
+			std::vector<CubeMapTexture*> tmpCubeList;
+			tmpCubeList.reserve(material->getCubemapTextures().size());
+			for (auto& cubeTexture : material->getCubemapTextures())
+				tmpCubeList.push_back(cubeTexture);
 
-			// Add to the back of the batch queue for this entry's material shader
-			s_rendererData->batchQueue[shader].push_back({ geometry, material, modelMatrix });
+			std::vector<int32_t> units;
+			units.resize(tmpList.size());
+
+			std::vector<int32_t> cubeUnits;
+			cubeUnits.resize(tmpCubeList.size());
+
+			s_batchQueue[shader].push_back({ geometry, tmpList, tmpCubeList, units, cubeUnits, modelMatrix, material->getTint() });
 		}
 	}
 
@@ -172,10 +122,10 @@ namespace Engine
 	void Renderer3D::flushBatch()
 	{
 		// Sort the queue by geometry ID
-		for (auto& shaderEntry : s_rendererData->batchQueue)
+		for (auto& batchEntry : s_batchQueue)
 		{
-			std::sort(shaderEntry.second.begin(), shaderEntry.second.end(),
-				[](BatchQueueEntry& a, BatchQueueEntry& b)
+			std::sort(batchEntry.second.begin(), batchEntry.second.end(),
+				[](BatchEntry3D& a, BatchEntry3D& b)
 			{
 				return a.geometry.ID < b.geometry.ID;
 			}
@@ -186,59 +136,61 @@ namespace Engine
 		int32_t unit = 0;
 
 		// Go through each shader entry
-		for (auto& shaderEntry : s_rendererData->batchQueue)
+		for (auto& shaderEntry : s_batchQueue)
 		{
 			ShaderProgram* shader = shaderEntry.first;
 			// For each geometry entry for this shader
 			for (auto& geomEntry : shaderEntry.second)
 			{
-				auto textures = geomEntry.material->getSubTextures();
+				// Bind Textures
 
-				// If texture unit manager is full, flush current batch and start fresh
-				if (s_rendererData->unitManager->getRemainingUnitCount() < TEXTURELIMIT)
+				// Check if we can bind the textures first
+				if (s_unitManager->getRemainingUnitCount() < geomEntry.subTextures.size() + geomEntry.cubeTextures.size())
 				{
-					flushBatchCommands(shader, runningInstanceCount);
+					// If we cannot bind all the textures, lets draw the current queue to free the unit manager up
+					flushBatchCommands(shaderEntry.first, runningInstanceCount);
 					runningInstanceCount = 0;
 					clearBatch();
 				}
 
-				// Bind textures
-				for (int i = 0; i < TEXTURELIMIT; i++)
+				// Unit manager can bind textures now
+				int32_t unit = 0;
+				for (int i = 0; i < geomEntry.subTextures.size(); i++)
 				{
-					if (i < textures.size())
-					{
-						if (s_rendererData->unitManager->getUnit(textures[i]->getBaseTexture()->getID(), unit))
-							s_rendererData->unitManager->bindToUnit(textures[i]->getBaseTexture());
+					// For each subtexture, lets bind the texture to a unit
+					if (s_unitManager->getUnit(geomEntry.subTextures[i]->getBaseTexture()->getID(), unit))
+						s_unitManager->bindToUnit(geomEntry.subTextures[i]->getBaseTexture());
 
-						s_rendererData->texUnitInstanceData.push_back(unit);
-					}
-					else
-						s_rendererData->texUnitInstanceData.push_back(0);
+					geomEntry.textureUnits.at(i) = unit;
+				}
+
+				for (int i = 0; i < geomEntry.cubeTextures.size(); i++)
+				{
+					// For each cubemap texture, lets bind the texture to a unit
+					if (s_unitManager->getUnit(geomEntry.cubeTextures[i]->getID(), unit))
+						s_unitManager->bindToUnit(geomEntry.cubeTextures[i]);
+
+					geomEntry.cubeTextureUnits.at(i) = unit;
 				}
 
 				auto& index = geomEntry.geometry.ID;
-
+				auto& commands = s_batchCommandsQueue[shaderEntry.first->getVertexArray()->getVertexBuffers().at(0)][index];
 				// If this geometry is being rendered for the first time, set the command queue values
-				if (s_rendererData->batchCommandsQueue.at(index).DrawCount == 0)
+				if (commands.DrawCount == 0)
 				{
-					s_rendererData->batchCommandsQueue.at(index).DrawCount = geomEntry.geometry.IndexCount;
-					s_rendererData->batchCommandsQueue.at(index).FirstIndex = geomEntry.geometry.FirstIndex;
-					s_rendererData->batchCommandsQueue.at(index).FirstVertex = geomEntry.geometry.FirstVertex;
-					s_rendererData->batchCommandsQueue.at(index).FirstInstance = runningInstanceCount;
+					commands.DrawCount = geomEntry.geometry.IndexCount;
+					commands.FirstIndex = geomEntry.geometry.FirstIndex;
+					commands.FirstVertex = geomEntry.geometry.FirstVertex;
+					commands.FirstInstance = runningInstanceCount;
 				}
 
 				// Increase instance count
-				s_rendererData->batchCommandsQueue.at(index).InstanceCount++;
+				commands.InstanceCount++;
 				runningInstanceCount++;
-
-				// Add instance data for this submission
-				s_rendererData->modelInstanceData.push_back(geomEntry.transformationMatrix);
-				s_rendererData->tintInstanceData.push_back(MemoryUtils::pack(geomEntry.material->getTint()));
-				s_rendererData->subTextureUVs.push_back(glm::vec4(geomEntry.material->getSubTexture(0)->getUVStart().x, 
-																  geomEntry.material->getSubTexture(0)->getUVStart().y,
-																  geomEntry.material->getSubTexture(0)->getUVEnd().x,
-																  geomEntry.material->getSubTexture(0)->getUVEnd().y));
 			}
+
+			// Set the instance VBOs
+			generateInstanceData(shaderEntry.first, shaderEntry.second, runningInstanceCount);
 
 			// All submissions for one shader entry done, flush if we have something to flush
 			if (runningInstanceCount > 0)
@@ -248,9 +200,9 @@ namespace Engine
 				clearBatch();
 			}
 		}
-		
+
 		// Clear all render data for this current run
-		s_rendererData->batchQueue.clear();
+		s_batchQueue.clear();
 		clearBatch();
 	}
 
@@ -263,38 +215,35 @@ namespace Engine
 	{
 		shader->start();
 
-		// Bind the uniform buffer to the current shader
-		for (auto& dataPair : s_rendererData->sceneWideUniforms)
+		// Attach the UBO
+		for (auto& dataPair : shader->getUniformBuffers())
 		{
-			const char* nameOfUniformBlock = dataPair.first;
+			const char* nameOfUniformBlock = dataPair.first.c_str();
 			dataPair.second->attachShaderBlock(shader, nameOfUniformBlock);
 		}
 
 		// Upload texture units
-		shader->sendIntArray("u_diffuseMap", s_rendererData->unit.data(), 16);
+		auto uniforms = shader->getUniforms();
+		if (uniforms.find("u_diffuseMap") != uniforms.end()) shader->sendIntArray("u_diffuseMap", s_unit.data(), 16);
+		if (uniforms.find("u_cubeMap") != uniforms.end()) shader->sendIntArray("u_cubeMap", s_unit.data(), 16);
 
-		// Edit all instance data in GPU memory
-		s_rendererData->VAO->getVertexBuffers().at(1)->edit(s_rendererData->modelInstanceData.data(), sizeof(glm::mat4) * instanceCount, 0);
-		s_rendererData->VAO->getVertexBuffers().at(2)->edit(s_rendererData->texUnitInstanceData.data(), (sizeof(uint32_t) * 4) * instanceCount, 0);
-		s_rendererData->VAO->getVertexBuffers().at(3)->edit(s_rendererData->tintInstanceData.data(), sizeof(uint32_t) * instanceCount, 0);
-		s_rendererData->VAO->getVertexBuffers().at(4)->edit(s_rendererData->subTextureUVs.data(), sizeof(glm::vec4) * instanceCount, 0);
-		s_rendererData->VAO->getVertexBuffers().at(5)->edit(s_rendererData->cubeTexUnitInstanceData.data(), sizeof(uint32_t) * instanceCount, 0);
-		
 		// Bind VAO
-		s_rendererData->VAO->bind();
+		shader->getVertexArray()->bind();
 		// Edit Indirect buffer
-		s_rendererData->commands->edit(s_rendererData->batchCommandsQueue.data(), static_cast<uint32_t>(s_rendererData->batchCommandsQueue.size()), 0);
+		auto& commands = s_batchCommandsQueue[shader->getVertexArray()->getVertexBuffers().at(0)];
+		s_indirectBuffer->edit(commands.data(), static_cast<uint32_t>(commands.size()), 0);
 
 		// Draw
-		RenderUtils::drawMultiIndirect(static_cast<uint32_t>(s_rendererData->batchCommandsQueue.size()));
+		RenderUtils::drawMultiIndirect(static_cast<uint32_t>(commands.size()));
 	}
 
 	//! end()
 	void Renderer3D::end()
 	{
-		// If we've accumulated any submissions at the end of the frame, let's flush
-		if (s_rendererData->batchQueue.size() > 0)
+		if (s_batchQueue.size() > 0)
+		{
 			flushBatch();
+		}
 	}
 
 	//! destroy()
@@ -302,9 +251,12 @@ namespace Engine
 	{
 		ENGINE_INFO("[Renderer3D::destroy] Destroying the 3D renderer.");
 		// Clean up renderer data
-		delete s_rendererData;
-		s_rendererData = nullptr;
-		s_overridingShader = nullptr;
+		if (s_indirectBuffer) s_indirectBuffer->decreaseCount();
+		s_indirectBuffer = nullptr;
+
+		s_unitManager = nullptr;
+		s_batchQueue.clear();
+		s_batchCommandsQueue.clear();
 	}
 
 	//! addGeometry()
@@ -318,47 +270,97 @@ namespace Engine
 		uint32_t vertexCount = static_cast<uint32_t>(vertices.size()); // The total number of vertices we're adding
 		uint32_t indexCount = static_cast<uint32_t>(indices.size()); // The total number of indices we're adding
 
+		auto VBO = geometry.VertexBuffer;
+		auto IBO = ResourceManager::getResource<IndexBuffer>("IndexBuffer3D");
+
+		if (s_nextVertex.find(VBO) == s_nextVertex.end())
+			s_nextVertex[VBO] = 0;
+
 		// Check if adding this geometry goes over buffer capacity
 		// Total number + new amount > buffer capacity
-		if (s_rendererData->nextVertex + vertexCount > s_rendererData->vertexCapacity)
+		if (s_nextVertex[VBO] + vertexCount > ResourceManager::getConfigValue(ConfigData::VertexCapacity3D))
 		{
-			ENGINE_ERROR("[Renderer3D::addGeometry] Cannot add geometry as vertex buffer limit has been reached.");
+			ENGINE_ERROR("[Renderer3D::addGeometry] Cannot add geometry as vertex buffer limit has been reached. VBO Name: {0}.", VBO->getName());
 			return;
 		}
-		if (s_rendererData->nextIndex + indexCount > s_rendererData->indexCapacity)
+		if (s_nextIndex + indexCount > ResourceManager::getConfigValue(ConfigData::IndexCapacity3D))
 		{
-			ENGINE_ERROR("[Renderer3D::addGeometry] Cannot add geometry as index buffer limit has been reached.");
+			ENGINE_ERROR("[Renderer3D::addGeometry] Cannot add geometry as index buffer limit has been reached. IBO Name: {0}.", IBO->getName());
 			return;
 		}
 
 		// Capacity wont be reached, so add the data to the buffer
-		auto VBO = s_rendererData->VAO->getVertexBuffers().at(0);
-		auto IBO = s_rendererData->VAO->getIndexBuffer();
-
-		VBO->edit(vertices.data(), vertexCount * sizeof(Vertex3D), s_rendererData->nextVertex * sizeof(Vertex3D));
-		IBO->edit(indices.data(), indexCount, s_rendererData->nextIndex);
+		VBO->edit(vertices.data(), static_cast<uint32_t>(vertices.size()) * sizeof(Vertex3D), s_nextVertex[VBO] * sizeof(Vertex3D));
+		IBO->edit(indices.data(), indexCount, s_nextIndex);
 
 		// Create geometry data
-		geometry.ID = static_cast<uint32_t>(s_rendererData->batchCommandsQueue.size());
-		geometry.FirstVertex = s_rendererData->nextVertex;
-		geometry.FirstIndex = s_rendererData->nextIndex;
+		geometry.ID = static_cast<uint32_t>(s_batchCommandsQueue[VBO].size());
+		geometry.FirstVertex = s_nextVertex[VBO];
+		geometry.FirstIndex = s_nextIndex;
 		geometry.VertexCount = vertexCount;
 		geometry.IndexCount = indexCount;
 
 		// Update the next vertex and index position
-		s_rendererData->nextVertex += vertexCount;
-		s_rendererData->nextIndex += indexCount;
-		s_rendererData->batchCommandsQueue.push_back({ 0, 0, 0, 0, 0 });
+		s_nextVertex[VBO] += vertexCount;
+		s_nextIndex += indexCount;
+		s_batchCommandsQueue[VBO].push_back({ 0, 0, 0, 0, 0 });
 	}
 
 	//! setTextureUnitManager()
 	/*!
-	\param unitManager a const std::shared_ptr<TextureUnitManager>& - A reference to the texture unit manager
+	\param unitManager a TextureUnitManager*& - A reference to the texture unit manager
 	\param unit a const std::array<int32_t, 16>& - A reference to the array of units
 	*/
-	void Renderer3D::setTextureUnitManager(const std::shared_ptr<TextureUnitManager>& unitManager, const std::array<int32_t, 16>& unit)
+	void Renderer3D::setTextureUnitManager(TextureUnitManager*& unitManager, const std::array<int32_t, 16>& unit)
 	{
-		s_rendererData->unitManager = unitManager;
-		s_rendererData->unit = unit;
+		s_unitManager = unitManager;
+		s_unit = unit;
+	}
+
+	//! generateBasic3D()
+	/*
+	\param shader a ShaderProgram* - A pointer to the shader program
+	\param batchEntries a std::vector<BatchEntry3D>& - A list of batch entries
+	*/
+	void Renderer3D::generateBasic3D(ShaderProgram* shader, std::vector<BatchEntry3D>& batchEntries, const uint32_t instanceCount)
+	{
+		std::vector<glm::mat4> modelInstanceData; //!< The model matrix instance data
+		std::vector<uint32_t> tintInstanceData; //!< The tint instance data
+		std::vector<int32_t> unitInstanceData; //!< The texture unit data
+		std::vector<glm::vec4> subTextureUVs; //!< The Start and End UV coordinates of the subtexture
+
+		for (auto& entry : batchEntries)
+		{
+			modelInstanceData.push_back(entry.modelMatrix);
+			unitInstanceData.push_back(entry.textureUnits[0]);
+			tintInstanceData.push_back(MemoryUtils::pack(entry.tint));
+			subTextureUVs.push_back(glm::vec4(entry.subTextures.at(0)->getUVStart().x, entry.subTextures.at(0)->getUVStart().y,
+				entry.subTextures.at(0)->getUVEnd().x, entry.subTextures.at(0)->getUVEnd().y));
+		}
+
+		shader->getVertexArray()->getVertexBuffers().at(1)->edit(modelInstanceData.data(), sizeof(glm::mat4) * instanceCount, 0);
+		shader->getVertexArray()->getVertexBuffers().at(2)->edit(unitInstanceData.data(), sizeof(int32_t) * instanceCount, 0);
+		shader->getVertexArray()->getVertexBuffers().at(3)->edit(tintInstanceData.data(), sizeof(uint32_t) * instanceCount, 0);
+		shader->getVertexArray()->getVertexBuffers().at(4)->edit(subTextureUVs.data(), sizeof(glm::vec4) * instanceCount, 0);
+	}
+
+	//! generateSkybox()
+	/*
+	\param shader a ShaderProgram* - A pointer to the shader program
+	\param batchEntries a std::vector<BatchEntry3D>& - A list of batch entries
+	*/
+	void Renderer3D::generateSkybox(ShaderProgram* shader, std::vector<BatchEntry3D>& batchEntries, const uint32_t instanceCount)
+	{
+		std::vector<uint32_t> tintInstanceData; //!< The tint instance data
+		std::vector<int32_t> unitInstanceData; //!< The texture unit data
+
+		for (auto& entry : batchEntries)
+		{
+			unitInstanceData.push_back(entry.cubeTextureUnits[0]);
+			tintInstanceData.push_back(MemoryUtils::pack(entry.tint));
+		}
+
+		shader->getVertexArray()->getVertexBuffers().at(1)->edit(unitInstanceData.data(), sizeof(int32_t) * instanceCount, 0);
+		shader->getVertexArray()->getVertexBuffers().at(2)->edit(tintInstanceData.data(), sizeof(uint32_t) * instanceCount, 0);
 	}
 }

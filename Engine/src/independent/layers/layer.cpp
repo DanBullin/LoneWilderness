@@ -5,7 +5,6 @@
 * \author DMU Course material
 *
 */
-
 #include "independent/layers/layer.h"
 #include "independent/layers/layerManager.h"
 #include "independent/systems/components/scene.h"
@@ -26,7 +25,7 @@ namespace Engine
 	{
 		if (getLayerManager())
 		{
-			if(getLayerManager()->getParentScene())
+			if (getLayerManager()->getParentScene())
 				ENGINE_INFO("[Layer::~Layer] Deleting layer named: {0} which is attached to scene: {1}.", m_layerName, getLayerManager()->getParentScene()->getName());
 		}
 		else
@@ -70,6 +69,7 @@ namespace Engine
 	void Layer::setDisplayed(const bool display)
 	{
 		m_display = display;
+		getLayerManager()->getParentScene()->setNewEntitiesFlag(true);
 	}
 
 	//! getActive()
@@ -144,7 +144,7 @@ namespace Engine
 			if (entity.second->getLayer() == this)
 			{
 				// If the entity contains some rendering component
-				if(entity.second->containsComponent<MeshRender3D>() || entity.second->containsComponent<MeshRender2D>() || entity.second->containsComponent<Text>())
+				if (entity.second->containsComponent<MeshRender3D>() || entity.second->containsComponent<MeshRender2D>() || entity.second->containsComponent<Text>())
 					list.emplace_back(entity.second);
 			}
 		}

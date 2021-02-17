@@ -17,12 +17,10 @@ using namespace Engine;
 */
 class FPSCounter : public Entity
 {
-private:
-
 public:
 	FPSCounter(); //!< Constructor
 	~FPSCounter(); //!< Destructor
-	virtual void onPostUpdate(const float timestep, const float totalTime) override; //!< Call after game update
-	virtual void onPreUpdate(const float timestep, const float totalTime) override; //!< Call before game update
+	void onPostUpdate(const float timestep, const float totalTime) override; //!< Call after game update
+	void onPreUpdate(const float timestep, const float totalTime) override; //!< Call before game update
 };
 #endif

@@ -5,14 +5,31 @@
 * \author DMU Course material
 *
 */
-
 #include "independent/events/inputPoller.h"
 
 #ifdef NG_PLATFORM_WINDOWS
 #include "platform/GLFW/GLFWInputPoller.h"
 #endif
 
-namespace Engine {
+namespace Engine 
+{
+	//! getMouseX()
+	/*!
+	\return a float - The mouse x position
+	*/
+	float InputPoller::getMouseX()
+	{
+		return getMousePosition().x;
+	}
+
+	//! getMouseY()
+	/*!
+	\return a float - The mouse y position
+	*/
+	float InputPoller::getMouseY()
+	{
+		return getMousePosition().y;
+	}
 
 #ifdef NG_PLATFORM_WINDOWS
 	//! isAnyKeyPressed()
@@ -61,5 +78,7 @@ namespace Engine {
 	{
 		return GLFWInputPoller::getMousePosition();
 	}
+	
 #endif
+
 }

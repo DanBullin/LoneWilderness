@@ -13,7 +13,8 @@
 #include "independent/core/common.h"
 #include "independent/rendering/textures/textureAtlas.h"
 
-namespace Engine {
+namespace Engine
+{
 
 	/*! \struct GlyphData
 	* \brief A struct containing glyph data
@@ -24,13 +25,14 @@ namespace Engine {
 		glm::vec2 size; //!< The dimensions of the glyph (Pixels)
 		glm::vec2 bearing; //!< The glyph bearing
 		float advance; //!< The advance of the glyph
-		std::shared_ptr<SubTexture2D> subTexture; //!< The subtexture of the glyph
+		SubTexture* subTexture; //!< The subtexture of the glyph
 	};
 
 	/*! \class Font
 	* \brief A class which stores all the data about a font
 	*/
-	class Font {
+	class Font
+	{
 	private:
 		std::string m_fontName; //!< The name of the font
 		FT_Face m_fontFace; //!< A font face

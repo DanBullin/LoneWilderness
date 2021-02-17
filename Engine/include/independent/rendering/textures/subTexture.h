@@ -8,7 +8,6 @@
 #ifndef SUBTEXTURE_H
 #define SUBTEXTURE_H
 
-#include "independent/core/common.h"
 #include "independent/rendering/textures/texture.h"
 
 namespace Engine
@@ -24,10 +23,10 @@ namespace Engine
 		UVEnd = glm::vec2(1.f, 0.f);
 	}
 
-	/*! \class SubTexture2D
+	/*! \class SubTexture
 	* \brief A subtexture holding texture and UV data
 	*/
-	class SubTexture2D
+	class SubTexture : public Resource
 	{
 	private:
 		Texture2D* m_baseTexture; //!< The base texture
@@ -35,14 +34,13 @@ namespace Engine
 		glm::vec2 m_UVEnd; //!< UV Mapping end coordinate
 		glm::ivec2 m_size; //!< Size in pixels of the subtexture
 	public:
-		SubTexture2D(Texture2D* baseTexture, const glm::vec2& UVStart, const glm::vec2& UVEnd, const bool convertToBottomLeft); //!< Constructor
-		~SubTexture2D(); //!< Destructor
+		SubTexture(const std::string& subTextureName, Texture2D* baseTexture, const glm::vec2& UVStart, const glm::vec2& UVEnd, const bool convertToBottomLeft); //!< Constructor
+		~SubTexture(); //!< Destructor
 
 		inline glm::vec2 getUVStart() const { return m_UVStart; } //!< Get the UV start coordinates
 			/*!< \return a glm::vec2 - The UV start coorindates */
 		inline glm::vec2 getUVEnd() const { return m_UVEnd; } //!< Get the UV end coordinates
 			/*!< \return a glm::vec2 - The UV end coorindates */
-
 		inline glm::ivec2 getSize() const { return m_size; } //!< Get the size in pixels of the subtexture
 			/*!< \return a glm::ivec2 - The size of the subtexture in pixels */
 		inline glm::vec2 getSizef() const { return { static_cast<float>(m_size.x), static_cast<float>(m_size.y) }; } //!< Get the size in pixels of subtexture as float

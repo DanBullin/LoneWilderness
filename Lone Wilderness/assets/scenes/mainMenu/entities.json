@@ -2,29 +2,23 @@
 	"entities": 
 	[
 		{
-			"name": "Quad",
-			"type": "Rectangle",
-			"layer": "Default",
+			"name": "Player1",
+			"type": "Player",
+			"layer": "UI",
+			"display": true,
 			"components": 
 			[
 				{
 					"name": "Transform",
-					"type": "Transform2D",
-					"position": [ 0.0, 0.0 ],
-					"rotation": 0.0,
-					"scale": [ 1.0, 1.0 ]
-				},
-				{
-					"name": "MeshRender",
-					"type": "MeshRender2D",
-					"materialName": "screenMaterial",
-					"localPosition": [ 400.0, 300.0 ],
-					"localRotation": 0.0,
-					"localScale": [ 800.0, 600.0 ]
+					"type": "Transform3D",
+					"position": [ 0.0, 0.0, 0.0],
+					"rotation": [ 0.0, 0.0, 0.0],
+					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"name": "Camera",
 					"type": "Camera",
+					"clearColour": [ 0.1, 0.2, 0.3, 1.0],
 					"localPosition": [ 0.0, 0.0, 0.0 ],
 					"front": [ 0.0, 0.0, -1.0],
 					"up": [ 0.0, 1.0, 0.0],
@@ -43,9 +37,10 @@
 			]
 		},
 		{
-			"name": "MenuOptions",
-			"type": "Rectangle",
+			"name": "MenuText",
+			"type": "MenuText",
 			"layer": "UI",
+			"display": true,
 			"components": 
 			[
 				{
@@ -56,54 +51,24 @@
 					"scale": [ 1.0, 1.0 ]
 				},
 				{
-					"name": "Continue",
+					"name": "Play",
 					"type": "Text",
-					"text": "Continue World",
-					"colour": [ 1.0, 0.0, 1.0, 1.0 ],
+					"text": "Play",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
 					"fontName": "Arial",
-					"localPosition": [ 250.0, 150.0 ],
+					"localPosition": [ 350.0, 200.0, 0.15 ],
 					"localRotation": 0.0,
-					"localScale": [ 345.0, 40.0 ]
+					"localScale": [ 92.0, 49.0 ]
 				},
 				{
-					"name": "NewWorld",
+					"name": "Quit",
 					"type": "Text",
-					"text": "New World",
-					"colour": [ 1.0, 0.0, 1.0, 1.0 ],
+					"text": "Quit",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
 					"fontName": "Arial",
-					"localPosition": [ 250.0, 250.0 ],
+					"localPosition": [ 350.0, 400.0, 0.15 ],
 					"localRotation": 0.0,
-					"localScale": [ 252.0, 40.0 ]
-				},
-				{
-					"name": "Settings",
-					"type": "Text",
-					"text": "Settings",
-					"colour": [ 1.0, 0.0, 1.0, 1.0 ],
-					"fontName": "Arial",
-					"localPosition": [ 250.0, 350.0 ],
-					"localRotation": 0.0,
-					"localScale": [ 170.0, 40.0 ]
-				},
-				{
-					"name": "Credits",
-					"type": "Text",
-					"text": "Credits",
-					"colour": [ 1.0, 0.0, 1.0, 1.0 ],
-					"fontName": "Arial",
-					"localPosition": [ 250.0, 450.0 ],
-					"localRotation": 0.0,
-					"localScale": [ 150.0, 40.0 ]
-				},
-				{
-					"name": "Exit",
-					"type": "Text",
-					"text": "Exit",
-					"colour": [ 1.0, 0.0, 1.0, 1.0 ],
-					"fontName": "Arial",
-					"localPosition": [ 250.0, 550.0 ],
-					"localRotation": 0.0,
-					"localScale": [ 77.0, 40.0 ]
+					"localScale": [ 92.0, 42.0 ]
 				},
 				{
 					"name": "EventListener",

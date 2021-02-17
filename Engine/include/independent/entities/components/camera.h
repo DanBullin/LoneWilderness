@@ -9,6 +9,7 @@
 #define CAMERA_H
 
 #include "independent/entities/entityComponent.h"
+#include "independent/entities/components/components/skybox.h"
 
 namespace Engine
 {
@@ -19,7 +20,9 @@ namespace Engine
 		FORWARD, //!< The forward direction of the camera
 		BACKWARD, //!< The backward direction of the camera
 		LEFT, //!< The left direction of the camera
-		RIGHT //!< The right direction of the camera
+		RIGHT, //!< The right direction of the camera
+		UP, //!< The upward direction of the camera
+		DOWN //!< The downward direction of the camera
 	};
 
 	/*! \struct Projection
@@ -83,6 +86,9 @@ namespace Engine
 		CameraData m_cameraData; //!< The camera data
 		Projection m_projection; //!< The projection data
 		bool m_mainCamera; //!< Is this camera the main camera in the scene
+		glm::vec4 m_clearColour; //!< The clear colour when rendering
+		Skybox* m_skybox; //!< A skybox
+
 		void updateCameraVectors(); //!< Update all camera vectors
 	public:
 		Camera(const CameraData& cameraData); //!< Constructor
@@ -92,11 +98,17 @@ namespace Engine
 		void onDetach() override; //!< Occurs when component is detached from an entity
 		void onUpdate(const float timestep, const float totalTime) override; //!< Update the component
 
+		const glm::vec4& getClearColour(); //!< Get the clear colour
+		void setClearColour(const glm::vec4& colour); //!< Set the clear colour
+
+		Skybox* getSkybox(); //!< Get the camera's skybox
+		void setSkybox(Skybox* skybox); //!< Set the camera's skybox
+
 		glm::mat4 getViewMatrix(const bool perspective); //!< Get the view matrix
 		glm::mat4 getProjectionMatrix(const bool perspective); //!< Get the projection matrix
 
 		const glm::vec3& getLocalPosition() const; //!< Get the camera local position
-		void setLocalPosition(const glm::vec3& pos); //!< Set the local position of the camera
+		void setLocalPosition(const glm::vec3 pos); //!< Set the local position of the camera
 		const glm::vec3 getWorldPosition(); //!< Get the world position of the camera
 
 		void setProjection(const Projection& projection); //!< Set the projection data
@@ -111,7 +123,7 @@ namespace Engine
 		void rotate(float xoffset, float yoffset, bool constrainPitch = true); //!< Rotate the camera
 		void zoom(float yoffset); //!< Zoom in/out
 
-		void printComponentDetails() override; //!< Print component details
+		virtual void printComponentDetails() override; //!< Print component details
 	};
 }
 #endif

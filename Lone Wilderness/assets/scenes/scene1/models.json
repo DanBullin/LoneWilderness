@@ -2,20 +2,16 @@
 	"models": 
 	[
 		{ 
-			"name": "cyborg", 
-			"filePath": "assets/models/cyborg/cyborg.obj"
-		},
-		{ 
-			"name": "terrain", 
-			"filePath": "assets/models/terrain/terrain.obj"
-		},
-		{ 
 			"name": "plane", 
 			"filePath": "assets/models/plane/plane.obj"
 		},
 		{ 
 			"name": "cube", 
 			"filePath": "assets/models/cube/cube.obj"
+		},
+		{ 
+			"name": "cyborg", 
+			"filePath": "assets/models/cyborg/cyborg.obj"
 		}
 	]	
 }

@@ -5,7 +5,6 @@
 * \author DMU Course material
 *
 */
-
 #include "independent/systems/components/timer.h"
 #include "independent/systems/systems/log.h"
 
@@ -41,6 +40,7 @@ namespace Engine
 		// Measure the time based on the end point and the start
 		m_endPoint = std::chrono::high_resolution_clock::now();
 		std::chrono::duration<float, std::milli> elapsed = m_endPoint - m_startPoint;
+		// Return in seconds
 		return elapsed.count() / 1000.f;
 	}
 }

@@ -5,7 +5,6 @@
 * \author Daniel Bullin
 *
 */
-
 #include "independent/entities/entity.h"
 #include "independent/systems/systems/log.h"
 #include "independent/systems/components/scene.h"
@@ -17,10 +16,10 @@ namespace Engine
 	//! Entity()
 	Entity::Entity()
 	{
-		m_delete = false;
 		m_entityName = "";
 		m_parentScene = nullptr;
 		m_layer = nullptr;
+		m_display = true;
 	}
 
 	//! ~Entity()
@@ -85,7 +84,13 @@ namespace Engine
 	void Entity::setLayer(Layer* layer)
 	{
 		if (layer)
-			m_layer = layer;
+		{
+			// Check if new layer exists in the entity's parent scene layers
+			if(getParentScene()->getLayerManager()->layerExists(layer))
+				m_layer = layer;
+			else
+				ENGINE_ERROR("[Entity::setLayer] New layer doesn't exist in the entity's parent scene. Entity: {0}.", m_entityName);
+		}
 		else
 			ENGINE_ERROR("[Entity::setLayer] New layer is a null pointer. Entity: {0}.", m_entityName);
 	}
@@ -97,26 +102,26 @@ namespace Engine
 	Layer* Entity::getLayer() const
 	{
 		if (!m_layer)
-			ENGINE_ERROR("[Entity::getLayer] Layer is a null pointer.");
+			ENGINE_ERROR("[Entity::getLayer] The Layer is a null pointer.");
 		return m_layer;
 	}
 
-	//! setDelete()
+	//! setDisplay()
 	/*!
-	\param deletion a const bool - Should this entity be deleted
+	\param display a const bool - Should the entity be displayed
 	*/
-	void Entity::setDelete(const bool deletion)
+	void Entity::setDisplay(const bool display)
 	{
-		m_delete = deletion;
+		m_display = display;
 	}
 
-	//! getDelete()
+	//! getDisplay()
 	/*!
-	\return a const bool - Should this entity be deleted
+	\return a const bool - Whether the entity should be displayed
 	*/
-	const bool Entity::getDelete() const
+	const bool Entity::getDisplay() const
 	{
-		return m_delete;
+		return m_display;
 	}
 
 	//! detach()
@@ -125,11 +130,12 @@ namespace Engine
 	*/
 	void Entity::detach(const char* name)
 	{
-		if (m_components.find(name) != m_components.end())
+		if (componentNameExists(name))
 		{
 			// Check if the component is already deleted
 			if (m_components[name])
 			{
+				// Call the component's onDetach function
 				m_components[name]->onDetach();
 				// Found component, clean up
 				delete m_components[name];
@@ -151,16 +157,25 @@ namespace Engine
 		return m_components;
 	}
 
+	//! componentNameExists()
+	/*!
+	\param name a const std::string& - The name of the component
+	\return a const bool - Was the component name found in the component list
+	*/
+	bool Entity::componentNameExists(const std::string& name)
+	{
+		return m_components.find(name) != m_components.end();
+	}
+
 	//! onRender()
 	/*!
-	\param renderer a const Renderers::Renderers - The renderer type
+	\param renderer a const Renderers - The renderer type
 	*/
-	void Entity::onRender(const Renderers::Renderers renderer)
+	void Entity::onRender(const Renderers renderer)
 	{
 		// This function will be called if it's not overriden by child entity classes
 		// This provides this default action which can be overriden if sandbox needs more control
 		// over what and when to render an entity
-
 		if (renderer == Renderers::Renderer3D)
 		{
 			if (containsComponent<MeshRender3D>())
@@ -175,18 +190,17 @@ namespace Engine
 		}
 		else if (renderer == Renderers::Renderer2D)
 		{
-			if (containsComponent<Text>())
-			{
-				// Submit all text components
-				for (auto& textRender : getComponents<Text>())
-					Renderer2D::submitText(textRender, textRender->getModelMatrix());
-			}
-
 			if (containsComponent<MeshRender2D>())
 			{
 				// Submit all 2D mesh renders
 				for (auto& meshRender : getComponents<MeshRender2D>())
 					Renderer2D::submit(meshRender->getMaterial(), meshRender->getModelMatrix());
+			}
+			if (containsComponent<Text>())
+			{
+				// Submit all text components
+				for (auto& textRender : getComponents<Text>())
+					Renderer2D::submitText(textRender, textRender->getModelMatrix());
 			}
 		}
 	}
@@ -206,31 +220,31 @@ namespace Engine
 		{
 			ENGINE_TRACE("Component Name: {0}, Type: {1}.", comp.second->getName(), static_cast<int>(comp.second->getComponentType()));
 		}
-		ENGINE_TRACE("Scheduled for Deletion: {0}.", m_delete);
+		ENGINE_TRACE("Scheduled for Deletion: {0}.", getDestroyed());
 		ENGINE_TRACE("==============");
 	}
 
-	//! convertClassType()
+	//! convertComponentClassType()
 	/*!
 	\param classType a const std::string& - The class type (Use typeid)
 	\return a const ComponentType - The type of component
 	*/
-	const ComponentType Entity::convertClassType(const std::string& classType)
+	const ComponentType Entity::convertComponentClassType(const std::string& classType)
 	{
 		// Class types should be in the format [class Engine::{CLASS_NAME}]
-		if (classType == "class Engine::Camera")
+		if (classType == "class Engine::Camera" || classType == "Camera")
 			return ComponentType::Camera;
-		else if (classType == "class Engine::Transform3D")
+		else if (classType == "class Engine::Transform3D" || classType == "Transform3D")
 			return ComponentType::Transform3D;
-		else if (classType == "class Engine::Transform2D")
+		else if (classType == "class Engine::Transform2D" || classType == "Transform2D")
 			return ComponentType::Transform2D;
-		else if (classType == "class Engine::EventListener")
+		else if (classType == "class Engine::EventListener" || classType == "EventListener")
 			return ComponentType::EventListener;
-		else if (classType == "class Engine::MeshRender3D")
+		else if (classType == "class Engine::MeshRender3D" || classType == "MeshRender3D")
 			return ComponentType::MeshRender3D;
-		else if (classType == "class Engine::MeshRender2D")
+		else if (classType == "class Engine::MeshRender2D" || classType == "MeshRender2D")
 			return ComponentType::MeshRender2D;
-		else if (classType == "class Engine::Text")
+		else if (classType == "class Engine::Text" || classType == "Text")
 			return ComponentType::Text;
 		else
 			return ComponentType::None;

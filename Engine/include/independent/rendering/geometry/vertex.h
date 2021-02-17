@@ -1,7 +1,6 @@
 /*! \file vertex.h
 *
 * \brief All geometry is defined by a set of vertices. The vertex struct defines all the information about a vertex.
-* This includes: Vertex positions, texture coordinates, normals and tangents
 *
 * \author Daniel Bullin
 *

@@ -5,20 +5,34 @@
 * \author DMU Course material
 *
 */
-
-#include "independent/systems/systems/log.h"
 #include "independent/rendering/textures/textureUnitManager.h"
+#include "independent/systems/systems/log.h"
 
 namespace Engine
 {
 	//! TextureUnitManager()
 	/*!
 	\param capacity a const uint32_t - The total number of texture units
-	\param reservationCount a const uint32_t - The number of reserved slots to reserve 
+	\param reservationCount a const uint32_t - The number of reserved slots to reserve
 	*/
-	TextureUnitManager::TextureUnitManager(const uint32_t capacity, const uint32_t reservationCount) 
-		: m_buffer(capacity, 0xFFFFFFFF), m_capacity(capacity), m_reservedSlots(reservationCount), m_head(reservationCount), m_tail(0) 
+	TextureUnitManager::TextureUnitManager(const uint32_t capacity, const uint32_t reservationCount)
+		: m_buffer(capacity, 0xFFFFFFFF), m_capacity(capacity), m_reservedSlots(reservationCount), m_head(reservationCount), m_tail(0)
 	{
+	}
+
+	//! ~TextureUnitManager()
+	TextureUnitManager::~TextureUnitManager()
+	{
+		ENGINE_INFO("[TextureUnitManager::~TextureUnitManager] Deleting the texture unit manager.");
+	}
+
+	//! full()
+	/*!
+	\return a bool - Is the texture unit buffer full
+	*/
+	bool TextureUnitManager::full() const
+	{
+		return m_full;
 	}
 
 	//! clear()
@@ -32,7 +46,7 @@ namespace Engine
 		m_full = false;
 
 		// Either delete all or only the unreserved units
-		if(deleteReservations) std::fill(m_buffer.begin(), m_buffer.end(), 0xFFFFFFFF);
+		if (deleteReservations) std::fill(m_buffer.begin(), m_buffer.end(), 0xFFFFFFFF);
 		else std::fill(m_buffer.begin() + m_reservedSlots, m_buffer.end(), 0xFFFFFFFF);
 	}
 
@@ -102,21 +116,9 @@ namespace Engine
 
 	//! bindToUnit()
 	/*!
-	\param texture a Texture2D* - The texture to bind
+	\param texture a Texture* - The texture to bind
 	*/
-	void TextureUnitManager::bindToUnit(Texture2D* texture)
-	{
-		// Find the texture unit the texture is bound to, and bind it
-		for (int i = 0; i < m_buffer.size(); i++)
-			if (m_buffer[i] == texture->getID())
-				texture->bind(i);
-	}
-
-	//! bindToUnit()
-	/*!
-	\param texture a CubeMapTexture* - The texture to bind
-	*/
-	void TextureUnitManager::bindToUnit(CubeMapTexture* texture)
+	void TextureUnitManager::bindToUnit(Texture* texture)
 	{
 		// Find the texture unit the texture is bound to, and bind it
 		for (int i = 0; i < m_buffer.size(); i++)

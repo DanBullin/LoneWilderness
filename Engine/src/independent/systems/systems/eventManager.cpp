@@ -5,13 +5,12 @@
 * \author Daniel Bullin
 *
 */
-
 #include "independent/systems/systems/eventManager.h"
 #include "independent/systems/systems/log.h"
 #include "independent/systems/systems/sceneManager.h"
 #include "independent/systems/systems/windowManager.h"
 #include "independent/systems/systems/timerSystem.h"
-#include "independent/core/application.h"
+#include "independent/systems/systems/resourceManager.h"
 #include "independent/entities/entity.h"
 
 namespace Engine
@@ -46,14 +45,14 @@ namespace Engine
 	}
 
 	//! EventManager()
-	EventManager::EventManager() : System(Systems::Type::EventManager)
+	EventManager::EventManager() : System(SystemType::EventManager)
 	{
 	}
 
 	//! ~EventManager()
 	EventManager::~EventManager()
 	{
-		
+
 	}
 
 	//! start()
@@ -88,7 +87,7 @@ namespace Engine
 		if (s_enabled)
 		{
 			// Schedule this window for deletion
-			window->close();
+			window->onWindowClose(e);
 		}
 	}
 
@@ -104,7 +103,7 @@ namespace Engine
 			window->onWindowResize(e);
 
 			// Pass input event to layers and entities 
-			Scene* scene = SceneManager::getActiveScene().get();
+			Scene* scene = SceneManager::getActiveScene();
 			if (scene)
 			{
 				if (scene->getLayerManager())
@@ -135,10 +134,11 @@ namespace Engine
 		if (s_enabled)
 		{
 			// Set this window as the focused window
+			window->onWindowFocus(e);
 			WindowManager::setFocusedWindowByName(window->getName().c_str());
 
 			// Pass input event to layers and entities 
-			Scene* scene = SceneManager::getActiveScene().get();
+			Scene* scene = SceneManager::getActiveScene();
 			if (scene)
 			{
 				if (scene->getLayerManager())
@@ -171,7 +171,7 @@ namespace Engine
 			window->onWindowLostFocus(e);
 
 			// Pass input event to layers and entities 
-			Scene* scene = SceneManager::getActiveScene().get();
+			Scene* scene = SceneManager::getActiveScene();
 			if (scene)
 			{
 				if (scene->getLayerManager())
@@ -204,7 +204,7 @@ namespace Engine
 			window->onWindowMoved(e);
 
 			// Pass input event to layers and entities 
-			Scene* scene = SceneManager::getActiveScene().get();
+			Scene* scene = SceneManager::getActiveScene();
 			if (scene)
 			{
 				if (scene->getLayerManager())
@@ -235,7 +235,7 @@ namespace Engine
 		if (s_enabled && e.getKeyCode() != -1)
 		{
 			// Pass input event to layers and entities 
-			Scene* scene = SceneManager::getActiveScene().get();
+			Scene* scene = SceneManager::getActiveScene();
 			if (scene)
 			{
 				if (scene->getLayerManager())
@@ -272,7 +272,7 @@ namespace Engine
 				window->setFullscreen(!window->getProperties().getFullScreen());
 
 			// Pass input event to layers and entities 
-			Scene* scene = SceneManager::getActiveScene().get();
+			Scene* scene = SceneManager::getActiveScene();
 			if (scene)
 			{
 				if (scene->getLayerManager())
@@ -290,7 +290,6 @@ namespace Engine
 					}
 				}
 			}
-
 		}
 	}
 
@@ -316,7 +315,7 @@ namespace Engine
 		if (s_enabled && e.getButton() != -1)
 		{
 			// Pass input event to layers and entities 
-			Scene* scene = SceneManager::getActiveScene().get();
+			Scene* scene = SceneManager::getActiveScene();
 			if (scene)
 			{
 				if (scene->getLayerManager())
@@ -347,7 +346,7 @@ namespace Engine
 		if (s_enabled)
 		{
 			// Pass input event to layers and entities 
-			Scene* scene = SceneManager::getActiveScene().get();
+			Scene* scene = SceneManager::getActiveScene();
 			if (scene)
 			{
 				if (scene->getLayerManager())
@@ -378,10 +377,10 @@ namespace Engine
 		if (s_enabled)
 		{
 			// Update event data and mouse position change
-			if(window == WindowManager::getFocusedWindow()) calculateMouseOffset(e);
+			if (window == WindowManager::getFocusedWindow()) calculateMouseOffset(e);
 
 			// Pass input event to layers and entities 
-			Scene* scene = SceneManager::getActiveScene().get();
+			Scene* scene = SceneManager::getActiveScene();
 			if (scene)
 			{
 				if (scene->getLayerManager())
@@ -412,7 +411,7 @@ namespace Engine
 		if (s_enabled)
 		{
 			// Pass input event to layers and entities 
-			Scene* scene = SceneManager::getActiveScene().get();
+			Scene* scene = SceneManager::getActiveScene();
 			if (scene)
 			{
 				if (scene->getLayerManager())
@@ -470,8 +469,8 @@ namespace Engine
 
 			// Update all registered windows
 			for (auto& window : WindowManager::getRegisteredWindows())
-				if(window.second)
-						window.second->onUpdate(timestep, totalTime);
+				if (window.second)
+					window.second->onUpdate(timestep, totalTime);
 
 			// Call entity postupdate
 			for (auto& entity : SceneManager::getActiveScene()->getRootEntities())

@@ -5,20 +5,33 @@
 * \author Daniel Bullin
 *
 */
-
+#include "independent/rendering/frameBuffer.h"
 #include "independent/systems/systems/log.h"
 #include "independent/rendering/renderAPI.h"
-#include "independent/rendering/frameBuffer.h"
 #include "platform/OpenGL/openGLFrameBuffer.h"
 
 namespace Engine
 {
+	//! FrameBuffer()
+	/*!
+	\param frameBufferName a const std::string& - The name of the framebuffer
+	*/
+	FrameBuffer::FrameBuffer(const std::string& frameBufferName) : Resource(frameBufferName, ResourceType::FrameBuffer)
+	{
+	}
+
+	//! ~FrameBuffer()
+	FrameBuffer::~FrameBuffer()
+	{
+	}
+
 	//! create()
 	/*!
+	\param frameBufferName a const std::string& - The name of the framebuffer
 	\param size a const glm::ivec2& - The dimensions of the framebuffer targets
 	\param layout a FrameBufferLayoutt& - A reference to the layout of the framebuffer
 	*/
-	FrameBuffer* FrameBuffer::create(const glm::ivec2& size, FrameBufferLayout& layout)
+	FrameBuffer* FrameBuffer::create(const std::string& frameBufferName, const glm::ivec2& size, FrameBufferLayout& layout)
 	{
 		switch (RenderAPI::getAPI())
 		{
@@ -29,7 +42,7 @@ namespace Engine
 			}
 			case GraphicsAPI::OpenGL:
 			{
-				return new OpenGLFrameBuffer(size, layout);
+				return new OpenGLFrameBuffer(frameBufferName, size, layout);
 			}
 			case GraphicsAPI::Direct3D:
 			{
@@ -46,7 +59,10 @@ namespace Engine
 	}
 
 	//! createDefault()
-	FrameBuffer* FrameBuffer::createDefault()
+	/*!
+	\param frameBufferName a const std::string& - The name of the framebuffer
+	*/
+	FrameBuffer* FrameBuffer::createDefault(const std::string& frameBufferName)
 	{
 		switch (RenderAPI::getAPI())
 		{
@@ -57,7 +73,7 @@ namespace Engine
 			}
 			case GraphicsAPI::OpenGL:
 			{
-				return new OpenGLFrameBuffer;
+				return new OpenGLFrameBuffer(frameBufferName);
 			}
 			case GraphicsAPI::Direct3D:
 			{

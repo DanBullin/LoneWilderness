@@ -5,7 +5,6 @@
 * \author Daniel Bullin
 *
 */
-
 #include "independent/entities/components/eventListener.h"
 #include "independent/systems/systems/log.h"
 

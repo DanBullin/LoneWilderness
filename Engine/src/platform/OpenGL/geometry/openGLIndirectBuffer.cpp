@@ -5,7 +5,6 @@
 * \author DMU Course material
 *
 */
-
 #include <glad/glad.h>
 #include "platform/OpenGL/geometry/OpenGLIndirectBuffer.h"
 #include "independent/systems/systems/log.h"
@@ -14,22 +13,26 @@ namespace Engine
 {
 	//! OpenGLIndirectBuffer()
 	/*!
+	\param indirectBufferName a const std::string& - The name of the indirect buffer
 	\param commands a DrawElementsIndirectCommand* - The commands info
 	\param count a const uint32_t - The number of commands
 	*/
-	OpenGLIndirectBuffer::OpenGLIndirectBuffer(DrawElementsIndirectCommand* commands, const uint32_t count)
+	OpenGLIndirectBuffer::OpenGLIndirectBuffer(const std::string& indirectBufferName, DrawElementsIndirectCommand* commands, const uint32_t count) : IndirectBuffer(indirectBufferName)
 	{
 		// Create the buffer and set its original data
+		m_byteSize = sizeof(DrawElementsIndirectCommand) * count;
+		m_commandCount = count;
+
 		glCreateBuffers(1, &m_bufferID);
 		glBindBuffer(GL_DRAW_INDIRECT_BUFFER, m_bufferID);
-		glBufferData(GL_DRAW_INDIRECT_BUFFER, count * sizeof(DrawElementsIndirectCommand), commands, GL_DYNAMIC_DRAW);
+		glBufferData(GL_DRAW_INDIRECT_BUFFER, m_byteSize, commands, GL_DYNAMIC_DRAW);
 	}
 
 	//! ~OpenGLIndirectBuffer()
 	OpenGLIndirectBuffer::~OpenGLIndirectBuffer()
 	{
 		// Delete the buffer
-		ENGINE_INFO("[OpenGLIndirectBuffer::~OpenGLIndirectBuffer] Deleting Indirect buffer with ID: {0}", m_bufferID);
+		ENGINE_INFO("[OpenGLIndirectBuffer::~OpenGLIndirectBuffer] Deleting Indirect buffer with ID: {0}, Name: {1}.", m_bufferID, m_name);
 		glDeleteBuffers(1, &m_bufferID);
 	}
 

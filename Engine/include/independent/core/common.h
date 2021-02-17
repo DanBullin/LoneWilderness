@@ -43,16 +43,13 @@ using Shared = std::shared_ptr<T>; //!< Shared pointer type alias
 #define TIME_FUNCTION(x, y) Engine::TimerSystem::startTimer(x); y; Engine::TimerSystem::stopTimer(x, false, true); //!< Macro to time a function
 #define GET_TIME(x, y, z)  Engine::TimerSystem::getTime(x, y, z) //!< Macro to get a time from the timer system
 
-namespace Renderers
+/*! \enum Renderers
+* \brief The different types of renderers
+*/
+enum class Renderers
 {
-	/*! \enum Renderers
-	* \brief The different types of renderers
-	*/
-	enum Renderers
-	{
-		Renderer3D = 0,
-		Renderer2D = 1
-	};
-}
+	Renderer3D = 0,
+	Renderer2D = 1
+};
 
 #endif

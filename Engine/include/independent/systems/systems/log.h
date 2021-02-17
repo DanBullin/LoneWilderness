@@ -25,10 +25,10 @@ namespace Engine
 	public:
 		Log(); //!< Constructor
 		~Log(); //!< Destructor
-		void enableFileLogging(const bool enable); //!< Enable/Disable the file logging
+		void start() override; //!< Start the logger
+		void stop() override; //!< Stop the logger
 
-		virtual void start() override; //!< Start the logger
-		virtual void stop() override; //!< Stop the logger
+		void enableFileLogging(const bool enable); //!< Enable/Disable the file logging
 
 		template<class ...Args> static void info(Args&&... args); //!< Print info to the console
 		template<class ...Args> static void trace(Args&&... args); //!< Print a trace message to the console

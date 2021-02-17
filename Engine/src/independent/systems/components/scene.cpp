@@ -5,11 +5,9 @@
 * \author Daniel Bullin
 *
 */
-
 #include "independent/systems/components/scene.h"
 #include "independent/systems/systems/log.h"
-
-#define RENDERPASSLIMIT 15
+#include "independent/systems/systems/resourceManager.h"
 
 namespace Engine
 {
@@ -22,21 +20,14 @@ namespace Engine
 		ENGINE_INFO("[Scene::Scene] Creating new scene named: {0}.", name);
 		m_mainCamera = nullptr;
 		m_layerManager = new LayerManager(this);
-		m_renderPasses.reserve(RENDERPASSLIMIT);
-		m_delete = false;
+		m_renderPasses.reserve(ResourceManager::getConfigValue(ConfigData::MaxRenderPassesPerScene));
 		m_newEntities = true;
 	}
 
 	//! ~Scene()
 	Scene::~Scene()
 	{
-		
-	}
-
-	//! destroy()
-	void Scene::destroy()
-	{
-		ENGINE_INFO("[Scene::destroy] Destroying scene: {0}.", m_sceneName);
+		ENGINE_INFO("[Scene::~Scene] Destroying scene: {0}.", m_sceneName);
 
 		// If there is any entities in the scene, delete them
 		if (m_entities.size() != 0)
@@ -68,24 +59,6 @@ namespace Engine
 		return m_sceneName;
 	}
 
-	//! getClearColour()
-	/*!
-	\return a const glm::vec4& - The clear colour
-	*/
-	const glm::vec4& Scene::getClearColour()
-	{
-		return m_clearColour;
-	}
-
-	//! setClearColour()
-	/*!
-	\param colour a const glm::vec4& - The clear colour
-	*/
-	void Scene::setClearColour(const glm::vec4& colour)
-	{
-		m_clearColour = colour;
-	}
-
 	//! onUpdate()
 	/*!
 	\param timestep a const float - The update time step
@@ -96,7 +69,7 @@ namespace Engine
 		// Delete any entities that are scheuled to be deleted, can also update components if entity is not to be deleted
 		for (auto it = m_entities.cbegin(); it != m_entities.cend(); )
 		{
-			if (it->second->getDelete())
+			if (it->second->getDestroyed())
 			{
 				delete it->second;
 				m_entities.erase(it++);
@@ -128,27 +101,7 @@ namespace Engine
 			setNewEntitiesFlag(true);
 		}
 		else
-		{
 			ENGINE_ERROR("[Scene::addEntity] Name for entity already taken. Cannot add. Entity Name: {0}", name);
-			delete entity;
-		}
-	}
-
-	//! deleteEntity()
-	/*!
-	\param name a const char* - The name of the entity
-	*/
-	void Scene::deleteEntity(const char * name)
-	{
-		// Check if entity name is in the list of entities
-		if (checkEntityNameTaken(name))
-		{
-			// Found entity, schedule for deletion
-			m_entities[name]->setDelete(true);
-			setNewEntitiesFlag(true);
-		}
-		else
-			ENGINE_ERROR("[Scene::deleteEntity] Name for entity wasn't found in the list. Entity Name: {0}", name);
 	}
 
 	//! getEntity()
@@ -201,7 +154,7 @@ namespace Engine
 		else
 		{
 			// Set the current main camera's value to false
-			if(m_mainCamera)
+			if (m_mainCamera)
 				m_mainCamera->setMainCamera(false);
 
 			// Update main camera with camera passed
@@ -234,8 +187,12 @@ namespace Engine
 	*/
 	void Scene::addRenderPass(RenderPass* pass)
 	{
-		m_renderPasses.emplace_back(pass);
-		pass->attachScene(this);
+		// If the maximum number of passes has not been reached
+		if (m_renderPasses.size() < m_renderPasses.capacity())
+		{
+			m_renderPasses.emplace_back(pass);
+			pass->attachScene(this);
+		}
 	}
 
 	//! getRenderPasses()
@@ -247,22 +204,13 @@ namespace Engine
 		return m_renderPasses;
 	}
 
-	//! setDelete()
+	//! getFinalFrameBuffer()
 	/*!
-	\param deletion a const bool - Should this scene be deleted
+	\return a FrameBuffer* - The framebuffer
 	*/
-	void Scene::setDelete(const bool deletion)
+	FrameBuffer* Scene::getFinalFrameBuffer()
 	{
-		m_delete = deletion;
-	}
-
-	//! getDelete()
-	/*!
-	\return a const bool - Should this scene be deleted
-	*/
-	const bool Scene::getDelete() const
-	{
-		return m_delete;
+		return m_renderPasses.back()->getFrameBuffer();
 	}
 
 	//! setNewEntitiesFlag()
@@ -287,9 +235,7 @@ namespace Engine
 	void Scene::printEntityDetails()
 	{
 		for (auto& entity : m_entities)
-		{
 			entity.second->printEntityDetails();
-		}
 	}
 
 	//! printSceneDetails()
@@ -300,11 +246,10 @@ namespace Engine
 		ENGINE_TRACE("Scene Address: {0}", (void*)this);
 		ENGINE_TRACE("Scene Name: {0}", getName());
 		ENGINE_TRACE("Scene Entity List Size: {0}", getRootEntities().size());
-		ENGINE_TRACE("Scene Clear Colour: R:{0} G:{1} B:{2} A:{3}", getClearColour().r, getClearColour().g, getClearColour().b, getClearColour().a);
 		ENGINE_TRACE("Scene Layer Manager Address: {0}", (void*)getLayerManager());
 		ENGINE_TRACE("Scene Main Camera Address: {0}", (void*)getMainCamera());
 		ENGINE_TRACE("Number of Render Passes: {0}", getRenderPasses().size());
-		ENGINE_TRACE("Scheduled for Deletion: {0}", getDelete());
+		ENGINE_TRACE("Scheduled for Deletion: {0}", getDestroyed());
 		ENGINE_TRACE("New Entities Flag: {0}", getNewEntitiesFlag());
 		ENGINE_TRACE("==========================");
 	}

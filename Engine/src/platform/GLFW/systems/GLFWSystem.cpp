@@ -5,7 +5,6 @@
 * \author DMU Course material
 *
 */
-
 #include "platform/GLFW/systems/GLFWSystem.h"
 #include "independent/systems/systems/log.h"
 
@@ -16,7 +15,7 @@ namespace Engine
 	bool GLFWSystem::s_enabled = false; //!< Set to false
 
 	//! GLFWSystem()
-	GLFWSystem::GLFWSystem() : System(Systems::Type::WindowAPISystem)
+	GLFWSystem::GLFWSystem() : System(SystemType::WindowAPISystem)
 	{
 	}
 

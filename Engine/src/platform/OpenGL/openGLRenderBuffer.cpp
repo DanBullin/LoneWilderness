@@ -5,10 +5,9 @@
 * \author Daniel Bullin
 *
 */
-
+#include "platform/OpenGL/openGLRenderBuffer.h"
 #include <glad/glad.h>
 #include "independent/systems/systems/log.h"
-#include "platform/OpenGL/openGLRenderBuffer.h"
 
 namespace Engine
 {

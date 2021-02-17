@@ -5,7 +5,6 @@
 * \author DMU Course material
 *
 */
-
 #include "independent/rendering/renderAPI.h"
 #include "independent/systems/systems/log.h"
 #include "independent/rendering/geometry/vertexBuffer.h"
@@ -13,15 +12,29 @@
 
 namespace Engine
 {
+	//! VertexBuffer()
+	/*
+	\param vertexBufferName a const std::string& - The name of the vertex buffer
+	*/
+	VertexBuffer::VertexBuffer(const std::string& vertexBufferName) : Resource(vertexBufferName, ResourceType::VertexBuffer)
+	{
+	}
+
+	//! ~VertexBuffer()
+	VertexBuffer::~VertexBuffer()
+	{
+	}
+
 	//! create()
 	/*!
+	\param vertexBufferName a const std::string& - The name of the vertex buffer
 	\param vertices a const void* - The vertices info
 	\param size a const uint32_t - The size in bytes of the vertices data
 	\param layout a const VertexBufferLayout - The layout of the vertex buffer
 	\param usage a const VertexBufferUsage - The usage of the vertices data
 	\return a VertexBuffer* - The vertex buffer based on the current graphics API
 	*/
-	VertexBuffer* VertexBuffer::create(const void* vertices, const uint32_t size, const VertexBufferLayout& layout, const VertexBufferUsage usage)
+	VertexBuffer* VertexBuffer::create(const std::string& vertexBufferName, const void* vertices, const uint32_t size, const VertexBufferLayout& layout, const VertexBufferUsage usage)
 	{
 		switch (RenderAPI::getAPI())
 		{
@@ -32,7 +45,7 @@ namespace Engine
 			}
 			case GraphicsAPI::OpenGL:
 			{
-				return new OpenGLVertexBuffer(vertices, size, layout, usage);
+				return new OpenGLVertexBuffer(vertexBufferName, vertices, size, layout, usage);
 			}
 			case GraphicsAPI::Direct3D:
 			{
@@ -50,11 +63,12 @@ namespace Engine
 
 	//! create()
 	/*!
+	\param vertexBufferName a const std::string& - The name of the vertex buffer
 	\param size a const uint32_t - The size in bytes of the buffer data
 	\param usage a const VertexBufferUsage - The usage of the vertices data
 	\return VertexBuffer* - The vertex buffer based on the current graphics API
 	*/
-	VertexBuffer* VertexBuffer::create(const uint32_t size, const VertexBufferUsage usage)
+	VertexBuffer* VertexBuffer::create(const std::string& vertexBufferName, const uint32_t size, const VertexBufferUsage usage)
 	{
 		switch (RenderAPI::getAPI())
 		{
@@ -65,7 +79,7 @@ namespace Engine
 			}
 			case GraphicsAPI::OpenGL:
 			{
-				return new OpenGLVertexBuffer(size, usage);
+				return new OpenGLVertexBuffer(vertexBufferName, size, usage);
 			}
 			case GraphicsAPI::Direct3D:
 			{

@@ -20,12 +20,13 @@ namespace Engine
 	class OpenGLVertexArray : public VertexArray
 	{
 	public:
-		OpenGLVertexArray(); //!< Constructor
+		OpenGLVertexArray(const std::string& vertexArrayName); //!< Constructor
 		~OpenGLVertexArray(); //!< Destructor
-		virtual void addVertexBuffer(const std::shared_ptr<VertexBuffer> vertexBuffer) override; //!< Add vertex buffer to array
-		virtual void setIndexBuffer(const std::shared_ptr<IndexBuffer> indexBuffer) override; //!< Set the index buffer
-		virtual void bind() override; //!< Bind the VAO
-		virtual void unbind() override; //!< Unbind the VAO
+		void addVertexBuffer(VertexBuffer* vertexBuffer) override; //!< Add vertex buffer to array
+		void setIndexBuffer(IndexBuffer* indexBuffer) override; //!< Set the index buffer
+		void bind() override; //!< Bind the VAO
+		void unbind() override; //!< Unbind the VAO
+		const bool indexBufferBoundToArray() override; //!< Check if the index buffer set is correctly bound to the array
 	};
 }
 #endif

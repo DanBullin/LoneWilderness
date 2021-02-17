@@ -5,10 +5,10 @@
 * \author Daniel Bullin
 *
 */
-
 #include "independent/entities/components/transform3D.h"
 #include "independent/entities/entity.h"
 #include "independent/systems/systems/log.h"
+
 namespace Engine
 {
 	//! Transform3D()

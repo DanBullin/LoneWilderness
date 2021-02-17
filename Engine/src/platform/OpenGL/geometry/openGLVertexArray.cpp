@@ -5,7 +5,6 @@
 * \author DMU Course material
 *
 */
-
 #include <glad/glad.h>
 #include "independent/systems/systems/log.h"
 #include "platform/OpenGL/geometry/openGLVertexArray.h"
@@ -47,32 +46,42 @@ namespace Engine
 	}
 
 	//! OpenGLVertexArray()
-	OpenGLVertexArray::OpenGLVertexArray()
+	/*
+	\param vertexArrayName a const std::string& - The name of the vertex array
+	*/
+	OpenGLVertexArray::OpenGLVertexArray(const std::string& vertexArrayName) : VertexArray(vertexArrayName)
 	{
 		// Create array
 		glCreateVertexArrays(1, &m_arrayID);
-		glBindVertexArray(m_arrayID);
+		bind();
+		m_totalByteSize = 0;
 	}
 
 	//! ~OpenGLVertexArray()
 	OpenGLVertexArray::~OpenGLVertexArray()
 	{
 		// Delete the array
-		ENGINE_INFO("[OpenGLVertexArray::~OpenGLVertexArray] Deleting Vertex array with ID: {0}", m_arrayID);
+		ENGINE_INFO("[OpenGLVertexArray::~OpenGLVertexArray] Deleting Vertex array with ID: {0}, Name: {1}.", m_arrayID, m_name);
 		glDeleteVertexArrays(1, &m_arrayID);
+
+		// Decrease reference counter for all vertex buffers attached and the index buffer
+		for (auto& vBuffer : m_vertexBuffers)
+			if (vBuffer) vBuffer->decreaseCount();
+
+		if (m_indexBuffer) m_indexBuffer->decreaseCount();
 	}
 
 	//! addVertexBuffer()
 	/*!
-	\param vertexBuffer a const std::shared_ptr<VertexBuffer> - The vertex buffer to add to the array
+	\param vertexBuffer a VertexBuffer* - The vertex buffer to add to the array
 	*/
-	void OpenGLVertexArray::addVertexBuffer(const std::shared_ptr<VertexBuffer> vertexBuffer)
+	void OpenGLVertexArray::addVertexBuffer(VertexBuffer* vertexBuffer)
 	{
 		m_vertexBuffers.push_back(vertexBuffer);
 
 		// Bind array
 		bind();
-		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer->getBufferID());
+		vertexBuffer->bind();
 
 		// Configure the vertex attributes based on the buffer layout
 		const auto& layout = vertexBuffer->getLayout();
@@ -95,7 +104,7 @@ namespace Engine
 				{
 					glEnableVertexAttribArray(m_attribIndex);
 					glVertexAttribPointer(m_attribIndex, count,
-						SDT::toGLType(element.m_dataType), element.m_normalized ? GL_TRUE : GL_FALSE, layout.getStride(), 
+						SDT::toGLType(element.m_dataType), element.m_normalized ? GL_TRUE : GL_FALSE, layout.getStride(),
 						(const void*)(sizeof(float) * count * i));
 					glVertexAttribDivisor(m_attribIndex, element.m_instanceDivisor);
 					m_attribIndex++;
@@ -112,17 +121,20 @@ namespace Engine
 			}
 		}
 
+		m_totalByteSize += vertexBuffer->getByteSize();
+
 	}
 
 	//! setIndexBuffer()
 	/*!
-	\param indexBuffer a const std::shared_ptr<IndexBuffer> - The index buffer to set
+	\param indexBuffer an IndexBuffer* - The index buffer to set
 	*/
-	void OpenGLVertexArray::setIndexBuffer(const std::shared_ptr<IndexBuffer> indexBuffer)
+	void OpenGLVertexArray::setIndexBuffer(IndexBuffer* indexBuffer)
 	{
 		bind();
 		m_indexBuffer = indexBuffer;
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer->getBufferID());
+		m_totalByteSize += indexBuffer->getByteSize();
+		indexBuffer->bind();
 	}
 
 	//! bind
@@ -135,6 +147,22 @@ namespace Engine
 	void OpenGLVertexArray::unbind()
 	{
 		glBindVertexArray(0);
+	}
+
+	//! indexBufferBoundToArray()
+	/*!
+	\return a const bool - Is the index buffer correctly bound to this VAO
+	*/
+	const bool OpenGLVertexArray::indexBufferBoundToArray()
+	{
+		int boundIndexBuffer = 0;
+		glGetVertexArrayiv(m_arrayID, GL_ELEMENT_ARRAY_BUFFER_BINDING, &boundIndexBuffer);
+
+		// Check the result ID is not 0 and is equal to the index buffer ID
+		if (boundIndexBuffer != 0 && boundIndexBuffer == getIndexBuffer()->getBufferID())
+			return true;
+		else
+			return false;
 	}
 
 }

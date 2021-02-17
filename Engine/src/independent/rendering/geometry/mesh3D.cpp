@@ -5,9 +5,8 @@
 * \author Daniel Bullin
 *
 */
-
-#include "independent/systems/systems/log.h"
 #include "independent/rendering/geometry/mesh3D.h"
+#include "independent/systems/systems/log.h"
 
 namespace Engine
 {
@@ -15,8 +14,7 @@ namespace Engine
 	/*!
 	\param geometry a const Geometry3D& - A reference to the geometry data
 	*/
-	Mesh3D::Mesh3D(const Geometry3D& geometry)
-		: m_geometry(geometry)
+	Mesh3D::Mesh3D(const Geometry3D& geometry) : m_geometry(geometry)
 	{
 	}
 

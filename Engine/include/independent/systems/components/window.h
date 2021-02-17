@@ -12,33 +12,31 @@
 #include "independent/systems/components/windowProperties.h"
 #include "independent/core/graphicsContext.h"
 #include "independent/events/events.h"
+#include "independent/core/destroyable.h"
 
-namespace Engine {
+namespace Engine 
+{
 	/*! \class Window
 	* \brief Base windows class
 	*/
-	class Window
+	class Window : public Destroyable
 	{
 	protected:
 		std::string m_windowName; //!< The name of the window
-		bool m_delete = false; //!< Schedule window for deletion
 		WindowProperties m_properties; //!< Properties of the window
 		Shared<GraphicsContext> m_graphicsContext; //!< A pointer to the graphics context
 		virtual void setEventCallbacks() = 0; //!< Set up the event callbacks for the window
 	public:
 		virtual ~Window(); //!< Destructor
 
-		inline WindowProperties& getProperties() { return m_properties; } //!< Get the window properties
-			/*!< \return a WindowProperties& - The window properties */
-
 		inline const std::string& getName() const { return m_windowName; }
 			/*!< \return a const std::string& - The window name */
 
+		inline WindowProperties& getProperties() { return m_properties; } //!< Get the window properties
+			/*!< \return a WindowProperties& - The window properties */
+
 		inline const Shared<GraphicsContext>& getGraphicsContext() { return m_graphicsContext; } //!< Get the graphics context
 			/*!< \return a const std::shared_ptr<GraphicsContext>& - The pointer to the graphics context */
-
-		inline const bool getDeletion() const { return m_delete; }  //!< Get whether the window is to be deleted
-			/*!< \return a const bool - Delete the window */
 
 		virtual void* getNativeWindow() const = 0; //!< Get the native window
 			/*!< \return a void* - A pointer to the native window */

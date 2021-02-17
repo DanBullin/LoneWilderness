@@ -22,6 +22,34 @@ namespace Engine
 
 	namespace SDT
 	{
+		//! convertStringToSDT()
+		/*!
+		\param type a const std::string& - The type as a string literal
+		\return a ShaderDataType - The shader data type
+		*/
+		static ShaderDataType convertStringToSDT(const std::string& type)
+		{
+			if (type == "Short") return ShaderDataType::Short;
+			if (type == "Short2") return ShaderDataType::Short2;
+			if (type == "Short3") return ShaderDataType::Short3;
+			if (type == "Short4") return ShaderDataType::Short4;
+			if (type == "Float") return ShaderDataType::Float;
+			if (type == "Float2") return ShaderDataType::Float2;
+			if (type == "Float3") return ShaderDataType::Float3;
+			if (type == "Float4") return ShaderDataType::Float4;
+			if (type == "Mat3") return ShaderDataType::Mat3;
+			if (type == "Mat4") return ShaderDataType::Mat4;
+			if (type == "Int") return ShaderDataType::Int;
+			if (type == "Int2") return ShaderDataType::Int2;
+			if (type == "Int3") return ShaderDataType::Int3;
+			if (type == "Int4") return ShaderDataType::Int4;
+			if (type == "Bool") return ShaderDataType::Bool;
+			if (type == "Byte4") return ShaderDataType::Byte4;
+			if (type == "FlatInt") return ShaderDataType::FlatInt;
+			if (type == "FlatByte") return ShaderDataType::FlatByte;
+			else return ShaderDataType::None;
+		}
+
 		//! getSize()
 		/*!
 		\param type a ShaderDataType - The data type

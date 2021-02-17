@@ -2,76 +2,64 @@
 	"materials": 
 	[
 		{ 
-			"name": "cyborgMaterial",
-			"subTextures": [
-				"cyborgSubTexture"
-			], 
-			"shader": "blinnPhong", 
-			"tint": [ 1.0, 1.0, 1.0, 1.0 ] 
-		},
-		{ 
-			"name": "cyborgMaterial2",
-			"subTextures": [
-				"cyborgSubTexture"
-			], 
-			"shader": "blinnPhong2", 
-			"tint": [ 1.0, 1.0, 1.0, 1.0 ] 
-		},
-		{ 
-			"name": "gridMaterial",
-			"subTextures": [
-				"gridSubTexture"
-			], 
-			"shader": "blinnPhong", 
-			"tint": [ 1.0, 1.0, 1.0, 1.0 ] 
-		},
-		{ 
-			"name": "grassMaterial", 
-			"subTextures": [
-				"grassSubTexture"
-			],  
-			"shader": "blinnPhong", 
-			"tint": [ 1.0, 1.0, 1.0, 1.0 ] 
-		},
-		{ 
 			"name": "textMaterial", 
 			"subTextures": [
 				"textSubTexture"
-			],  
+			],
+			"cubeMapTextures": [
+			],			
+			"shader": "textShader", 
+			"tint": [ 1.0, 1.0, 1.0, 1.0 ] 
+		},
+		{ 
+			"name": "mapMaterial", 
+			"subTextures": [
+				"mapSubTexture"
+			],
+			"cubeMapTextures": [
+			],	
 			"shader": "quad", 
 			"tint": [ 1.0, 1.0, 1.0, 1.0 ] 
 		},
 		{ 
-			"name": "recMaterial1", 
+			"name": "hotbarMaterial", 
 			"subTextures": [
-				"numberSubTexture"
+				"hotbarSubTexture"
 			],
+			"cubeMapTextures": [
+			],	
 			"shader": "quad", 
-			"tint": [ 1.0, 0.0, 1.0, 1.0 ] 
+			"tint": [ 1.0, 1.0, 1.0, 1.0 ] 
 		},
 		{ 
-			"name": "alignMaterial", 
+			"name": "cyborgMaterial", 
 			"subTextures": [
-				"alignSubTexture"
+				"cyborgSubTexture"
 			],
+			"cubeMapTextures": [
+			],	
 			"shader": "blinnPhong", 
-			"tint": [ 1.0, 1.0, 1.0, 1.0 ] 
-		},
-		{ 
-			"name": "planeMaterial", 
-			"subTextures": [
-				"numberSubTexture", "gridSubTexture"
-			],
-			"shader": "blinnPhong3", 
 			"tint": [ 1.0, 1.0, 1.0, 1.0 ] 
 		},
 		{ 
 			"name": "screenMaterial", 
 			"subTextures": [
-				"screenQuadSubTexture", "gridSubTexture"
+				"screenQuadSubTexture"
 			],
-			"shader": "quad1", 
+			"cubeMapTextures": [
+			],	
+			"shader": "quad", 
 			"tint": [ 1.0, 1.0, 1.0, 1.0 ] 
+		},
+		{ 
+			"name": "skyboxMaterial", 
+			"subTextures": [
+			],
+			"cubeMapTextures": [
+				"sky"
+			],	
+			"shader": "skyboxShader", 
+			"tint": [ 0.25, 0.25, 0.25, 1.0 ] 
 		}
 	]
 }

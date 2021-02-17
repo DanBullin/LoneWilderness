@@ -12,25 +12,13 @@
 
 namespace Engine 
 {
-	namespace Systems
+	/*! \enum SystemType
+	* \brief The different types of systems
+	*/
+	enum class SystemType
 	{
-		/*! \enum Type
-		* \brief The different types of systems
-		*/
-		enum Type
-		{
-			Logger = 1, //!< A log to console or files
-			Randomiser = 2, //!< A random number generator
-			TimerSystem = 3, //!< Create and use timers
-			WindowAPISystem = 4, //!< The windowing API
-			WindowManager = 5, //!< A manager for windows
-			EventManager = 6, //!< An event manager
-			ResourceManager = 7, //!< A resource manager
-			SceneManager = 8, //!< A scene manager
-			RenderSystem = 9, //!< A render system
-			FontManager = 10 //!< A Font manager
-		};
-	}
+		Logger, Randomiser, TimerSystem, WindowAPISystem, WindowManager, EventManager, ResourceManager, SceneManager, FontManager, RenderSystem
+	};
 
 	/*! \class System
 	* \brief Base class for all systems
@@ -38,11 +26,11 @@ namespace Engine
 	class System
 	{
 	private:
-		Systems::Type m_systemType; //!< The system type
+		SystemType m_systemType; //!< The system type
 	public:
-		System(const Systems::Type type); //!< Constructor
+		System(const SystemType type); //!< Constructor
 		virtual ~System(); //!< Destructor
-		const Systems::Type getSystemType() const; //!< Get the type of the system
+		const SystemType getSystemType() const; //!< Get the type of the system
 
 		virtual void start() = 0; //!< Start the system
 		virtual void stop() = 0; //!< Stop the system

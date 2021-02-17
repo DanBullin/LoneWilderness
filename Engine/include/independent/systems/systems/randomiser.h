@@ -11,7 +11,8 @@
 #include <random>
 #include "independent/systems/system.h"
 
-namespace Engine {
+namespace Engine 
+{
 	using UniIntDistrib = std::uniform_int_distribution<int32_t>; //!< Type alias because its quite a handful
 	using UniRealDistrib = std::uniform_real_distribution<float>; //!< Type alias because its quite a handful
 
@@ -29,9 +30,8 @@ namespace Engine {
 	public:
 		Randomiser(); //!< Constructor
 		~Randomiser(); //!< Destructor
-
-		virtual void start() override; //!< Start the system
-		virtual void stop() override; //!< Stop the system
+		void start() override; //!< Start the system
+		void stop() override; //!< Stop the system
 
 		int32_t uniformIntBetween(const int32_t lower, const int32_t upper); //!< Get an integer i such that lower <= i <= upper
 		float uniformFloatBetween(const float lower, const float upper); //!< Get an float i such that lower <= i <= upper

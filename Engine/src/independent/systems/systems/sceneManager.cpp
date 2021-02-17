@@ -5,7 +5,6 @@
 * \author Daniel Bullin
 *
 */
-
 #include "independent/systems/systems/sceneManager.h"
 #include "independent/systems/systems/log.h"
 #include "independent/systems/systems/resourceManager.h"
@@ -13,11 +12,11 @@
 namespace Engine
 {
 	bool SceneManager::s_enabled = false; //!< Initialise with default value of false
-	Map<std::string, Scene> SceneManager::s_scenesList = Map<std::string, Scene>(); //!< Initialise empty list
+	std::map<std::string, Scene*> SceneManager::s_scenesList = std::map<std::string, Scene*>(); //!< Initialise empty list
 	std::string SceneManager::s_activeSceneName = std::string(); //!< Initialise to empty string
 
 	//! SceneManager()
-	SceneManager::SceneManager() : System(Systems::Type::SceneManager)
+	SceneManager::SceneManager() : System(SystemType::SceneManager)
 	{
 	}
 
@@ -44,42 +43,45 @@ namespace Engine
 		if (s_enabled)
 		{
 			ENGINE_INFO("[SceneManager::stop] Stopping the scene manager system.");
-			destroyScenes();
+			destroyScene();
 			s_enabled = false;
 		}
 	}
 
+	//! sceneExists()
+	/*!
+	\param sceneName a const std::string& - The name of the scene to check
+	\return a bool - Was the scene name found in the scene list
+	*/
+	bool SceneManager::sceneExists(const std::string& sceneName)
+	{
+		return s_scenesList.find(sceneName) != s_scenesList.end();
+	}
+
 	//! createScene()
 	/*!
-	\param sceneName a const char* - The name of the scene to load
+	\param sceneName a const std::string& - The name of the scene to load
 	\return a Scene* - A pointer to the new scene
 	*/
-	Scene* SceneManager::createScene(const char* sceneName)
+	Scene* SceneManager::createScene(const std::string& sceneName)
 	{
 		if (s_enabled)
 		{
 			// Check if the scene name is already taken
-			if (s_scenesList.find(sceneName) == s_scenesList.end())
+			if (!sceneExists(sceneName))
 			{
 				// Scene name is free, so load the scene
-				Shared<Scene> newScene;
-				newScene.reset(new Scene(sceneName));
-
+				Scene* newScene = new Scene(sceneName.c_str());
 				s_scenesList[sceneName] = newScene;
-				ResourceManager::loadResourcesByScene(sceneName);
-
+	
 				// If this is the first scene to be loaded, set it as the active scene
 				if (s_scenesList.size() == 1)
 					s_activeSceneName = sceneName;
 
-				return newScene.get();
+				return newScene;
 			}
 			else
 				ENGINE_ERROR("[SceneManager::loadScene] Scene name already exists, cannot load the new scene. Name: {0}", sceneName);
-
-			// If no scenes exist after an attempt to load a scene, set a default scene
-			if (s_scenesList.size() == 0)
-				return createScene("default");
 		}
 		else
 			ENGINE_ERROR("[SceneManager::loadScene] This system has not been enabled.");
@@ -95,44 +97,35 @@ namespace Engine
 	{
 		if (s_enabled)
 		{
-			// Find the scene and erase it
-			if (s_scenesList.find(sceneName) != s_scenesList.end())
+			if (sceneName != "")
 			{
-				// Only if the scene to be deleted is NOT the current active scene
-				if (sceneName != s_activeSceneName)
-					s_scenesList[sceneName]->setDelete(true);
+				// Find the scene and erase it
+				if (sceneExists(sceneName))
+				{
+					// Only if the scene to be deleted is NOT the current active scene
+					if (sceneName != s_activeSceneName || s_scenesList.size() != 1)
+						s_scenesList[sceneName]->destroy();
+					else
+						ENGINE_ERROR("[SceneManager::deleteScene] Cannot destroy scene as it is currently set as the active scene or is the last scene available. Name: {0}.", sceneName);
+				}
 				else
-					ENGINE_ERROR("[SceneManager::deleteScene] Cannot destroy scene as it is currently set as the active scene. Name: {0}.", sceneName);
+					ENGINE_ERROR("[SceneManager::deleteScene] Cannot destroy scene as name cannot be found. Name: {0}", sceneName);
 			}
 			else
-				ENGINE_ERROR("[SceneManager::deleteScene] Cannot destroy scene as name cannot be found. Name: {0}", sceneName);
+			{
+				// Name is blank, delete all scenes
+				for (auto& scene : s_scenesList)
+				{
+					delete scene.second;
+					scene.second = nullptr;
+				}
 
-			// If no scenes are left, load a default scene
-			if (s_scenesList.size() == 0)
-				createScene("default");
+				s_scenesList.clear();
+				s_activeSceneName = "NULL";
+			}
 		}
 		else
 			ENGINE_ERROR("[SceneManager::destroyScene] This system has not been enabled.");
-	}
-
-	//! destroyScenes()
-	void SceneManager::destroyScenes()
-	{
-		if (s_enabled)
-		{
-			// Clear all scenes
-			for (auto& scene : s_scenesList)
-			{
-				scene.second->destroy();
-				scene.second.reset();
-				scene.second = nullptr;
-			}
-
-			s_scenesList.clear();
-			s_activeSceneName = "NULL";
-		}
-		else
-			ENGINE_ERROR("[SceneManager::destroyScenes] This system has not been enabled.");
 	}
 
 	//! destroyScheduledScenes()
@@ -140,11 +133,11 @@ namespace Engine
 	{
 		if (s_enabled)
 		{
-			for (auto it = s_scenesList.cbegin(); it != s_scenesList.cend() ; )
+			for (auto it = s_scenesList.cbegin(); it != s_scenesList.cend(); )
 			{
-				if (it->second->getDelete())
+				if (it->second->getDestroyed())
 				{
-					it->second->destroy();
+					delete it->second;
 					s_scenesList.erase(it++);
 				}
 				else
@@ -158,14 +151,14 @@ namespace Engine
 	//! getScene()
 	/*!
 	\param sceneName a const char* - The name of the scene to get
-	\return a std::shared_ptr<Scene> - A pointer to the scene
+	\return a Scene* - A pointer to the scene
 	*/
-	Shared<Scene> SceneManager::getScene(const char* sceneName)
+	Scene* SceneManager::getScene(const char* sceneName)
 	{
 		if (s_enabled)
 		{
 			// Find the scene by name
-			if (s_scenesList.find(sceneName) != s_scenesList.end())
+			if (sceneExists(sceneName))
 				return s_scenesList[sceneName];
 		}
 		else
@@ -176,9 +169,9 @@ namespace Engine
 
 	//! getSceneList()
 	/*!
-	\return a std::map<std::string, std::shared_ptr<Scene>>& - A reference to the list of scenes
+	\return a std::map<std::string, Scene*>& - A reference to the list of scenes
 	*/
-	Map<std::string, Scene>& SceneManager::getSceneList()
+	std::map<std::string, Scene*>& SceneManager::getSceneList()
 	{
 		if (!s_enabled)
 			ENGINE_ERROR("[SceneManager::getSceneList] This system has not been enabled.");
@@ -192,11 +185,11 @@ namespace Engine
 
 	//! getActiveScene()
 	/*!
-	\return a std::shared_ptr<Scene> - A pointer to the active scene
+	\return a Scene* - A pointer to the active scene
 	*/
-	Shared<Scene> SceneManager::getActiveScene()
+	Scene* SceneManager::getActiveScene()
 	{
-		Shared<Scene> scene = nullptr;
+		Scene* scene = nullptr;
 
 		if (s_enabled)
 			scene = getScene(s_activeSceneName.c_str());
@@ -215,7 +208,7 @@ namespace Engine
 		if (s_enabled)
 		{
 			// Check if the scene to set as active exists
-			if (s_scenesList.find(sceneName) != s_scenesList.end())
+			if (sceneExists(sceneName))
 			{
 				//	Check to make sure the we're not setting the active scene as the current active scene
 				if (s_activeSceneName != sceneName)
@@ -246,7 +239,7 @@ namespace Engine
 			ENGINE_TRACE("==========================");
 			ENGINE_TRACE("Scene List Size: {0}", s_scenesList.size());
 			ENGINE_TRACE("Active Scene Name: {0}", s_activeSceneName);
-			ENGINE_TRACE("Active Scene: {0}", (void*)getActiveScene().get());
+			ENGINE_TRACE("Active Scene: {0}", (void*)getActiveScene());
 			ENGINE_TRACE("==========================");
 		}
 		else

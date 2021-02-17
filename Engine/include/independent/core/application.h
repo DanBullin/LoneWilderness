@@ -2,13 +2,14 @@
 *
 * \brief Main application, the start point of the engine
 *
-* \author DMU Course material
+* \author Daniel Bullin
 *
 */
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-namespace Engine {
+namespace Engine 
+{
 	/*! \class Application
 	* \brief Fundemental class of Engine. A singleton which runs the game loop infinitely. Contains all the systems.
 	*/
@@ -23,6 +24,8 @@ namespace Engine {
 		virtual ~Application(); //!< Deconstructor
 		void run(); //!< Main loop
 		static void stop(); //!< Stop the whole application
+
+		const bool checkExitConditions(); //!< Get all application exit conditions
 
 		inline static Application& getInstance() { return *s_instance; } //!< Instance getter from singleton pattern
 			/*!< \return an Application& - A reference to the application instance */

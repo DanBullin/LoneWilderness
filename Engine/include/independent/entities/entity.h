@@ -9,6 +9,9 @@
 #define ENTITY_H
 
 #include "independent/core/common.h"
+#include "independent/core/destroyable.h"
+#include "independent/events/events.h"
+
 #include "independent/entities/components/camera.h"
 #include "independent/entities/components/transform3D.h"
 #include "independent/entities/components/transform2D.h"
@@ -16,7 +19,6 @@
 #include "independent/entities/components/meshRender3D.h"
 #include "independent/entities/components/meshRender2D.h"
 #include "independent/entities/components/text.h"
-#include "independent/events/events.h"
 
 namespace Engine
 {
@@ -26,18 +28,14 @@ namespace Engine
 	/*! \class Entity
 	* \brief An entity class which represents an individual existance in the game world
 	*/
-	class Entity
+	class Entity : public Destroyable
 	{
 	private:
 		std::string m_entityName; //!< The name of the entity
 		Scene* m_parentScene; //!< The scene this entity belongs to
 		Layer* m_layer; //!< The layer this entity is attached to
-
 		std::map<std::string, EntityComponent*> m_components; //!< List of components attached to this entity
-
-		bool m_delete; //!< Delete this entity at the end of the frame
-
-		const ComponentType convertClassType(const std::string& classType); //!< Get component type from class type
+		bool m_display; //!< Should the entity be displayed
 	public:
 		Entity(); //!< Constructor
 		virtual ~Entity(); //!< Destructor
@@ -51,11 +49,12 @@ namespace Engine
 		void setLayer(Layer* layer); //!< Set the layer this entity belongs to
 		Layer* getLayer() const; //!< Get the layer this entity belongs to
 
-		void setDelete(const bool deletion); //!< Set the schedule entity deletion
-		const bool getDelete() const; //!< Get the schedule entity deletion
+		void setDisplay(const bool display); //!< Set whether the entity should be displayed
+		const bool getDisplay() const; //!< Get whether the entity should be displayed
 
 		void detach(const char* name); //!< Delete a component from the entity
 		std::map<std::string, EntityComponent*>& getAllComponents(); //!< Get list of all components
+		bool componentNameExists(const std::string& name); //!< Check if the component name exists
 		template<typename T, typename ...Args> void attach(const char* componentName, Args&&... args); //!< Attach a component to the entity
 		template<typename T> T* getComponent(); //!< Get first instance of component by template type
 		template<typename T> T* getComponent(const char* componentName); //!< Get a component by name
@@ -108,9 +107,10 @@ namespace Engine
 			/* \param e a MouseMovedEvent& - Reference to the mouse move event
 			   \param timestep a const float - The timestep
 			   \param totalTime a const float - The total runtime of the application */
-		virtual void onRender(const Renderers::Renderers renderer); //!< Call upon render if mesh render component attached
+		virtual void onRender(const Renderers renderer); //!< Call upon render if mesh render component attached
 
 		virtual void printEntityDetails(); //!< Print entity details
+		static const ComponentType convertComponentClassType(const std::string& classType); //!< Get component type from class type
 	};
 
 	template<typename T, typename ...Args>
@@ -122,7 +122,7 @@ namespace Engine
 	void Entity::attach(const char* componentName, Args&&... args)
 	{
 		// Check if component name is free
-		if (m_components.find(componentName) == m_components.end())
+		if (!componentNameExists(componentName))
 		{
 			EntityComponent* component;
 			uint32_t limit = Components::getComponentLimit(typeid(T).name());
@@ -150,12 +150,12 @@ namespace Engine
 	*/
 	T* Entity::getComponent()
 	{
-		ComponentType type = convertClassType(typeid(T).name());
+		ComponentType type = convertComponentClassType(typeid(T).name());
 
 		// Get first (and should be only) type of component
 		for (auto& comp : m_components)
 		{
-			if (comp.second->getComponentType() == type) 
+			if (comp.second->getComponentType() == type)
 				return static_cast<T*>(comp.second);
 		}
 
@@ -172,9 +172,9 @@ namespace Engine
 	T* Entity::getComponent(const char* componentName)
 	{
 		// Find component by name
-		if (m_components.find(componentName) != m_components.end())
+		if (componentNameExists(componentName))
 		{
-			if (convertClassType(typeid(T).name()) == m_components[componentName]->getComponentType())
+			if (convertComponentClassType(typeid(T).name()) == m_components[componentName]->getComponentType())
 				return static_cast<T*>(m_components[componentName]);
 			else
 				ENGINE_ERROR("[Entity::getComponent] An incorrect template type was provided for the component: {0}.", componentName);
@@ -193,7 +193,7 @@ namespace Engine
 	std::vector<T*> Entity::getComponents()
 	{
 		std::vector<T*> list;
-		ComponentType type = convertClassType(typeid(T).name());
+		ComponentType type = convertComponentClassType(typeid(T).name());
 
 		// Go through each component and check its type
 		for (auto& component : m_components)
@@ -212,7 +212,7 @@ namespace Engine
 	*/
 	bool Entity::containsComponent()
 	{
-		ComponentType type = convertClassType(typeid(T).name());
+		ComponentType type = convertComponentClassType(typeid(T).name());
 
 		// Go through each component and check its type
 		for (auto& component : m_components)

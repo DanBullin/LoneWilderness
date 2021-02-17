@@ -5,25 +5,19 @@
 * \author Daniel Bullin
 *
 */
-
 #include "independent/systems/systems/renderSystem.h"
 #include "independent/systems/systems/log.h"
 #include "independent/systems/systems/resourceManager.h"
 #include "independent/rendering/renderUtils.h"
 
-#define BATCH3DCAPACITY 50000
-#define VERTEX3DCAPACITY 1000000
-#define INDICIES3DCAPACITY 1000000
-#define BATCH2DCAPACITY 100
-
 namespace Engine
 {
 	bool RenderSystem::s_enabled = false; //!< Is this system enabled
-	std::shared_ptr<TextureUnitManager> RenderSystem::s_unitManager = nullptr; //!< The texture unit manager
+	TextureUnitManager* RenderSystem::s_unitManager = nullptr; //!< The texture unit manager
 	std::array<int32_t, 16> RenderSystem::s_unit = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 }; //!< The texture units
 
 	//! RenderSystem
-	RenderSystem::RenderSystem() : System(Systems::Type::RenderSystem)
+	RenderSystem::RenderSystem() : System(SystemType::RenderSystem)
 	{
 	}
 
@@ -39,7 +33,7 @@ namespace Engine
 		if (!s_enabled)
 		{
 			ENGINE_INFO("[RenderSystem::start] Starting the render system.");
-			s_unitManager.reset(new TextureUnitManager(16, 0));
+			s_unitManager = new TextureUnitManager(16, 0);
 			s_enabled = true;
 		}
 	}
@@ -53,6 +47,8 @@ namespace Engine
 			ENGINE_INFO("[RenderSystem::stop] Stopping the render system.");
 			Renderer3D::destroy();
 			Renderer2D::destroy();
+
+			delete s_unitManager;
 			s_enabled = false;
 		}
 	}
@@ -61,21 +57,12 @@ namespace Engine
 	void RenderSystem::initialise()
 	{
 		// Initialise the 2D and 3D renderers with their capacity values
-		Renderer3D::initialise(BATCH3DCAPACITY, VERTEX3DCAPACITY, INDICIES3DCAPACITY);
-		Renderer2D::initialise(BATCH2DCAPACITY);
+		Renderer2D::initialise(ResourceManager::getConfigValue(ConfigData::BatchCapacity2D));
+		Renderer3D::initialise(ResourceManager::getConfigValue(ConfigData::BatchCapacity3D), ResourceManager::getConfigValue(ConfigData::VertexCapacity3D), ResourceManager::getConfigValue(ConfigData::IndexCapacity3D));
 
 		// Send both renderers the central texture unit manager and units
-		Renderer3D::setTextureUnitManager(s_unitManager, s_unit);
 		Renderer2D::setTextureUnitManager(s_unitManager, s_unit);
-	}
-
-	//! onUpdate()
-	/*!
-	\param timestep a const float - The timestep
-	\param totalTime a const float - The total time of the application
-	*/
-	void RenderSystem::onUpdate(const float timestep, const float totalTime)
-	{
+		Renderer3D::setTextureUnitManager(s_unitManager, s_unit);
 	}
 
 	//! onRender()
@@ -116,6 +103,9 @@ namespace Engine
 
 		// Go through each render pass in the order in which they were added and render
 		for (auto& pass : passList)
-			pass->onRender(entityList);
+		{
+			if(pass->getEnabled())
+				pass->onRender(entityList);
+		}
 	}
 }

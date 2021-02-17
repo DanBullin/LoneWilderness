@@ -5,10 +5,11 @@
 * \author Daniel Bullin
 *
 */
-
 #include "platform/OpenGL/openGLRenderUtils.h"
-
 #include <glad/glad.h>
+
+#include "independent/systems/systems/log.h"
+#include "independent/rendering/geometry/indirectBuffer.h"
 
 namespace Engine
 {
@@ -29,18 +30,18 @@ namespace Engine
 		{
 			switch (type)
 			{
-			case RenderParameter::COLOR_BUFFER_BIT: return GL_COLOR_BUFFER_BIT;
-			case RenderParameter::DEPTH_BUFFER_BIT: return GL_DEPTH_BUFFER_BIT;
-			case RenderParameter::COLOR_AND_DEPTH_BUFFER_BIT: return GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
-			case RenderParameter::NEVER: return GL_NEVER;
-			case RenderParameter::LESS: return GL_LESS;
-			case RenderParameter::EQUAL: return GL_EQUAL;
-			case RenderParameter::LESS_THAN_OR_EQUAL: return GL_LEQUAL;
-			case RenderParameter::GREATER: return GL_GREATER;
-			case RenderParameter::NOTEQUAL: return GL_NOTEQUAL;
-			case RenderParameter::GREATER_THAN_OR_EQUAL: return GL_GEQUAL;
-			case RenderParameter::ALWAYS: return GL_ALWAYS;
-			default: return GL_INVALID_ENUM;
+				case RenderParameter::COLOR_BUFFER_BIT: return GL_COLOR_BUFFER_BIT;
+				case RenderParameter::DEPTH_BUFFER_BIT: return GL_DEPTH_BUFFER_BIT;
+				case RenderParameter::COLOR_AND_DEPTH_BUFFER_BIT: return GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
+				case RenderParameter::NEVER: return GL_NEVER;
+				case RenderParameter::LESS: return GL_LESS;
+				case RenderParameter::EQUAL: return GL_EQUAL;
+				case RenderParameter::LESS_THAN_OR_EQUAL: return GL_LEQUAL;
+				case RenderParameter::GREATER: return GL_GREATER;
+				case RenderParameter::NOTEQUAL: return GL_NOTEQUAL;
+				case RenderParameter::GREATER_THAN_OR_EQUAL: return GL_GEQUAL;
+				case RenderParameter::ALWAYS: return GL_ALWAYS;
+				default: return GL_INVALID_ENUM;
 			}
 		}
 	}
@@ -146,10 +147,10 @@ namespace Engine
 
 	//! clearBuffers()
 	/*!
-	\param buffers a const RenderParameters::RenderParameter - The buffers to clear
+	\param buffers a const RenderParameter - The buffers to clear
 	\param colour a const glm::vec4& - The colour to clear the colour buffer with
 	*/
-	void OpenGLRenderUtils::clearBuffers(const RenderParameters::RenderParameter buffers, const glm::vec4& colour)
+	void OpenGLRenderUtils::clearBuffers(const RenderParameter buffers, const glm::vec4& colour)
 	{
 		glClearColor(colour.r, colour.g, colour.b, colour.a);
 		glClear(RenderParameters::toGLType(buffers));
@@ -157,9 +158,9 @@ namespace Engine
 
 	//! setDepthComparison()
 	/*!
-	\param comparison a const RenderParameters::RenderParameter - The depth test comparison value
+	\param comparison a const RenderParameter - The depth test comparison value
 	*/
-	void OpenGLRenderUtils::setDepthComparison(const RenderParameters::RenderParameter comparison)
+	void OpenGLRenderUtils::setDepthComparison(const RenderParameter comparison)
 	{
 		glDepthFunc(RenderParameters::toGLType(comparison));
 	}

@@ -10,6 +10,7 @@
 
 #include "independent/core/common.h"
 #include "independent/rendering/geometry/vertex.h"
+#include "independent/rendering/geometry/vertexBuffer.h"
 
 namespace Engine
 {
@@ -23,6 +24,7 @@ namespace Engine
 		uint32_t IndexCount; //!< The index count of this 3D mesh
 		uint32_t FirstVertex; //!< The index of the first vertex
 		uint32_t FirstIndex; //!< The index of the first index
+		VertexBuffer* VertexBuffer; //!< A pointer to the vertex buffer which fits the format of the type of vertex used
 	};
 
 	/*! \class Mesh3D

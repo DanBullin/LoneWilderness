@@ -18,8 +18,8 @@ namespace Engine
 	class OpenGLFrameBuffer : public FrameBuffer
 	{
 	public:
-		OpenGLFrameBuffer(); //!< Default constructor
-		OpenGLFrameBuffer(const glm::ivec2& size, FrameBufferLayout& layout); //!< Constructor
+		OpenGLFrameBuffer(const std::string& frameBufferName); //!< Default constructor
+		OpenGLFrameBuffer(const std::string& frameBufferName, const glm::ivec2& size, FrameBufferLayout& layout); //!< Constructor
 		~OpenGLFrameBuffer(); //!< Destructor
 
 		void bind() override; //!< Bind the frame buffer

@@ -5,16 +5,16 @@
 * \author DMU Course material
 *
 */
-
 #include "independent/systems/systems/log.h"
 
-namespace Engine {
+namespace Engine 
+{
 	bool Log::s_enabled = false; //!< Set to false
 	std::shared_ptr<spdlog::logger> Log::s_consoleLogger = nullptr; //!< Initialise the console logger
 	std::shared_ptr<spdlog::logger> Log::s_fileLogger = nullptr; //!< Initialise the file logger
 
 	//! Log()
-	Log::Log() : System(Systems::Type::Logger)
+	Log::Log() : System(SystemType::Logger)
 	{
 	}
 

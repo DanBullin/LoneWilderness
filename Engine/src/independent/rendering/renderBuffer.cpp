@@ -5,14 +5,23 @@
 * \author Daniel Bullin
 *
 */
-
+#include "independent/rendering/renderBuffer.h"
 #include "independent/systems/systems/log.h"
 #include "independent/rendering/renderAPI.h"
-#include "independent/rendering/renderBuffer.h"
 #include "platform/OpenGL/openGLRenderBuffer.h"
 
 namespace Engine
 {
+	//! RenderBuffer()
+	RenderBuffer::RenderBuffer()
+	{
+	}
+
+	//! ~RenderBuffer()
+	RenderBuffer::~RenderBuffer()
+	{
+	}
+
 	//! create()
 	/*!
 	\param type an AttachmentType - The type of attachment

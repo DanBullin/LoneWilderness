@@ -5,12 +5,10 @@
 * \author Daniel Bullin
 *
 */
-
 #include "independent/layers/layerManager.h"
 #include "independent/systems/components/scene.h"
 #include "independent/systems/systems/log.h"
-
-#define LAYERCAPACITY 25
+#include "independent/systems/systems/resourceManager.h"
 
 namespace Engine
 {
@@ -20,7 +18,7 @@ namespace Engine
 	*/
 	LayerManager::LayerManager(Scene* scene)
 	{
-		m_layers.reserve(LAYERCAPACITY);
+		m_layers.reserve(ResourceManager::getConfigValue(ConfigData::MaxLayersPerScene));
 		m_attachedScene = scene;
 	}
 
@@ -29,7 +27,23 @@ namespace Engine
 	{
 		// Delete all layers
 		ENGINE_INFO("[LayerManager::~LayerManager] Deleting layer manager attached to {0}.", getParentScene()->getName());
-		destroy();
+		
+		// Go through the list in reverse
+		for (std::vector<Layer*>::reverse_iterator i = m_layers.rbegin(); i != m_layers.rend(); ++i)
+		{
+			// Stop the layer
+			if ((*i))
+			{
+				// Call the onDetach function
+				(*i)->onDetach();
+				delete (*i);
+			}
+			else
+				ENGINE_ERROR("[LayerManager::~LayerManager] Layer is a null pointer.");
+		}
+		// All layers have been detached, clear the list
+		m_layers.clear();
+
 		m_attachedScene = nullptr;
 	}
 
@@ -50,37 +64,12 @@ namespace Engine
 			}
 		}
 
+		// Add layer to the list
 		m_layers.push_back(newLayer);
+		// Update the layer's manager
 		newLayer->setLayerManager(this);
+		// Call the layer's onAttach function
 		newLayer->onAttach();
-	}
-
-	//! destroy()
-	void LayerManager::destroy()
-	{
-		// Go through the list in reverse
-		for (std::vector<Layer*>::reverse_iterator i = m_layers.rbegin(); i != m_layers.rend(); ++i)
-		{
-			// Stop the layer
-			if ((*i))
-			{
-				(*i)->onDetach();
-				delete (*i);
-			}
-			else
-				ENGINE_ERROR("[LayerManager::destroy] Layer is a null pointer.");
-		}
-		// All layers have been detached, clear the list
-		m_layers.clear();
-	}
-
-	//! getLayers()
-	/*!
-	\return a std::vector<Layer*>& - A reference to the list of layers
-	*/
-	std::vector<Layer*>& LayerManager::getLayers()
-	{
-		return m_layers;
 	}
 
 	//! getLayer()
@@ -98,6 +87,31 @@ namespace Engine
 		}
 		ENGINE_ERROR("[LayerManager::getLayer] Could not get layer as layer name could not be found. Name: {0}, Scene: {1}.", layerName, getParentScene()->getName());
 		return nullptr;
+	}
+
+	//! getLayers()
+	/*!
+	\return a std::vector<Layer*>& - A reference to the list of layers
+	*/
+	std::vector<Layer*>& LayerManager::getLayers()
+	{
+		return m_layers;
+	}
+
+	//! layerExists()
+	/*!
+	\param layer a Layer* - A pointer to the layer
+	\return a bool - Does the layer exist in the layer list
+	*/
+	bool LayerManager::layerExists(Layer* layer)
+	{
+		// Loop through each layer and check its name
+		for (auto& layerElement : m_layers)
+		{
+			if (layerElement->getLayerName() == layer->getLayerName())
+				return true;
+		}
+		return false;
 	}
 
 	//! getParentScene()

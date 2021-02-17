@@ -6,9 +6,9 @@ in vec2 texCoord;
 in flat int texUnit;
 in vec4 tint;
 
-uniform sampler2D[16] u_diffuseMap;
+uniform sampler2D[16] u_textures;
 
 void main()
 {
-	 colour = texture(u_diffuseMap[texUnit], texCoord) * tint;
+	 colour = texture(u_textures[texUnit], texCoord) * tint;
 }

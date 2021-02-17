@@ -15,6 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\gameApplication.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\loaders\sceneLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\entities\cyborg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -33,14 +39,17 @@
     <ClInclude Include="include\layers\UILayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\loaders\sceneLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\gameApplication.h">
+    <ClInclude Include="include\entities\mainMenu\menuText.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\gameApplication.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\loaders\sceneLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\entities\cyborg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -59,10 +68,7 @@
     <ClCompile Include="src\layers\UILayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\loaders\sceneLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gameApplication.cpp">
+    <ClCompile Include="src\entities\mainMenu\menuText.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -11,14 +11,14 @@
 #include "independent/core/common.h"
 #include "independent/entities/entity.h"
 
-namespace Engine 
+namespace Engine
 {
 	class LayerManager; //!< Forward declare
 
 	/*! \class Layer
 	* \brief A layer containing a set of scene data
 	*/
-	class Layer 
+	class Layer
 	{
 	private:
 		std::string m_layerName; //!< The name of the layer

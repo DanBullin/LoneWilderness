@@ -5,7 +5,6 @@
 * \author Daniel Bullin and DMU Course material
 *
 */
-
 #include "independent/systems/components/font.h"
 #include "independent/systems/systems/log.h"
 #include "independent/systems/systems/resourceManager.h"
@@ -28,14 +27,14 @@ namespace Engine
 		m_firstGlyph = firstGlyph;
 		m_lastGlyph = lastGlyph;
 
-		//Load font into font face
+		// Load font into font face
 		if (FT_New_Face(ft, fontFilePath, 0, &m_fontFace))
 		{
 			ENGINE_ERROR("[Font::Font] Could not load font from filepath: {0}.", fontFilePath);
 			return;
 		}
 
-		//Set size of font (Pixel size)
+		// Set size of font (Pixel size)
 		if (FT_Set_Pixel_Sizes(m_fontFace, 0, pixelSize))
 		{
 			ENGINE_ERROR("[Font::Font] Error freetype can not set font size: {0}.", pixelSize);
@@ -99,10 +98,8 @@ namespace Engine
 			auto glyphBuffer = tmpGlyphdata.at(currentGlyph).second.second;
 
 			// Send the glyph data, updated glyph buffer and subtexture reference to atlas to create subtexture
-			if (!m_glyphAtlas->add(static_cast<uint32_t>(gd.size.x), static_cast<uint32_t>(gd.size.y), 4, glyphBuffer, gd.subTexture))
-			{
+			if (!m_glyphAtlas->add(static_cast<uint32_t>(gd.size.x), static_cast<uint32_t>(gd.size.y), 4, glyphBuffer, gd.subTexture, std::string(1, char(gd.ch))))
 				ENGINE_ERROR("Font::Font] Error adding to text buffer to the texture atlas.");
-			}
 			else
 			{
 				// Now update the actual list of loaded glyphs with tmp glyph data
@@ -120,7 +117,7 @@ namespace Engine
 		);
 
 		// Registering the texture atlas for this font with the resource manager
-		ResourceManager::registerTexture2D(getName().c_str(), m_glyphAtlas->getBaseTexture());
+		ResourceManager::registerResource(getName(), m_glyphAtlas->getBaseTexture());
 
 	}
 
@@ -128,6 +125,11 @@ namespace Engine
 	Font::~Font()
 	{
 		ENGINE_INFO("[Font::~Font] Deleting font: {0}.", getName());
+
+		for (auto& sub : m_glyphData)
+		{
+			delete sub.subTexture;
+		}
 	}
 
 	//!	getName()

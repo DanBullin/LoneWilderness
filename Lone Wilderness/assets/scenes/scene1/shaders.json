@@ -8,25 +8,10 @@
 			"geometryShader": "",
 			"tessControlShader": "",
 			"tessEvaluationShader": "",
-			"uniforms": [ "u_diffuseMap" ]
-		},
-		{ 
-			"name": "blinnPhong2", 
-			"vertexShader": "assets/shaders/blinnPhong2/vertex.vs", 
-			"fragmentShader": "assets/shaders/blinnPhong2/fragment.fs", 
-			"geometryShader": "",
-			"tessControlShader": "",
-			"tessEvaluationShader": "",
-			"uniforms": [ "u_diffuseMap" ]
-		},
-		{ 
-			"name": "blinnPhong3", 
-			"vertexShader": "assets/shaders/blinnPhong3/vertex.vs", 
-			"fragmentShader": "assets/shaders/blinnPhong3/fragment.fs", 
-			"geometryShader": "",
-			"tessControlShader": "",
-			"tessEvaluationShader": "",
-			"uniforms": [ "u_diffuseMap" ]
+			"vertexArray": "vertexArray1",
+			"uniforms": [ "u_diffuseMap" ],
+			"uniformBuffers": [ "Camera", "CameraUBO" ],
+			"order": 0
 		},
 		{ 
 			"name": "quad", 
@@ -35,16 +20,34 @@
 			"geometryShader": "",
 			"tessControlShader": "",
 			"tessEvaluationShader": "",
-			"uniforms": [ "u_diffuseMap" ]
+			"vertexArray": "QuadArray",
+			"uniforms": [ "u_textures" ],
+			"uniformBuffers": [ "Camera", "CameraUBO" ],
+			"order": 1
 		},
 		{ 
-			"name": "quad1", 
-			"vertexShader": "assets/shaders/quad1/vertex.vs", 
-			"fragmentShader": "assets/shaders/quad1/fragment.fs", 
+			"name": "skyboxShader", 
+			"vertexShader": "assets/shaders/sky/vertex.vs", 
+			"fragmentShader": "assets/shaders/sky/fragment.fs", 
 			"geometryShader": "",
 			"tessControlShader": "",
 			"tessEvaluationShader": "",
-			"uniforms": [ "u_diffuseMap" ]
+			"vertexArray": "vertexArray2",
+			"uniforms": [ "u_cubeMap" ],
+			"uniformBuffers": [ "Camera", "CameraUBO" ],
+			"order": 0
+		},
+		{ 
+			"name": "textShader", 
+			"vertexShader": "assets/shaders/quad/vertex.vs", 
+			"fragmentShader": "assets/shaders/quad/fragment.fs", 
+			"geometryShader": "",
+			"tessControlShader": "",
+			"tessEvaluationShader": "",
+			"vertexArray": "QuadArray",
+			"uniforms": [ "u_textures" ],
+			"uniformBuffers": [ "Camera", "CameraUBO" ],
+			"order": 1
 		}
 	]	
 }

@@ -5,7 +5,6 @@
 * \author DMU Course material
 *
 */
-
 #include "independent/rendering/renderAPI.h"
 #include "independent/rendering/geometry/indirectBuffer.h"
 #include "platform/OpenGL/geometry/openGLIndirectBuffer.h"
@@ -13,13 +12,27 @@
 
 namespace Engine
 {
+	//! IndirectBuffer()
+	/*
+	\param indirectBufferName a const std::string& - The name of the indirect buffer
+	*/
+	IndirectBuffer::IndirectBuffer(const std::string& indirectBufferName) : Resource(indirectBufferName, ResourceType::IndirectBuffer)
+	{
+	}
+
+	//! ~IndirectBuffer
+	IndirectBuffer::~IndirectBuffer()
+	{
+	}
+
 	//! create()
 	/*!
+	\param indirectBufferName a const std::string& - The name of the indirect buffer
 	\param commands a DrawElementsIndirectCommand* - The commands info
 	\param count a const uint32_t - The number of commands
 	\return an IndirectBuffer* - The indirect buffer based on the current graphics API
 	*/
-	IndirectBuffer* IndirectBuffer::create(DrawElementsIndirectCommand* commands, const uint32_t count)
+	IndirectBuffer* IndirectBuffer::create(const std::string& indirectBufferName, DrawElementsIndirectCommand* commands, const uint32_t count)
 	{
 		switch (RenderAPI::getAPI())
 		{
@@ -30,7 +43,7 @@ namespace Engine
 			}
 			case GraphicsAPI::OpenGL:
 			{
-				return new OpenGLIndirectBuffer(commands, count);
+				return new OpenGLIndirectBuffer(indirectBufferName, commands, count);
 			}
 			case GraphicsAPI::Direct3D:
 			{

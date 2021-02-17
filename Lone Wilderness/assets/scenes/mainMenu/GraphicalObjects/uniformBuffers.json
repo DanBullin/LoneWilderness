@@ -1,0 +1,9 @@
+{
+	"uniformBuffers": 
+	[
+		{ 
+			"name": "CameraUBO",
+			"layout": [ "u_view", "Mat4", "u_projection", "Mat4" ]
+		}
+	]	
+}

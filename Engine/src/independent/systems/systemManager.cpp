@@ -1,16 +1,19 @@
 /*! \file systemManager.cpp
 *
-* \brief A system manager class which manages all systems that can be added to an application.
+* \brief A system manager class which manages all systems that have been loaded.
 *
 * \author Daniel Bullin
 *
 */
-
 #include "independent/systems/systemManager.h"
+
+#ifdef NG_PLATFORM_WINDOWS
+#include "platform/GLFW/systems/GLFWSystem.h"
+#endif
 
 namespace Engine
 {
-	std::vector<System*> SystemManager::s_activeSystems = std::vector<System*>(); //!< Initialise static variable
+	std::vector<System*> SystemManager::s_activeSystems; //!< Initialise static variable
 	bool SystemManager::s_enabled = false; //!< Initialise starting as false
 
 	//! initialise()
@@ -19,57 +22,28 @@ namespace Engine
 	*/
 	void SystemManager::initialise(const uint32_t systemMaxCount)
 	{
-		// Initialise the SM if it hasn't been already
+		// Initialise the System manager if it hasn't been already
 		if(!s_enabled)
 		{
 			if (s_activeSystems.size() != 0)
+			{
+				for (auto& system : s_activeSystems)
+					delete system;
+
 				s_activeSystems.clear();
+			}
 
 			s_activeSystems.reserve(systemMaxCount);
 			s_enabled = true;
 		}
 	}
 
-	//! destroy()
-	void SystemManager::destroy()
-	{
-		// Destroy the SystemManager if it has been initialised
-		if (s_enabled)
-		{
-			// Check if list is empty
-			if (s_activeSystems.size() > 0)
-			{
-				// Go through the list in reverse
-				for (std::vector<System*>::reverse_iterator i = s_activeSystems.rbegin(); i != s_activeSystems.rend(); ++i)
-				{
-					// Stop the system
-					if ((*i))
-					{
-						(*i)->stop();
-						delete (*i);
-					}
-					else
-						ENGINE_ERROR("[SystemManager::destroy] System is a null pointer.");
-				}
-				// All systems have been stopped, clear the list
-				s_activeSystems.clear();
-			}
-			else
-				ENGINE_ERROR("[SystemManager::destroy] Cannot remove systems as system list is empty.");
-
-			s_enabled = false;
-		}
-		else
-			ENGINE_ERROR("[SystemManager::destroy] The system manager has not been enabled.");
-
-	}
-
 	//! containsSystem()
 	/*!
-	\param type a const Systems::Type - The system type
-	\return a const bool - Is the system enabled
+	\param type a const SystemType - The system type
+	\return a const bool - Has the system been added to the system list
 	*/
-	const bool SystemManager::containsSystem(const Systems::Type type)
+	const bool SystemManager::containsSystem(const SystemType type)
 	{
 		if (s_enabled)
 		{
@@ -83,9 +57,9 @@ namespace Engine
 
 	//! addSystem()
 	/*!
-	\param type a const Systems::Type - The system type
+	\param type a const SystemType - The system type
 	*/
-	void SystemManager::addSystem(const Systems::Type type)
+	void SystemManager::addSystem(const SystemType type)
 	{
 		// Add system if manager is enabled
 		if (s_enabled)
@@ -99,99 +73,124 @@ namespace Engine
 					// Add the system
 					switch (type)
 					{
-						case Systems::Type::Logger:
-						{
-							s_activeSystems.push_back(new Log);
-							break;
-						}
-						case Systems::Type::Randomiser:
-						{
-							s_activeSystems.push_back(new Randomiser);
-							break;
-						}
-						case Systems::Type::TimerSystem:
-						{
-							s_activeSystems.push_back(new TimerSystem);
-							break;
-						}
-						case Systems::Type::WindowAPISystem:
-						{
+					case SystemType::Logger:
+					{
+						s_activeSystems.push_back(new Log);
+						break;
+					}
+					case SystemType::Randomiser:
+					{
+						s_activeSystems.push_back(new Randomiser);
+						break;
+					}
+					case SystemType::TimerSystem:
+					{
+						s_activeSystems.push_back(new TimerSystem);
+						break;
+					}
+					case SystemType::WindowAPISystem:
+					{
 #ifdef NG_PLATFORM_WINDOWS
-							s_activeSystems.push_back(new GLFWSystem);
+						s_activeSystems.push_back(new GLFWSystem);
 #endif
-							break;
-						}
-						case Systems::Type::WindowManager:
+						break;
+					}
+					case SystemType::WindowManager:
+					{
+						// Check if window API has been added, cannot add window manager if it hasn't
+						if (containsSystem(SystemType::WindowAPISystem))
+							s_activeSystems.push_back(new WindowManager);
+						else
 						{
-							// Check if window API has been added, cannot add window manager if it hasn't
-							if (containsSystem(Systems::Type::WindowAPISystem))
-								s_activeSystems.push_back(new WindowManager);
-							else
-							{
-								ENGINE_ERROR("[SystemManager::addSystem] Cannot add WindowManager system until Windowing API system has been added.");
-								return;
-							}
-							break;
+							ENGINE_ERROR("[SystemManager::addSystem] Cannot add WindowManager system until Windowing API system has been added.");
+							return;
 						}
-						case Systems::Type::EventManager:
-						{
-							s_activeSystems.push_back(new EventManager);
-							break;
-						}
-						case Systems::Type::ResourceManager:
-						{
-							s_activeSystems.push_back(new ResourceManager);
-							break;
-						}
-						case Systems::Type::SceneManager:
-						{
-							s_activeSystems.push_back(new SceneManager);
-							break;
-						}
-						case Systems::Type::RenderSystem:
-						{
-							s_activeSystems.push_back(new RenderSystem);
-							break;
-						}
-						case Systems::Type::FontManager:
-						{
-							s_activeSystems.push_back(new FontManager);
-							break;
-						}
-						default:
-							break;
+						break;
+					}
+					case SystemType::EventManager:
+					{
+						s_activeSystems.push_back(new EventManager);
+						break;
+					}
+					case SystemType::ResourceManager:
+					{
+						s_activeSystems.push_back(new ResourceManager);
+						break;
+					}
+					case SystemType::SceneManager:
+					{
+						s_activeSystems.push_back(new SceneManager);
+						break;
+					}
+					case SystemType::FontManager:
+					{
+						s_activeSystems.push_back(new FontManager);
+						break;
+					}
+					case SystemType::RenderSystem:
+					{
+						s_activeSystems.push_back(new RenderSystem);
+						break;
+					}
+					default:
+						break;
 					}
 
 					// System has been added, start the system
 					getSystemByType(type)->start();
 				}
 				else
-					ENGINE_ERROR("[SystemManager::addSystem] Cannot add system as system type already exists: {0}", type);
+					ENGINE_ERROR("[SystemManager::addSystem] Cannot add system as system type already exists: {0}", static_cast<int>(type));
 			}
 			else
-				ENGINE_ERROR("[SystemManager::addSystem] Cannot add system has the maximum number of systems have been added. System Type: {0}", type);
+				ENGINE_ERROR("[SystemManager::addSystem] Cannot add system has the maximum number of systems have been added. System Type: {0}", static_cast<int>(type));
 		}
 		else
-			ENGINE_ERROR("[SystemManager::addSystem] The system manager has not been enabled.");
+			ENGINE_ERROR("[SystemManager::addSystem] The system manager has not been initialised.");
 	}
 
-	//! getActiveSystems()
-	/*!
-	\return a std::vector<System*>& - The active systems list
-	*/
-	std::vector<System*>& SystemManager::getActiveSystems()
+	//! destroy()
+	void SystemManager::destroy()
 	{
-		if(!s_enabled)
-			ENGINE_ERROR("[SystemManager::getActiveSystems] The system manager has not been enabled.");
-		return s_activeSystems;
+		// Destroy the SystemManager if it has been initialised
+		if (s_enabled)
+		{
+			// Check if list is empty
+			if (s_activeSystems.size() > 0)
+			{
+				// Go through the list in reverse order
+				for (std::vector<System*>::reverse_iterator i = s_activeSystems.rbegin(); i != s_activeSystems.rend(); ++i)
+				{
+					// Stop the system
+					// then delete the raw pointer
+					if ((*i))
+					{
+						(*i)->stop();
+						delete (*i);
+					}
+					else
+						ENGINE_ERROR("[SystemManager::destroy] System is a null pointer.");
+				}
+
+				// All systems have been stopped and then deleted, clear the list
+				s_activeSystems.clear();
+			}
+			else
+				ENGINE_ERROR("[SystemManager::destroy] Cannot remove systems as system list is empty.");
+
+			s_enabled = false;
+		}
+		else
+			ENGINE_ERROR("[SystemManager::destroy] The system manager has not been initialised.");
+
 	}
 
 	//! getSystemByType()
 	/*!
-	\param type a const Systems::Type - The system type
+	\param type a const SystemType - The system type
 	\return a System* - The system pointer
 	*/
-	System* SystemManager::getSystemByType(const Systems::Type type)
+	System* SystemManager::getSystemByType(const SystemType type)
 	{
 		if (s_enabled)
 		{
@@ -201,7 +200,7 @@ namespace Engine
 					return system;
 		}
 		else
-			ENGINE_ERROR("[SystemManager::getSystemByType] The system manager has not been enabled.");
+			ENGINE_ERROR("[SystemManager::getSystemByType] The system manager has not been initialised.");
 		return nullptr;
 	}
 }

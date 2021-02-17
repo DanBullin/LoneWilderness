@@ -5,7 +5,6 @@
 * \author DMU Course material
 *
 */
-
 #include "independent/rendering/renderAPI.h"
 #include "independent/systems/systems/log.h"
 #include "independent/rendering/geometry/vertexArray.h"
@@ -13,22 +12,36 @@
 
 namespace Engine
 {
+	//! VertexArray()
+	/*
+	\param vertexArrayName a const std::string& - The name of the vertex array
+	*/
+	VertexArray::VertexArray(const std::string& vertexArrayName) : Resource(vertexArrayName, ResourceType::VertexArray)
+	{
+	}
+
+	//! ~VertexArray()
+	VertexArray::~VertexArray()
+	{
+	}
+
 	//! create()
 	/*!
+	\param vertexArrayName a const std::string& - The name of the vertex array
 	\return a VertexArray* - The vertex array based on the current graphics API
 	*/
-	VertexArray* VertexArray::create()
+	VertexArray* VertexArray::create(const std::string& vertexArrayName)
 	{
 		switch (RenderAPI::getAPI())
 		{
 			case GraphicsAPI::None:
-			{	
+			{
 				ENGINE_ERROR("[VertexArray::create] No rendering API selected.");
 				break;
 			}
 			case GraphicsAPI::OpenGL:
 			{
-				return new OpenGLVertexArray;
+				return new OpenGLVertexArray(vertexArrayName);
 			}
 			case GraphicsAPI::Direct3D:
 			{

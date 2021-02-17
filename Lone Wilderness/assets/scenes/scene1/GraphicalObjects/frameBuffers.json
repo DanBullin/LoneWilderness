@@ -1,0 +1,26 @@
+{
+	"frameBuffers": 
+	[
+		{ 
+			"name": "frameBuffer1",
+			"useDefault": true,
+			"layout": [ ],
+			"dimensions": [],
+			"useWindowDimensions": true
+		},
+		{ 
+			"name": "frameBuffer2",
+			"useDefault": false,
+			"layout": [ "Colour", true, "DepthAndStencil", false ],
+			"dimensions": [],
+			"useWindowDimensions": true
+		},
+		{ 
+			"name": "frameBuffer3",
+			"useDefault": false,
+			"layout": [ "Colour", true, "DepthAndStencil", false ],
+			"dimensions": [],
+			"useWindowDimensions": true
+		}
+	]	
+}

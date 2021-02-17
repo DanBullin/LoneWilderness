@@ -5,9 +5,7 @@
 * \author Daniel Bullin
 *
 */
-
 #include "independent/systems/components/window.h"
-#include "independent/systems/components/scene.h"
 
 #ifdef NG_PLATFORM_WINDOWS
 #include "platform/GLFW/GLFWWindowImplementation.h"

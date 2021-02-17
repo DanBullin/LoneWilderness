@@ -5,7 +5,6 @@
 * \author Daniel Bullin
 *
 */
-
 #include "independent/systems/system.h"
 
 namespace Engine
@@ -14,7 +13,7 @@ namespace Engine
 	/*!
 	\param type a const Systems::Type - The type of the system
 	*/
-	System::System(const Systems::Type type) : m_systemType(type)
+	System::System(const SystemType type) : m_systemType(type)
 	{
 	}
 
@@ -25,9 +24,9 @@ namespace Engine
 
 	//! getSystemType()
 	/*!
-	\return a const Systems::Type - The type of the system
+	\return a const SystemType - The type of the system
 	*/
-	const Systems::Type System::getSystemType() const
+	const SystemType System::getSystemType() const
 	{
 		return m_systemType;
 	}

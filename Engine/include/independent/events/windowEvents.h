@@ -11,7 +11,8 @@
 #include "independent/events/event.h"
 #include <glm/glm.hpp>
 
-namespace Engine {
+namespace Engine 
+{
 	/*! \class WindowCloseEvent
 	* \brief A window close event
 	*/
@@ -29,7 +30,8 @@ namespace Engine {
 	/*! \class WindowResizeEvent
 	* \brief A window resize event
 	*/
-	class WindowResizeEvent : public Event {
+	class WindowResizeEvent : public Event 
+	{
 	private:
 		int32_t m_width;	//!< Window width after resize
 		int32_t m_height;	//!< Window height after resize
@@ -54,7 +56,8 @@ namespace Engine {
 	/*! \class WindowFocusEvent
 	* \brief A window focus event
 	*/
-	class WindowFocusEvent : public Event {
+	class WindowFocusEvent : public Event 
+	{
 	public:
 		static inline const EventType getStaticType() { return EventType::WindowFocus; } //!< Return static type
 			/*!< \return a const EventType - The static window focus event type */
@@ -67,7 +70,8 @@ namespace Engine {
 	/*! \class WindowLostFocusEvent
 	* \brief A window lost focus event
 	*/
-	class WindowLostFocusEvent : public Event {
+	class WindowLostFocusEvent : public Event 
+	{
 	public:
 		static inline const EventType getStaticType() { return EventType::WindowLostFocus; } //!< Return static type
 			/*!< \return a const EventType - The static window lost focus event type */
@@ -80,7 +84,8 @@ namespace Engine {
 	/*! \class WindowMovedEvent
 	* \brief A window moved event
 	*/
-	class WindowMovedEvent : public Event {
+	class WindowMovedEvent : public Event 
+	{
 	private:
 		int32_t m_xPos; //!< Position of the x-axis of the window after its been moved
 		int32_t m_yPos; //!< Position of the y-axis of the window after its been moved

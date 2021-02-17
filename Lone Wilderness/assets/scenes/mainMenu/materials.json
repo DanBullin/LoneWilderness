@@ -1,6 +1,13 @@
 {
 	"materials": 
 	[
-		
+		{ 
+			"name": "textMaterial", 
+			"subTextures": [
+				"textSubTexture"
+			],  
+			"shader": "textShader", 
+			"tint": [ 1.0, 1.0, 1.0, 1.0 ] 
+		}
 	]
 }

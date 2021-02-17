@@ -5,7 +5,6 @@
 * \author Daniel Bullin
 *
 */
-
 #include "independent/entities/components/meshRender3D.h"
 #include "independent/entities/entity.h"
 #include "independent/systems/systems/log.h"
@@ -17,11 +16,11 @@ namespace Engine
 	\param localPos a const glm::vec3& - The local position
 	\param localOrientation a const glm::vec3& - The local orientation
 	\param localScale a const glm::vec3& - The local scale
-	\param model a const std::shared_ptr<Model3D>& - A pointer to the 3D model
-	\param material a const std::shared_ptr<Material>& - A pointer to the material
+	\param model a Model3D* - A pointer to the 3D model
+	\param material a Material* - A pointer to the material
 	*/
-	MeshRender3D::MeshRender3D(const glm::vec3& localPos, const glm::vec3& localOrientation, const glm::vec3& localScale, const Shared<Model3D>& model, const Shared<Material>& material) 
-		: EntityComponent(ComponentType::MeshRender3D), m_model(model.get()), m_material(material.get()), m_localPosition(localPos), m_localOrientation(localOrientation), m_localScale(localScale)
+	MeshRender3D::MeshRender3D(const glm::vec3& localPos, const glm::vec3& localOrientation, const glm::vec3& localScale, Model3D* model, Material* material) 
+		: EntityComponent(ComponentType::MeshRender3D), m_model(model), m_material(material), m_localPosition(localPos), m_localOrientation(localOrientation), m_localScale(localScale)
 	{
 	}
 
@@ -67,12 +66,12 @@ namespace Engine
 
 	//!	setModel()
 	/*!
-	\param model a const std::shared_ptr<Model3D>& - A pointer to the 3D model
+	\param model a Model3D* - A pointer to the 3D model
 	*/
-	void MeshRender3D::setModel(const Shared<Model3D>& model)
+	void MeshRender3D::setModel(Model3D* model)
 	{
-		if (model.get())
-			m_model = model.get();
+		if (model)
+			m_model = model;
 		else
 			ENGINE_ERROR("[MeshRender3D::setModel] An invalid model was provided.");
 	}
@@ -88,12 +87,12 @@ namespace Engine
 
 	//!	setMaterial()
 	/*!
-	\param material a const std::shared_ptr<Material>& - A pointer to the material
+	\param material a Material* - A pointer to the material
 	*/
-	void MeshRender3D::setMaterial(const Shared<Material>& material)
+	void MeshRender3D::setMaterial(Material* material)
 	{
-		if (material.get())
-			m_material = material.get();
+		if (material)
+			m_material = material;
 		else
 			ENGINE_ERROR("[MeshRender3D::setMaterial] An invalid material was provided.");
 	}

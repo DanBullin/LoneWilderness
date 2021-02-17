@@ -5,11 +5,9 @@
 * \author Daniel Bullin and www.learnOpenGL.com
 *
 */
-
 #include "independent/entities/components/camera.h"
 #include "independent/entities/entity.h"
-#include "independent/systems/systems/log.h"
-#include "independent/systems/systems/windowManager.h"
+#include "independent/systems/systemManager.h"
 #include "independent/utils/mathUtils.h"
 
 namespace Engine
@@ -23,13 +21,60 @@ namespace Engine
 	{
 		// Update all the applicable camera vectors
 		m_mainCamera = false;
+		m_skybox = nullptr;
 		updateCameraVectors();
 	}
 
 	//! ~Camera()
 	Camera::~Camera()
 	{
-		
+		if (m_skybox) delete m_skybox;
+	}
+
+	//! onAttach()
+	void Camera::onAttach()
+	{
+	}
+
+	//! onDetach
+	void Camera::onDetach()
+	{
+	}
+
+	//! getClearColour()
+	/*!
+	\return a const glm::vec4& - The clear colour
+	*/
+	const glm::vec4& Camera::getClearColour()
+	{
+		return m_clearColour;
+	}
+
+	//! setClearColour()
+	/*!
+	\param colour a const glm::vec4& - The clear colour
+	*/
+	void Camera::setClearColour(const glm::vec4& colour)
+	{
+		m_clearColour = colour;
+	}
+
+	//! getSkybox()
+	/*!
+	\return a Skybox* - A pointer to the skybox
+	*/
+	Skybox* Camera::getSkybox()
+	{
+		return m_skybox;
+	}
+
+	//! setSkybox()
+	/*!
+	\param skybox a Skybox* - A pointer to the skybox
+	*/
+	void Camera::setSkybox(Skybox* skybox)
+	{
+		m_skybox = skybox;
 	}
 
 	//! getViewMatrix()
@@ -69,9 +114,9 @@ namespace Engine
 
 	//! setLocalPosition()
 	/*!
-	\param pos a const glm::vec3& - The new position
+	\param pos a const glm::vec3 - The new position
 	*/
-	void Camera::setLocalPosition(const glm::vec3& pos)
+	void Camera::setLocalPosition(const glm::vec3 pos)
 	{
 		m_cameraData.Position = pos;
 	}
@@ -137,16 +182,6 @@ namespace Engine
 	const bool Camera::getMainCamera()
 	{
 		return m_mainCamera;
-	}
-
-	//! onAttach()
-	void Camera::onAttach()
-	{
-	}
-
-	//! onDetach
-	void Camera::onDetach()
-	{
 	}
 
 	//! onUpdate()

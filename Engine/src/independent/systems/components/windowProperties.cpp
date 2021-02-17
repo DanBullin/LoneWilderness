@@ -5,7 +5,6 @@
 * \author Daniel Bullin
 *
 */
-
 #include "independent/systems/components/windowProperties.h"
 
 namespace Engine

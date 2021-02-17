@@ -5,14 +5,22 @@
 * \author DMU Course material
 *
 */
-
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "platform/GLFW/GLFWGLGraphicsContext.h"
 #include "independent/systems/systems/log.h"
 #include "independent/rendering/renderUtils.h"
 
-namespace Engine {
+namespace Engine 
+{
+	//! GLFWGLGraphicsContext()
+	/*!
+	\param nativeWindow a GLFWwindow* - A pointer to a GLFW window
+	*/
+	GLFWGLGraphicsContext::GLFWGLGraphicsContext(GLFWwindow * nativeWindow) : m_window(nativeWindow)
+	{
+	}
+
 	//! init()
 	void GLFWGLGraphicsContext::init()
 	{

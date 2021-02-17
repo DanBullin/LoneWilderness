@@ -1,0 +1,8 @@
+{
+	"indirectBuffers": 
+	[
+		{ 
+			"name": "indirectBuffer", "size": "Batch3DCapacity"
+		}
+	]	
+}

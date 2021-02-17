@@ -25,7 +25,7 @@ namespace Engine
 		FrameBufferLayout() {} //!< Default constructor
 		FrameBufferLayout(const std::initializer_list<Attachment>& attachments) : m_attachments(attachments) {} //!< Constructor
 			/*!< \param attachments a const std::initializer_list<Attachment>& - The attachments to add to the list of attachments */
-		
+
 		inline const std::vector<Attachment>& getAttachments() const { return m_attachments; } //!< Get the attachments in the frame buffer layout
 			/*!< \return a const std::vector<Attachment>& - The attachments in the frame buffer layout */
 
@@ -44,7 +44,7 @@ namespace Engine
 	/*! \class FrameBuffer
 	* \brief An API agnostic frame buffer object
 	*/
-	class FrameBuffer
+	class FrameBuffer : public Resource
 	{
 	protected:
 		uint32_t m_bufferID; //!< The frame buffer ID
@@ -54,14 +54,16 @@ namespace Engine
 		std::map<std::string, Texture2D*> m_sampledTargets; //!< A list of sampled targets
 		std::map<std::string, RenderBuffer*> m_nonSampledTargets; //!< A list of non-sampled targets
 	public:
-		virtual ~FrameBuffer() = default; //!< Destructor
+		static FrameBuffer* create(const std::string& frameBufferName, const glm::ivec2& size, FrameBufferLayout& layout); //!< Create a frame buffer
+		static FrameBuffer* createDefault(const std::string& frameBufferName); //!< Create a default frame buffer
+
+		FrameBuffer(const std::string& frameBufferName); //!< Constructor
+		virtual ~FrameBuffer(); //!< Destructor
 
 		inline const uint32_t getID() const { return m_bufferID; } //!< Get the frame buffer id
 			/*!< \return a const uint32_t - The frame buffer ID */
-
 		inline glm::ivec2 getSize() const { return m_size; } //!< Get the size of the framebuffer
 			/*!< \return a glm::ivec2 - The size of the framebuffer */
-
 		inline FrameBufferLayout& getLayout() { return m_layout; } //!< Get the framebuffer layout
 			/*!< \return a FrameBufferLayout& - The layout of the framebuffer */
 
@@ -69,9 +71,6 @@ namespace Engine
 		RenderBuffer* getNonSampledTarget(const char* targetName); //!< Get a non-sampled target from the framebuffer
 
 		virtual void bind() = 0; //!< Bind the frame buffer
-		
-		static FrameBuffer* create(const glm::ivec2& size, FrameBufferLayout& layout); //!< Create a frame buffer
-		static FrameBuffer* createDefault(); //!< Create a default frame buffer
 	};
 }
 #endif

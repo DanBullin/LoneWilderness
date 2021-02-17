@@ -9,8 +9,7 @@
 #define ENTITYCOMPONENT_H
 
 #include "independent/core/common.h"
-
-#define COMPONENTLIMIT 100
+#include "independent/systems/systems/resourceManager.h"
 
 namespace Engine
 {
@@ -49,7 +48,7 @@ namespace Engine
 			else if (componentClassName == "class Engine::EventListener")
 				return 1;
 			else
-				return COMPONENTLIMIT;
+				return ResourceManager::getConfigValue(ConfigData::MaxComponentsInstancePerEntity);
 		}
 	}
 
@@ -59,14 +58,14 @@ namespace Engine
 	class EntityComponent
 	{
 	private:
-		Entity* m_parentEntity; //!< The entity this component is attached to
 		std::string m_name; //!< The name of the component
 		ComponentType m_componentType; //!< The component type
+		Entity* m_parentEntity; //!< The entity this component is attached to
 
 		EntityComponent(const EntityComponent& other) {} //!< The copy constructor disabled
 		void operator=(const EntityComponent& other) {} //!< The assignment operator disabled
 	public:
-		EntityComponent(const ComponentType type); //!< Constructor requiring type
+		EntityComponent(const ComponentType type); //!< Constructor requiring component type
 		virtual ~EntityComponent(); //!< Destructor
 
 		void setParent(Entity* parent); //!< Set the component's parent

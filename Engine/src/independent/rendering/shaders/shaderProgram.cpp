@@ -5,7 +5,6 @@
 * \author Daniel Bullin
 *
 */
-
 #include "independent/systems/systems/log.h"
 #include "independent/rendering/renderAPI.h"
 #include "independent/rendering/shaders/shaderProgram.h"
@@ -13,11 +12,25 @@
 
 namespace Engine
 {
+	//! ShaderProgram()
+	/*
+	\param shaderName a const std::string& - The name of the shader program
+	*/
+	ShaderProgram::ShaderProgram(const std::string& shaderName) : Resource(shaderName, ResourceType::ShaderProgram), m_vertexArray(nullptr)
+	{
+	}
+
+	//! ~ShaderProgram()
+	ShaderProgram::~ShaderProgram()
+	{
+	}
+
 	//! create()
 	/*!
+	\param shaderName a const std::string& - The name of the shader program
 	\return a ShaderProgram* - The shader object of type defined by the graphics API chosen
 	*/
-	ShaderProgram* ShaderProgram::create()
+	ShaderProgram* ShaderProgram::create(const std::string& shaderName)
 	{
 		switch (RenderAPI::getAPI())
 		{
@@ -28,7 +41,7 @@ namespace Engine
 			}
 			case GraphicsAPI::OpenGL:
 			{
-				return new OpenGLShaderProgram;
+				return new OpenGLShaderProgram(shaderName);
 			}
 			case GraphicsAPI::Direct3D:
 			{

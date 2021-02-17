@@ -26,7 +26,7 @@ namespace Engine
 		glm::vec3 m_localOrientation; //!< The local rotation of the geometry to the entity
 		glm::vec3 m_localScale; //!< The local scale of the geometry to the entity
 	public:
-		MeshRender3D(const glm::vec3& localPos, const glm::vec3& localOrientation, const glm::vec3& localScale, const Shared<Model3D>& model, const Shared<Material>& material); //!< Constructor
+		MeshRender3D(const glm::vec3& localPos, const glm::vec3& localOrientation, const glm::vec3& localScale, Model3D* model, Material* material); //!< Constructor
 		~MeshRender3D(); //!< Destructor
 
 		void onAttach() override; //!< Occurs when component is attached to an entity
@@ -34,10 +34,10 @@ namespace Engine
 		void onUpdate(const float timestep, const float totalTime) override; //!< Update the 3D mesh render
 		void printComponentDetails() override; //!< Print component details
 
-		void setModel(const Shared<Model3D>& model); //!< Set the 3D model
+		void setModel(Model3D* model); //!< Set the 3D model
 		Model3D* getModel(); //!< Get the 3D model
 
-		void setMaterial(const Shared<Material>& material); //!< Set the material
+		void setMaterial(Material* material); //!< Set the material
 		Material* getMaterial(); //!< Get the material
 
 		void setLocalPosition(const glm::vec3& newPos); //!< Set the local position

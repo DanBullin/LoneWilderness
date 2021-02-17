@@ -11,14 +11,15 @@
 #include "independent/core/common.h"
 #include "independent/layers/layer.h"
 
-namespace Engine 
+namespace Engine
 {
 	class Scene; //!< Forward declare scene
 
 	/*! \class LayerManager
 	* \brief A layer manager which manages layers
 	*/
-	class LayerManager {
+	class LayerManager 
+	{
 	private:
 		Scene* m_attachedScene; //!< The scene this manager is attached to
 		std::vector<Layer*> m_layers; //!< A list of all layers
@@ -27,9 +28,9 @@ namespace Engine
 		~LayerManager(); //!< Destructor
 
 		void attachLayer(Layer* newLayer); //!< Add a layer to the layer list
-		void destroy(); //!< Destroys the layer manager and all layers
-		std::vector<Layer*>& getLayers(); //!< Get all layers
 		Layer* getLayer(const std::string& layerName); //!< Get a layer by name
+		std::vector<Layer*>& getLayers(); //!< Get all layers
+		bool layerExists(Layer* layer); //!< Check if the layer exists in the manager
 
 		Scene* getParentScene(); //!< Get the scene this manager is attached to
 

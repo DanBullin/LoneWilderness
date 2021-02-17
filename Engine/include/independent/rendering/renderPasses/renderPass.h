@@ -23,14 +23,18 @@ namespace Engine
 	{
 	protected:
 		Scene* m_attachedScene; //!< The scene this pass is attached to
-		FrameBuffer* m_frameBuffer; //!< The framebuffer to render to for this pass
+		bool m_enabled; //!< Is the render pass enabled
 	public:
 		RenderPass(); //!< Constructor
 		virtual ~RenderPass(); //!< Destructor
 
 		virtual void onRender(std::vector<Entity*>& entities) = 0; //!< The rendering to perform for this pass
+		virtual FrameBuffer* getFrameBuffer() = 0; //!< Get a framebuffer from the render pass
 
 		void attachScene(Scene* scene); //!< Attach the scene to this pass
+
+		void setEnabled(const bool value); //!< Set whether to enable this render pass
+		bool getEnabled() const; //!< Get whether to process this render pass
 	};
 }
 #endif

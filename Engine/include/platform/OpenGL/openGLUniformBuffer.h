@@ -20,11 +20,11 @@ namespace Engine
 	private:
 		static uint32_t s_blockNumber; //!< Global block number
 	public:
-		OpenGLUniformBuffer(const UniformBufferLayout& layout); //!< Constructor
+		OpenGLUniformBuffer(const std::string& uniformBufferName, const UniformBufferLayout& layout); //!< Constructor
 		~OpenGLUniformBuffer(); //!< Destructor
 
-		virtual void attachShaderBlock(ShaderProgram* shader, const char* blockName) override; //!< Attach shader block
-		virtual void uploadData(const char* uniformName, void* data) override; //!< Upload data to buffer
+		void attachShaderBlock(ShaderProgram* shader, const char* blockName) override; //!< Attach shader block
+		void uploadData(const char* uniformName, void* data) override; //!< Upload data to buffer
 	};
 }
 #endif

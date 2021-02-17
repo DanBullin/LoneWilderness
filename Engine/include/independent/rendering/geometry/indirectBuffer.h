@@ -8,6 +8,7 @@
 #ifndef INDIRECTBUFFER_H
 #define INDIRECTBUFFER_H
 
+#include "independent/systems/components/resource.h"
 #include <inttypes.h>
 
 namespace Engine
@@ -27,23 +28,26 @@ namespace Engine
 	/*! \class IndirectBuffer
 	* \brief An API agnostic Indirect buffer
 	*/
-	class IndirectBuffer
+	class IndirectBuffer : public Resource
 	{
 	protected:
 		uint32_t m_bufferID; //!< The indirect buffer ID
 		uint32_t m_commandCount; //!< The number of commands
+		uint32_t m_byteSize; //!< The size of the indirect buffer in bytes
 	public:
-		static IndirectBuffer* create(DrawElementsIndirectCommand* commands, const uint32_t count); //!< Create an indirect buffer
-		virtual ~IndirectBuffer() = default; //!< Destructor
+		static IndirectBuffer* create(const std::string& indirectBufferName, DrawElementsIndirectCommand* commands, const uint32_t count); //!< Create an indirect buffer
+
+		IndirectBuffer(const std::string& indirectBufferName); //!< Constructor
+		virtual ~IndirectBuffer(); //!< Destructor
 
 		virtual void edit(DrawElementsIndirectCommand* commands, const uint32_t count, const uint32_t offset) = 0; //!< Edit the buffer contents
 			/*!< \param commands a DrawElementsIndirectCommand* - The commands info
-				 \param count a const uint32_t - The number of commands 
+				 \param count a const uint32_t - The number of commands
 				 \param offset a const uint32_t - The offset in memory */
 
-		virtual inline const uint32_t getBufferID() const { return m_bufferID; }  //!< Get the buffer ID
+		inline const uint32_t getBufferID() const { return m_bufferID; }  //!< Get the buffer ID
 			/*!< \return a const uint32_t - The ID of the buffer */
-		virtual inline const uint32_t getCount() const { return m_commandCount; }  //!< Get the command count
+		inline const uint32_t getCount() const { return m_commandCount; }  //!< Get the command count
 			/*!< \return a const uint32_t - The command count */
 	};
 }

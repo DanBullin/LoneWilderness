@@ -31,8 +31,6 @@ namespace Engine
 		void onUpdate(const float timestep, const float totalTime) override; //!< Update the component
 		void printComponentDetails() override; //!< Print component details
 
-		bool containsPoint(const glm::vec2& coordinate); //!< Returns whether the point is inside this transform's bounding box
-
 		glm::vec2 getPosition() const; //!< Get the position of the entity in the world
 		void setPosition(const float xPos, const float yPos); //!< Set the position of the entity in the world
 		void setPosition(const glm::vec2& newPos); //!< Set the position of the entity in the world

@@ -1,0 +1,10 @@
+{
+	"vertexArrays": 
+	[
+		{ 
+			"name": "QuadArray",
+			"vertexBuffers": [ "QuadVBuffer" ],
+			"indexBuffer": "QuadIBuffer"
+		}
+	]	
+}

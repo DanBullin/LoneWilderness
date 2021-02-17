@@ -18,10 +18,12 @@ namespace Engine
 	class OpenGLIndexBuffer : public IndexBuffer
 	{
 	public:
-		OpenGLIndexBuffer(const uint32_t* indices, const uint32_t count); //!< Constructor
-		virtual ~OpenGLIndexBuffer(); //!< Destructor
+		OpenGLIndexBuffer(const std::string& indexBufferName, const uint32_t* indices, const uint32_t count); //!< Constructor
+		~OpenGLIndexBuffer(); //!< Destructor
 
-		virtual void edit(const void* indices, const uint32_t size, const uint32_t offset) override; //!< Edit the index buffer contents
+		void edit(const void* indices, const uint32_t size, const uint32_t offset) override; //!< Edit the index buffer contents
+		void bind() override; //!< Bind the buffer
+		void unbind() override; //!< Unbind the buffer
 	};
 }
 #endif

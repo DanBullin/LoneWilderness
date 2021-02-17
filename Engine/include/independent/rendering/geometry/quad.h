@@ -21,8 +21,8 @@ namespace Engine
 	{
 		std::vector<Vertex2D> localVertices;
 		localVertices.resize(4);
-		localVertices[0] = Vertex2D({ 0.5f,  0.5f, 1.f, 1.f }, { 1.f, 1.f }, 0, { 1.f, 1.f, 1.f, 1.f });
-		localVertices[1] = Vertex2D({ 0.5f, -0.5f, 1.f, 1.f }, { 1.f, 0.f }, 0, { 1.f, 1.f, 1.f, 1.f });
+		localVertices[0] = Vertex2D({  0.5f,  0.5f, 1.f, 1.f }, { 1.f, 1.f }, 0, { 1.f, 1.f, 1.f, 1.f });
+		localVertices[1] = Vertex2D({  0.5f, -0.5f, 1.f, 1.f }, { 1.f, 0.f }, 0, { 1.f, 1.f, 1.f, 1.f });
 		localVertices[2] = Vertex2D({ -0.5f, -0.5f, 1.f, 1.f }, { 0.f, 0.f }, 0, { 1.f, 1.f, 1.f, 1.f });
 		localVertices[3] = Vertex2D({ -0.5f,  0.5f, 1.f, 1.f }, { 0.f, 1.f }, 0, { 1.f, 1.f, 1.f, 1.f });
 

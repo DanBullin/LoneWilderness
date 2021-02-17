@@ -15,11 +15,9 @@ namespace Engine
 	/*! \enum CursorInputMode
 	* \brief The type of cursor input for the window
 	*/
-	enum CursorInputMode
+	enum class CursorInputMode
 	{
-		Visible = 0, //!< Cursor is visible
-		Hidden = 1,  //!< Cursor is hidden
-		Disabled = 2 //!< Cursor is disabled
+		Visible, Hidden = 1, Disabled
 	};
 
 	/*! \class WindowProperties

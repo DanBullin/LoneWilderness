@@ -1,0 +1,10 @@
+{
+	"batch3DCapacity": 50000,
+	"batch2DCapacity": 100,
+	"maxCount3DVertices": 500000,
+	"maxCount3DIndices": 450000,
+	"maxNumberOfComponentsInstancePerEntity": 100,
+	"maxRenderPassesPerScene": 15,
+	"maxLayersPerScene": 25,
+	"maximumSubTexturesPerMaterial": 10
+}

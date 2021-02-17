@@ -10,7 +10,8 @@
 
 #include "independent/core/graphicsContext.h"
 
-namespace Engine {
+namespace Engine 
+{
 	/*! \class GLFWGLGraphicsContext
 	* \brief An GLFW OpenGL graphics context
 	*/
@@ -19,12 +20,11 @@ namespace Engine {
 	private:
 		GLFWwindow* m_window; //!< Pointer to GLFW window
 	public:
-		GLFWGLGraphicsContext(GLFWwindow* nativeWindow) : m_window(nativeWindow) {} //!< Constructor
-			/*!< \param nativeWindow a GLFWwindow* - A pointer to a GLFW window */
-		virtual void init() override; //!< Init the graphics context for the given windowing api
-		virtual void swapBuffers() override; //!< Swap the front and back buffers
-		virtual void makeCurrent() override; //!< Make this graphics context the current context
-		virtual void updateViewport(const uint32_t x, const uint32_t y, const uint32_t width, const uint32_t height) override; //!< Update the viewport
+		GLFWGLGraphicsContext(GLFWwindow* nativeWindow); //!< Constructor
+		void init() override; //!< Init the graphics context for the given windowing api
+		void swapBuffers() override; //!< Swap the front and back buffers
+		void makeCurrent() override; //!< Make this graphics context the current context
+		void updateViewport(const uint32_t x, const uint32_t y, const uint32_t width, const uint32_t height) override; //!< Update the viewport
 	};
 }
 #endif

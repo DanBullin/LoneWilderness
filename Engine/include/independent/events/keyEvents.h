@@ -10,7 +10,8 @@
 
 #include "independent/events/event.h"
 
-namespace Engine {
+namespace Engine 
+{
 	/*! \class KeyEvent
 	* \brief A base event class for key events
 	*/
@@ -30,7 +31,8 @@ namespace Engine {
 	/*! \class KeyPressedEvent
 	* \brief A key pressed event
 	*/
-	class KeyPressedEvent : public KeyEvent {
+	class KeyPressedEvent : public KeyEvent 
+	{
 	private:
 		int32_t m_repeatCount; //!< Is the key press event a repeat press
 	public:
@@ -48,7 +50,8 @@ namespace Engine {
 	/*! \class KeyReleasedEvent
 	* \brief A key released event
 	*/
-	class KeyReleasedEvent : public KeyEvent {
+	class KeyReleasedEvent : public KeyEvent 
+	{
 	public:
 		KeyReleasedEvent(const int32_t keycode) : KeyEvent(keycode) {} //!< Constructor
 			/*!< \param keycode a const int32_t - The key involved in the event */
@@ -61,7 +64,8 @@ namespace Engine {
 	/*! \class KeyTypedEvent
 	* \brief A key typed event
 	*/
-	class KeyTypedEvent : public KeyEvent {
+	class KeyTypedEvent : public KeyEvent 
+	{
 	public:
 		KeyTypedEvent(const int32_t keycode) : KeyEvent(keycode) {} //!< Constructor
 			/*!< \param keycode a const int32_t - The key involved in the event */

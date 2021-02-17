@@ -5,9 +5,9 @@
 * \author Daniel Bullin
 *
 */
-
 #include "independent/utils/assimpLoader.h"
 #include "independent/systems/systems/log.h"
+#include "independent/systems/systems/resourceManager.h"
 #include "independent/rendering/renderers/renderer3D.h"
 #include "independent/utils/memoryUtils.h"
 
@@ -61,7 +61,7 @@ namespace Engine
 			const aiVector3D* aBitangent = &(mesh->mBitangents[i]);
 
 			// Create a vertex and store all vertices information based on the current vertex we're processing
-			Vertex3D vertex({ aPos->x, aPos->y, aPos->z }, { aTexCoord->x, aTexCoord->y }, 
+			Vertex3D vertex({ aPos->x, aPos->y, aPos->z }, { aTexCoord->x, aTexCoord->y },
 				MemoryUtils::normalise({ aNormal->x, aNormal->y, aNormal->z }), MemoryUtils::normalise({ aTangent->x, aTangent->y, aTangent->z }), MemoryUtils::normalise({ aBitangent->x, aBitangent->y, aBitangent->z }));
 
 			// Add new vertex to the list
@@ -78,9 +78,8 @@ namespace Engine
 
 		// Create a piece of geometry using local vertices and indices information
 		Geometry3D geometry;
-
+		geometry.VertexBuffer = ResourceManager::getResourceAndRef<VertexBuffer>("Vertex3DBuffer");
 		Renderer3D::addGeometry(vertices, indices, geometry);
-
 		return Mesh3D(geometry);
 	}
 

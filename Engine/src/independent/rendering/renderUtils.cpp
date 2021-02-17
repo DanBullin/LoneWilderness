@@ -5,7 +5,6 @@
 * \author Daniel Bullin
 *
 */
-
 #include "independent/rendering/renderUtils.h"
 #include "independent/rendering/renderAPI.h"
 #include "independent/systems/systems/log.h"
@@ -145,35 +144,35 @@ namespace Engine
 	{
 		switch (RenderAPI::getAPI())
 		{
-		case GraphicsAPI::None:
-		{
-			ENGINE_ERROR("[RenderUtils::enableBlending] No rendering API selected.");
-			break;
-		}
-		case GraphicsAPI::OpenGL:
-		{
-			OpenGLRenderUtils::enableBlending(enable);
-			break;
-		}
-		case GraphicsAPI::Direct3D:
-		{
-			ENGINE_ERROR("[RenderUtils::enableBlending] Direct3D not supported.");
-			break;
-		}
-		case GraphicsAPI::Vulkan:
-		{
-			ENGINE_ERROR("[RenderUtils::enableBlending] Vulkan not supported.");
-			break;
-		}
+			case GraphicsAPI::None:
+			{
+				ENGINE_ERROR("[RenderUtils::enableBlending] No rendering API selected.");
+				break;
+			}
+			case GraphicsAPI::OpenGL:
+			{
+				OpenGLRenderUtils::enableBlending(enable);
+				break;
+			}
+			case GraphicsAPI::Direct3D:
+			{
+				ENGINE_ERROR("[RenderUtils::enableBlending] Direct3D not supported.");
+				break;
+			}
+			case GraphicsAPI::Vulkan:
+			{
+				ENGINE_ERROR("[RenderUtils::enableBlending] Vulkan not supported.");
+				break;
+			}
 		}
 	}
 
 	//! clearBuffers()
 	/*!
-	\param buffers a const RenderParameters::RenderParameter - The buffers to clear
+	\param buffers a const RenderParameter - The buffers to clear
 	\param colour a const glm::vec4& - The colour to clear the colour buffer with
 	*/
-	void RenderUtils::clearBuffers(const RenderParameters::RenderParameter buffers, const glm::vec4& colour)
+	void RenderUtils::clearBuffers(const RenderParameter buffers, const glm::vec4& colour)
 	{
 		switch (RenderAPI::getAPI())
 		{
@@ -202,9 +201,9 @@ namespace Engine
 
 	//! setDepthComparison()
 	/*!
-	\param comparison a const RenderParameters::RenderParameter - The depth test comparison value
+	\param comparison a const RenderParameter - The depth test comparison value
 	*/
-	void RenderUtils::setDepthComparison(const RenderParameters::RenderParameter comparison)
+	void RenderUtils::setDepthComparison(const RenderParameter comparison)
 	{
 		switch (RenderAPI::getAPI())
 		{

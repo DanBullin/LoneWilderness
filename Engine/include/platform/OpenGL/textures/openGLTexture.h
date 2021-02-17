@@ -20,23 +20,23 @@ namespace Engine
 	private:
 		void init(unsigned char* data, const uint32_t channels); //!< Create the texture
 	public:
-		OpenGLTexture2D(const char* filePath, Texture2DProperties& properties); //!< Constructor
-		OpenGLTexture2D(const Texture2DProperties& properties, const uint32_t channels, unsigned char* data); //!< Constructor
+		OpenGLTexture2D(const std::string& textureName, const char* filePath, TextureProperties& properties); //!< Constructor
+		OpenGLTexture2D(const std::string& textureName, const TextureProperties& properties, const uint32_t channels, unsigned char* data); //!< Constructor
 		~OpenGLTexture2D(); //!< Destructor
-		virtual void edit(const uint32_t offsetX, const uint32_t offsetY, const uint32_t width, const uint32_t height, const unsigned char* data) override; //!< Edit the texture data
-		virtual void bind(const uint32_t slot = 0) override; //!< Bind the texture to a texture unit
+		void edit(const uint32_t offsetX, const uint32_t offsetY, const uint32_t width, const uint32_t height, const unsigned char* data) override; //!< Edit the texture data
+		void bind(const uint32_t slot = 0) override; //!< Bind the texture to a texture unit
 	};
 
-	/*! \class OpenGLCubemapTexture
+	/*! \class OpenGLCubeMapTexture
 	* \brief An OpenGL cubemap texture object
 	*/
-	class OpenGLCubemapTexture : public CubeMapTexture
+	class OpenGLCubeMapTexture : public CubeMapTexture
 	{
 	public:
-		OpenGLCubemapTexture(const std::string& folderPath, const std::string& fileType); //!< Constructor
-		~OpenGLCubemapTexture(); //!< Destructor
+		OpenGLCubeMapTexture(const std::string& textureName, const std::string& folderPath, const std::string& fileType); //!< Constructor
+		~OpenGLCubeMapTexture(); //!< Destructor
 
-		virtual void bind(const uint32_t slot = 0) override; //!< Bind the texture to a texture unit
+		void bind(const uint32_t slot = 0) override; //!< Bind the texture to a texture unit
 	};
 }
 #endif

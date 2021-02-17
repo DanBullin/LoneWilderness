@@ -13,9 +13,8 @@
 #include "independent/events/events.h"
 #include "independent/systems/components/window.h"
 
-namespace Engine {
-	class Entity; //!< Forward declare entity
-
+namespace Engine 
+{
 	/*! \struct EventData
 	* \brief Struct containing event related data such as mouse position last frame, etc
 	*/
@@ -32,7 +31,8 @@ namespace Engine {
 	/*! \class EventManager
 	* \brief An event manager which manages events
 	*/
-	class EventManager : public System {
+	class EventManager : public System 
+	{
 	private:
 		static bool s_enabled; //!< Is the event manager enabled
 		static EventData s_eventData; //!< Event related variables
@@ -41,8 +41,8 @@ namespace Engine {
 	public:
 		EventManager(); //!< Constructor
 		~EventManager(); //!< Destructor
-		virtual void start() override; //!< Start the system
-		virtual void stop() override; //!< Stop the system
+		void start() override; //!< Start the system
+		void stop() override; //!< Stop the system
 
 		static void onWindowClose(Window* window, WindowCloseEvent& e); //!< Called when a window closes
 		static void onWindowResize(Window* window, WindowResizeEvent& e); //!< Called when a window is resized

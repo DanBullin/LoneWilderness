@@ -5,10 +5,9 @@
 * \author Daniel Bullin
 *
 */
-
 #include "independent/systems/systems/windowManager.h"
-#include "independent/systems/systems/log.h"
 #include "independent/systems/systems/eventManager.h"
+#include "independent/systems/systems/log.h"
 
 namespace Engine
 {
@@ -17,7 +16,7 @@ namespace Engine
 	bool WindowManager::s_enabled = false; //!< Set to false
 
 	//! WindowManager()
-	WindowManager::WindowManager() : System(Systems::Type::WindowManager)
+	WindowManager::WindowManager() : System(SystemType::WindowManager)
 	{
 	}
 
@@ -49,10 +48,22 @@ namespace Engine
 			for (auto& window : s_registeredWindows)
 				delete window.second;
 
-			s_focusedWindow = nullptr;
 			s_registeredWindows.clear();
+
+			// Set the focused window to nullptr
+			s_focusedWindow = nullptr;
 			s_enabled = false;
 		}
+	}
+
+	//! windowExists()
+	/*!
+	\param windowName a const std::string& - The name of the window
+	\return a const bool - Was the window name found in the window list
+	*/
+	const bool WindowManager::windowExists(const std::string& windowName)
+	{
+		return s_registeredWindows.find(windowName) != s_registeredWindows.end();
 	}
 
 	//! registerWindow()
@@ -65,11 +76,16 @@ namespace Engine
 		if (s_enabled)
 		{
 			// Check if name is unique, if it is create a window
-			if (s_registeredWindows.find(name) == s_registeredWindows.end())
+			if (!windowExists(name))
 			{
-				// Disable multi-windowing until multi-window rendering is support
+				////
+				// DISABLED MULTIPLE WINDOWS BECAUSE MULTIPLE GRAPHICS CONTEXTS NOT YET SUPPORTED
+				// REMOVE THE BELOW CODE WHEN YOU WANT TO REENABLE MULTIPLE WINDOWS
+				////
 				if (s_registeredWindows.size() == 1)
 					return;
+
+				// End of multiple window restriction
 
 				s_registeredWindows[name] = Window::create(name, props);
 				// Call onFocus for the new window which will be brought to focus
@@ -92,7 +108,7 @@ namespace Engine
 		if (s_enabled)
 		{
 			// Check if window exists, close it if it does
-			if (s_registeredWindows.find(name) != s_registeredWindows.end())
+			if (windowExists(name))
 				s_registeredWindows[name]->close();
 			else
 				ENGINE_ERROR("[WindowManager::deregisterWindow] The window name cannot be found. Name: {0}.", name);
@@ -109,7 +125,7 @@ namespace Engine
 			// Loop through all registered windows and check if it is scheduled for deletion
 			for (auto it = s_registeredWindows.cbegin(); it != s_registeredWindows.cend();)
 			{
-				if (it->second->getDeletion())
+				if (it->second->getDestroyed())
 				{
 					// Delete window
 					if (s_focusedWindow == it->second)
@@ -135,7 +151,7 @@ namespace Engine
 		if (s_enabled)
 		{
 			// Check if window exists
-			if (s_registeredWindows.find(name) != s_registeredWindows.end())
+			if (windowExists(name))
 				return s_registeredWindows[name];
 			else
 				ENGINE_ERROR("[WindowManager::getWindowByName] The window cannot be found. Name: {0}.", name);
@@ -176,7 +192,7 @@ namespace Engine
 		if (s_enabled)
 		{
 			// Check if window exists
-			if (s_registeredWindows.find(windowName) != s_registeredWindows.end())
+			if (windowExists(windowName))
 			{
 				// Set the currently focused window
 				s_focusedWindow = s_registeredWindows[windowName];
@@ -198,7 +214,7 @@ namespace Engine
 		if (s_enabled)
 		{
 			// Check if window exists
-			if (s_registeredWindows.find(windowName) != s_registeredWindows.end())
+			if (windowExists(windowName))
 			{
 				s_registeredWindows[windowName]->setFullscreen(true);
 			}
@@ -216,7 +232,8 @@ namespace Engine
 		{
 			ENGINE_TRACE("==========================");
 			ENGINE_TRACE("Window Manager Details");
-			ENGINE_TRACE("Focused Window Address: {0} [Name: {1}]", (void*)s_focusedWindow, s_focusedWindow->getName());
+			ENGINE_TRACE("Focused Window Address: {0}", (void*)s_focusedWindow);
+			if(s_focusedWindow) ENGINE_TRACE("Focused Window Name: {0}", s_focusedWindow->getName());
 			ENGINE_TRACE("Registered Window Count: {0}", s_registeredWindows.size());
 			ENGINE_TRACE("==========================");
 

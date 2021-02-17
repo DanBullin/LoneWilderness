@@ -2,36 +2,8 @@
 	"subTextures": 
 	[
 		{ 
-			"name": "default", 
-			"baseTextureName": "default", 
-			"UVStart": [ 0.0, 0.0 ], 
-			"UVEnd": [ 1.0, 1.0 ],
-			"ConvertBottomLeft": false
-		},
-		{ 
-			"name": "gridSubTexture", 
-			"baseTextureName": "grid", 
-			"UVStart": [ 0.0, 0.0 ], 
-			"UVEnd": [ 1.0, 1.0 ],
-			"ConvertBottomLeft": false
-		},
-		{ 
-			"name": "grassSubTexture", 
-			"baseTextureName": "grass", 
-			"UVStart": [ 0.0, 0.0 ], 
-			"UVEnd": [ 1.0, 1.0 ],
-			"ConvertBottomLeft": false
-		},
-		{ 
 			"name": "textSubTexture", 
 			"baseTextureName": "text", 
-			"UVStart": [ 0.0, 0.0 ], 
-			"UVEnd": [ 1.0, 1.0 ],
-			"ConvertBottomLeft": false
-		},
-		{ 
-			"name": "defaultSubTexture", 
-			"baseTextureName": "default", 
 			"UVStart": [ 0.0, 0.0 ], 
 			"UVEnd": [ 1.0, 1.0 ],
 			"ConvertBottomLeft": false
@@ -44,22 +16,22 @@
 			"ConvertBottomLeft": false
 		},
 		{ 
-			"name": "numberSubTexture", 
-			"baseTextureName": "numbers", 
-			"UVStart": [ 0.0, 0.5 ], 
+			"name": "mapSubTexture", 
+			"baseTextureName": "map", 
+			"UVStart": [ 0.0, 0.0 ], 
 			"UVEnd": [ 1.0, 1.0 ],
 			"ConvertBottomLeft": false
 		},
 		{ 
-			"name": "alignSubTexture", 
-			"baseTextureName": "align", 
+			"name": "hotbarSubTexture", 
+			"baseTextureName": "hotbar", 
 			"UVStart": [ 0.0, 0.0 ], 
 			"UVEnd": [ 1.0, 1.0 ],
 			"ConvertBottomLeft": false
 		},
 		{ 
 			"name": "screenQuadSubTexture", 
-			"baseTextureName": "default", 
+			"baseTextureName": "cyborg_diffuse", 
 			"UVStart": [ 0.0, 0.0 ], 
 			"UVEnd": [ 1.0, 1.0 ],
 			"ConvertBottomLeft": true

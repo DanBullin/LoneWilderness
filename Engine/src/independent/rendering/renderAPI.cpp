@@ -5,10 +5,9 @@
 * \author DMU Course material
 *
 */
-
 #include "independent/rendering/renderAPI.h"
 
 namespace Engine
 {
-	GraphicsAPI RenderAPI::s_API = Engine::GraphicsAPI::OpenGL; //!< Initialise the graphics API
+	GraphicsAPI RenderAPI::s_API = GraphicsAPI::OpenGL; //!< Initialise the graphics API
 }

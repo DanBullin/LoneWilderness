@@ -10,18 +10,20 @@
 
 #include "independent/systems/system.h"
 
-namespace Engine {
+namespace Engine 
+{
 	/*! \class GLFWSystem
 	* \brief A GLFWSystem handling the GLFW windows
 	*/
-	class GLFWSystem : public System {
+	class GLFWSystem : public System 
+	{
 	private:
 		static bool s_enabled; //!< Is this GLFW system enabled
 	public:
 		GLFWSystem(); //!< Constructor
 		~GLFWSystem(); //!< Destructor
-		virtual void start(); //!< Start the system
-		virtual void stop(); //!< Stop the system
+		void start() override; //!< Start the system
+		void stop() override; //!< Stop the system
 	};
 }
 #endif

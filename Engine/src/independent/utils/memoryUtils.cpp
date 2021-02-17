@@ -5,7 +5,6 @@
 * \author Daniel Bullin
 *
 */
-
 #include "independent/utils/memoryUtils.h"
 
 namespace Engine

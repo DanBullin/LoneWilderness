@@ -12,7 +12,8 @@
 #include "independent/systems/system.h"
 #include "independent/systems/components/timer.h"
 
-namespace Engine {
+namespace Engine 
+{
 	/*! \class TimerSystem
 	* \brief A timer system which handles timers and stores recorded times
 	*/
@@ -23,8 +24,8 @@ namespace Engine {
 	public:
 		TimerSystem(); //!< Constructor
 		~TimerSystem(); //!< Destructor
-		virtual void start() override; //!< Start the system
-		virtual void stop() override; //!< Stop the system
+		void start() override; //!< Start the system
+		void stop() override; //!< Stop the system
 
 		static void startTimer(const char* timerName); //!< Start a new timer with name
 		static void stopTimer(const char* timerName, const bool deleteTimer, const bool storeResult = false); //!< Stop the timer

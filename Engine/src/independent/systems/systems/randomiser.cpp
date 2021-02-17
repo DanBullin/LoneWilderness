@@ -5,12 +5,12 @@
 * \author DMU Course material
 *
 */
-
 #include <chrono>
 #include "independent/systems/systems/randomiser.h"
 #include "independent/systems/systems/log.h"
 
-namespace Engine {
+namespace Engine 
+{
 	bool Randomiser::s_enabled = false; //!< Set to false
 	std::shared_ptr<std::mt19937> Randomiser::s_randomGenerator = nullptr; //!< Initialise the random generator
 	UniIntDistrib Randomiser::s_uniformInt = UniIntDistrib(std::numeric_limits<int32_t>::min(), std::numeric_limits<int32_t>::max()); //!< Initialise the uniform integer distribution
@@ -19,7 +19,7 @@ namespace Engine {
 	float Randomiser::s_floatRange = std::numeric_limits<float>::max() - std::numeric_limits<float>::min(); //!< Initialise the float range
 
 	//! Randomiser
-	Randomiser::Randomiser() : System(Systems::Type::Randomiser)
+	Randomiser::Randomiser() : System(SystemType::Randomiser)
 	{
 	}
 

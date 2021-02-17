@@ -5,16 +5,17 @@
 * \author Daniel Bullin
 *
 */
-
-#include <glad/glad.h>
-#include "independent/systems/systems/log.h"
-#include "independent/systems/systems/resourceManager.h"
 #include "platform/OpenGL/openGLFrameBuffer.h"
+#include "independent/systems/systems/log.h"
+#include <glad/glad.h>
 
 namespace Engine
 {
 	//! OpenGLFrameBuffer()
-	OpenGLFrameBuffer::OpenGLFrameBuffer()
+	/*!
+	\param frameBufferName a const std::string& - The name of the framebuffer
+	*/
+	OpenGLFrameBuffer::OpenGLFrameBuffer(const std::string& frameBufferName) : FrameBuffer(frameBufferName)
 	{
 		m_bufferID = 0;
 		m_size = { 0.f, 0.f };
@@ -22,10 +23,11 @@ namespace Engine
 
 	//! OpenGLFrameBuffer()
 	/*!
+	\param frameBufferName a const std::string& - The name of the framebuffer
 	\param size a const glm::ivec2& - The dimensions of the framebuffer targets
 	\param layout a FrameBufferLayoutt& - A reference to the layout of the framebuffer
 	*/
-	OpenGLFrameBuffer::OpenGLFrameBuffer(const glm::ivec2& size, FrameBufferLayout& layout)
+	OpenGLFrameBuffer::OpenGLFrameBuffer(const std::string& frameBufferName, const glm::ivec2& size, FrameBufferLayout& layout) : FrameBuffer(frameBufferName)
 	{
 		// Set the size and layout
 		m_size = size;
@@ -37,7 +39,7 @@ namespace Engine
 
 		uint32_t colourAttachmentCount = 0;
 
-		for(auto&[type, isSampled] : m_layout)
+		for (auto&[type, isSampled] : m_layout)
 		{
 			if (isSampled)
 			{
@@ -45,13 +47,23 @@ namespace Engine
 				{
 					case AttachmentType::Colour:
 					{
-						Texture2DProperties properties(size.x, size.y, "Repeat", "Repeat", "Repeat", "Linear", "Linear", false, false);
-						Texture2D* colourTexture = Texture2D::create(properties, 3, nullptr);
-						
+						TextureProperties properties(size.x, size.y, "Repeat", "Repeat", "Repeat", "Linear", "Linear", false, false);
 						std::string textureName = "Colour" + std::to_string(colourAttachmentCount);
+
+						Texture2D* colourTexture = Texture2D::create(textureName, properties, 3, nullptr);
 						m_sampledTargets[textureName] = colourTexture;
 						glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + colourAttachmentCount, GL_TEXTURE_2D, colourTexture->getID(), 0);
 						colourAttachmentCount++;
+						break;
+					}
+					case AttachmentType::Depth:
+					{
+						TextureProperties properties(size.x, size.y, "Repeat", "Repeat", "Repeat", "Linear", "Linear", false, false);
+						std::string textureName = "Depth";
+
+						Texture2D* depthTexture = Texture2D::create(textureName, properties, 2, nullptr);
+						m_sampledTargets[textureName] = depthTexture;
+						glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture->getID(), 0);
 						break;
 					}
 				}
@@ -88,11 +100,11 @@ namespace Engine
 	OpenGLFrameBuffer::~OpenGLFrameBuffer()
 	{
 		// Delete the buffer
-		ENGINE_INFO("[OpenGLFrameBuffer::~OpenGLFrameBuffer] Deleting Framebuffer with ID: {0}", m_bufferID);
+		ENGINE_INFO("[OpenGLFrameBuffer::~OpenGLFrameBuffer] Deleting Framebuffer with ID: {0}, Name: {1}.", m_bufferID, m_name);
 
 		for (auto& target : m_sampledTargets)
 			delete target.second;
-		
+
 		m_sampledTargets.clear();
 
 		for (auto& target : m_nonSampledTargets)

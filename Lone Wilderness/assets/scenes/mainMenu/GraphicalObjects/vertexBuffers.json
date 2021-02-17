@@ -1,0 +1,12 @@
+{
+	"vertexBuffers": 
+	[
+		{ 
+			"name": "QuadVBuffer",
+			"layout": [ "Float4", false, 0, "Float2", false, 0, "FlatInt", false, 0, "Byte4", true, 0 ],
+			"dataType": "Vertex2D",
+			"size": "VertexCapacity2D",
+			"usage": 1
+		}
+	]	
+}

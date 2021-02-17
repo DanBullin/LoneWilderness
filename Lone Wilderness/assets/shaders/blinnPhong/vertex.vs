@@ -5,20 +5,14 @@ layout (location = 2) in vec3 aNormal;
 layout (location = 3) in vec3 aTangent;
 layout (location = 4) in vec3 aBitangent;
 layout (location = 5) in mat4 aModel;
-layout (location = 9) in int aTexUnit1;
-layout (location = 10) in int aTexUnit2;
-layout (location = 11) in int aTexUnit3;
-layout (location = 12) in int aTexUnit4;
-layout (location = 13) in vec4 aTint;
-layout (location = 14) in vec4 aSubTextureUV;
+layout (location = 9) in int aTexUnit;
+layout (location = 10) in vec4 aTint;
+layout (location = 11) in vec4 aSubTextureUV;
 
 // Interface block for the outputs of the vertex shader
 out VS_OUT {
 	vec2 TexCoords;
-	flat int TexUnit1;
-	flat int TexUnit2;
-	flat int TexUnit3;
-	flat int TexUnit4;
+	flat int TexUnit;
 	vec4 Tint;
 } vs_out;
 
@@ -35,10 +29,7 @@ void main()
     vs_out.TexCoords.y = aSubTextureUV.y + ((aSubTextureUV.w - aSubTextureUV.y) * aTexCoords.y);
 	
 	// Output the texture unit
-	vs_out.TexUnit1 = aTexUnit1;
-	vs_out.TexUnit2 = aTexUnit2;
-	vs_out.TexUnit3 = aTexUnit3;
-	vs_out.TexUnit4 = aTexUnit4;
+	vs_out.TexUnit = aTexUnit;
 	
 	// Output the tint
 	vs_out.Tint = aTint;

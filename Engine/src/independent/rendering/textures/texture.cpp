@@ -5,7 +5,6 @@
 * \author Daniel Bullin
 *
 */
-
 #include "independent/systems/systems/log.h"
 #include "independent/rendering/renderAPI.h"
 #include "independent/rendering/textures/texture.h"
@@ -13,14 +12,55 @@
 
 namespace Engine
 {
+	//! Texture()
+	/*
+	\param textureName a const std::string& - The name of the texture
+	*/
+	Texture::Texture(const std::string& textureName) : Resource(textureName, ResourceType::Texture)
+	{
+	}
+
+	//! ~Texture()
+	Texture::~Texture()
+	{
+	}
+
+	//! Texture2D()
+	/*!
+	\param textureName a const std::string& - The name of the texture
+	\param properties a const TextureProperties& - A reference to the properties of the 2D texture
+	*/
+	Texture2D::Texture2D(const std::string& textureName, const TextureProperties& properties) : Texture(textureName), m_textureProperties(properties)
+	{
+	}
+
+	//! ~Texture2D()
+	Texture2D::~Texture2D()
+	{
+	}
+
+	//! CubeMapTexture()
+	/*
+	\param textureName a const std::string& - The name of the texture
+	*/
+	CubeMapTexture::CubeMapTexture(const std::string& textureName) : Texture(textureName)
+	{
+	}
+
+	//! ~CubeMapTexture()
+	CubeMapTexture::~CubeMapTexture()
+	{
+	}
+
 	//! create()
 	/*!
-	\param properties a const Texture2DProperties& - A reference to the properties of the 2D texture
+	\param textureName a const std::string& - The name of the texture
+	\param properties a const TextureProperties& - A reference to the properties of the 2D texture
 	\param channels a const uint32_t - The number of channels in the texture data
 	\param data an unsigned char* - The data of the texture
 	\return an Texture2D* - The 2D texture of type defined by the graphics API chosen
 	*/
-	Texture2D* Texture2D::create(const Texture2DProperties& properties, const uint32_t channels, unsigned char* data)
+	Texture2D* Texture2D::create(const std::string& textureName, const TextureProperties& properties, const uint32_t channels, unsigned char* data)
 	{
 		switch (RenderAPI::getAPI())
 		{
@@ -31,7 +71,7 @@ namespace Engine
 			}
 			case GraphicsAPI::OpenGL:
 			{
-				return new OpenGLTexture2D(properties, channels, data);
+				return new OpenGLTexture2D(textureName, properties, channels, data);
 			}
 			case GraphicsAPI::Direct3D:
 			{
@@ -49,11 +89,12 @@ namespace Engine
 
 	//! create()
 	/*!
+	\param textureName a const std::string& - The name of the texture
 	\param filePath a const char* - The filepath of the texture
-	\param properties a Texture2DProperties - A reference to the properties of the texture
+	\param properties a TextureProperties - The properties of the texture
 	\return an Texture2D* - The 2D texture of type defined by the graphics API chosen
 	*/
-	Texture2D* Texture2D::create(const char* filePath, Engine::Texture2DProperties properties)
+	Texture2D* Texture2D::create(const std::string& textureName, const char* filePath, TextureProperties properties)
 	{
 		switch (RenderAPI::getAPI())
 		{
@@ -64,7 +105,7 @@ namespace Engine
 			}
 			case GraphicsAPI::OpenGL:
 			{
-				return new OpenGLTexture2D(filePath, properties);
+				return new OpenGLTexture2D(textureName, filePath, properties);
 			}
 			case GraphicsAPI::Direct3D:
 			{
@@ -82,11 +123,12 @@ namespace Engine
 
 	//! create()
 	/*!
+	\param textureName a const std::string& - The name of the texture
 	\param folderPath a const std::string& - The path to the folder containing the individual files
 	\param fileType a const std::string& - The file type of the textures
 	\return a CubeMapTexture* - The cubmeap texture of type defined by the graphics API chosen
 	*/
-	CubeMapTexture* CubeMapTexture::create(const std::string& folderPath, const std::string& fileType)
+	CubeMapTexture* CubeMapTexture::create(const std::string& textureName, const std::string& folderPath, const std::string& fileType)
 	{
 		switch (RenderAPI::getAPI())
 		{
@@ -97,7 +139,7 @@ namespace Engine
 			}
 			case GraphicsAPI::OpenGL:
 			{
-				return new OpenGLCubemapTexture(folderPath, fileType);
+				return new OpenGLCubeMapTexture(textureName, folderPath, fileType);
 			}
 			case GraphicsAPI::Direct3D:
 			{

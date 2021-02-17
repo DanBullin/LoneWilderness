@@ -19,7 +19,7 @@ namespace Engine
 	{
 	public:
 		OpenGLRenderBuffer(const AttachmentType type, const glm::ivec2& size); //!< Constructor
-		virtual ~OpenGLRenderBuffer(); //!< Destructor
+		~OpenGLRenderBuffer(); //!< Destructor
 	};
 }
 #endif
