@@ -7,6 +7,7 @@
 */
 #include <glad/glad.h>
 #include "independent/systems/systems/log.h"
+#include "independent/systems/systems/resourceManager.h"
 #include "platform/OpenGL/geometry/openGLVertexArray.h"
 
 namespace Engine
@@ -22,25 +23,25 @@ namespace Engine
 		{
 			switch (type)
 			{
-			case ShaderDataType::Short: return GL_SHORT;
-			case ShaderDataType::Short2: return GL_SHORT;
-			case ShaderDataType::Short3: return GL_SHORT;
-			case ShaderDataType::Short4: return GL_SHORT;
-			case ShaderDataType::Float: return GL_FLOAT;
-			case ShaderDataType::Float2: return GL_FLOAT;
-			case ShaderDataType::Float3: return GL_FLOAT;
-			case ShaderDataType::Float4: return GL_FLOAT;
-			case ShaderDataType::Mat3: return GL_FLOAT;
-			case ShaderDataType::Mat4: return GL_FLOAT;
-			case ShaderDataType::Int: return GL_INT;
-			case ShaderDataType::Int2: return GL_INT;
-			case ShaderDataType::Int3: return GL_INT;
-			case ShaderDataType::Int4: return GL_INT;
-			case ShaderDataType::Bool: return GL_BOOL;
-			case ShaderDataType::Byte4: return GL_UNSIGNED_BYTE;
-			case ShaderDataType::FlatInt: return GL_INT;
-			case ShaderDataType::FlatByte: return GL_BYTE;
-			default: return GL_INVALID_ENUM;
+				case ShaderDataType::Short: return GL_SHORT;
+				case ShaderDataType::Short2: return GL_SHORT;
+				case ShaderDataType::Short3: return GL_SHORT;
+				case ShaderDataType::Short4: return GL_SHORT;
+				case ShaderDataType::Float: return GL_FLOAT;
+				case ShaderDataType::Float2: return GL_FLOAT;
+				case ShaderDataType::Float3: return GL_FLOAT;
+				case ShaderDataType::Float4: return GL_FLOAT;
+				case ShaderDataType::Mat3: return GL_FLOAT;
+				case ShaderDataType::Mat4: return GL_FLOAT;
+				case ShaderDataType::Int: return GL_INT;
+				case ShaderDataType::Int2: return GL_INT;
+				case ShaderDataType::Int3: return GL_INT;
+				case ShaderDataType::Int4: return GL_INT;
+				case ShaderDataType::Bool: return GL_BOOL;
+				case ShaderDataType::Byte4: return GL_UNSIGNED_BYTE;
+				case ShaderDataType::FlatInt: return GL_INT;
+				case ShaderDataType::FlatByte: return GL_BYTE;
+				default: return GL_INVALID_ENUM;
 			}
 		}
 	}
@@ -61,14 +62,9 @@ namespace Engine
 	OpenGLVertexArray::~OpenGLVertexArray()
 	{
 		// Delete the array
-		ENGINE_INFO("[OpenGLVertexArray::~OpenGLVertexArray] Deleting Vertex array with ID: {0}, Name: {1}.", m_arrayID, m_name);
+		if (ResourceManager::getConfigValue(Config::PrintResourcesInDestructor))
+			ENGINE_INFO("[OpenGLVertexArray::~OpenGLVertexArray] Deleting Vertex array with ID: {0}, Name: {1}.", m_arrayID, m_name);
 		glDeleteVertexArrays(1, &m_arrayID);
-
-		// Decrease reference counter for all vertex buffers attached and the index buffer
-		for (auto& vBuffer : m_vertexBuffers)
-			if (vBuffer) vBuffer->decreaseCount();
-
-		if (m_indexBuffer) m_indexBuffer->decreaseCount();
 	}
 
 	//! addVertexBuffer()
@@ -163,6 +159,28 @@ namespace Engine
 			return true;
 		else
 			return false;
+	}
+
+	//! printDetails()
+	void OpenGLVertexArray::printDetails()
+	{
+		ENGINE_TRACE("Array ID: {0}.", m_arrayID);
+		ENGINE_TRACE("Number of Attributes: {0}.", m_attribIndex);
+
+		for (int i = 0; i < m_vertexBuffers.size(); i++)
+		{
+			if (m_vertexBuffers[i])
+				ENGINE_TRACE("VertexBuffer{0}: {1}", i, m_vertexBuffers[i]->getName());
+			else
+				ENGINE_TRACE("VertexBuffer{0}: NULL", i);
+		}
+
+		if (m_indexBuffer)
+			ENGINE_TRACE("IndexBuffer: {0}", m_indexBuffer->getName());
+		else
+			ENGINE_TRACE("IndexBuffer: NULL");
+
+		ENGINE_TRACE("Total Byte Size: {0}.", m_totalByteSize);
 	}
 
 }

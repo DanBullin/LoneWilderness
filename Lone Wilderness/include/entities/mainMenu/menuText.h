@@ -20,6 +20,7 @@ class MenuText : public Entity
 public:
 	MenuText(); //!< Constructor
 	~MenuText(); //!< Destructor
+	void onMousePress(MousePressedEvent& e, const float timestep, const float totalTime) override; //!< Call upon mouse press
 	void onMouseRelease(MouseReleasedEvent& e, const float timestep, const float totalTime) override; //!< Call upon mouse release
 	void onMouseMoved(MouseMovedEvent& e, const float timestep, const float totalTime) override; //!< Call upon mouse move
 };

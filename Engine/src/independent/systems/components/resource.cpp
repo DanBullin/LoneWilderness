@@ -6,6 +6,7 @@
 *
 */
 #include "independent/systems/components/resource.h"
+#include "independent/systems/systems/log.h"
 
 namespace Engine
 {
@@ -18,18 +19,9 @@ namespace Engine
 	{
 	}
 
-	//! increaseCount()
-	void Resource::increaseCount()
+	//! ~Resource()
+	Resource::~Resource()
 	{
-		// Increase by one, call this function when the referencing entity is created
-		m_referenceCounter++;
-	}
-
-	//! decreaseCount()
-	void Resource::decreaseCount()
-	{
-		// Decrease by one, call this function when the referencing entity is deleted
-		m_referenceCounter--;
 	}
 
 	//! getName()
@@ -39,17 +31,6 @@ namespace Engine
 	const std::string& Resource::getName() const
 	{
 		return m_name;
-	}
-
-	//! getReferenceCount()
-	/*!
-	\return a const uint32_t - The number of external references to this resource
-	*/
-	const uint32_t Resource::getReferenceCount() const
-	{
-		// If this count reaches 0, the resource should be deleted
-		// This will be handled elsewhere at an appropriate time
-		return m_referenceCounter;
 	}
 
 	//! getType()

@@ -13,7 +13,7 @@
 #include "independent/events/events.h"
 #include "independent/systems/components/window.h"
 
-namespace Engine 
+namespace Engine
 {
 	/*! \struct EventData
 	* \brief Struct containing event related data such as mouse position last frame, etc
@@ -38,6 +38,7 @@ namespace Engine
 		static EventData s_eventData; //!< Event related variables
 		static void calculateMouseOffset(MouseMovedEvent& e); //!< Calculate change in mouse position when moved
 		static void updateTime(); //!< Update FPS and TotalTime
+		
 	public:
 		EventManager(); //!< Constructor
 		~EventManager(); //!< Destructor

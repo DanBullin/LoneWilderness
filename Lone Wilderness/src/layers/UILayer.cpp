@@ -6,7 +6,6 @@
 *
 */
 #include "layers/UILayer.h"
-#include "independent/systems/systemManager.h"
 
 //! UILayer()
 UILayer::UILayer() : Layer("UI")
@@ -16,19 +15,16 @@ UILayer::UILayer() : Layer("UI")
 //! ~UILayer()
 UILayer::~UILayer()
 {
-
 }
 
 //! onAttach()
 void UILayer::onAttach()
 {
-
 }
 
 //! onDetach()
 void UILayer::onDetach()
 {
-
 }
 
 //! onUpdate()
@@ -38,7 +34,6 @@ void UILayer::onDetach()
 */
 void UILayer::onUpdate(const float timestep, const float totalTime)
 {
-
 }
 
 //! onWindowResize()
@@ -99,6 +94,10 @@ void UILayer::onKeyPress(KeyPressedEvent& e, const float timestep, const float t
 */
 void UILayer::onKeyRelease(KeyReleasedEvent& e, const float timestep, const float totalTime)
 {
+	if (e.getKeyCode() == Keys::M)
+	{
+		setDisplayed(!getDisplayed());
+	}
 }
 
 //! onMousePress()

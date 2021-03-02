@@ -46,6 +46,7 @@ namespace Engine
 
 		virtual void bind() = 0; //!< Bind the buffer
 		virtual void unbind() = 0; //!< Unbind the buffer
+		virtual void printDetails() override = 0; //!< Print the resource details
 
 		inline const uint32_t getBufferID() const { return m_bufferID; }  //!< Get the buffer ID
 			/*!< \return a const uint32_t - The ID of the buffer */

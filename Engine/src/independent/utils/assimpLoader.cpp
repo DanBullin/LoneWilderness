@@ -78,7 +78,7 @@ namespace Engine
 
 		// Create a piece of geometry using local vertices and indices information
 		Geometry3D geometry;
-		geometry.VertexBuffer = ResourceManager::getResourceAndRef<VertexBuffer>("Vertex3DBuffer");
+		geometry.VertexBuffer = ResourceManager::getResource<VertexBuffer>("Vertex3DBuffer");
 		Renderer3D::addGeometry(vertices, indices, geometry);
 		return Mesh3D(geometry);
 	}

@@ -43,10 +43,31 @@ namespace Engine
 		int32_t TexUnit; //!< The texture unit for the vertex
 		uint32_t Tint; //!< The tint of the vertex
 		Vertex2D() {}; //!< Default constructor
-		Vertex2D(const glm::vec4& pos, const glm::vec2& texCoord, const int32_t texUnit, const glm::vec4& tint) : Position(pos), TexCoords(texCoord), TexUnit(texUnit), Tint(MemoryUtils::pack(tint)) {} //!< Constructor
+		Vertex2D(const glm::vec4& pos, const glm::vec2& texCoord, const int32_t texUnit, const glm::vec4& tint) 
+			: Position(pos), TexCoords(texCoord), TexUnit(texUnit), Tint(MemoryUtils::pack(tint)) {} //!< Constructor
 			/*!< \param pos a const glm::vec4& - The vertex position
 				 \param texCoord a const glm::vec2& - The vertex texture coordinate
 				 \param texUnit a const int32_t - The vertex texture unit
+				 \param tint a const glm::vec4& - The vertex tint */
+	};
+
+	/*! \struct Vertex2DMultiTextured
+	* \brief A 2D vertex containing all the information about a 2D vertex
+	*/
+	struct Vertex2DMultiTextured
+	{
+		glm::vec4 Position; //!< Position of the vertex
+		glm::vec2 TexCoords; //!< The texture coordinate of the vertex
+		int32_t TexUnit1; //!< A texture unit for the vertex
+		int32_t TexUnit2; //!< A texture unit for the vertex
+		uint32_t Tint; //!< The tint of the vertex
+		Vertex2DMultiTextured() {}; //!< Default constructor
+		Vertex2DMultiTextured(const glm::vec4& pos, const glm::vec2& texCoord, const int32_t texUnit1, const int32_t texUnit2, const glm::vec4& tint) 
+			: Position(pos), TexCoords(texCoord), TexUnit1(texUnit1), TexUnit2(texUnit2), Tint(MemoryUtils::pack(tint)) {} //!< Constructor
+			/*!< \param pos a const glm::vec4& - The vertex position
+				 \param texCoord a const glm::vec2& - The vertex texture coordinate
+				 \param texUnit1 a const int32_t - The first vertex texture unit
+				 \param texUnit2 a const int32_t - The second vertex texture unit
 				 \param tint a const glm::vec4& - The vertex tint */
 	};
 }

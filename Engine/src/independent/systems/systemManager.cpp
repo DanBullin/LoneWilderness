@@ -28,7 +28,10 @@ namespace Engine
 			if (s_activeSystems.size() != 0)
 			{
 				for (auto& system : s_activeSystems)
-					delete system;
+				{
+					if(system)
+						delete system;
+				}
 
 				s_activeSystems.clear();
 			}
@@ -49,8 +52,13 @@ namespace Engine
 		{
 			// Loop through each item and check the system type
 			for (auto& system : s_activeSystems)
-				if (system->getSystemType() == type)
-					return true;
+			{
+				if (system)
+				{
+					if (system->getSystemType() == type)
+						return true;
+				}
+			}
 		}
 		return false;
 	}
@@ -137,7 +145,8 @@ namespace Engine
 					}
 
 					// System has been added, start the system
-					getSystemByType(type)->start();
+					auto system = getSystemByType(type);
+					if(system) system->start();
 				}
 				else
 					ENGINE_ERROR("[SystemManager::addSystem] Cannot add system as system type already exists: {0}", static_cast<int>(type));
@@ -166,7 +175,7 @@ namespace Engine
 					if ((*i))
 					{
 						(*i)->stop();
-						delete (*i);
+						if((*i)) delete (*i);
 					}
 					else
 						ENGINE_ERROR("[SystemManager::destroy] System is a null pointer.");
@@ -196,8 +205,13 @@ namespace Engine
 		{
 			// Loop through each item and check the system type
 			for (auto& system : s_activeSystems)
-				if (system->getSystemType() == type)
-					return system;
+			{
+				if (system)
+				{
+					if (system->getSystemType() == type)
+						return system;
+				}
+			}
 		}
 		else
 			ENGINE_ERROR("[SystemManager::getSystemByType] The system manager has not been initialised.");

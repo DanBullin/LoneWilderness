@@ -28,7 +28,13 @@ namespace Engine
 		ENGINE_INFO("[Entity::~Entity] Deleting entity named: {0}", m_entityName);
 
 		for (auto& comp : m_components)
-			delete comp.second;
+		{
+			if (comp)
+			{
+				comp->onDetach();
+				delete comp;
+			}
+		}
 		
 		m_components.clear();
 
@@ -47,9 +53,9 @@ namespace Engine
 
 	//! setName()
 	/*!
-	\param entityName a const char* - The name of the entity
+	\param entityName a const std::string& - The name of the entity
 	*/
-	void Entity::setName(const char* entityName)
+	void Entity::setName(const std::string& entityName)
 	{
 		m_entityName = entityName;
 	}
@@ -85,11 +91,24 @@ namespace Engine
 	{
 		if (layer)
 		{
-			// Check if new layer exists in the entity's parent scene layers
-			if(getParentScene()->getLayerManager()->layerExists(layer))
-				m_layer = layer;
+			Scene* scene = getParentScene();
+
+			if (scene)
+			{
+				LayerManager* layerManager = scene->getLayerManager();
+				if (layerManager)
+				{
+					// Check if new layer exists in the entity's parent scene layers
+					if (layerManager->layerExists(layer))
+						m_layer = layer;
+					else
+						ENGINE_ERROR("[Entity::setLayer] New layer doesn't exist in the entity's parent scene. Entity: {0}.", m_entityName);
+				}
+				else
+					ENGINE_ERROR("[Entity::setLayer] The parent scene does not have a valid layer manager. Scene: {0}, Entity: {1}.", scene->getName(), m_entityName);
+			}
 			else
-				ENGINE_ERROR("[Entity::setLayer] New layer doesn't exist in the entity's parent scene. Entity: {0}.", m_entityName);
+				ENGINE_ERROR("[Entity::setLayer] The entity does not have a valid parent scene. Entity: {0}.", m_entityName);
 		}
 		else
 			ENGINE_ERROR("[Entity::setLayer] New layer is a null pointer. Entity: {0}.", m_entityName);
@@ -124,47 +143,56 @@ namespace Engine
 		return m_display;
 	}
 
-	//! detach()
+	//! containsPoint()
 	/*!
-	\param name a const char* - The name of the component
+	\param coordinate a const glm::vec2& - The coordinate to check
+	\return a bool - Is this coordinate within this bounding box
 	*/
-	void Entity::detach(const char* name)
+	bool Entity::containsPoint(const glm::vec2& coordinate)
 	{
-		if (componentNameExists(name))
+		// Need to convert bottom left origin to calc top left and right, manually input scale and tune values size isnt known
+		auto transform = getComponent<Transform>();
+
+		if (transform)
 		{
-			// Check if the component is already deleted
-			if (m_components[name])
-			{
-				// Call the component's onDetach function
-				m_components[name]->onDetach();
-				// Found component, clean up
-				delete m_components[name];
-				m_components.erase(name);
-			}
-			else
-				ENGINE_ERROR("[Entity::detach] The component is a null pointer. Entity Name: {0}, Component: {1}", m_entityName, name);
+			glm::vec2 pos = { transform->getPosition().x, transform->getPosition().y };
+			glm::vec2 topLeft = pos - glm::vec2(0.f, transform->getScale().y);
+			glm::vec2 bottomRight = pos + glm::vec2(transform->getScale().x, 0.f);
+
+			if (coordinate.x >= topLeft.x && coordinate.x <= bottomRight.x)
+				if (coordinate.y >= topLeft.y && coordinate.y <= bottomRight.y)
+					return true;
 		}
 		else
-			ENGINE_ERROR("[Entity::detach] Cannot find component. Entity Name: {0}, Component: {1}", m_entityName, name);
+			ENGINE_ERROR("[Entity::containsPoint] This entity does not have a valid transform. Entity Name: {0}.", m_entityName);
+
+		return false;
 	}
 
 	//! getAllComponents()
 	/*!
-	\return a std::map<std::string, EntityComponent*>& - A reference to the list of all components
+	\return a const std::vector<EntityComponent*>& - A reference to the list of all components
 	*/
-	std::map<std::string, EntityComponent*>& Entity::getAllComponents()
+	const std::vector<EntityComponent*>& Entity::getAllComponents()
 	{
 		return m_components;
 	}
 
-	//! componentNameExists()
-	/*!
-	\param name a const std::string& - The name of the component
-	\return a const bool - Was the component name found in the component list
+	//! detach()
+	/*
+	\param type a const ComponentType - The type of component to delete
 	*/
-	bool Entity::componentNameExists(const std::string& name)
+	void Entity::detach(EntityComponent* component)
 	{
-		return m_components.find(name) != m_components.end();
+		if (component)
+		{
+			// If it does, detach and delete
+			component->onDetach();
+			delete component;
+			m_components.erase(std::remove(m_components.begin(), m_components.end(), component), m_components.end());
+		}
+		else
+			ENGINE_ERROR("[Entity::detach] The entity does not have a component of this type. Entity Name: {0}, Component Type: {1}.", m_entityName, Components::toString(component->getComponentType()));
 	}
 
 	//! onRender()
@@ -173,18 +201,22 @@ namespace Engine
 	*/
 	void Entity::onRender(const Renderers renderer)
 	{
-		// This function will be called if it's not overriden by child entity classes
-		// This provides this default action which can be overriden if sandbox needs more control
-		// over what and when to render an entity
+		// This function will be called if it's not overridden by child entity classes
+		// This provides this default action which can be overriden if sandbox needs more control over what and when to render an entity
 		if (renderer == Renderers::Renderer3D)
 		{
 			if (containsComponent<MeshRender3D>())
 			{
-				// Submit all 3D mesh renders
-				for (auto& meshRender : getComponents<MeshRender3D>())
+				MeshRender3D* meshRender = getComponent<MeshRender3D>();
+				if (meshRender)
 				{
+					Material* material = meshRender->getMaterial();
+
+					if (!material || material->getName() == "")
+						material = ResourceManager::getResource<Material>("defaultMaterial3D");
+
 					for (auto& mesh : meshRender->getModel()->getMeshes())
-						Renderer3D::submit(mesh.getGeometry(), meshRender->getMaterial(), meshRender->getModelMatrix());
+						Renderer3D::submit(mesh.getGeometry(), material, getComponent<Transform>()->getModelMatrix());
 				}
 			}
 		}
@@ -192,15 +224,14 @@ namespace Engine
 		{
 			if (containsComponent<MeshRender2D>())
 			{
-				// Submit all 2D mesh renders
-				for (auto& meshRender : getComponents<MeshRender2D>())
-					Renderer2D::submit(meshRender->getMaterial(), meshRender->getModelMatrix());
+				MeshRender2D* meshRender = getComponent<MeshRender2D>();
+				Renderer2D::submit(meshRender->getMaterial()->getShader(), meshRender->getMaterial()->getSubTextures(), getComponent<Transform>()->getModelMatrix(), meshRender->getMaterial()->getTint());
 			}
 			if (containsComponent<Text>())
 			{
 				// Submit all text components
-				for (auto& textRender : getComponents<Text>())
-					Renderer2D::submitText(textRender, textRender->getModelMatrix());
+				Text* textRender = getComponent<Text>();
+				Renderer2D::submitText(textRender, getComponent<Transform>()->getModelMatrix());
 			}
 		}
 	}
@@ -208,45 +239,28 @@ namespace Engine
 	//! printEntityDetails()
 	void Entity::printEntityDetails()
 	{
+		Scene* scene = getParentScene();
+
+		if (!scene)
+		{
+			ENGINE_ERROR("[Entity::printEntityDetails] This entity does not have a valid parent scene. Entity Name: {0}.", m_entityName);
+			return;
+		}
+
 		ENGINE_TRACE("==============");
 		ENGINE_TRACE("Entity Details");
 		ENGINE_TRACE("==============");
 		ENGINE_TRACE("Entity Address: {0}.", (void*)this);
 		ENGINE_TRACE("Entity Name: {0}.", getName());
-		ENGINE_TRACE("Entity Parent Scene: {0} [Name: {1}].", (void*)getParentScene(), getParentScene()->getName());
+		ENGINE_TRACE("Entity Parent Scene: {0} [Name: {1}].", (void*)scene, scene->getName());
 		ENGINE_TRACE("Attached to Layer: {0}.", (void*)getLayer());
 		ENGINE_TRACE("Entity Component Count: {0}", getAllComponents().size());
 		for (auto& comp : getAllComponents())
 		{
-			ENGINE_TRACE("Component Name: {0}, Type: {1}.", comp.second->getName(), static_cast<int>(comp.second->getComponentType()));
+			if(comp)
+				ENGINE_TRACE("Component Type: {0}.", static_cast<int>(comp->getComponentType()));
 		}
 		ENGINE_TRACE("Scheduled for Deletion: {0}.", getDestroyed());
 		ENGINE_TRACE("==============");
-	}
-
-	//! convertComponentClassType()
-	/*!
-	\param classType a const std::string& - The class type (Use typeid)
-	\return a const ComponentType - The type of component
-	*/
-	const ComponentType Entity::convertComponentClassType(const std::string& classType)
-	{
-		// Class types should be in the format [class Engine::{CLASS_NAME}]
-		if (classType == "class Engine::Camera" || classType == "Camera")
-			return ComponentType::Camera;
-		else if (classType == "class Engine::Transform3D" || classType == "Transform3D")
-			return ComponentType::Transform3D;
-		else if (classType == "class Engine::Transform2D" || classType == "Transform2D")
-			return ComponentType::Transform2D;
-		else if (classType == "class Engine::EventListener" || classType == "EventListener")
-			return ComponentType::EventListener;
-		else if (classType == "class Engine::MeshRender3D" || classType == "MeshRender3D")
-			return ComponentType::MeshRender3D;
-		else if (classType == "class Engine::MeshRender2D" || classType == "MeshRender2D")
-			return ComponentType::MeshRender2D;
-		else if (classType == "class Engine::Text" || classType == "Text")
-			return ComponentType::Text;
-		else
-			return ComponentType::None;
 	}
 }

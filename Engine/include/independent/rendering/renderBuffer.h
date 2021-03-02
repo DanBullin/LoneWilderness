@@ -19,6 +19,7 @@ namespace Engine
 	{
 		None,
 		Colour,
+		Colour16,
 		Depth,
 		Stencil,
 		DepthAndStencil
@@ -34,10 +35,35 @@ namespace Engine
 		static AttachmentType convertStringToAttachment(const std::string& attachmentLiteral)
 		{
 			if (attachmentLiteral == "Colour") return AttachmentType::Colour;
+			else if (attachmentLiteral == "Colour16") return AttachmentType::Colour16;
 			else if (attachmentLiteral == "Depth") return AttachmentType::Depth;
 			else if (attachmentLiteral == "Stencil") return AttachmentType::Stencil;
 			else if (attachmentLiteral == "DepthAndStencil") return AttachmentType::DepthAndStencil;
 			else return AttachmentType::None;
+		}
+
+		//! toString()
+		/*!
+		\param attachment a const AttachmentType - The attachment type
+		\return a std::string - The attachment type as a string
+		*/
+		static std::string toString(const AttachmentType attachment)
+		{
+			switch (attachment)
+			{
+				case AttachmentType::Colour:
+					return "Colour";
+				case AttachmentType::Colour16:
+					return "Colour16";
+				case AttachmentType::Depth:
+					return "Depth";
+				case AttachmentType::Stencil:
+					return "Stencil";
+				case AttachmentType::DepthAndStencil:
+					return "DepthAndStencil";
+				default:
+					return "None";
+			}
 		}
 	}
 

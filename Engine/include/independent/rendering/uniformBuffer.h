@@ -43,6 +43,8 @@ namespace Engine
 		virtual void uploadData(const char* uniformName, void* data) = 0; //!< Upload the data to the GPU
 			/*!< \param uniformName a const char* - The uniform name
 				 \param data a void* - A pointer to the data */
+
+		virtual void printDetails() override = 0; //!< Print the resource details
 	};
 }
 #endif

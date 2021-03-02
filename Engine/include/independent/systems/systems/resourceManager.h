@@ -27,13 +27,18 @@
 
 namespace Engine
 {
-	/*! \enum ConfigData
-	* \brief The different types of configurable data
-	*/
-	enum class ConfigData
+	namespace Config
 	{
-		MaxSubTexturesPerMaterial, VertexCapacity3D, IndexCapacity3D, BatchCapacity3D, BatchCapacity2D, MaxLayersPerScene, MaxRenderPassesPerScene, MaxComponentsInstancePerEntity
-	};
+		/*! \enum ConfigData
+		* \brief The different types of configurable data
+		*/
+		enum ConfigData
+		{
+			MaxSubTexturesPerMaterial = 0, VertexCapacity3D = 1, IndexCapacity3D = 2, BatchCapacity3D = 3, BatchCapacity2D = 4,
+			MaxLayersPerScene = 5, MaxRenderPassesPerScene = 6, MaxLightsPerDraw = 7, UseBloom = 8, BloomBlurFactor = 9, PrintResourcesInDestructor = 10,
+			PrintOpenGLDebugMessages = 11
+		};
+	}
 
 	/*! \class ResourceManager
 	* \brief A resource manager managing resources
@@ -43,15 +48,7 @@ namespace Engine
 	private:
 		static bool s_enabled; //!< Is this system enabled
 		static std::map<std::string, Resource*> s_loadedResources; //!< A list of loaded resources
-
-		static uint32_t s_maxSubTexturesPerMaterial; //!< Maximum subtextures allowed per material
-		static uint32_t s_vertexCapacity3D; //!< Maximum number of vertices in a 3D vertex buffer
-		static uint32_t s_indexCapacity3D; //!< Maximum number of indices in an 3D index buffer
-		static uint32_t s_batchCapacity3D; //!< Maximum number of submissions in a 3D Batch
-		static uint32_t s_batchCapacity2D; //!< Maximum number of quads in a 2D Batch
-		static uint32_t s_maxRenderPassesPerScene; //!< Maximum number of render passes per scene
-		static uint32_t s_maxLayersPerScene; //!< Maximum number of layers per scene
-		static uint32_t s_maxComponentsInstancePerEntity; //!< Maximum number of instances of a type of component per entity
+		static std::vector<uint32_t> s_configValues; //!< The config values
 	public:
 		ResourceManager(); //!< Constructor
 		~ResourceManager(); //!< Destructor
@@ -64,23 +61,27 @@ namespace Engine
 		static void destroyResource(const std::string& resourceName = ""); //!< Destroy a resource by name or all of them
 
 		template<typename T> static T* getResource(const std::string& resourceName); //!< Get a resource by name
-		template<typename T> static T* getResourceAndRef(const std::string& resourceName); //!< Get a resource by name and increase reference counter
+		template<typename T> static std::vector<T*> getResourcesOfType(const ResourceType type); //!< Get all resources of a certain type
 		static std::map<std::string, Resource*>& getResources(); //!< Get a list of all resources
 
 		static std::string getCurrentDirectory(); //!< Returns the current directory
 		static std::string getContents(const std::string& filePath); //!< Return the file contents
 		static nlohmann::json getJSON(const std::string& filePath); //!< Load the contents of a file into a JSON object and return the object
 
-		static const uint32_t getConfigValue(const ConfigData data); //!< Get a config value
+		static const uint32_t getConfigValue(const Config::ConfigData data); //!< Get a config value
+		static void setConfigValue(const Config::ConfigData data, const uint32_t value); //!< Set a config value
+
+		static FrameBuffer* getDefaultFrameBuffer(); //!< Get the default framebuffer
 
 		static void printResourceManagerDetails(); //!< Print resource manager details
-		static void printResourceDetails(); //!< Print resource details
+		static void printResourceDetails(const std::string& resourceName = ""); //!< Print resource details
 	};
 
 	template<typename T>
 	//! getResource()
 	/*!
 	\param resourceName a const std::string& - The name of the resource
+	\return a T* - The resource in type T
 	*/
 	static T* ResourceManager::getResource(const std::string& resourceName)
 	{
@@ -94,21 +95,25 @@ namespace Engine
 	}
 
 	template<typename T>
-	//! getResourceAndRef()
+	//! getResourcesOfType()
 	/*!
-	\param resourceName a const std::string& - The name of the resource
+	\param type a const ResourceType - The resource type
+	\return a std::vector<T*> - The list of resources of type T
 	*/
-	static T* ResourceManager::getResourceAndRef(const std::string& resourceName)
+	static std::vector<T*> ResourceManager::getResourcesOfType(const ResourceType type)
 	{
-		// Get resource and increase reference counter
-		T* res = getResource<T>(resourceName);
+		std::vector<T*> resources;
 
-		// If the resource is valid (was found), now increase the reference counter and return it
-		// It is up to the developer to ensure this returned resource is handled properly in order for the decrease counter to function properly
-		if (res)
-			static_cast<Resource*>(res)->increaseCount();
+		for (auto& res : s_loadedResources)
+		{
+			if (res.second)
+			{
+				if (res.second->getType() == type)
+					resources.emplace_back(static_cast<T*>(res.second));
+			}
+		}
 
-		return res;
+		return resources;
 	}
 }
 

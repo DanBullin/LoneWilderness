@@ -17,6 +17,7 @@
 #include "independent/rendering/materials/material.h"
 #include "independent/entities/components/text.h"
 #include "independent/entities/components/meshRender2D.h"
+#include "independent/rendering/geometry/quad.h"
 
 namespace Engine
 {
@@ -50,10 +51,11 @@ namespace Engine
 		static void draw(ShaderProgram* shader); //!< Draw the scene
 
 		static void generateListOfVertex2D(ShaderProgram* shader, std::vector<BatchEntry2D>& batchEntries); //!< Generate a list of vertices and edit the VBO
+		static void generateListOfVertex2DMutlitextured(ShaderProgram* shader, std::vector<BatchEntry2D>& batchEntries); //!< Generate a list of vertices and edit the VBO
 	public:
 		static void initialise(const uint32_t batchCapacity); //!< Initialise the renderer
 		static void begin(ShaderProgram* shaderProgram); //!< Begin a new 2D scene
-		static void submit(Material* material, const glm::mat4& modelMatrix, const glm::vec4& tint = glm::vec4(-1.f, -1.f, -1.f, -1.f)); //!< Submit a 2D entity
+		static void submit(ShaderProgram* shaderProgram, std::vector<SubTexture*>& subTextures, const glm::mat4& modelMatrix, const glm::vec4& tint); //!< Submit a 2D entity
 		static void submitText(Text* text, const glm::mat4& modelMatrix); //!< Submit text to renderer
 		static void end(); //!< End the 2D scene
 		static void destroy(); //!< Destroy all internal data

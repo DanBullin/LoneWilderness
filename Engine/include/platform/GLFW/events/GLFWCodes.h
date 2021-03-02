@@ -69,6 +69,7 @@ namespace Engine
 			ENTER = 257,
 			TAB = 258,
 			BACKSPACE = 259,
+			DEL = 261,
 			RIGHT = 262,
 			LEFT = 263,
 			DOWN = 264,

@@ -1,0 +1,101 @@
+{
+	"programs": 
+	[
+		{ 
+			"name": "blinnPhong", 
+			"vertexShader": "assets/shaders/blinnPhong/vertex.vs", 
+			"fragmentShader": "assets/shaders/blinnPhong/fragment.fs", 
+			"geometryShader": "",
+			"tessControlShader": "",
+			"tessEvaluationShader": "",
+			"vertexArray": "vertexArray1",
+			"uniforms": [ "u_diffuseMap" ],
+			"uniformBuffers": [ "Camera", "CameraUBO", "DirectionalLights", "DirLightUBO", "PointLights", "PointLightUBO", "SpotLights", "SpotLightUBO" ],
+			"orderImportance": 0
+		},
+		{ 
+			"name": "lightSource", 
+			"vertexShader": "assets/shaders/lightSource/vertex.vs", 
+			"fragmentShader": "assets/shaders/lightSource/fragment.fs", 
+			"geometryShader": "",
+			"tessControlShader": "",
+			"tessEvaluationShader": "",
+			"vertexArray": "lightSourceArray",
+			"uniforms": [ ],
+			"uniformBuffers": [ "Camera", "CameraUBO" ],
+			"orderImportance": 1
+		},
+		{ 
+			"name": "quad", 
+			"vertexShader": "assets/shaders/quad/vertex.vs", 
+			"fragmentShader": "assets/shaders/quad/fragment.fs", 
+			"geometryShader": "",
+			"tessControlShader": "",
+			"tessEvaluationShader": "",
+			"vertexArray": "QuadArray",
+			"uniforms": [ "u_textures" ],
+			"uniformBuffers": [ "Camera", "CameraUBO" ],
+			"orderImportance": 1
+		},
+		{ 
+			"name": "sceneQuadPlain", 
+			"vertexShader": "assets/shaders/sceneQuadPlain/vertex.vs", 
+			"fragmentShader": "assets/shaders/sceneQuadPlain/fragment.fs", 
+			"geometryShader": "",
+			"tessControlShader": "",
+			"tessEvaluationShader": "",
+			"vertexArray": "QuadArray",
+			"uniforms": [ "u_textures" ],
+			"uniformBuffers": [ "Camera", "CameraUBO" ],
+			"orderImportance": 0
+		},
+		{ 
+			"name": "sceneQuad", 
+			"vertexShader": "assets/shaders/sceneQuad/vertex.vs", 
+			"fragmentShader": "assets/shaders/sceneQuad/fragment.fs", 
+			"geometryShader": "",
+			"tessControlShader": "",
+			"tessEvaluationShader": "",
+			"vertexArray": "QuadMultiTexturedArray",
+			"uniforms": [ "u_textures" ],
+			"uniformBuffers": [ "Camera", "CameraUBO", "Bloom", "BloomUBO" ],
+			"orderImportance": 0
+		},
+		{ 
+			"name": "blurBright", 
+			"vertexShader": "assets/shaders/blurBright/vertex.vs", 
+			"fragmentShader": "assets/shaders/blurBright/fragment.fs", 
+			"geometryShader": "",
+			"tessControlShader": "",
+			"tessEvaluationShader": "",
+			"vertexArray": "QuadArray",
+			"uniforms": [ "u_textures" ],
+			"uniformBuffers": [ "Camera", "CameraUBO", "Bloom", "BloomUBO" ],
+			"orderImportance": 0
+		},
+		{ 
+			"name": "skyboxShader", 
+			"vertexShader": "assets/shaders/sky/vertex.vs", 
+			"fragmentShader": "assets/shaders/sky/fragment.fs", 
+			"geometryShader": "",
+			"tessControlShader": "",
+			"tessEvaluationShader": "",
+			"vertexArray": "vertexArray2",
+			"uniforms": [ "u_cubeMap" ],
+			"uniformBuffers": [ "Camera", "CameraUBO" ],
+			"orderImportance": 2
+		},
+		{ 
+			"name": "textShader", 
+			"vertexShader": "assets/shaders/quad/vertex.vs", 
+			"fragmentShader": "assets/shaders/quad/fragment.fs", 
+			"geometryShader": "",
+			"tessControlShader": "",
+			"tessEvaluationShader": "",
+			"vertexArray": "QuadArray",
+			"uniforms": [ "u_textures" ],
+			"uniformBuffers": [ "Camera", "CameraUBO" ],
+			"orderImportance": 1
+		}
+	]	
+}

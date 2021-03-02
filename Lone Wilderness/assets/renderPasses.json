@@ -1,0 +1,20 @@
+{
+	"renderPasses": 
+	[
+		{ 
+			"name": "FirstPass"
+		},
+		{ 
+			"name": "SecondPass"
+		},
+		{ 
+			"name": "ThirdPass"
+		},
+		{ 
+			"name": "FourthPass"
+		},
+		{
+			"name": "MenuPass"
+		}
+	]	
+}

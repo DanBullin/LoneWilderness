@@ -18,6 +18,15 @@ Cyborg::~Cyborg()
 {
 }
 
+//! onPreUpdate()
+/*
+\param timestep a const float - The timestep
+\param totalTime a const float - The total time of the application
+*/
+void Cyborg::onPreUpdate(const float timestep, const float totalTime)
+{
+}
+
 //! onKeyRelease()
 /*!
 \param e a KeyReleasedEvent& - A key release event
@@ -27,5 +36,7 @@ Cyborg::~Cyborg()
 void Cyborg::onKeyRelease(KeyReleasedEvent& e, const float timestep, const float totalTime)
 {
 	if (e.getKeyCode() == Keys::P)
+	{
 		setDisplay(!getDisplay());
+	}
 }

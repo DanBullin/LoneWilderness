@@ -1,0 +1,398 @@
+{
+	"entities": 
+	[
+		{
+			"name": "Player1",
+			"type": "Player",
+			"layer": "Default",
+			"display": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ -12.0, 1.7, -34.0],
+					"rotation": [ 0.0, 0.0, 0.0],
+					"scale": [ 1.0, 1.0, 1.0 ]
+				},
+				{
+					"name": "Camera",
+					"type": "Camera",
+					"skybox": [{"model" : "cube", "material": "skyboxMaterial"}],
+					"clearColour": [ 0.1, 0.2, 0.3, 1.0],
+					"front": [ 0.0, 0.0, -1.0],
+					"up": [ 0.0, 1.0, 0.0],
+					"worldUp": [ 0.0, 1.0, 0.0],
+					"Yaw": 90.0,
+					"Pitch": 0.0,
+					"Zoom": 45.0,
+					"setMainCamera": true
+				},
+				{
+					"name": "Light1",
+					"type": "DirectionalLight",
+					"direction": [ -0.2, -1.0, -0.3 ],
+					"ambient": [ 0.01, 0.01, 0.01 ],
+					"diffuse": [ 0.01, 0.01, 0.01 ],
+					"specular": [ 0.1, 0.1, 0.1 ]
+				},
+				{
+					"name": "EventListener",
+					"type": "EventListener"
+				},
+				{
+					"name": "CController",
+					"type": "CharacterController",
+					"speed": 22.0,
+					"sensitivity": 0.15,
+					"frozen": false
+				}
+			]
+		},
+		{
+			"name": "Cyborg1",
+			"type": "Cyborg",
+			"layer": "Default",
+			"display": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ -12.0, 30.0, 19.0 ],
+					"rotation": [ 0.0, 0.0, 0.0],
+					"scale": [ 1.0, 1.0, 1.0 ]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender3D",
+					"modelName": "cyborg",
+					"materialName": "defaultMaterial3D"
+				},
+				{
+					"name": "EventListener",
+					"type": "EventListener"
+				}
+			]
+		},
+		{
+			"name": "LightSource1",
+			"type": "LightTest",
+			"layer": "Default",
+			"display": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 4.4, 4.15, 3.4],
+					"rotation": [ 0.0, 0.0, 0.0],
+					"scale": [ 1.0, 1.0, 1.0 ]
+				},
+				{
+					"name": "Light1",
+					"type": "PointLight",
+					"ambient": [ 0.2, 0.2, 0.2 ],
+					"diffuse": [ 15.0, 0.0, 0.0 ],
+					"specular": [ 1.0, 1.0, 1.0 ],
+					"constant": 1.0,
+					"linear": 0.7,
+					"quadratic": 1.8
+				},
+				{
+					"name": "EventListener",
+					"type": "EventListener"
+				}
+			]
+		},
+		{
+			"name": "LightSource2",
+			"type": "LightTest",
+			"layer": "Default",
+			"display": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ -10.43, 4.12, -26.1],
+					"rotation": [ 0.0, 0.0, 0.0],
+					"scale": [ 1.0, 1.0, 1.0 ]
+				},
+				{
+					"name": "Light1",
+					"type": "PointLight",
+					"ambient": [ 0.2, 0.2, 0.2 ],
+					"diffuse": [ 15.0, 15.0, 0.0 ],
+					"specular": [ 1.0, 1.0, 1.0 ],
+					"constant": 1.0,
+					"linear": 0.7,
+					"quadratic": 1.8
+				},
+				{
+					"name": "EventListener",
+					"type": "EventListener"
+				}
+			]
+		},
+		{
+			"name": "LightSource3",
+			"type": "LightTest",
+			"layer": "Default",
+			"display": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ -10.43, 4.12, -11.9],
+					"rotation": [ 0.0, 0.0, 0.0],
+					"scale": [ 1.0, 1.0, 1.0 ]
+				},
+				{
+					"name": "Light1",
+					"type": "PointLight",
+					"ambient": [ 0.2, 0.2, 0.2 ],
+					"diffuse": [ 15.0, 15.0, 0.0 ],
+					"specular": [ 1.0, 1.0, 1.0 ],
+					"constant": 1.0,
+					"linear": 0.7,
+					"quadratic": 1.8
+				},
+				{
+					"name": "EventListener",
+					"type": "EventListener"
+				}
+			]
+		},
+		{
+			"name": "LightSource4",
+			"type": "LightTest",
+			"layer": "Default",
+			"display": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ -10.43, 4.12, 2.3],
+					"rotation": [ 0.0, 0.0, 0.0],
+					"scale": [ 1.0, 1.0, 1.0 ]
+				},
+				{
+					"name": "Light1",
+					"type": "PointLight",
+					"ambient": [ 0.2, 0.2, 0.2 ],
+					"diffuse": [ 15.0, 15.0, 0.0 ],
+					"specular": [ 1.0, 1.0, 1.0 ],
+					"constant": 1.0,
+					"linear": 0.7,
+					"quadratic": 1.8
+				},
+				{
+					"name": "EventListener",
+					"type": "EventListener"
+				}
+			]
+		},
+		{
+			"name": "LightSource5",
+			"type": "LightTest",
+			"layer": "Default",
+			"display": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ -10.43, 4.0, -40.3],
+					"rotation": [ 0.0, 0.0, 0.0],
+					"scale": [ 1.0, 1.0, 1.0 ]
+				},
+				{
+					"name": "Light1",
+					"type": "PointLight",
+					"ambient": [ 0.2, 0.2, 0.2 ],
+					"diffuse": [ 15.0, 15.0, 0.0 ],
+					"specular": [ 1.0, 1.0, 1.0 ],
+					"constant": 1.0,
+					"linear": 0.7,
+					"quadratic": 1.8
+				},
+				{
+					"name": "EventListener",
+					"type": "EventListener"
+				}
+			]
+		},
+		{
+			"name": "LightSource7",
+			"type": "LightTest",
+			"layer": "Default",
+			"display": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ -10.43, 4.12, 16.5],
+					"rotation": [ 0.0, 0.0, 0.0],
+					"scale": [ 1.0, 1.0, 1.0 ]
+				},
+				{
+					"name": "Light1",
+					"type": "PointLight",
+					"ambient": [ 0.2, 0.2, 0.2 ],
+					"diffuse": [ 15.0, 15.0, 0.0 ],
+					"specular": [ 1.0, 1.0, 1.0 ],
+					"constant": 1.0,
+					"linear": 0.7,
+					"quadratic": 1.8
+				},
+				{
+					"name": "EventListener",
+					"type": "EventListener"
+				}
+			]
+		},
+		{
+			"name": "LightSource6",
+			"type": "LightTest",
+			"layer": "Default",
+			"display": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ -12.5, 300.12, 2.3],
+					"rotation": [ 0.0, 0.0, 0.0],
+					"scale": [ 8.0, 8.0, 8.0 ]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender3D",
+					"modelName": "sphere",
+					"materialName": "lightSourceMaterial"
+				},
+				{
+					"name": "Light1",
+					"type": "PointLight",
+					"ambient": [ 0.2, 0.2, 0.2 ],
+					"diffuse": [ 100.0, 100.0, 100.0 ],
+					"specular": [ 1.0, 1.0, 1.0 ],
+					"constant": 1.0,
+					"linear": 0.09,
+					"quadratic": 0.032
+				},
+				{
+					"name": "EventListener",
+					"type": "EventListener"
+				}
+			]
+		},
+		{
+			"name": "Street",
+			"type": "Sign",
+			"layer": "Default",
+			"display": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 0.0, 0.0, 3.0],
+					"rotation": [ 0.0, 0.0, 0.0],
+					"scale": [ 0.003, 0.003, 0.003 ]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender3D",
+					"modelName": "street",
+					"materialName": "streetMaterial"
+				},
+				{
+					"name": "EventListener",
+					"type": "EventListener"
+				}
+			]
+		},
+		{
+			"name": "HotbarUI",
+			"type": "Rectangle",
+			"layer": "UI",
+			"display": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 350.0, 540.0, 0.0 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 408.0, 100.0, 1.0 ]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender2D",
+					"materialName": "hotbarMaterial"
+				},
+				{
+					"name": "EventListener",
+					"type": "EventListener"
+				}
+			]
+		},
+		{
+			"name": "MapUI",
+			"type": "Rectangle",
+			"layer": "UI",
+			"display": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 720.0, 520.0, 0.0 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 150.0, 150.0, 1.0 ]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender2D",
+					"materialName": "mapMaterial"
+				},
+				{
+					"name": "EventListener",
+					"type": "EventListener"
+				}
+			]
+		},
+		{
+			"name": "FPSText",
+			"type": "FPSCounter",
+			"layer": "UI",
+			"display": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 5.0, 45.0, 0.0 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 400.0, 400.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Arial"
+				},
+				{
+					"name": "EventListener",
+					"type": "EventListener"
+				}
+			]
+		}
+	]
+}

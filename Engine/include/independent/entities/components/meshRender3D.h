@@ -22,11 +22,8 @@ namespace Engine
 	private:
 		Model3D* m_model; //!< A pointer to the 3D geometry
 		Material* m_material; //!< A pointer to the material
-		glm::vec3 m_localPosition; //!< The local position of the geometry to the entity
-		glm::vec3 m_localOrientation; //!< The local rotation of the geometry to the entity
-		glm::vec3 m_localScale; //!< The local scale of the geometry to the entity
 	public:
-		MeshRender3D(const glm::vec3& localPos, const glm::vec3& localOrientation, const glm::vec3& localScale, Model3D* model, Material* material); //!< Constructor
+		MeshRender3D(Model3D* model, Material* material); //!< Constructor
 		~MeshRender3D(); //!< Destructor
 
 		void onAttach() override; //!< Occurs when component is attached to an entity
@@ -39,15 +36,6 @@ namespace Engine
 
 		void setMaterial(Material* material); //!< Set the material
 		Material* getMaterial(); //!< Get the material
-
-		void setLocalPosition(const glm::vec3& newPos); //!< Set the local position
-		glm::vec3 getLocalPosition(); //!< Get the local position
-		void setLocalOrientation(const glm::vec3& newOrientation); //!< Set the local orientation
-		glm::vec3 getLocalOrientation(); //!< Get the local orientation
-		void setLocalScale(const glm::vec3& newScale); //!< Set the local scale
-		glm::vec3 getLocalScale(); //!< Get the local scale
-
-		glm::mat4 getModelMatrix(); //!< Get the model matrix of the geometry
 	};
 }
 #endif

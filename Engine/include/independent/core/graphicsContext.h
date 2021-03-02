@@ -8,7 +8,7 @@
 #ifndef GRAPHICSCONTEXT_H
 #define GRAPHICSCONTEXT_H
 
-namespace Engine 
+namespace Engine
 {
 	/*! \class GraphicsContext
 	* \brief A graphics context interface

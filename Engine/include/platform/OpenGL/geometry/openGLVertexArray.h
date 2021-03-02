@@ -27,6 +27,7 @@ namespace Engine
 		void bind() override; //!< Bind the VAO
 		void unbind() override; //!< Unbind the VAO
 		const bool indexBufferBoundToArray() override; //!< Check if the index buffer set is correctly bound to the array
+		void printDetails() override; //!< Print the resource details
 	};
 }
 #endif

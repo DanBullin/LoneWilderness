@@ -13,14 +13,14 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-namespace Engine 
+namespace Engine
 {
 	//! GLFWWindowImplementation()
 	/*!
-	\param windowName a const char* - The name of the window
+	\param windowName a const std::string& - The name of the window
 	\param properties a const WindowProperties& - The window properties
 	*/
-	GLFWWindowImplementation::GLFWWindowImplementation(const char* windowName, const WindowProperties& properties)
+	GLFWWindowImplementation::GLFWWindowImplementation(const std::string& windowName, const WindowProperties& properties)
 	{
 		// Initiate the window
 		m_windowName = windowName;
@@ -29,15 +29,21 @@ namespace Engine
 
 		m_monitor = glfwGetPrimaryMonitor();
 
+		if (!m_monitor)
+			ENGINE_ERROR("[GLFWWindowImplementation::GLFWWindowImplementation] Couldn't get primary monitor for window: {0}.", windowName);
+
 		// Create the GLFW object
 		// Check fullscreen is enabled, give primary monitor if so, otherwise null
 		m_native = glfwCreateWindow(m_properties.getWidth(), m_properties.getHeight(), m_properties.getTitle().c_str(), nullptr, nullptr);
+
+		if (!m_native)
+			ENGINE_ERROR("[GLFWWindowImplementation::GLFWWindowImplementation] Couldn't create GLFW window: {0}.", windowName);
 
 		m_graphicsContext.reset(new GLFWGLGraphicsContext(m_native));
 		m_graphicsContext->init();
 
 		// Set this window as user data in window
-		glfwSetWindowUserPointer(m_native, static_cast<void*>(this));
+		if(m_native) glfwSetWindowUserPointer(m_native, static_cast<void*>(this));
 
 		// Set window properties
 		setPosition(m_properties.getPosition());
@@ -61,6 +67,10 @@ namespace Engine
 			m_properties.setFullScreen(false);
 			setFullscreen(true);
 		}
+
+		// Print the window's details upon creation
+		ENGINE_TRACE("[GLFWWindowImplementation::GLFWWindowImplementation] Window details upon creation for: {0}.", m_windowName);
+		printWindowDetails();
 	}
 
 	//! ~GLFWWindowImplementation()
@@ -68,7 +78,7 @@ namespace Engine
 	{
 		// Destroy the window
 		ENGINE_INFO("[GLFWWindowImplementation::~GLFWWindowImplementation] Closing the window.");
-		glfwDestroyWindow(m_native);
+		if(m_native) glfwDestroyWindow(m_native);
 		m_native = nullptr;
 	}
 
@@ -266,6 +276,8 @@ namespace Engine
 			m_properties.setTitle(title);
 			glfwSetWindowTitle(m_native, title);
 		}
+		else
+			ENGINE_ERROR("[GLFWWindowImplementation::setTitle] Couldn't find GLFW window: {0}.", m_windowName);
 	}
 
 	//! setSize()
@@ -279,6 +291,8 @@ namespace Engine
 			// Size property will be updated automatically
 			glfwSetWindowSize(m_native, size.x, size.y);
 		}
+		else
+			ENGINE_ERROR("[GLFWWindowImplementation::setSize] Couldn't find GLFW window: {0}.", m_windowName);
 	}
 
 	//! setPosition()
@@ -292,6 +306,8 @@ namespace Engine
 			// Position property will be updated automatically
 			glfwSetWindowPos(m_native, newPosition.x, newPosition.y);
 		}
+		else
+			ENGINE_ERROR("[GLFWWindowImplementation::setPosition] Couldn't find GLFW window: {0}.", m_windowName);
 	}
 
 	//! setPosition()
@@ -303,6 +319,8 @@ namespace Engine
 	{
 		if(m_native)
 			setPosition(glm::ivec2(x, y));
+		else
+			ENGINE_ERROR("[GLFWWindowImplementation::setPosition] Couldn't find GLFW window: {0}.", m_windowName);
 	}
 
 	//! setVSync()
@@ -316,6 +334,8 @@ namespace Engine
 			m_properties.setVSync(VSync);
 			glfwSwapInterval(VSync);
 		}
+		else
+			ENGINE_ERROR("[GLFWWindowImplementation::setVSync] Couldn't find GLFW window: {0}.", m_windowName);
 	}
 
 	//! setFullscreen()
@@ -326,13 +346,25 @@ namespace Engine
 	{
 		if (fullscreen == m_properties.getFullScreen()) return;
 
+		if (!m_native)
+		{
+			ENGINE_ERROR("[GLFWWindowImplementation::setFullscreen] Couldn't find GLFW window: {0}.", m_windowName);
+			return;
+		}
+
 		if (fullscreen)
 		{
-			m_nonFullscreenWindowSize = m_properties.getSize();
-			m_nonFullscreenWindowPosition = m_properties.getPosition();
-
 			// Get resolution of monitor
 			const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+			if (!mode)
+			{
+				ENGINE_ERROR("[GLFWWindowImplementation::setFullscreen] Couldn't find GLFW video mode: {0}.", m_windowName);
+				return;
+			}
+
+			m_nonFullscreenWindowSize = m_properties.getSize();
+			m_nonFullscreenWindowPosition = m_properties.getPosition();
 
 			int width = mode->width;
 			int height = mode->height;
@@ -365,6 +397,8 @@ namespace Engine
 			else
 				glfwRestoreWindow(m_native);
 		}
+		else
+			ENGINE_ERROR("[GLFWWindowImplementation::setMinimised] Couldn't find GLFW window: {0}.", m_windowName);
 	}
 
 	//! setOpacity()
@@ -384,6 +418,8 @@ namespace Engine
 			else
 				ENGINE_ERROR("[GLFWWindowImplementation::setOpacity] Opacity value must be between 0.0 and 1.0.");
 		}
+		else
+			ENGINE_ERROR("[GLFWWindowImplementation::setOpacity] Couldn't find GLFW window: {0}.", m_windowName);
 	}
 
 	//! focus()
@@ -395,6 +431,8 @@ namespace Engine
 			WindowFocusEvent e;
 			onWindowFocus(e);
 		}
+		else
+			ENGINE_ERROR("[GLFWWindowImplementation::focus] Couldn't find GLFW window: {0}.", m_windowName);
 	}
 
 	//! hide()
@@ -405,6 +443,8 @@ namespace Engine
 			m_properties.setHidden(true);
 			glfwHideWindow(m_native);
 		}
+		else
+			ENGINE_ERROR("[GLFWWindowImplementation::hide] Couldn't find GLFW window: {0}.", m_windowName);
 	}
 
 	//! show()
@@ -415,6 +455,8 @@ namespace Engine
 			m_properties.setHidden(false);
 			glfwShowWindow(m_native);
 		}
+		else
+			ENGINE_ERROR("[GLFWWindowImplementation::show] Couldn't find GLFW window: {0}.", m_windowName);
 	}
 
 	//! setCursorInputMode()
@@ -451,6 +493,8 @@ namespace Engine
 			m_properties.setCursorInputMode(mode);
 			glfwSetInputMode(m_native, GLFW_CURSOR, glfwMode);
 		}
+		else
+			ENGINE_ERROR("[GLFWWindowImplementation::setCursorInputMode] Couldn't find GLFW window: {0}.", m_windowName);
 	}
 
 	//! setCursorInputMode()
@@ -469,6 +513,8 @@ namespace Engine
 			icon.pixels = pixels;
 			glfwSetWindowIcon(m_native, 1, &icon);
 		}
+		else
+			ENGINE_ERROR("[GLFWWindowImplementation::setIcon] Couldn't find GLFW window: {0}.", m_windowName);
 	}
 
 	//! setCursorInputMode()
@@ -489,12 +535,14 @@ namespace Engine
 
 			stbi_image_free(data);
 		}
+		else
+			ENGINE_ERROR("[GLFWWindowImplementation::setIcon] Couldn't find GLFW window: {0}.", m_windowName);
 	}
 
 	//! printWindowDetails()
 	void GLFWWindowImplementation::printWindowDetails()
 	{
-		ENGINE_TRACE("==========================");
+		ENGINE_TRACE("========================================================");
 		ENGINE_TRACE("Window Properties for {0}:", m_windowName);
 		ENGINE_TRACE("Address: {0}", (void*)this);
 		ENGINE_TRACE("Title: {0}", m_properties.getTitle());
@@ -512,6 +560,6 @@ namespace Engine
 		ENGINE_TRACE("Address of Graphics Context: {0}", (void*)m_graphicsContext.get());
 		ENGINE_TRACE("Non-fullscreen window position: {0}, {1}", m_nonFullscreenWindowPosition.x, m_nonFullscreenWindowPosition.y);
 		ENGINE_TRACE("Non-fullscreen window size: {0}, {1}", m_nonFullscreenWindowSize.x, m_nonFullscreenWindowSize.y);
-		ENGINE_TRACE("==========================");
+		ENGINE_TRACE("========================================================");
 	}
 }

@@ -6,48 +6,28 @@
 *
 */
 #include "loaders/sceneLoader.h"
-#include "independent/utils/resourceLoader.h"
 #include "independent/systems/systems/sceneManager.h"
-#include "independent/systems/systems/log.h"
 
 #include "entities/player.h"
 #include "entities/cyborg.h"
+#include "entities/sign.h"
 #include "entities/rectangleShape.h"
 #include "entities/FPSCounter.h"
 #include "entities/mainMenu/menuText.h"
+#include "entities/lightTest.h"
+#include "entities/street.h"
 
 #include "layers/defaultLayer.h"
 #include "layers/UILayer.h"
 
 #include "independent/rendering/renderPasses/passes/firstPass.h"
 #include "independent/rendering/renderPasses/passes/secondPass.h"
+#include "independent/rendering/renderPasses/passes/thirdPass.h"
+#include "independent/rendering/renderPasses/passes/fourthPass.h"
 #include "independent/rendering/renderPasses/passes/menuPass.h"
 
 namespace Engine
 {
-	using json = nlohmann::json; //!< Type alias
-
-	//! loadResources()
-	/*!
-	\param sceneFolderPath a const std::string& - The scene data folder path
-	*/
-	void SceneLoader::loadResources(const std::string& resourceFolderPath)
-	{
-		// Load all the various resources with the Engine's resource loader
-		// resourceFolderPath takes us to the scene's root folder
-		ResourceLoader::loadVertexBuffers(resourceFolderPath + "GraphicalObjects/vertexBuffers.json");
-		ResourceLoader::loadIndexBuffers(resourceFolderPath + "GraphicalObjects/indexBuffers.json");
-		ResourceLoader::loadVertexArrays(resourceFolderPath + "GraphicalObjects/vertexArrays.json");
-		ResourceLoader::loadIndirectBuffers(resourceFolderPath + "GraphicalObjects/indirectBuffers.json");
-		ResourceLoader::loadUniformBuffers(resourceFolderPath + "GraphicalObjects/uniformBuffers.json");
-		ResourceLoader::loadFrameBuffers(resourceFolderPath + "GraphicalObjects/frameBuffers.json");
-		ResourceLoader::loadShaderPrograms(resourceFolderPath + "shaders.json");
-		ResourceLoader::loadTextures(resourceFolderPath + "textures.json");
-		ResourceLoader::loadSubTextures(resourceFolderPath + "subTextures.json");
-		ResourceLoader::loadMaterials(resourceFolderPath + "materials.json");
-		ResourceLoader::load3DModels(resourceFolderPath + "models.json");
-	}
-
 	//! createNewEntity()
 	/*!
 	\param entitySubType a const std::string& - The name of the entity subclass
@@ -56,18 +36,15 @@ namespace Engine
 	Entity* SceneLoader::createNewEntity(const std::string& entitySubType)
 	{
 		// All subclasses of Entity must be added and returned here
-		if (entitySubType == "Player")
-			return new Player;
-		else if (entitySubType == "Cyborg")
-			return new Cyborg;
-		else if (entitySubType == "Rectangle")
-			return new RectangleShape;
-		else if (entitySubType == "FPSCounter")
-			return new FPSCounter;
-		else if (entitySubType == "MenuText")
-			return new MenuText;
-		else
-			return nullptr;
+		if (entitySubType == "Player") return new Player;
+		else if (entitySubType == "Cyborg") return new Cyborg;
+		else if (entitySubType == "Sign") return new Sign;
+		else if (entitySubType == "Street") return new Street;
+		else if (entitySubType == "Rectangle") return new RectangleShape;
+		else if (entitySubType == "FPSCounter") return new FPSCounter;
+		else if (entitySubType == "MenuText") return new MenuText;
+		else if (entitySubType == "LightTest") return new LightTest;
+		else return nullptr;	
 	}
 
 	//! createLayer()
@@ -77,13 +54,10 @@ namespace Engine
 	*/
 	Layer* SceneLoader::createLayer(const std::string& layerName)
 	{
-		// All subclasses of layer must be added and returned here
-		if (layerName == "Default")
-			return new DefaultLayer;
-		else if (layerName == "UI")
-			return new UILayer;
-		else
-			return nullptr;
+		// All subclasses of layers should be return here from a string
+		if (layerName == "Default") return new DefaultLayer;
+		else if (layerName == "UI") return new UILayer;
+		else return nullptr;
 	}
 
 	//! createRenderPass()
@@ -93,15 +67,91 @@ namespace Engine
 	*/
 	RenderPass* SceneLoader::createRenderPass(const std::string& passName)
 	{
-		// All subclasses of layer must be added and returned here
-		if (passName == "FirstPass")
-			return new FirstPass;
-		else if (passName == "SecondPass")
-			return new SecondPass;
-		else if (passName == "MenuPass")
-			return new MenuPass;
+		// All subclasses of RenderPass should be return here from a string
+		if (passName == "FirstPass") return new FirstPass;
+		else if (passName == "SecondPass") return new SecondPass;
+		else if (passName == "ThirdPass") return new ThirdPass;
+		else if (passName == "FourthPass") return new FourthPass;
+		else if (passName == "MenuPass") return new MenuPass;
+		else return nullptr;
+	}
+
+	//! loadSceneProperties()
+	/*
+	\param scene a Scene* - A pointer to the scene we're loading
+	\param sceneData a json - The scene's JSON data
+	\return a bool - The success value
+	*/
+	bool SceneLoader::loadSceneProperties(Scene* scene, json sceneData)
+	{
+		if (scene)
+		{
+			// Load layers
+			for (auto& layer : sceneData["layers"])
+			{
+				Layer* newLayer = createLayer(layer["name"].get<std::string>());
+
+				if (newLayer)
+				{
+					newLayer->setActive(layer["active"].get<bool>());
+					newLayer->setDisplayed(layer["displayed"].get<bool>());
+					scene->getLayerManager()->attachLayer(newLayer);
+				}
+				else
+				{
+					ENGINE_ERROR("[SceneLoader::loadSceneProperties] An invalid layer was provided for this scene. Cannot add. Scene Name: {0}, Layer Name: {1}.", scene->getName(), layer["name"].get<std::string>());
+					return false;
+				}
+			}
+
+			// Load Render passes
+			for (auto& pass : sceneData["renderPasses"])
+			{
+				RenderPass* newPass = createRenderPass(pass["name"].get<std::string>());
+
+				if (newPass)
+				{
+					newPass->setEnabled(pass["enabled"].get<bool>());
+					scene->addRenderPass(newPass);
+				}
+				else
+				{
+					ENGINE_ERROR("[SceneLoader::loadSceneProperties] An invalid render pass was provided for this scene. Cannot add. Scene Name: {0}, Pass Name: {1}.", scene->getName(), pass["name"].get<std::string>());
+					return false;
+				}
+			}
+			return true;
+		}
 		else
-			return nullptr;
+			ENGINE_ERROR("[SceneLoader::loadSceneProperties] Cannot construct because the scene is invalid.");
+		return false;
+	}
+
+	//! loadSceneProperties()
+	/*
+	\param entity a Entity* - A pointer to the entity we're loading
+	\param entityData a json - The entity's JSON data
+	\return a bool - The success value
+	*/
+	bool SceneLoader::loadEntityProperties(Entity* entity, json entityData)
+	{
+		if (entity)
+		{
+			LayerManager* layerManager = entity->getParentScene()->getLayerManager();
+
+			if (layerManager)
+			{
+				entity->setLayer(layerManager->getLayer(entityData["layer"].get<std::string>()));
+				entity->setDisplay(entityData["display"].get<bool>());
+				return true;
+			}
+			else
+				ENGINE_ERROR("[SceneLoader::loadEntityProperties] Cannot construct because the layer manager is invalid. Entity Name: {0}.", entity->getName());
+		}
+		else
+			ENGINE_ERROR("[SceneLoader::loadEntityProperties] Cannot construct because the entity is invalid.");
+
+		return false;
 	}
 
 	//! load()
@@ -119,172 +169,130 @@ namespace Engine
 		}
 
 		// Create scene
-		Scene* scene = SceneManager::createScene(sceneName);
-		// Load all resources associated with this scene
-		loadResources(sceneFolderPath);
-		// Set scene clear colour
-		json sceneData = ResourceManager::getJSON(sceneFolderPath + "config.json");
-		
-		// Load layers
-		for (auto& layer : sceneData["layers"])
-			scene->getLayerManager()->attachLayer(createLayer(layer["name"].get<std::string>()));
-		// Load Render passes
-		for (auto& pass : sceneData["renderPasses"])
-		{
-			RenderPass* passInstance = createRenderPass(pass["name"].get<std::string>());
-			passInstance->setEnabled(pass["enabled"].get<bool>());
-			scene->addRenderPass(passInstance);
-		}
+		Scene* scene = SceneManager::createScene(sceneName, sceneFolderPath);
 
-		// Load entities
-		sceneData = ResourceManager::getJSON(sceneFolderPath + "entities.json");
-
-		// Go through each entity and add its components
-		for (auto& entity : sceneData["entities"])
+		if (scene)
 		{
-			// First check if entity name already exists
-			if (!scene->checkEntityNameTaken(entity["name"].get<std::string>().c_str()))
+			/////
+			// Loading Core Scene
+			/////
+			json sceneData = ResourceManager::getJSON(sceneFolderPath + "config.json");
+			bool coreLoadSuccess = loadSceneProperties(scene, sceneData);
+
+			/////
+			// Loading Entities
+			/////
+			sceneData = ResourceManager::getJSON(sceneFolderPath + "entities.json");
+
+			// Go through each entity and add its components
+			for (auto& entity : sceneData["entities"])
 			{
-				// If not, create new entity
-				Entity* newEntity;
+				Entity* newEntity = createNewEntity(entity["type"].get<std::string>());
+				std::string entityName = entity["name"].get<std::string>();
 
-				// Create new entity based on subclass name
-				newEntity = createNewEntity(entity["type"].get<std::string>());
-
-				// An invalid entity sub class was provided, exit out
-				if (!newEntity)
+				if (newEntity)
 				{
-					ENGINE_ERROR("[SceneLoader::load] Entity subclass provided wasn't a valid entity type. Type: {0}.", entity["type"].get<std::string>());
-					continue;
-				}
-
-				// Add entity to the scene
-				scene->addEntity(entity["name"].get<std::string>().c_str(), newEntity);
-
-				// Set the entity's layer
-				newEntity->setLayer(scene->getLayerManager()->getLayer(entity["layer"].get<std::string>()));
-
-				newEntity->setDisplay(entity["display"].get<bool>());
-
-				// Go through each component found in the file and add it to the entity
-				for (auto& component : entity["components"])
-				{
-					std::string compName = component["name"].get<std::string>();
-
-					// Check component name is free
-					if (newEntity->getAllComponents().find(compName) == newEntity->getAllComponents().end())
+					// First check if entity name already exists
+					if (!scene->checkRootEntityNameTaken(entityName))
 					{
-						ComponentType componentType = Entity::convertComponentClassType(component["type"].get<std::string>());
+						// Add entity to the scene
+						scene->addEntity(entityName, newEntity);
+						bool entityCoreSuccess = loadEntityProperties(newEntity, entity);
 
-						switch (componentType)
+						/////
+						// Loading all components
+						/////
+
+						for (auto& component : entity["components"])
 						{
-							case ComponentType::Camera:
+							std::string compName = component["name"].get<std::string>();
+							ComponentType componentType = Components::toType(component["type"].get<std::string>());
+
+							switch (componentType)
 							{
-								// Camera Data:
-								// [PosX, PosY, PosZ], [FrontX, FrontY, FrontZ], [UpX, UpY, UpZ], [WorldUpX, WorldupY, WorldUpZ],
-								// yaw, pitch, speed, sensitivity, zoom
-								CameraData camData(
-									{ component["localPosition"][0], component["localPosition"][1], component["localPosition"][2] }, // Pos
-									{ component["front"][0],		 component["front"][1],			component["front"][2] }, // Pos
-									{ component["up"][0],			 component["up"][1],			component["up"][2] }, // Pos
-									{ component["worldUp"][0],		 component["worldUp"][1],		component["worldUp"][2] }, // Pos
-									component["Yaw"],
-									component["Pitch"],
-									component["Speed"],
-									component["Sensitivity"],
-									component["Zoom"]
-								);
-
-								newEntity->attach<Camera>(compName.c_str(), camData);
-
-								newEntity->getComponent<Camera>(compName.c_str())->setClearColour({ component["clearColour"][0], component["clearColour"][1] , component["clearColour"][2] , component["clearColour"][3] });
-
-								if (component["skybox"].size() != 0)
+								case ComponentType::Camera:
 								{
-									newEntity->getComponent<Camera>(compName.c_str())->setSkybox(new Skybox(ResourceManager::getResourceAndRef<Model3D>(component["skybox"][0]["model"].get<std::string>()), ResourceManager::getResourceAndRef<Material>(component["skybox"][0]["material"].get<std::string>())));
+									CameraData camData({component["front"][0], component["front"][1], component["front"][2] }, { component["up"][0], component["up"][1], component["up"][2] }, { component["worldUp"][0], component["worldUp"][1], component["worldUp"][2] }, component["Yaw"], component["Pitch"],component["Zoom"]);
+									newEntity->attach<Camera>(compName, camData);
+									newEntity->getComponent<Camera>()->setClearColour({ component["clearColour"][0], component["clearColour"][1] , component["clearColour"][2] , component["clearColour"][3] });
+
+									// Load the cameras skybox if it has one
+									if (component["skybox"].size() != 0)
+										newEntity->getComponent<Camera>()->setSkybox(new Skybox(ResourceManager::getResource<Model3D>(component["skybox"][0]["model"].get<std::string>()), ResourceManager::getResource<Material>(component["skybox"][0]["material"].get<std::string>())));
+
+									// Camera is main camera, set the scene's main camera to this
+									if (component["setMainCamera"].get<bool>())
+										scene->setMainCamera(newEntity->getComponent<Camera>());
+
+									break;
 								}
-
-								// Camera is main camera, set the scene's main camera to this
-								if (component["setMainCamera"].get<bool>())
-									scene->setMainCamera(static_cast<Camera*>(newEntity->getComponent<Camera>(compName.c_str())));
-
-								break;
-							}
-							case ComponentType::Transform3D:
-							{
-								// Add transform component
-								newEntity->attach<Transform3D>(compName.c_str(),
-									component["position"][0], component["position"][1], component["position"][2],
-									component["rotation"][0], component["rotation"][1], component["rotation"][2],
-									component["scale"][0], component["scale"][1], component["scale"][2]
-									);
-
-								break;
-							}
-							case ComponentType::Transform2D:
-							{
-								// Add transform component
-								newEntity->attach<Transform2D>(compName.c_str(),
-									component["position"][0], component["position"][1],
-									component["rotation"],
-									component["scale"][0], component["scale"][1]
-									);
-
-								break;
-							}
-							case ComponentType::Text:
-							{
-								glm::vec4 tint = { component["colour"][0], component["colour"][1], component["colour"][2], component["colour"][3] };
-								// Add text component
-								newEntity->attach<Text>(compName.c_str(),
-									component["text"].get<std::string>().c_str(),
-									tint,
-									component["fontName"].get<std::string>().c_str(),
-									glm::vec3(component["localPosition"][0], component["localPosition"][1], component["localPosition"][2]),
-									component["localRotation"],
-									glm::vec2(component["localScale"][0], component["localScale"][1])
-									);
-
-								break;
-							}
-							case ComponentType::EventListener:
-							{
-								newEntity->attach<EventListener>(compName.c_str());
-								break;
-							}
-							case ComponentType::MeshRender3D:
-							{
-								// Add mesh render component
-								// [LocalPosition, LocalRotation, LocalScale, Model3D, Material]
-								newEntity->attach<MeshRender3D>(compName.c_str(),
-									glm::vec3(component["localPosition"][0], component["localPosition"][1], component["localPosition"][2]),
-									glm::vec3(component["localRotation"][0], component["localRotation"][1], component["localRotation"][2]),
-									glm::vec3(component["localScale"][0], component["localScale"][1], component["localScale"][2]),
-									ResourceManager::getResourceAndRef<Model3D>(component["modelName"].get<std::string>()),
-									ResourceManager::getResourceAndRef<Material>(component["materialName"].get<std::string>())
-									);
-
-								break;
-							}
-							case ComponentType::MeshRender2D:
-							{
-								// Add mesh render component
-								// [LocalPosition, LocalRotation, LocalScale, Material]
-								newEntity->attach<MeshRender2D>(compName.c_str(),
-									glm::vec3(component["localPosition"][0], component["localPosition"][1], component["localPosition"][2]),
-									component["localRotation"],
-									glm::vec2(component["localScale"][0], component["localScale"][1]),
-									ResourceManager::getResourceAndRef<Material>(component["materialName"].get<std::string>())
-									);
-
-								break;
+								case ComponentType::Transform:
+								{
+									newEntity->attach<Transform>(compName, component["position"][0], component["position"][1], component["position"][2], component["rotation"][0], component["rotation"][1], component["rotation"][2], component["scale"][0], component["scale"][1], component["scale"][2]);
+									break;
+								}
+								case ComponentType::Text:
+								{
+									newEntity->attach<Text>(compName, component["text"].get<std::string>(), glm::vec4(component["colour"][0], component["colour"][1], component["colour"][2], component["colour"][3]), component["fontName"].get<std::string>());
+									break;
+								}
+								case ComponentType::EventListener:
+								{
+									newEntity->attach<EventListener>(compName);
+									break;
+								}
+								case ComponentType::CharacterController:
+								{
+									newEntity->attach<CharacterController>(compName, component["speed"], component["sensitivity"]);
+									break;
+								}
+								case ComponentType::MeshRender3D:
+								{
+									newEntity->attach<MeshRender3D>(compName, ResourceManager::getResource<Model3D>(component["modelName"].get<std::string>()), ResourceManager::getResource<Material>(component["materialName"].get<std::string>()));
+									break;
+								}
+								case ComponentType::MeshRender2D:
+								{
+									newEntity->attach<MeshRender2D>(compName, ResourceManager::getResource<Material>(component["materialName"].get<std::string>()));
+									break;
+								}
+								case ComponentType::PointLight:
+								{
+									newEntity->attach<PointLight>(compName,glm::vec3(component["ambient"][0], component["ambient"][1], component["ambient"][2]), glm::vec3(component["diffuse"][0], component["diffuse"][1], component["diffuse"][2]), glm::vec3(component["specular"][0], component["specular"][1], component["specular"][2]), component["constant"], component["linear"], component["quadratic"]);
+									break;
+								}
+								case ComponentType::SpotLight:
+								{
+									newEntity->attach<SpotLight>(compName, glm::vec3(component["direction"][0], component["direction"][1], component["direction"][2]), glm::vec3(component["ambient"][0], component["ambient"][1], component["ambient"][2]), glm::vec3(component["diffuse"][0], component["diffuse"][1], component["diffuse"][2]), glm::vec3(component["specular"][0], component["specular"][1], component["specular"][2]), component["cutOff"], component["outerCutOff"], component["constant"], component["linear"], component["quadratic"]);
+									break;
+								}
+								case ComponentType::DirectionalLight:
+								{
+									newEntity->attach<DirectionalLight>(compName, glm::vec3(component["direction"][0], component["direction"][1], component["direction"][2]), glm::vec3(component["ambient"][0], component["ambient"][1], component["ambient"][2]), glm::vec3(component["diffuse"][0], component["diffuse"][1], component["diffuse"][2]), glm::vec3(component["specular"][0], component["specular"][1], component["specular"][2]));
+									break;
+								}
+								default:
+								{
+									ENGINE_ERROR("[SceneLoader::load] An invalid component type was provided. Entity Name: {0}. Type: {1}.", newEntity->getName(), component["type"].get<std::string>());
+									break;
+								}
 							}
 						}
 					}
 					else
-						ENGINE_ERROR("[SceneLoader::load] Component name is already taken. Name: {0}.", compName);
+					{
+						if(newEntity) delete newEntity;
+						continue;
+					}
+				}
+				else
+				{
+					ENGINE_ERROR("[SceneLoader::load] The entity subclass provided is not a real entity type. Scene Name: {0}, Type: {1}.", scene->getName(), entity["type"].get<std::string>());
+					continue;
 				}
 			}
 		}
+		else
+			ENGINE_ERROR("[SceneLoader::load] An invalid scene was created. Scene Name: {0}.", sceneName);
 	}
 }

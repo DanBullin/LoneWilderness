@@ -7,6 +7,7 @@
 */
 #include "platform/OpenGL/openGLUniformBuffer.h"
 #include "independent/systems/systems/log.h"
+#include "independent/systems/systems/resourceManager.h"
 #include "independent/rendering/shaders/shaderProgram.h"
 #include <glad/glad.h>
 
@@ -42,7 +43,8 @@ namespace Engine
 	//! ~OpenGLUniformBuffer
 	OpenGLUniformBuffer::~OpenGLUniformBuffer()
 	{
-		ENGINE_INFO("[OpenGLUniformBuffer::~OpenGLUniformBuffer] Deleting Uniform buffer with ID: {0}, Name: {1}.", m_bufferID, m_name);
+		if (ResourceManager::getConfigValue(Config::PrintResourcesInDestructor))
+			ENGINE_INFO("[OpenGLUniformBuffer::~OpenGLUniformBuffer] Deleting Uniform buffer with ID: {0}, Name: {1}.", m_bufferID, m_name);
 		glDeleteBuffers(1, &m_bufferID);
 	}
 
@@ -70,5 +72,21 @@ namespace Engine
 		auto& pair = m_uniformCache[uniformName];
 		glBindBuffer(GL_UNIFORM_BUFFER, m_bufferID);
 		glBufferSubData(GL_UNIFORM_BUFFER, pair.first, pair.second, data);
+		if(ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages)) ENGINE_TRACE("OpenGLUniformBuffer::uploadData] Uploading {0} bytes to {1} from offset: {2}.", pair.second, m_name, pair.first);
+	}
+
+	//! printDetails()
+	void OpenGLUniformBuffer::printDetails()
+	{
+		ENGINE_TRACE("Buffer ID: {0}.", m_bufferID);
+
+		auto layout = m_layout.getElements();
+		for (int i = 0; i < layout.size(); i++)
+			ENGINE_TRACE("Element{0}: Name: {1}, Type: {2}, Size: {3}, Offset: {4}", i, layout[i].m_name, SDT::convertSDTToString(layout[i].m_dataType), layout[i].m_size, layout[i].m_offset);
+
+		for (auto& uniform : m_uniformCache)
+			ENGINE_TRACE("Uniform: Name: {0}, Offset: {1}, Size: {2}.", uniform.first, uniform.second.first, uniform.second.second);
+	
+		ENGINE_TRACE("Block Number: {0}.", m_blockNumber);
 	}
 }

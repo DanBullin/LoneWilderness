@@ -15,6 +15,7 @@ namespace Engine
 	RenderPass::RenderPass()
 	{
 		m_attachedScene = nullptr;
+		m_index = 0;
 		m_enabled = true;
 	}
 
@@ -53,5 +54,23 @@ namespace Engine
 	bool RenderPass::getEnabled() const
 	{
 		return m_enabled;
+	}
+
+	//! setIndex()
+	/*
+	\param index a const uint32_t - The index of the pass
+	*/
+	void RenderPass::setIndex(const uint32_t index)
+	{
+		m_index = index;
+	}
+
+	//! getIndex()
+	/*
+	\return an uint32_t - The index of the pass in the scene's list of passes
+	*/
+	uint32_t RenderPass::getIndex() const
+	{
+		return m_index;
 	}
 }

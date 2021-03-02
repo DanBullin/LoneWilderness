@@ -10,6 +10,8 @@
 
 #include "independent/core/common.h"
 #include "independent/rendering/geometry/vertex.h"
+#include "independent/systems/systems/windowManager.h"
+#include "independent/systems/systems/log.h"
 
 namespace Engine
 {
@@ -36,6 +38,8 @@ namespace Engine
 	*/
 	static std::vector<uint32_t> getQuadIndices(const uint32_t capacity)
 	{
+		// Works out all the indicies for the "capacity" number of quads
+
 		std::vector<uint32_t> indices(capacity * 6);
 
 		int j = 0;
@@ -52,6 +56,28 @@ namespace Engine
 		}
 
 		return indices;
+	}
+
+	//! getScreenQuad()
+	/*!
+	\return a glm::mat4 - A model matrix for a screen quad
+	*/
+	static glm::mat4 getScreenQuad()
+	{
+		// Returns the model matrix for a screen quad
+		glm::mat4 modelMatrix = glm::mat4(1.f);
+
+		Window* window = WindowManager::getFocusedWindow();
+		if (!window)
+		{
+			ENGINE_ERROR("[getScreenQuad] Cannot get the focused window.");
+			return modelMatrix;
+		}
+
+		glm::vec3 size = { window->getProperties().getSizef().x, window->getProperties().getSizef().y, -1.f };
+		modelMatrix = glm::translate(modelMatrix, glm::vec3(size.x / 2, size.y / 2, 0.f));
+		modelMatrix = glm::scale(modelMatrix, { size.x, size.y, 1.f });
+		return modelMatrix;
 	}
 }
 #endif

@@ -22,7 +22,22 @@ namespace Engine
 	//! ~EntityComponent()
 	EntityComponent::~EntityComponent()
 	{
-		ENGINE_INFO("[EntityComponent::~EntityComponent] Deleting entity component: {0} attached to entity: {1}.", m_name, m_parentEntity->getName());
+		if(m_parentEntity)
+			ENGINE_TRACE("[EntityComponent::~EntityComponent] Deleting entity component: {0} attached to entity: {1}.", m_name, m_parentEntity->getName());
+		else
+			ENGINE_TRACE("[EntityComponent::~EntityComponent] Deleting entity component: {0}.", m_name);
+	}
+
+	//! detach()
+	void EntityComponent::detach()
+	{
+		Entity* parent = getParent();
+		if (parent)
+		{
+			parent->detach(this);
+		}
+		else
+			ENGINE_ERROR("[EntityComponent::detach] This component does not have a valid parent.");
 	}
 
 	//! setParent()
@@ -48,12 +63,14 @@ namespace Engine
 
 	//! setName()
 	/*!
-	\param name a const char* - The name of the component
+	\param name a const std::string& - The name of the component
 	*/
-	void EntityComponent::setName(const char* name)
+	void EntityComponent::setName(const std::string& name)
 	{
-		if (name)
+		if (name != "")
 			m_name = name;
+		else
+			ENGINE_ERROR("[EntityComponent::setName] An invalid name was provided.");
 	}
 
 	//! getName()
@@ -73,5 +90,4 @@ namespace Engine
 	{
 		return m_componentType;
 	}
-
 }

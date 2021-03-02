@@ -8,6 +8,7 @@
 #include <glad/glad.h>
 #include "platform/OpenGL/geometry/OpenGLIndirectBuffer.h"
 #include "independent/systems/systems/log.h"
+#include "independent/systems/systems/resourceManager.h"
 
 namespace Engine
 {
@@ -32,7 +33,8 @@ namespace Engine
 	OpenGLIndirectBuffer::~OpenGLIndirectBuffer()
 	{
 		// Delete the buffer
-		ENGINE_INFO("[OpenGLIndirectBuffer::~OpenGLIndirectBuffer] Deleting Indirect buffer with ID: {0}, Name: {1}.", m_bufferID, m_name);
+		if (ResourceManager::getConfigValue(Config::PrintResourcesInDestructor))
+			ENGINE_INFO("[OpenGLIndirectBuffer::~OpenGLIndirectBuffer] Deleting Indirect buffer with ID: {0}, Name: {1}.", m_bufferID, m_name);
 		glDeleteBuffers(1, &m_bufferID);
 	}
 
@@ -47,5 +49,13 @@ namespace Engine
 		// Edit the buffer contents
 		glBindBuffer(GL_DRAW_INDIRECT_BUFFER, m_bufferID);
 		glBufferSubData(GL_DRAW_INDIRECT_BUFFER, offset, count * sizeof(DrawElementsIndirectCommand), commands);
+	}
+
+	//! printDetails()
+	void OpenGLIndirectBuffer::printDetails()
+	{
+		ENGINE_TRACE("Buffer ID: {0}.", m_bufferID);
+		ENGINE_TRACE("Command Count: {0}.", m_commandCount);
+		ENGINE_TRACE("Byte Size: {0}.", m_byteSize);
 	}
 }

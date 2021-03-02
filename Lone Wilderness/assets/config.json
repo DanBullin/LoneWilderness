@@ -1,10 +1,38 @@
 {
-	"batch3DCapacity": 50000,
-	"batch2DCapacity": 100,
-	"maxCount3DVertices": 500000,
-	"maxCount3DIndices": 450000,
-	"maxNumberOfComponentsInstancePerEntity": 100,
-	"maxRenderPassesPerScene": 15,
+	"window":
+	[
+		{
+			"name": "Main",
+			"title": "Lone Wilderness",
+			"size": [ 800, 600 ],
+			"position": [ 500, 300 ],
+			"vSync": true,
+			"fullScreen": false,
+			"minimised": false,
+			"opacity": 1.0,
+			"focused": true,
+			"hide": false,
+			"cursorInputMode": 0
+		}
+	],
+	"fonts":
+	[
+		{
+			"name": "Arial",
+			"filePath": "assets/fonts/arial/arial.ttf",
+			"characterSize": 38
+		}
+	],
+	"maximumSubTexturesPerMaterial": 10,
+	"vertex3DCapacity": 800000,
+	"index3DCapacity": 700000,
+	"batchCapacity3D": 30000,
+	"batchCapacity2D": 200,
 	"maxLayersPerScene": 25,
-	"maximumSubTexturesPerMaterial": 10
+	"maxRenderPassesPerScene": 15,
+	"maxLightsPerRenderCall": 10,
+	"useBloom": 1,
+	"bloomBlurFactor": 50,
+	"printResourcesInDestructor": 0,
+	"printOpenGLDebugMessages": 0
 }

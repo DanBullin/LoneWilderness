@@ -8,6 +8,7 @@
 #include <glad/glad.h>
 #include "platform/OpenGL/geometry/openGLIndexBuffer.h"
 #include "independent/systems/systems/log.h"
+#include "independent/systems/systems/resourceManager.h"
 
 namespace Engine
 {
@@ -19,6 +20,9 @@ namespace Engine
 	*/
 	OpenGLIndexBuffer::OpenGLIndexBuffer(const std::string& indexBufferName, const uint32_t* indices, const uint32_t count) : IndexBuffer(indexBufferName)
 	{
+		if (count <= 0)
+			ENGINE_ERROR("[OpenGLIndexBuffer::OpenGLIndexBuffer] A count value of 0 or less was provided. Is this an error? Count: {0}, Name: {1}.", count, m_name);
+
 		m_count = count;
 		m_byteSize = count * static_cast<uint32_t>(sizeof(uint32_t));
 
@@ -32,7 +36,9 @@ namespace Engine
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
 	{
 		// Delete the buffer
-		ENGINE_INFO("[OpenGLIndexBuffer::~OpenGLIndexBuffer] Deleting Index buffer with ID: {0}, Name: {1}.", m_indexBufferID, m_name);
+		if (ResourceManager::getConfigValue(Config::PrintResourcesInDestructor))
+			ENGINE_INFO("[OpenGLIndexBuffer::~OpenGLIndexBuffer] Deleting Index buffer with ID: {0}, Name: {1}.", m_indexBufferID, m_name);
+
 		glDeleteBuffers(1, &m_indexBufferID);
 	}
 
@@ -45,6 +51,10 @@ namespace Engine
 	void OpenGLIndexBuffer::edit(const void* indices, const uint32_t size, const uint32_t offset)
 	{
 		// Edit the buffer contents
+
+		if (size <= 0)
+			ENGINE_ERROR("[OpenGLIndexBuffer::edit] An invalid size was provided. Size: {0}: Offset: {1}. Name: {2}.", size, offset, m_name);
+
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBufferID);
 		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset * sizeof(uint32_t), size * sizeof(uint32_t), indices);
 	}
@@ -52,6 +62,9 @@ namespace Engine
 	//! bind()
 	void OpenGLIndexBuffer::bind()
 	{
+		if (m_indexBufferID == 0)
+			ENGINE_ERROR("[OpenGLIndexBuffer::bind] Attempting to bind when ID is 0. Name: {0}.", m_name);
+
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBufferID);
 	}
 
@@ -59,5 +72,13 @@ namespace Engine
 	void OpenGLIndexBuffer::unbind()
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	}
+
+	//! printDetails()
+	void OpenGLIndexBuffer::printDetails()
+	{
+		ENGINE_TRACE("Buffer ID: {0}.", m_indexBufferID);
+		ENGINE_TRACE("Index Count: {0}.", m_count);
+		ENGINE_TRACE("Byte Size: {0}.", m_byteSize);
 	}
 }

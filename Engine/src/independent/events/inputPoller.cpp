@@ -11,7 +11,7 @@
 #include "platform/GLFW/GLFWInputPoller.h"
 #endif
 
-namespace Engine 
+namespace Engine
 {
 	//! getMouseX()
 	/*!
@@ -32,6 +32,7 @@ namespace Engine
 	}
 
 #ifdef NG_PLATFORM_WINDOWS
+
 	//! isAnyKeyPressed()
 	/*!
 	\return a std::vector<uint32_t> - A list of all keys currently pressed

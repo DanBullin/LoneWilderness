@@ -54,6 +54,7 @@ namespace Engine
 		virtual void start() = 0; //!< Start the shader
 		virtual void stop() = 0; //!< Stop using the shader
 		virtual void destroy() = 0; //!< Destroy the shader
+		virtual void printDetails() override = 0; //!< Print the resource details
 
 		inline const uint32_t getID() const { return m_programID; } //!< Get the program ID
 			/*!< \return a const uint32_t - The program ID */

@@ -21,11 +21,11 @@ namespace Engine
 #ifdef NG_PLATFORM_WINDOWS
 	//! create()
 	/*!
-	\param windowName a const char* - The window name
+	\param windowName a const std::string& - The window name
 	\param properties a const WindowProperties& - The window properties
 	\return a Window* - A pointer to the window
 	*/
-	Window* Window::create(const char* windowName, const WindowProperties& properties)
+	Window* Window::create(const std::string& windowName, const WindowProperties& properties)
 	{
 		return new GLFWWindowImplementation(windowName, properties);
 	}

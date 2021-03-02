@@ -11,19 +11,25 @@
 #include "independent/systems/systems/log.h"
 #include "independent/rendering/renderUtils.h"
 
-namespace Engine 
+namespace Engine
 {
 	//! GLFWGLGraphicsContext()
 	/*!
 	\param nativeWindow a GLFWwindow* - A pointer to a GLFW window
 	*/
-	GLFWGLGraphicsContext::GLFWGLGraphicsContext(GLFWwindow * nativeWindow) : m_window(nativeWindow)
+	GLFWGLGraphicsContext::GLFWGLGraphicsContext(GLFWwindow* nativeWindow) : m_window(nativeWindow)
 	{
 	}
 
 	//! init()
 	void GLFWGLGraphicsContext::init()
 	{
+		if (!m_window)
+		{
+			ENGINE_ERROR("[GLFWGLGraphicsContext::init] Invalid GLFW window.");
+			return;
+		}
+
 		// Set the current context
 		glfwMakeContextCurrent(m_window);
 
@@ -59,13 +65,17 @@ namespace Engine
 	void GLFWGLGraphicsContext::swapBuffers()
 	{
 		// Swap the front and back buffers
-		glfwSwapBuffers(m_window);
+		if(m_window) glfwSwapBuffers(m_window);
+		else
+			ENGINE_ERROR("[GLFWGLGraphicsContext::swapBuffers] Invalid GLFW window.");
 	}
 
 	//! makeCurrent()
 	void GLFWGLGraphicsContext::makeCurrent()
 	{
-		glfwMakeContextCurrent(m_window);
+		if(m_window) glfwMakeContextCurrent(m_window);
+		else
+			ENGINE_ERROR("[GLFWGLGraphicsContext::makeCurrent] Invalid GLFW window.");
 	}
 
 	//! updateViewport()
@@ -77,6 +87,9 @@ namespace Engine
 	*/
 	void GLFWGLGraphicsContext::updateViewport(const uint32_t x, const uint32_t y, const uint32_t width, const uint32_t height)
 	{
-		RenderUtils::setViewport(x, y, width, height);
+		if(m_window)
+			RenderUtils::setViewport(x, y, width, height);
+		else
+			ENGINE_ERROR("[GLFWGLGraphicsContext::updateViewport] Invalid GLFW window.");
 	}
 }

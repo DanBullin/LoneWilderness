@@ -14,16 +14,16 @@ namespace Engine
 {
 	//!	TextureAtlas()
 	/*!
+	\param name a const std::string& - The name of the texture atlas
 	\param size a const glm::ivec2 - The size of the texture atlas
 	\param channels a const uint32_t - The number of channels for this atlas
 	\param reservedSpaces a const uint32_t - The number of spaces to reserve
 	*/
-	TextureAtlas::TextureAtlas(const glm::ivec2 size, const uint32_t channels, const uint32_t reservedSpaces)
+	TextureAtlas::TextureAtlas(const std::string& name, const glm::ivec2 size, const uint32_t channels, const uint32_t reservedSpaces)
 	{
+		m_name = name;
 		TextureProperties properties(size.x, size.y, "Repeat", "Repeat", "Repeat", "Linear", "Linear", false, false);
-		m_baseTexture = Texture2D::create("TextureAtlasTexture", properties, channels, nullptr);
-		// Increase reference counter for the texture
-		m_baseTexture->increaseCount();
+		m_baseTexture = Texture2D::create(name, properties, channels, nullptr);
 
 		m_spaces.reserve(reservedSpaces);
 		m_spaces.push_back({ 0, 0, size.x, size.y });
@@ -32,23 +32,21 @@ namespace Engine
 	//! ~TextureAtlas()
 	TextureAtlas::~TextureAtlas()
 	{
-		// Base texture will be added to the resource manager who will then manage it
-		// So just decrease the count
-		m_baseTexture->decreaseCount();
+		// Resource Manager will delete this resource, so lets just set to null, MAKE SURE TO REGISTER THE TEXTURE THOUGH
 		m_baseTexture = nullptr;
 	}
 
 	//!	add()
 	/*!
-	\param filePath a const char* - The filepath of the texture to add
+	\param filePath a const std::string& - The filepath of the texture to add
 	\param result a SubTexture*& - The subtexture created when adding the texture to the atlas
 	\param subTextureName a const std::string& - The name of the subtexture
 	\return a bool - Returns whether the addition was successful
 	*/
-	bool TextureAtlas::add(const char* filePath, SubTexture*& result, const std::string& subTextureName)
+	bool TextureAtlas::add(const std::string& filePath, SubTexture*& result, const std::string& subTextureName)
 	{
 		int32_t width, height, channels;
-		unsigned char* data = stbi_load(filePath, &width, &height, &channels, static_cast<int>(m_baseTexture->getChannels()));
+		unsigned char* data = stbi_load(filePath.c_str(), &width, &height, &channels, static_cast<int>(m_baseTexture->getChannels()));
 
 		if (data)
 		{
@@ -71,6 +69,12 @@ namespace Engine
 	bool TextureAtlas::add(int32_t width, int32_t height, uint32_t channels, unsigned char * data, SubTexture*& result, const std::string& subTextureName)
 	{
 		if (channels != m_baseTexture->getChannels()) return false;
+
+		if (!m_baseTexture)
+		{
+			ENGINE_ERROR("[TextureAtlas::add] This texture atlas has an invalid base texture.");
+			return false;
+		}
 
 		for (auto it = m_spaces.begin(); it != m_spaces.end(); ++it)
 		{

@@ -10,7 +10,7 @@
 
 #include "independent/core/common.h"
 
-namespace Engine 
+namespace Engine
 {
 	/*! \class GLFWInputPoller
 	* \brief GFLW specific Input poller for getting current keyboard/mouse state

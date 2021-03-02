@@ -10,7 +10,7 @@
 
 #include "independent/systems/system.h"
 
-namespace Engine 
+namespace Engine
 {
 	/*! \class GLFWSystem
 	* \brief A GLFWSystem handling the GLFW windows

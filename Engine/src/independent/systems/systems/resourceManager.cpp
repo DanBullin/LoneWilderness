@@ -6,20 +6,51 @@
 *
 */
 #include "independent/systems/systems/resourceManager.h"
+#include "independent/utils/resourceLoader.h"
 #include "independent/systems/systems/log.h"
 
 namespace Engine
 {
 	bool ResourceManager::s_enabled = false; //!< Set to false
-	uint32_t ResourceManager::s_maxSubTexturesPerMaterial = 0; //!< Set to 0
-	uint32_t ResourceManager::s_batchCapacity3D = 0; //!< Set to 0
-	uint32_t ResourceManager::s_batchCapacity2D = 0; //!< Set to 0
-	uint32_t ResourceManager::s_vertexCapacity3D = 0; //!< Set to 0
-	uint32_t ResourceManager::s_indexCapacity3D = 0; //!< Set to 0
-	uint32_t ResourceManager::s_maxLayersPerScene = 0; //!< Set to 0
-	uint32_t ResourceManager::s_maxRenderPassesPerScene = 0; //!< Set to 0
-	uint32_t ResourceManager::s_maxComponentsInstancePerEntity = 0; //!< Set to 0
+	std::vector<uint32_t> ResourceManager::s_configValues;
 	std::map<std::string, Resource*> ResourceManager::s_loadedResources; //!< A list of loaded resources
+
+	//! getConfigAsString()
+	/*
+	\param data a const uint32_t - The config data to convert
+	\return a std::string - The config data name as a string literal
+	*/
+	static std::string getConfigAsString(const uint32_t data)
+	{
+		switch (data)
+		{
+			case Config::ConfigData::MaxSubTexturesPerMaterial:
+				return "[MaxSubtexturesPerMaterial]";
+			case Config::ConfigData::VertexCapacity3D:
+				return "[VertexCapacity3D]";
+			case Config::ConfigData::IndexCapacity3D:
+				return "[IndexCapacity3D]";
+			case Config::ConfigData::BatchCapacity3D:
+				return "[BatchCapacity3D]";
+			case Config::ConfigData::BatchCapacity2D:
+				return "[BatchCapacity2D]";
+			case Config::ConfigData::MaxLayersPerScene:
+				return "[MaxLayersPerScene]";
+			case Config::ConfigData::MaxRenderPassesPerScene:
+				return "[MaxRenderPassesPerScene]";
+			case Config::ConfigData::MaxLightsPerDraw:
+				return "[MaxLightsPerRenderCall]";
+			case Config::ConfigData::UseBloom:
+				return "[UseBloom]";
+			case Config::ConfigData::BloomBlurFactor:
+				return "[BloomBlurFactor]";
+			case Config::ConfigData::PrintResourcesInDestructor:
+				return "[PrintResourcesInDestructor]";
+			case Config::ConfigData::PrintOpenGLDebugMessages:
+				return "[PrintOpenGLDebugMessages]";
+			default: return 0;
+		}
+	}
 
 	//! ResourceManager()
 	ResourceManager::ResourceManager() : System(SystemType::ResourceManager)
@@ -39,16 +70,36 @@ namespace Engine
 			ENGINE_INFO("[ResourceManager::start] Starting the resource manager.");
 			s_enabled = true;
 
+			ENGINE_INFO("[ResourceManager::start] Loading common configuration values.");
 			// Set all configuration values associated with resources
 			nlohmann::json configData = getJSON("assets/config.json");
-			s_maxSubTexturesPerMaterial = configData["maximumSubTexturesPerMaterial"];
-			s_batchCapacity3D = configData["batch3DCapacity"];
-			s_batchCapacity2D = configData["batch2DCapacity"];
-			s_vertexCapacity3D = configData["maxCount3DVertices"];
-			s_indexCapacity3D = configData["maxCount3DIndices"];
-			s_maxLayersPerScene = configData["maxLayersPerScene"];
-			s_maxRenderPassesPerScene = configData["maxRenderPassesPerScene"];
-			s_maxComponentsInstancePerEntity = configData["maxNumberOfComponentsInstancePerEntity"];
+			s_configValues.push_back(configData["maximumSubTexturesPerMaterial"]);
+			s_configValues.push_back(configData["vertex3DCapacity"]);
+			s_configValues.push_back(configData["index3DCapacity"]);
+			s_configValues.push_back(configData["batchCapacity3D"]);
+			s_configValues.push_back(configData["batchCapacity2D"]);
+			s_configValues.push_back(configData["maxLayersPerScene"]);
+			s_configValues.push_back(configData["maxRenderPassesPerScene"]);
+			s_configValues.push_back(configData["maxLightsPerRenderCall"]);
+			s_configValues.push_back(configData["useBloom"]);
+			s_configValues.push_back(configData["bloomBlurFactor"]);
+			s_configValues.push_back(configData["printResourcesInDestructor"]);
+			s_configValues.push_back(configData["printOpenGLDebugMessages"]);
+
+			ENGINE_INFO("[ResourceManager::start] Loading common resources.");
+			ResourceLoader::loadVertexBuffers("assets/vertexBuffers.json");
+			ResourceLoader::loadIndexBuffers("assets/indexBuffers.json");
+			ResourceLoader::loadVertexArrays("assets/vertexArrays.json");
+			ResourceLoader::loadIndirectBuffers("assets/indirectBuffers.json");
+			ResourceLoader::loadUniformBuffers("assets/uniformBuffers.json");
+			ResourceLoader::loadFrameBuffers("assets/frameBuffers.json");
+			ResourceLoader::loadShaderPrograms("assets/shaders.json");
+			ResourceLoader::loadTextures("assets/textures.json");
+			ResourceLoader::loadSubTextures("assets/subTextures.json");
+			ResourceLoader::loadMaterials("assets/materials.json");
+			ResourceLoader::load3DModels("assets/models.json");
+
+			printResourceManagerDetails();
 		}
 	}
 
@@ -84,7 +135,15 @@ namespace Engine
 		{
 			// Check if the resource name is available and isn't blank
 			if (!resourceExists(resourceName) && resourceName != "")
+			{
+				if (!resource)
+				{
+					ENGINE_ERROR("[ResourceManager::registerResource] This resource is not a valid resource. Name: {0}.", resourceName);
+					return;
+				}
+
 				s_loadedResources[resourceName] = resource;
+			}
 			else
 				ENGINE_ERROR("[ResourceManager::registerResource] This resource name has already been taken by another resource. Name: {0}.", resourceName);
 		}
@@ -99,19 +158,33 @@ namespace Engine
 		// If the resource name is empty, delete all resources
 		if (resourceName == "")
 		{
-			// Sort shader entries by some property
+			// Sort resources entries by type, this order can be seen in resource.h
 			std::vector<std::pair<std::string, Resource*>> mapConvertedVector(s_loadedResources.begin(), s_loadedResources.end());
 
 			std::sort(mapConvertedVector.begin(), mapConvertedVector.end(),
 				[](std::pair<std::string, Resource*> a, std::pair<std::string, Resource*> b)
 			{
-				return static_cast<int>(a.second->getType()) < static_cast<int>(b.second->getType());
+				return static_cast<int>(a.second->getType()) > static_cast<int>(b.second->getType());
 			}
 			);
 
+			ResourceType type = mapConvertedVector.front().second->getType();
+			ENGINE_INFO("[ResourceManager::destroyResource] Deleting all resources of type: {0}.", toString(type));
 			// Clean up all pointers
 			for (auto& res : mapConvertedVector)
-				delete res.second;
+			{
+				if (res.second)
+				{
+					ResourceType currentType = res.second->getType();
+					if(type != currentType)
+						ENGINE_INFO("[ResourceManager::destroyResource] Deleting all resources of type: {0}.", toString(currentType));
+
+					type = currentType;
+					ENGINE_TRACE("Deleting resource: {0}.", res.second->getName());
+					delete res.second;
+
+				}
+			}
 
 			// Clear the list
 			s_loadedResources.clear();
@@ -121,9 +194,18 @@ namespace Engine
 			// Check if resource name exists
 			if (resourceExists(resourceName))
 			{
-				delete s_loadedResources[resourceName];
+				if (s_loadedResources[resourceName])
+				{
+					ENGINE_TRACE("Deleting resource: {0}.", resourceName);
+					delete s_loadedResources[resourceName];
+				}
+				else
+					ENGINE_ERROR("[ResourceManager::destroyResource] The resource cannot be deleted as it is not a valid resource. Name: {0}", resourceName);
+
 				s_loadedResources.erase(resourceName);
 			}
+			else
+				ENGINE_ERROR("[ResourceManager::destroyResource] The resource by name was not found. Name: {0}", resourceName);
 		}
 	}
 
@@ -138,47 +220,43 @@ namespace Engine
 
 	//! getConfigValue()
 	/*!
-	\param data const ConfigData - The configurable data to retrieve
+	\param data const Config::ConfigData - The configurable data to retrieve
 	\return a const uint32_t - The value of the configured data
 	*/
-	const uint32_t ResourceManager::getConfigValue(const ConfigData data)
+	const uint32_t ResourceManager::getConfigValue(const Config::ConfigData data)
 	{
-		switch (data)
+		if (s_configValues.size() > static_cast<uint32_t>(data))
+			return s_configValues[static_cast<uint32_t>(data)];
+		else
+			return 0;
+	}
+
+	//! setConfigValue
+	/*
+	\param data a const Config::ConfigData - The config value to edit
+	\param value a const uint32_t - The new config value
+	*/
+	void ResourceManager::setConfigValue(const Config::ConfigData data, const uint32_t value)
+	{
+		if (s_configValues.size() > static_cast<uint32_t>(data))
+			s_configValues[static_cast<uint32_t>(data)] = value;
+	}
+
+	//! getDefaultFrameBuffer()
+	/*
+	\return a FrameBuffer* - The default framebuffer
+	*/
+	FrameBuffer* ResourceManager::getDefaultFrameBuffer()
+	{
+		for (auto& FBO : getResourcesOfType<FrameBuffer>(ResourceType::FrameBuffer))
 		{
-			case ConfigData::MaxSubTexturesPerMaterial:
+			if (FBO)
 			{
-				return s_maxSubTexturesPerMaterial;
-			}
-			case ConfigData::BatchCapacity3D:
-			{
-				return s_batchCapacity3D;
-			}
-			case ConfigData::BatchCapacity2D:
-			{
-				return s_batchCapacity2D;
-			}
-			case ConfigData::VertexCapacity3D:
-			{
-				return s_vertexCapacity3D;
-			}
-			case ConfigData::IndexCapacity3D:
-			{
-				return s_indexCapacity3D;
-			}
-			case ConfigData::MaxLayersPerScene:
-			{
-				return s_maxLayersPerScene;
-			}
-			case ConfigData::MaxRenderPassesPerScene:
-			{
-				return s_maxRenderPassesPerScene;
-			}
-			case ConfigData::MaxComponentsInstancePerEntity:
-			{
-				return s_maxComponentsInstancePerEntity;
+				if (FBO->isDefault())
+					return FBO;
 			}
 		}
-		return 0;
+		return nullptr;
 	}
 
 #pragma region "File System stuff"
@@ -249,30 +327,24 @@ namespace Engine
 	*/
 	nlohmann::json ResourceManager::getJSON(const std::string& filePath)
 	{
-		if (s_enabled)
+		// Create file object and set exceptions
+		std::ifstream file;
+		file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+		try
 		{
-			// Create file object and set exceptions
-			std::ifstream file;
-			file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-
-			try
-			{
-				// open files
-				file.open(filePath);
-				nlohmann::json j;
-				// read stream into json object
-				file >> j;
-				file.close();
-				return j;
-			}
-			catch (std::ifstream::failure& e)
-			{
-				// An error occured, log to the console the file path
-				ENGINE_ERROR("[ResourceManager::getJSON] Cannot read from file: {0}, error: {1}", filePath, e.what());
-			}
+			// open files
+			file.open(filePath);
+			nlohmann::json j;
+			// read stream into json object
+			file >> j;
+			file.close();
+			return j;
 		}
-		else
-			ENGINE_ERROR("[ResourceManager::getJSON] This system has not been enabled.");
+		catch (std::ifstream::failure& e)
+		{
+			// An error occured, log to the console the file path
+			ENGINE_ERROR("[ResourceManager::getJSON] Cannot read from file: {0}, error: {1}", filePath, e.what());
+		}
 		return nlohmann::json();
 	}
 
@@ -283,9 +355,12 @@ namespace Engine
 	{
 		if (s_enabled)
 		{
+			ENGINE_TRACE("==========================");
 			ENGINE_TRACE("Resource Manager Details");
 			ENGINE_TRACE("==========================");
 			ENGINE_TRACE("Resource List Size: {0}", s_loadedResources.size());
+			for (int i = 0; i < s_configValues.size(); i++)
+				ENGINE_TRACE("Config: {0} has a value of {1}.", getConfigAsString(i), s_configValues[i]);
 			ENGINE_TRACE("==========================");
 		}
 		else
@@ -293,15 +368,46 @@ namespace Engine
 	}
 
 	//! printResourceDetails()
-	void ResourceManager::printResourceDetails()
+	/*
+	\param resourceName a const std::string& - The name of the resource whose details to print
+	*/
+	void ResourceManager::printResourceDetails(const std::string& resourceName)
 	{
 		if (s_enabled)
 		{
-			ENGINE_TRACE("Resource Details");
-			ENGINE_TRACE("==========================");
-			for (auto& res : s_loadedResources)
-				ENGINE_TRACE("Resource Name: {0}, Address: {1}.", res.first, (void*)res.second);
-			ENGINE_TRACE("==========================");
+			// If name is blank, print all resource details
+			if (resourceName != "")
+			{
+				if (resourceExists(resourceName))
+				{
+					auto resource = getResource<Resource>(resourceName);
+
+					if (resource)
+					{
+						ENGINE_TRACE("Resource Details");
+						ENGINE_TRACE("==========================");
+						ENGINE_TRACE("Name: {0}.", resource->getName());
+						ENGINE_TRACE("Type: {0}.", toString(resource->getType()));
+						resource->printDetails();
+						ENGINE_TRACE("==========================");
+					}
+					else
+						ENGINE_ERROR("[ResourceManager::printResourceDetails] The resource is not a valid resource. Name: {0}.", resourceName);
+				}
+				else
+					ENGINE_ERROR("[ResourceManager::printResourceDetails] The resource name was not found in the resource manager. Name: {0}.", resourceName);
+			}
+			else
+			{
+				ENGINE_TRACE("Resource Details");
+				ENGINE_TRACE("==========================");
+				for (auto& resource : s_loadedResources)
+				{
+					if (resource.second)
+						resource.second->printDetails();
+					ENGINE_TRACE("==========================");
+				}
+			}
 		}
 		else
 			ENGINE_ERROR("[ResourceManager::printResourceDetails] This system has not been enabled.");

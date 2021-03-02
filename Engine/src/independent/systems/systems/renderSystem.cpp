@@ -13,6 +13,7 @@
 namespace Engine
 {
 	bool RenderSystem::s_enabled = false; //!< Is this system enabled
+	bool RenderSystem::s_renderersInitialised = false; //!< Set to false
 	TextureUnitManager* RenderSystem::s_unitManager = nullptr; //!< The texture unit manager
 	std::array<int32_t, 16> RenderSystem::s_unit = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 }; //!< The texture units
 
@@ -34,7 +35,10 @@ namespace Engine
 		{
 			ENGINE_INFO("[RenderSystem::start] Starting the render system.");
 			s_unitManager = new TextureUnitManager(16, 0);
+			s_renderersInitialised = false;
 			s_enabled = true;
+
+			RenderSystem::initialise();
 		}
 	}
 
@@ -48,7 +52,9 @@ namespace Engine
 			Renderer3D::destroy();
 			Renderer2D::destroy();
 
-			delete s_unitManager;
+			if(s_unitManager) delete s_unitManager;
+			s_unitManager = nullptr;
+			s_renderersInitialised = false;
 			s_enabled = false;
 		}
 	}
@@ -56,13 +62,17 @@ namespace Engine
 	//! initialise()
 	void RenderSystem::initialise()
 	{
-		// Initialise the 2D and 3D renderers with their capacity values
-		Renderer2D::initialise(ResourceManager::getConfigValue(ConfigData::BatchCapacity2D));
-		Renderer3D::initialise(ResourceManager::getConfigValue(ConfigData::BatchCapacity3D), ResourceManager::getConfigValue(ConfigData::VertexCapacity3D), ResourceManager::getConfigValue(ConfigData::IndexCapacity3D));
+		if (!s_renderersInitialised && s_enabled)
+		{
+			// Initialise the 2D and 3D renderers with their capacity values
+			Renderer2D::initialise(ResourceManager::getConfigValue(Config::BatchCapacity2D));
+			Renderer3D::initialise(ResourceManager::getConfigValue(Config::BatchCapacity3D), ResourceManager::getConfigValue(Config::VertexCapacity3D), ResourceManager::getConfigValue(Config::IndexCapacity3D));
 
-		// Send both renderers the central texture unit manager and units
-		Renderer2D::setTextureUnitManager(s_unitManager, s_unit);
-		Renderer3D::setTextureUnitManager(s_unitManager, s_unit);
+			// Send both renderers the central texture unit manager and units
+			Renderer2D::setTextureUnitManager(s_unitManager, s_unit);
+			Renderer3D::setTextureUnitManager(s_unitManager, s_unit);
+			s_renderersInitialised = true;
+		}
 	}
 
 	//! onRender()
@@ -71,41 +81,18 @@ namespace Engine
 	*/
 	void RenderSystem::onRender(Scene* scene)
 	{
-		// A static list of all renderable entities
-		static std::vector<Entity*> entityList; // List to be populated
+		// Get a list of all entities in the scene
+		std::vector<Entity*> entityList = scene->getEntities();
 
-		// Check if entity list has changed since last frame
-		// This will therefore only update the entity list if it has changed
-		if (scene->getNewEntitiesFlag())
-		{
-			// Scene's entities has changed, go full nuclear and clear list and reassemble
-			entityList.clear();
-
-			auto layers = scene->getLayerManager()->getLayers();
-
-			for (auto& layer : layers)
-			{
-				// Go through each layer, if its displayed, insert the layer's entities into our temp list
-				if (layer->getDisplayed())
-				{
-					// Only get the entities that have a renderable component
-					auto layerList = layer->getRenderableEntities();
-					entityList.insert(entityList.end(), layerList.begin(), layerList.end());
-				}
-			}
-		}
-
-		// We now have a list of all entities to be rendered in this frame (2D and 3D) in entityList
-
-		auto passList = scene->getRenderPasses();
+		// Get a list of all the render passes for this scene
+		std::vector<RenderPass*> renderPassList = scene->getRenderPasses();
 
 		// Now we have all the render passes for this scene and a list of all entities
-
 		// Go through each render pass in the order in which they were added and render
-		for (auto& pass : passList)
+		for (auto& renderPass : renderPassList)
 		{
-			if(pass->getEnabled())
-				pass->onRender(entityList);
+			if(renderPass->getEnabled())
+				renderPass->onRender(entityList);
 		}
 	}
 }

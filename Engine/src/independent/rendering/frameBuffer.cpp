@@ -28,10 +28,11 @@ namespace Engine
 	//! create()
 	/*!
 	\param frameBufferName a const std::string& - The name of the framebuffer
+	\param useSceneSize a const bool - Is this framebuffer to be the size of the scene view
 	\param size a const glm::ivec2& - The dimensions of the framebuffer targets
 	\param layout a FrameBufferLayoutt& - A reference to the layout of the framebuffer
 	*/
-	FrameBuffer* FrameBuffer::create(const std::string& frameBufferName, const glm::ivec2& size, FrameBufferLayout& layout)
+	FrameBuffer* FrameBuffer::create(const std::string& frameBufferName, const bool useSceneSize, const glm::ivec2& size, FrameBufferLayout& layout)
 	{
 		switch (RenderAPI::getAPI())
 		{
@@ -42,7 +43,7 @@ namespace Engine
 			}
 			case GraphicsAPI::OpenGL:
 			{
-				return new OpenGLFrameBuffer(frameBufferName, size, layout);
+				return new OpenGLFrameBuffer(frameBufferName, useSceneSize, size, layout);
 			}
 			case GraphicsAPI::Direct3D:
 			{
@@ -101,27 +102,33 @@ namespace Engine
 
 	//! getSampledTarget()
 	/*!
-	\param targetName a const char* - The name of the target
+	\param targetName a const std::string& - The name of the target
 	\return a Texture2D* - A pointer to the texture target
 	*/
-	Texture2D* FrameBuffer::getSampledTarget(const char* targetName)
+	Texture2D* FrameBuffer::getSampledTarget(const std::string& targetName)
 	{
 		if (m_sampledTargets.find(targetName) != m_sampledTargets.end())
 			return m_sampledTargets[targetName];
 		else
+		{
+			ENGINE_ERROR("[FrameBuffer::getSampledTarget] The target wasn't found in this framebuffer. Target Name: {0}, FrameBuffer Name: {1}.", targetName, m_name);
 			return nullptr;
+		}
 	}
 
 	//! getNonSampledTarget()
 	/*!
-	\param targetName a const char* - The name of the target
+	\param targetName a const std::string& - The name of the target
 	\return a RenderBuffer* - A pointer to the renderbuffer target
 	*/
-	RenderBuffer* FrameBuffer::getNonSampledTarget(const char* targetName)
+	RenderBuffer* FrameBuffer::getNonSampledTarget(const std::string& targetName)
 	{
 		if (m_nonSampledTargets.find(targetName) != m_nonSampledTargets.end())
 			return m_nonSampledTargets[targetName];
 		else
+		{
+			ENGINE_ERROR("[FrameBuffer::getNonSampledTarget] The target wasn't found in this framebuffer. Target Name: {0}, FrameBuffer Name: {1}.", targetName, m_name);
 			return nullptr;
+		}
 	}
 }

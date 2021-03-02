@@ -46,6 +46,7 @@ namespace Engine
 		virtual void bind() = 0; //!< Bind the VAO
 		virtual void unbind() = 0; //!< Unbind the VAO
 		virtual const bool indexBufferBoundToArray() = 0; //!< Check if the index buffer set is correctly bound to the array
+		virtual void printDetails() override = 0; //!< Print the resource details
 	};
 }
 #endif

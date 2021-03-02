@@ -11,7 +11,7 @@ namespace Engine
 {
 	//! WindowProperties()
 	/*!
-	\param title a const char* - The window title
+	\param title a const std::string& - The window title
 	\param width a const uint32_t - The window width
 	\param height a const uint32_t - The window height
 	\param position a const glm::ivec2& - The window position
@@ -23,7 +23,7 @@ namespace Engine
 	\param hide a const bool - Is the window hidden
 	\param mode a const CursorInputMode - The cursor input mode
 	*/
-	WindowProperties::WindowProperties(const char* title, const uint32_t width, const uint32_t height, const glm::ivec2& position, const bool vSync, const bool fullScreen, const bool minimised, const float opacity, const bool focused, const bool hide, const CursorInputMode mode)
+	WindowProperties::WindowProperties(const std::string& title, const uint32_t width, const uint32_t height, const glm::ivec2& position, const bool vSync, const bool fullScreen, const bool minimised, const float opacity, const bool focused, const bool hide, const CursorInputMode mode)
 		: m_title(title), m_width(width), m_height(height), m_aspectRatio(static_cast<float>(width) / static_cast<float>(height)), m_position(position),
 		m_vSync(vSync), m_fullScreen(fullScreen), m_minimised(minimised), m_opacity(opacity), m_focused(focused), m_hidden(hide), m_cursorInputMode(mode)
 	{
@@ -45,9 +45,9 @@ namespace Engine
 
 	//! setTitle()
 	/*!
-	\param title a const char* - The window's title
+	\param title a const std::string& - The window's title
 	*/
-	void WindowProperties::setTitle(const char* title)
+	void WindowProperties::setTitle(const std::string& title)
 	{
 		m_title = title;
 	}

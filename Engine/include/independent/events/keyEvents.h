@@ -10,7 +10,7 @@
 
 #include "independent/events/event.h"
 
-namespace Engine 
+namespace Engine
 {
 	/*! \class KeyEvent
 	* \brief A base event class for key events

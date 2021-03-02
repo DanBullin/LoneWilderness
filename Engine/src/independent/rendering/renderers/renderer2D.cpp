@@ -6,7 +6,6 @@
 *
 */
 #include "independent/rendering/renderers/renderer2D.h"
-#include "independent/rendering/geometry/quad.h"
 #include "independent/systems/systems/log.h"
 #include "independent/systems/systems/resourceManager.h"
 #include "independent/systems/systems/fontManager.h"
@@ -27,7 +26,7 @@ namespace Engine
 	*/
 	void Renderer2D::initialise(const uint32_t batchCapacity)
 	{
-		ENGINE_INFO("[Renderer2D::initialise] Initialising the 2D renderer.");
+		ENGINE_TRACE("[Renderer2D::initialise] Initialising the 2D renderer.");
 
 		// Set the batch capacity
 		s_batchCapacity = batchCapacity;
@@ -58,14 +57,14 @@ namespace Engine
 	\param modelMatrix a const glm::mat4& - A model matrix
 	\param tint a const glm::vec4& - The tint to override the material (Optional)
 	*/
-	void Renderer2D::submit(Material* material, const glm::mat4& modelMatrix, const glm::vec4& tint)
+	void Renderer2D::submit(ShaderProgram* shaderProgram, std::vector<SubTexture*>& subTextures, const glm::mat4& modelMatrix, const glm::vec4& tint)
 	{
 		// Submit the geometry
 
 		// Check what shader we're submitting with
 		ShaderProgram* shader;
 		if (s_overridingShader) shader = s_overridingShader;
-		else shader = material->getShader();
+		else shader = shaderProgram;
 
 		// Now we have the shader to submit our 2D geometry under, check if that shader's list of submissions is full or would be full if we were to submit
 		if (s_batchQueue[shader].size() >= s_batchCapacity)
@@ -76,27 +75,9 @@ namespace Engine
 		}
 		else
 		{
-			// Let's do the tint check now, we need to check whether to use the material tint or the tint provided to us
-			// This provided tint exists because it allows us to define a tint per Text object rather than material
-			// Therefore it is only used in text submissions, ignore for MeshRender2D submissions
-
-			// If the tint values are all -1, then use material tint
-			glm::vec4 tmpTint;
-			if (tint == glm::vec4(-1.f, -1.f, -1.f, -1.f))
-				tmpTint = material->getTint();
-			else
-				tmpTint = tint;
-
-			// Get a vector of all the subtextures in the material
-			std::vector<SubTexture*> tmpList;
-			tmpList.reserve(material->getSubTextures().size());
-			for (auto& subtexture : material->getSubTextures())
-				tmpList.push_back(subtexture);
-
 			std::vector<int32_t> units;
-			units.resize(tmpList.size());
-
-			s_batchQueue[shader].push_back( { tmpList, units, modelMatrix, tmpTint } );
+			units.resize(subTextures.size());
+			s_batchQueue[shader].push_back( { subTextures, units, modelMatrix, tint } );
 			s_drawCount++;
 		}
 	}
@@ -148,7 +129,7 @@ namespace Engine
 				// Update the material's subtexture to the subtexture of the glyph we want to render
 				material->setSubTexture(0, gd.subTexture);
 				// Now we can submit this new quad
-				submit(material, model, text->getColour());
+				submit(material->getShader(), material->getSubTextures(), model, text->getColour());
 			}
 
 			x += advance;
@@ -166,6 +147,8 @@ namespace Engine
 
 		if(shader->getVertexArray() == ResourceManager::getResource<VertexArray>("QuadArray"))
 			generateListOfVertex2D(shader, batchEntries);
+		else if (shader->getVertexArray() == ResourceManager::getResource<VertexArray>("QuadMultiTexturedArray"))
+			generateListOfVertex2DMutlitextured(shader, batchEntries);
 	}
 
 	//! flush()
@@ -265,10 +248,9 @@ namespace Engine
 	//! destroy()
 	void Renderer2D::destroy()
 	{
-		ENGINE_INFO("[Renderer2D::destroy] Destroying the 2D renderer.");
+		ENGINE_TRACE("[Renderer2D::destroy] Destroying the 2D renderer.");
 
 		// Clean up renderer data
-		if (s_overridingShader) s_overridingShader->decreaseCount();
 		s_overridingShader = nullptr;
 
 		s_unitManager = nullptr;
@@ -295,7 +277,7 @@ namespace Engine
 	{
 		// Create a fresh new list of vertices and then edit the VBO
 		std::vector<Vertex2D> vertexList;
-		vertexList.resize(ResourceManager::getConfigValue(ConfigData::BatchCapacity2D) * 4);
+		vertexList.resize(ResourceManager::getConfigValue(Config::BatchCapacity2D) * 4);
 
 		// Starting from the beginning of the list
 		uint32_t startIndex = 0;
@@ -318,6 +300,42 @@ namespace Engine
 		}
 
 		shader->getVertexArray()->getVertexBuffers().at(0)->edit(vertexList.data(), static_cast<uint32_t>(sizeof(Vertex2D) * vertexList.size()), 0);
+
+	}
+
+	//! generateListOfVertex2DMutlitextured()
+	/*
+	\param shader a ShaderProgram* - A pointer to the shader program
+	\param batchEntries a std::vector<BatchEntry2D>& - A list of batch entries
+	*/
+	void Renderer2D::generateListOfVertex2DMutlitextured(ShaderProgram * shader, std::vector<BatchEntry2D>& batchEntries)
+	{
+		// Create a fresh new list of vertices and then edit the VBO
+		std::vector<Vertex2DMultiTextured> vertexList;
+		vertexList.resize(ResourceManager::getConfigValue(Config::BatchCapacity2D) * 4);
+
+		// Starting from the beginning of the list
+		uint32_t startIndex = 0;
+		for (auto& entry : batchEntries)
+		{
+			// Edit the next 4 vertices in the list
+			for (int i = 0; i < 4; i++)
+			{
+				vertexList[i + startIndex].Position = entry.modelMatrix * getQuadVertices().at(i).Position;
+				vertexList[i + startIndex].TexUnit1 = entry.textureUnits[0];
+				vertexList[i + startIndex].TexUnit2 = entry.textureUnits[1];
+				vertexList[i + startIndex].Tint = MemoryUtils::pack(entry.tint);
+			}
+
+			vertexList[startIndex].TexCoords = entry.subTextures.at(0)->getUVEnd();
+			vertexList[startIndex + 1].TexCoords = { entry.subTextures.at(0)->getUVEnd().x, entry.subTextures.at(0)->getUVStart().y };
+			vertexList[startIndex + 2].TexCoords = entry.subTextures.at(0)->getUVStart();
+			vertexList[startIndex + 3].TexCoords = { entry.subTextures.at(0)->getUVStart().x, entry.subTextures.at(0)->getUVEnd().y };
+
+			startIndex += 4;
+		}
+
+		shader->getVertexArray()->getVertexBuffers().at(0)->edit(vertexList.data(), static_cast<uint32_t>(sizeof(Vertex2DMultiTextured) * vertexList.size()), 0);
 
 	}
 }

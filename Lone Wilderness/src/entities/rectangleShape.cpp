@@ -6,7 +6,6 @@
 *
 */
 #include "entities/rectangleShape.h"
-#include "independent/systems/systemManager.h"
 
 //! RectangleShape()
 RectangleShape::RectangleShape()

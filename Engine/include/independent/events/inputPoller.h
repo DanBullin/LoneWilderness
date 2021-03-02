@@ -10,7 +10,7 @@
 
 #include "independent/core/common.h"
 
-namespace Engine 
+namespace Engine
 {
 	/*! \class InputPoller
 	* \brief API agnostic Input poller for getting current keyboard/mouse state

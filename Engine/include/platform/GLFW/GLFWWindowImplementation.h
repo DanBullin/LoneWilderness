@@ -12,7 +12,7 @@
 #include <GLFW/glfw3.h>
 #include "independent/systems/components/window.h"
 
-namespace Engine 
+namespace Engine
 {
 	/*! \class GLFWWindowImplementation
 	* \brief Implementation of a window using GLFW
@@ -27,7 +27,7 @@ namespace Engine
 	protected:
 		void setEventCallbacks() override; //!< Set up the event callbacks for the window
 	public:
-		GLFWWindowImplementation(const char* windowName, const WindowProperties& properties); //!< Constructor
+		GLFWWindowImplementation(const std::string& windowName, const WindowProperties& properties); //!< Constructor
 		~GLFWWindowImplementation(); //!< Destructor
 		void* getNativeWindow() const override; //!< Get the native window
 		void onUpdate(const float timestep, const float totalTime) override; //!< Update

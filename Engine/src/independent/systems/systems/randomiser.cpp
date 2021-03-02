@@ -9,7 +9,7 @@
 #include "independent/systems/systems/randomiser.h"
 #include "independent/systems/systems/log.h"
 
-namespace Engine 
+namespace Engine
 {
 	bool Randomiser::s_enabled = false; //!< Set to false
 	std::shared_ptr<std::mt19937> Randomiser::s_randomGenerator = nullptr; //!< Initialise the random generator

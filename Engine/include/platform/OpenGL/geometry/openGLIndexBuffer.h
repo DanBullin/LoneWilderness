@@ -24,6 +24,7 @@ namespace Engine
 		void edit(const void* indices, const uint32_t size, const uint32_t offset) override; //!< Edit the index buffer contents
 		void bind() override; //!< Bind the buffer
 		void unbind() override; //!< Unbind the buffer
+		void printDetails() override; //!< Print the resource details
 	};
 }
 #endif

@@ -15,6 +15,12 @@ namespace Engine
 		m_destroy = true;
 	}
 
+	//! undestroy()
+	void Destroyable::undestroy()
+	{
+		m_destroy = false;
+	}
+
 	//! getDestroyed()
 	/*
 	\return a const bool - Is this object to be destroyed

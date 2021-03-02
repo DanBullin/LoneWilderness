@@ -31,6 +31,7 @@ namespace Engine
 		std::vector<CubeMapTexture*> cubeTextures; //!< The list of cubemap textures in this entry
 		std::vector<int32_t> textureUnits; //!< The list of texture units used subtextures
 		std::vector<int32_t> cubeTextureUnits; //!< The list of texture units used for cubemaps
+		float shininess; //!< The shininess of the material
 		glm::mat4 modelMatrix; //!< The model matrix
 		glm::vec4 tint; //!< The tint
 	};
@@ -60,6 +61,7 @@ namespace Engine
 
 		static void generateBasic3D(ShaderProgram* shader, std::vector<BatchEntry3D>& batchEntries, const uint32_t instanceCount); //!< Generate the instance data
 		static void generateSkybox(ShaderProgram* shader, std::vector<BatchEntry3D>& batchEntries, const uint32_t instanceCount); //!< Generate the instance data
+		static void generateLightSource(ShaderProgram* shader, std::vector<BatchEntry3D>& batchEntries, const uint32_t instanceCount); //!< Generate the instance data
 	public:
 		static void initialise(const uint32_t batchCapacity, const uint32_t vertexCapacity, const uint32_t indexCapacity); //!< Initialise the renderer
 		static void begin(); //!< Begin a new 3D scene

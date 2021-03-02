@@ -75,7 +75,7 @@ namespace Engine
 			   \param timestep a const float - The timestep
 			   \param totalTime a const float - The total runtime of the application */
 
-		void printLayerDetails(); //!< Print the layer details
+		virtual void printLayerDetails(); //!< Print the layer details
 
 		const std::string& getLayerName(); //!< Get the name of the layer
 		const bool getDisplayed() const; //!< Get whether this layer should be rendered

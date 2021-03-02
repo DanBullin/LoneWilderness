@@ -6,7 +6,7 @@
 *
 */
 #include "entities/FPSCounter.h"
-#include "independent/systems/systemManager.h"
+#include "independent/systems/systems/timerSystem.h"
 
 //! FPSCounter()
 FPSCounter::FPSCounter()
@@ -17,7 +17,6 @@ FPSCounter::FPSCounter()
 //! ~FPSCounter()
 FPSCounter::~FPSCounter()
 {
-	
 }
 
 //! onPreUpdate()
@@ -38,7 +37,11 @@ void FPSCounter::onPostUpdate(const float timestep, const float totalTime)
 {
 	if (TimerSystem::getTime("FPSRefresh", false, true) > 1.f)
 	{
-		getComponent<Text>()->setText("FPS: " + std::to_string(static_cast<uint32_t>(TimerSystem::getFPS())));
+		Text* text = getComponent<Text>();
+		
+		if (text)
+			text->setText("FPS: " + std::to_string(static_cast<uint32_t>(TimerSystem::getFPS())));
+		
 		TimerSystem::stopTimer("FPSRefresh", false, true);
 	}
 }

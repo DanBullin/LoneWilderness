@@ -50,11 +50,13 @@ namespace Engine
 		uint32_t m_bufferID; //!< The frame buffer ID
 		glm::ivec2 m_size; //!< The pixel size of the framebuffer
 		FrameBufferLayout m_layout; //!< The layout of the framebuffer
+		bool m_default; //!< Is this framebuffer the default framebuffer
+		bool m_useSceneSize; //!< Is this framebuffer to be the size of the scene
 
 		std::map<std::string, Texture2D*> m_sampledTargets; //!< A list of sampled targets
 		std::map<std::string, RenderBuffer*> m_nonSampledTargets; //!< A list of non-sampled targets
 	public:
-		static FrameBuffer* create(const std::string& frameBufferName, const glm::ivec2& size, FrameBufferLayout& layout); //!< Create a frame buffer
+		static FrameBuffer* create(const std::string& frameBufferName, const bool useSceneSize, const glm::ivec2& size, FrameBufferLayout& layout); //!< Create a frame buffer
 		static FrameBuffer* createDefault(const std::string& frameBufferName); //!< Create a default frame buffer
 
 		FrameBuffer(const std::string& frameBufferName); //!< Constructor
@@ -64,13 +66,19 @@ namespace Engine
 			/*!< \return a const uint32_t - The frame buffer ID */
 		inline glm::ivec2 getSize() const { return m_size; } //!< Get the size of the framebuffer
 			/*!< \return a glm::ivec2 - The size of the framebuffer */
+		inline bool isDefault() const { return m_default; } //!< Get whether this framebuffer is the default framebuffer
+			/*!< \return a bool - Whether this framebuffer is the default framebuffer */
+		inline bool useSceneSize() const { return m_useSceneSize; } //!< Get whether this framebuffer is the size of the scene view
+			/*!< \return a bool - Whether this framebuffer is the size of the scene view */
 		inline FrameBufferLayout& getLayout() { return m_layout; } //!< Get the framebuffer layout
 			/*!< \return a FrameBufferLayout& - The layout of the framebuffer */
 
-		Texture2D* getSampledTarget(const char* targetName); //!< Get a sampled target from the framebuffer
-		RenderBuffer* getNonSampledTarget(const char* targetName); //!< Get a non-sampled target from the framebuffer
+		Texture2D* getSampledTarget(const std::string& targetName); //!< Get a sampled target from the framebuffer
+		RenderBuffer* getNonSampledTarget(const std::string& targetName); //!< Get a non-sampled target from the framebuffer
 
 		virtual void bind() = 0; //!< Bind the frame buffer
+		virtual void resize(const glm::ivec2& size) = 0; //!< Resize the frame buffer
+		virtual void printDetails() override = 0; //!< Print the resource details
 	};
 }
 #endif

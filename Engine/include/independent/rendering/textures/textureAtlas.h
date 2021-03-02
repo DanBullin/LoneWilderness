@@ -29,16 +29,17 @@ namespace Engine
 	class TextureAtlas
 	{
 	private:
+		std::string m_name; //!< The name of the atlas
 		std::vector<SimpleRect> m_spaces; //! Gaps left which can be filled
 		Texture2D* m_baseTexture; //!< Texture which holds all subtexture pixel data
 	public:
-		TextureAtlas(const glm::ivec2 size = { 4096, 4096 }, const uint32_t channels = 4, const uint32_t reservedSpaces = 32); //!<	Constructor
+		TextureAtlas(const std::string& name, const glm::ivec2 size = { 4096, 4096 }, const uint32_t channels = 4, const uint32_t reservedSpaces = 32); //!<	Constructor
 		~TextureAtlas(); //!< Destructor
 
 		inline Texture2D* getBaseTexture() const { return m_baseTexture; } //!< Get the base texture
 			/*!< \return a const Texture2D* - The base texture pointer */
 
-		bool add(const char* filePath, SubTexture*& result, const std::string& subTextureName); //!< Attempt to add a subtexture with a file
+		bool add(const std::string& filePath, SubTexture*& result, const std::string& subTextureName); //!< Attempt to add a subtexture with a file
 		bool add(int32_t width, int32_t height, uint32_t channels, unsigned char* data, SubTexture*& result, const std::string& subTextureName); //!< Attempt to add a subtexture
 	};
 }

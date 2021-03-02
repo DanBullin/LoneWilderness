@@ -20,6 +20,7 @@
 #include <utility>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 #include <direct.h>
 
 #include <glm/glm.hpp>
@@ -42,6 +43,8 @@ using Shared = std::shared_ptr<T>; //!< Shared pointer type alias
 
 #define TIME_FUNCTION(x, y) Engine::TimerSystem::startTimer(x); y; Engine::TimerSystem::stopTimer(x, false, true); //!< Macro to time a function
 #define GET_TIME(x, y, z)  Engine::TimerSystem::getTime(x, y, z) //!< Macro to get a time from the timer system
+
+#define PAUSE_ONKEYPRESS(x) Engine::InputPoller::isKeyPressed(x)
 
 /*! \enum Renderers
 * \brief The different types of renderers

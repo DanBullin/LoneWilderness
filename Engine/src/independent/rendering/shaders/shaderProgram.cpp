@@ -16,7 +16,7 @@ namespace Engine
 	/*
 	\param shaderName a const std::string& - The name of the shader program
 	*/
-	ShaderProgram::ShaderProgram(const std::string& shaderName) : Resource(shaderName, ResourceType::ShaderProgram), m_vertexArray(nullptr)
+	ShaderProgram::ShaderProgram(const std::string& shaderName) : Resource(shaderName, ResourceType::ShaderProgram), m_vertexArray(nullptr), m_programID(0)
 	{
 	}
 

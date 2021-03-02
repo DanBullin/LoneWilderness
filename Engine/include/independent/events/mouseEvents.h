@@ -11,7 +11,7 @@
 #include "independent/events/event.h"
 #include <glm/glm.hpp>
 
-namespace Engine 
+namespace Engine
 {
 	/*! \class MouseEvent
 	* \brief A base event class for mouse events

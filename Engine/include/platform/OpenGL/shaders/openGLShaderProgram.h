@@ -38,6 +38,7 @@ namespace Engine
 		void sendVec4(const std::string& uniformName, const glm::vec4& value) override; //!< Upload vec4 to shader
 		void sendMat3(const std::string& uniformName, const glm::mat3& mat) override; //!< Upload mat3 to shader
 		void sendMat4(const std::string& uniformName, const glm::mat4& mat) override; //!< Upload mat4 to shader
+		void printDetails() override; //!< Print the resource details
 	};
 }
 #endif

@@ -7,6 +7,7 @@
 */
 #include <glad/glad.h>
 #include "independent/systems/systems/log.h"
+#include "independent/systems/systems/resourceManager.h"
 #include "platform/OpenGL/geometry/OpenGLVertexBuffer.h"
 
 namespace Engine
@@ -37,6 +38,9 @@ namespace Engine
 	*/
 	OpenGLVertexBuffer::OpenGLVertexBuffer(const std::string& vertexBufferName, const void* vertices, const uint32_t size, const VertexBufferLayout layout, const VertexBufferUsage usage) : VertexBuffer(vertexBufferName)
 	{
+		if (size <= 0)
+			ENGINE_ERROR("[OpenGLVertexBuffer::OpenGLVertexBuffer] An invalid size was provided. Is this an error? Size: {0}, Name: {1}.", size, m_name);
+
 		m_layout = layout;
 		m_usage = usage;
 		m_byteSize = size;
@@ -55,6 +59,9 @@ namespace Engine
 	*/
 	OpenGLVertexBuffer::OpenGLVertexBuffer(const std::string& vertexBufferName, const uint32_t size, const VertexBufferUsage usage) : VertexBuffer(vertexBufferName)
 	{
+		if (size <= 0)
+			ENGINE_ERROR("[OpenGLVertexBuffer::OpenGLVertexBuffer] An invalid size was provided. Is this an error? Size: {0}, Name: {1}.", size, m_name);
+
 		m_usage = usage;
 		m_byteSize = size;
 
@@ -68,7 +75,8 @@ namespace Engine
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
 		// Delete the buffer
-		ENGINE_INFO("[OpenGLVertexBuffer::~OpenGLVertexBuffer] Deleting Vertex buffer with ID: {0}, Name: {1}.", m_bufferID, m_name);
+		if (ResourceManager::getConfigValue(Config::PrintResourcesInDestructor))
+			ENGINE_INFO("[OpenGLVertexBuffer::~OpenGLVertexBuffer] Deleting Vertex buffer with ID: {0}, Name: {1}.", m_bufferID, m_name);
 		glDeleteBuffers(1, &m_bufferID);
 	}
 
@@ -80,6 +88,9 @@ namespace Engine
 	*/
 	void OpenGLVertexBuffer::edit(const void* vertices, const uint32_t size, const uint32_t offset)
 	{
+		if (size <= 0)
+			ENGINE_ERROR("[OpenGLVertexBuffer::edit] An invalid size was provided. Size: {0}: Offset: {1}. Name: {2}.", size, offset, m_name);
+
 		// Edit the buffer contents
 		bind();
 		glBufferSubData(GL_ARRAY_BUFFER, offset, size, vertices);
@@ -88,6 +99,9 @@ namespace Engine
 	//! bind()
 	void OpenGLVertexBuffer::bind()
 	{
+		if (m_bufferID == 0)
+			ENGINE_ERROR("[OpenGLVertexBuffer::bind] Attempting to bind when ID is 0. Name: {0}.", m_name);
+
 		glBindBuffer(GL_ARRAY_BUFFER, m_bufferID);
 	}
 
@@ -95,5 +109,16 @@ namespace Engine
 	void OpenGLVertexBuffer::unbind()
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
+	//! printDetails()
+	void OpenGLVertexBuffer::printDetails()
+	{
+		ENGINE_TRACE("Buffer ID: {0}.", m_bufferID);
+		auto layout = m_layout.getElements();
+		for (int i = 0; i < layout.size(); i++)
+			ENGINE_TRACE("Element{0}: Type: {1}, Size: {2}, Offset: {3}, Normalized: {4}, Instance Divisor: {5}", i, SDT::convertSDTToString(layout[i].m_dataType), layout[i].m_size, layout[i].m_offset, layout[i].m_normalized, layout[i].m_instanceDivisor);
+		ENGINE_TRACE("Usage: {0}.", static_cast<uint32_t>(m_usage));
+		ENGINE_TRACE("Byte Size: {0}.", m_byteSize);
 	}
 }

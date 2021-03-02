@@ -25,6 +25,7 @@ namespace Engine
 		~Model3D(); //!< Destructor
 		std::vector<Mesh3D>& getMeshes(); //!< Get the list of meshes as a reference
 		void destroy(); //!< Destory the meshes
+		void printDetails() override; //!< Print the resource details
 	};
 }
 #endif

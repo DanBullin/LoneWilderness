@@ -1,0 +1,82 @@
+{
+	"subTextures": 
+	[
+		{ 
+			"name": "defaultSubTexture", 
+			"baseTextureName": "default", 
+			"UVStart": [ 0.0, 0.0 ], 
+			"UVEnd": [ 1.0, 1.0 ],
+			"ConvertBottomLeft": false
+		},
+		{ 
+			"name": "textSubTexture", 
+			"baseTextureName": "text", 
+			"UVStart": [ 0.0, 0.0 ], 
+			"UVEnd": [ 1.0, 1.0 ],
+			"ConvertBottomLeft": false
+		},
+		{ 
+			"name": "cyborgSubTexture", 
+			"baseTextureName": "cyborg_diffuse", 
+			"UVStart": [ 0.0, 0.0 ], 
+			"UVEnd": [ 1.0, 0.5 ],
+			"ConvertBottomLeft": false
+		},
+		{ 
+			"name": "mapSubTexture", 
+			"baseTextureName": "map", 
+			"UVStart": [ 0.0, 0.0 ], 
+			"UVEnd": [ 1.0, 1.0 ],
+			"ConvertBottomLeft": false
+		},
+		{ 
+			"name": "hotbarSubTexture", 
+			"baseTextureName": "hotbar", 
+			"UVStart": [ 0.0, 0.0 ], 
+			"UVEnd": [ 1.0, 1.0 ],
+			"ConvertBottomLeft": false
+		},
+		{ 
+			"name": "SpecularFullSubTexture", 
+			"baseTextureName": "specular_full", 
+			"UVStart": [ 0.0, 0.0 ], 
+			"UVEnd": [ 1.0, 1.0 ],
+			"ConvertBottomLeft": false
+		},
+		{ 
+			"name": "SpecularNoneSubTexture", 
+			"baseTextureName": "specular_none", 
+			"UVStart": [ 0.0, 0.0 ], 
+			"UVEnd": [ 1.0, 1.0 ],
+			"ConvertBottomLeft": false
+		},
+		{ 
+			"name": "screenQuadSubTexture1", 
+			"baseTextureName": "cyborg_diffuse", 
+			"UVStart": [ 0.0, 0.0 ], 
+			"UVEnd": [ 1.0, 1.0 ],
+			"ConvertBottomLeft": true
+		},
+		{ 
+			"name": "screenQuadSubTexture2", 
+			"baseTextureName": "cyborg_diffuse", 
+			"UVStart": [ 0.0, 0.0 ], 
+			"UVEnd": [ 1.0, 1.0 ],
+			"ConvertBottomLeft": true
+		},
+		{ 
+			"name": "streetSubTexture", 
+			"baseTextureName": "street_diffuse", 
+			"UVStart": [ 0.0, 0.0 ], 
+			"UVEnd": [ 1.0, 1.0 ],
+			"ConvertBottomLeft": true
+		},
+		{ 
+			"name": "wireframeSubTexture", 
+			"baseTextureName": "wireframe", 
+			"UVStart": [ 0.0, 0.0 ], 
+			"UVEnd": [ 1.0, 1.0 ],
+			"ConvertBottomLeft": true
+		}
+	]
+}

@@ -10,7 +10,7 @@
 
 #include "independent/core/common.h"
 
-namespace Engine 
+namespace Engine
 {
 	/*! \enum SystemType
 	* \brief The different types of systems

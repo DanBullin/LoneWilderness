@@ -6,7 +6,6 @@
 *
 */
 #include "layers/defaultLayer.h"
-#include "independent/systems/systemManager.h"
 
 //! DefaultLayer()
 DefaultLayer::DefaultLayer() : Layer("Default")
@@ -16,19 +15,16 @@ DefaultLayer::DefaultLayer() : Layer("Default")
 //! ~DefaultLayer()
 DefaultLayer::~DefaultLayer()
 {
-	
 }
 
 //! onAttach()
 void DefaultLayer::onAttach()
-{
-	
+{	
 }
 
 //! onDetach()
 void DefaultLayer::onDetach()
 {
-	
 }
 
 //! onUpdate()
@@ -38,7 +34,6 @@ void DefaultLayer::onDetach()
 */
 void DefaultLayer::onUpdate(const float timestep, const float totalTime)
 {
-	
 }
 
 //! onWindowResize()

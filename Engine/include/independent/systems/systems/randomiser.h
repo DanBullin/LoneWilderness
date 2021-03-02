@@ -11,7 +11,7 @@
 #include <random>
 #include "independent/systems/system.h"
 
-namespace Engine 
+namespace Engine
 {
 	using UniIntDistrib = std::uniform_int_distribution<int32_t>; //!< Type alias because its quite a handful
 	using UniRealDistrib = std::uniform_real_distribution<float>; //!< Type alias because its quite a handful
@@ -33,10 +33,10 @@ namespace Engine
 		void start() override; //!< Start the system
 		void stop() override; //!< Stop the system
 
-		int32_t uniformIntBetween(const int32_t lower, const int32_t upper); //!< Get an integer i such that lower <= i <= upper
-		float uniformFloatBetween(const float lower, const float upper); //!< Get an float i such that lower <= i <= upper
-		int32_t normalInt(const float c, const float sigma); //!< Get an int from the Gaussian distribution described by C and Sigma
-		float normalFloat(const float c, const float sigma); //!< Get a float from the Gaussian distribution described by C and Sigma
+		static int32_t uniformIntBetween(const int32_t lower, const int32_t upper); //!< Get an integer i such that lower <= i <= upper
+		static float uniformFloatBetween(const float lower, const float upper); //!< Get an float i such that lower <= i <= upper
+		static int32_t normalInt(const float c, const float sigma); //!< Get an int from the Gaussian distribution described by C and Sigma
+		static float normalFloat(const float c, const float sigma); //!< Get a float from the Gaussian distribution described by C and Sigma
 	};
 }
 #endif

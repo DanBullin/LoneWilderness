@@ -6,7 +6,8 @@
 *
 */
 #include "entities/mainMenu/menuText.h"
-#include "independent/systems/systemManager.h"
+#include "independent/systems/systems/sceneManager.h"
+#include "independent/systems/systems/windowManager.h"
 
 //! MenuText()
 MenuText::MenuText()
@@ -18,6 +19,24 @@ MenuText::~MenuText()
 {
 }
 
+//! onMousePress()
+/*!
+\param e a MousePressedEvent& - A mouse released event
+\param timestep a const float - The timestep
+\param totalTime a const float - The total time of the application
+*/
+void MenuText::onMousePress(MousePressedEvent& e, const float timestep, const float totalTime)
+{
+	Text* text = getComponent<Text>();
+	bool containsMouse = containsPoint(InputPoller::getMousePosition());
+
+	if (text)
+	{
+		if (containsMouse && e.getButton() == Mouse::LEFTBUTTON)
+			text->setColour({ 1.f, 1.f, 0.f, 1.f });
+	}
+}
+
 //! onMouseRelease()
 /*!
 \param e a MouseReleasedEvent& - A mouse released event
@@ -26,17 +45,31 @@ MenuText::~MenuText()
 */
 void MenuText::onMouseRelease(MouseReleasedEvent& e, const float timestep, const float totalTime)
 {
-	if (getName() == "MenuText" && getComponent<Text>("Play")->containsPoint(InputPoller::getMousePosition()))
+	glm::vec2 mousePosition = InputPoller::getMousePosition();
+
+	if (getName() == "PlayGame" && containsPoint(mousePosition) && e.getButton() == Mouse::LEFTBUTTON)
 	{
-		if (SceneManager::getScene("scene1"))
+		if (SceneManager::getScene("gameScene"))
 		{
-			SceneManager::setActiveScene("scene1", true);
+			SceneManager::setActiveScene("gameScene", false);
 			WindowManager::getFocusedWindow()->setCursorInputMode(CursorInputMode::Disabled);
 		}
+		else
+			ENGINE_ERROR("[MenuText::onMouseRelease] There is no scene called: danScene.");
 	}
-	else if (getName() == "MenuText" && getComponent<Text>("Quit")->containsPoint(InputPoller::getMousePosition()))
+	else if (getName() == "QuitText" && containsPoint(mousePosition) && e.getButton() == Mouse::LEFTBUTTON)
 	{
-		WindowManager::getFocusedWindow()->close();
+		if (WindowManager::getFocusedWindow())
+			WindowManager::getFocusedWindow()->close();
+	}
+
+	Text* text = getComponent<Text>();
+	bool containsMouse = containsPoint(mousePosition);
+
+	if (text)
+	{
+		if (!containsMouse && e.getButton() == Mouse::LEFTBUTTON)
+			text->setColour({ 1.f, 1.f, 1.f, 1.f });
 	}
 }
 
@@ -48,11 +81,14 @@ void MenuText::onMouseRelease(MouseReleasedEvent& e, const float timestep, const
 */
 void MenuText::onMouseMoved(MouseMovedEvent & e, const float timestep, const float totalTime)
 {
-	for (auto& trans : getComponents<Text>())
+	Text* text = getComponent<Text>();
+	bool containsMouse = containsPoint(e.getPos());
+
+	if (text)
 	{
-		if (trans->containsPoint(e.getPos()))
-			trans->setColour({ 1.f, 0.f, 1.f, 1.f });
-		else
-			trans->setColour({ 1.f, 1.f, 1.f, 1.f });
+		if (containsMouse && !InputPoller::isMousePressed(Mouse::LEFTBUTTON))
+			text->setColour({ 1.f, 0.f, 1.f, 1.f });
+		else if(!containsMouse && !InputPoller::isMousePressed(Mouse::LEFTBUTTON))
+			text->setColour({ 1.f, 1.f, 1.f, 1.f });
 	}
 }

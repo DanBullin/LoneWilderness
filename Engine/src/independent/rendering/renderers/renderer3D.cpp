@@ -45,6 +45,8 @@ namespace Engine
 			generateBasic3D(shader, batchEntries, instanceCount);
 		else if (shader->getVertexArray() == ResourceManager::getResource<VertexArray>("vertexArray2"))
 			generateSkybox(shader, batchEntries, instanceCount);
+		else if (shader->getVertexArray() == ResourceManager::getResource<VertexArray>("lightSourceArray"))
+			generateLightSource(shader, batchEntries, instanceCount);
 	}
 
 	//! initialise()
@@ -55,7 +57,7 @@ namespace Engine
 	*/
 	void Renderer3D::initialise(const uint32_t batchCapacity, const uint32_t vertexCapacity, const uint32_t indexCapacity)
 	{
-		ENGINE_INFO("[Renderer3D::initialise] Initialising the 3D renderer.");
+		ENGINE_TRACE("[Renderer3D::initialise] Initialising the 3D renderer.");
 		// Initialise new renderer data
 
 		// Set capacity values
@@ -64,7 +66,7 @@ namespace Engine
 		s_indexCapacity = indexCapacity;
 
 		// Set the indirect buffer by retrieving it from the resource manager
-		s_indirectBuffer = ResourceManager::getResourceAndRef<IndirectBuffer>("indirectBuffer");
+		s_indirectBuffer = ResourceManager::getResource<IndirectBuffer>("indirectBuffer");
 	}
 
 	//! begin()
@@ -114,7 +116,7 @@ namespace Engine
 			std::vector<int32_t> cubeUnits;
 			cubeUnits.resize(tmpCubeList.size());
 
-			s_batchQueue[shader].push_back({ geometry, tmpList, tmpCubeList, units, cubeUnits, modelMatrix, material->getTint() });
+			s_batchQueue[shader].push_back({ geometry, tmpList, tmpCubeList, units, cubeUnits, material->getShininess(), modelMatrix, material->getTint() });
 		}
 	}
 
@@ -224,8 +226,8 @@ namespace Engine
 
 		// Upload texture units
 		auto uniforms = shader->getUniforms();
-		if (uniforms.find("u_diffuseMap") != uniforms.end()) shader->sendIntArray("u_diffuseMap", s_unit.data(), 16);
-		if (uniforms.find("u_cubeMap") != uniforms.end()) shader->sendIntArray("u_cubeMap", s_unit.data(), 16);
+		if(uniforms.find("u_diffuseMap") != uniforms.end()) shader->sendIntArray("u_diffuseMap", s_unit.data(), 16);
+		if(uniforms.find("u_cubeMap") != uniforms.end()) shader->sendIntArray("u_cubeMap", s_unit.data(), 16);
 
 		// Bind VAO
 		shader->getVertexArray()->bind();
@@ -249,9 +251,8 @@ namespace Engine
 	//! destroy()
 	void Renderer3D::destroy()
 	{
-		ENGINE_INFO("[Renderer3D::destroy] Destroying the 3D renderer.");
+		ENGINE_TRACE("[Renderer3D::destroy] Destroying the 3D renderer.");
 		// Clean up renderer data
-		if (s_indirectBuffer) s_indirectBuffer->decreaseCount();
 		s_indirectBuffer = nullptr;
 
 		s_unitManager = nullptr;
@@ -278,12 +279,12 @@ namespace Engine
 
 		// Check if adding this geometry goes over buffer capacity
 		// Total number + new amount > buffer capacity
-		if (s_nextVertex[VBO] + vertexCount > ResourceManager::getConfigValue(ConfigData::VertexCapacity3D))
+		if (s_nextVertex[VBO] + vertexCount > ResourceManager::getConfigValue(Config::VertexCapacity3D))
 		{
 			ENGINE_ERROR("[Renderer3D::addGeometry] Cannot add geometry as vertex buffer limit has been reached. VBO Name: {0}.", VBO->getName());
 			return;
 		}
-		if (s_nextIndex + indexCount > ResourceManager::getConfigValue(ConfigData::IndexCapacity3D))
+		if (s_nextIndex + indexCount > ResourceManager::getConfigValue(Config::IndexCapacity3D))
 		{
 			ENGINE_ERROR("[Renderer3D::addGeometry] Cannot add geometry as index buffer limit has been reached. IBO Name: {0}.", IBO->getName());
 			return;
@@ -325,23 +326,29 @@ namespace Engine
 	void Renderer3D::generateBasic3D(ShaderProgram* shader, std::vector<BatchEntry3D>& batchEntries, const uint32_t instanceCount)
 	{
 		std::vector<glm::mat4> modelInstanceData; //!< The model matrix instance data
-		std::vector<uint32_t> tintInstanceData; //!< The tint instance data
-		std::vector<int32_t> unitInstanceData; //!< The texture unit data
+		std::vector<glm::vec4> tintInstanceData; //!< The tint instance data
+		std::vector<int32_t> unit1InstanceData; //!< The texture unit data
+		std::vector<int32_t> unit2InstanceData; //!< The texture unit data
+		std::vector<float> shininessInstanceData; //!< The shininess data
 		std::vector<glm::vec4> subTextureUVs; //!< The Start and End UV coordinates of the subtexture
 
 		for (auto& entry : batchEntries)
 		{
 			modelInstanceData.push_back(entry.modelMatrix);
-			unitInstanceData.push_back(entry.textureUnits[0]);
-			tintInstanceData.push_back(MemoryUtils::pack(entry.tint));
+			unit1InstanceData.push_back(entry.textureUnits[0]);
+			unit2InstanceData.push_back(entry.textureUnits[1]);
+			tintInstanceData.push_back(entry.tint);
+			shininessInstanceData.push_back(entry.shininess);
 			subTextureUVs.push_back(glm::vec4(entry.subTextures.at(0)->getUVStart().x, entry.subTextures.at(0)->getUVStart().y,
-				entry.subTextures.at(0)->getUVEnd().x, entry.subTextures.at(0)->getUVEnd().y));
+											  entry.subTextures.at(0)->getUVEnd().x, entry.subTextures.at(0)->getUVEnd().y));
 		}
 
 		shader->getVertexArray()->getVertexBuffers().at(1)->edit(modelInstanceData.data(), sizeof(glm::mat4) * instanceCount, 0);
-		shader->getVertexArray()->getVertexBuffers().at(2)->edit(unitInstanceData.data(), sizeof(int32_t) * instanceCount, 0);
-		shader->getVertexArray()->getVertexBuffers().at(3)->edit(tintInstanceData.data(), sizeof(uint32_t) * instanceCount, 0);
-		shader->getVertexArray()->getVertexBuffers().at(4)->edit(subTextureUVs.data(), sizeof(glm::vec4) * instanceCount, 0);
+		shader->getVertexArray()->getVertexBuffers().at(2)->edit(unit1InstanceData.data(), sizeof(int32_t) * instanceCount, 0);
+		shader->getVertexArray()->getVertexBuffers().at(3)->edit(unit2InstanceData.data(), sizeof(int32_t) * instanceCount, 0);
+		shader->getVertexArray()->getVertexBuffers().at(4)->edit(tintInstanceData.data(), sizeof(glm::vec4) * instanceCount, 0);
+		shader->getVertexArray()->getVertexBuffers().at(5)->edit(shininessInstanceData.data(), sizeof(float) * instanceCount, 0);
+		shader->getVertexArray()->getVertexBuffers().at(6)->edit(subTextureUVs.data(), sizeof(glm::vec4) * instanceCount, 0);
 	}
 
 	//! generateSkybox()
@@ -351,16 +358,36 @@ namespace Engine
 	*/
 	void Renderer3D::generateSkybox(ShaderProgram* shader, std::vector<BatchEntry3D>& batchEntries, const uint32_t instanceCount)
 	{
-		std::vector<uint32_t> tintInstanceData; //!< The tint instance data
+		std::vector<glm::vec4> tintInstanceData; //!< The tint instance data
 		std::vector<int32_t> unitInstanceData; //!< The texture unit data
 
 		for (auto& entry : batchEntries)
 		{
 			unitInstanceData.push_back(entry.cubeTextureUnits[0]);
-			tintInstanceData.push_back(MemoryUtils::pack(entry.tint));
+			tintInstanceData.push_back(entry.tint);
 		}
 
 		shader->getVertexArray()->getVertexBuffers().at(1)->edit(unitInstanceData.data(), sizeof(int32_t) * instanceCount, 0);
-		shader->getVertexArray()->getVertexBuffers().at(2)->edit(tintInstanceData.data(), sizeof(uint32_t) * instanceCount, 0);
+		shader->getVertexArray()->getVertexBuffers().at(2)->edit(tintInstanceData.data(), sizeof(glm::vec4) * instanceCount, 0);
+	}
+
+	//! generateLightSource()
+	/*
+	\param shader a ShaderProgram* - A pointer to the shader program
+	\param batchEntries a std::vector<BatchEntry3D>& - A list of batch entries
+	*/
+	void Renderer3D::generateLightSource(ShaderProgram* shader, std::vector<BatchEntry3D>& batchEntries, const uint32_t instanceCount)
+	{
+		std::vector<glm::vec4> tintInstanceData; //!< The tint instance data
+		std::vector<glm::mat4> modelInstanceData; //!< The model matrix instance data
+
+		for (auto& entry : batchEntries)
+		{
+			modelInstanceData.push_back(entry.modelMatrix);
+			tintInstanceData.push_back(entry.tint);
+		}
+
+		shader->getVertexArray()->getVertexBuffers().at(1)->edit(modelInstanceData.data(), sizeof(glm::mat4) * instanceCount, 0);
+		shader->getVertexArray()->getVertexBuffers().at(2)->edit(tintInstanceData.data(), sizeof(glm::vec4) * instanceCount, 0);
 	}
 }

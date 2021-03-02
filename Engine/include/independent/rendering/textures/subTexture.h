@@ -57,13 +57,17 @@ namespace Engine
 		inline Texture2D* getBaseTexture() { return m_baseTexture; } //!< Get the base texture
 			/*!< \return a Texture2D* - The base texture */
 
-		void setBaseTexture(Texture2D* texture); //!< Set the base texture
+		void setBaseTexture(Texture2D* texture, const glm::vec2& UVStart, const glm::vec2& UVEnd, const bool convertToBottomLeft); //!< Set the base texture
+		void setSize(const glm::ivec2& size); //!< Set the subtexture size
+		void setUVs(const glm::vec2& UVStart, const glm::vec2& UVEnd); //!< Set the subtexture UVs
 
 		const glm::vec2 transformUV(const glm::vec2& uv); //!< Transform original UVs to atlased UV
 		const std::array<int16_t, 2> transformUV(const std::array<int16_t, 2>& uv); //!< Transform original UVs to atlased UV
 
 		const int16_t transformU(const int16_t u); //!< Transform original U to atlased U
 		const int16_t transformV(const int16_t v); //!< Transform original V to atlased V
+
+		void printDetails() override; //!< Print the resource details
 	};
 }
 #endif

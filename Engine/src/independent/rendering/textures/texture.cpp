@@ -92,7 +92,7 @@ namespace Engine
 	\param textureName a const std::string& - The name of the texture
 	\param filePath a const char* - The filepath of the texture
 	\param properties a TextureProperties - The properties of the texture
-	\return an Texture2D* - The 2D texture of type defined by the graphics API chosen
+	\return a Texture2D* - The 2D texture of type defined by the graphics API chosen
 	*/
 	Texture2D* Texture2D::create(const std::string& textureName, const char* filePath, TextureProperties properties)
 	{

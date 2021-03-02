@@ -26,6 +26,7 @@ namespace Engine
 		void edit(const void* vertices, const uint32_t size, const uint32_t offset) override; //!< Edit the buffer contents
 		void bind() override; //!< Bind the buffer
 		void unbind() override; //!< Unbind the buffer
+		void printDetails() override; //!< Print the resource details
 	};
 }
 #endif

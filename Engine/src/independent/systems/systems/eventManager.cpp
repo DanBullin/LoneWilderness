@@ -52,7 +52,6 @@ namespace Engine
 	//! ~EventManager()
 	EventManager::~EventManager()
 	{
-
 	}
 
 	//! start()
@@ -62,7 +61,7 @@ namespace Engine
 		if (!s_enabled)
 		{
 			ENGINE_INFO("[EventManager::start] Starting the event manager system.");
-			s_enabled = true;
+			s_enabled = true;		
 		}
 	}
 
@@ -86,6 +85,9 @@ namespace Engine
 	{
 		if (s_enabled)
 		{
+			// Check window is valid
+			if (!window) return;
+
 			// Schedule this window for deletion
 			window->onWindowClose(e);
 		}
@@ -100,6 +102,9 @@ namespace Engine
 	{
 		if (s_enabled)
 		{
+			// Check window is valid
+			if (!window) return;
+
 			window->onWindowResize(e);
 
 			// Pass input event to layers and entities 
@@ -110,17 +115,25 @@ namespace Engine
 				{
 					for (auto& layer : scene->getLayerManager()->getLayers())
 					{
-						if (layer->getActive())
-							layer->onWindowResize(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						if (layer)
+						{
+							if (layer->getActive())
+								layer->onWindowResize(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						}
 					}
+				}
 
-					for (auto& entity : scene->getRootEntities())
+				for (auto& entity : scene->getEntities())
+				{
+					if (entity)
 					{
-						if (entity.second->containsComponent<EventListener>())
-							entity.second->onWindowResize(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						if (entity->getLayer()->getActive() && entity->containsComponent<EventListener>())
+							entity->onWindowResize(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
 					}
 				}
 			}
+			else
+				ENGINE_ERROR("[EventManager::onWindowResize] Cannot get the active scene.");
 		}
 	}
 
@@ -133,6 +146,9 @@ namespace Engine
 	{
 		if (s_enabled)
 		{
+			// Check window is valid
+			if (!window) return;
+
 			// Set this window as the focused window
 			window->onWindowFocus(e);
 			WindowManager::setFocusedWindowByName(window->getName().c_str());
@@ -145,14 +161,20 @@ namespace Engine
 				{
 					for (auto& layer : scene->getLayerManager()->getLayers())
 					{
-						if (layer->getActive())
-							layer->onWindowFocus(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						if (layer)
+						{
+							if (layer->getActive())
+								layer->onWindowFocus(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						}
 					}
+				}
 
-					for (auto& entity : scene->getRootEntities())
+				for (auto& entity : scene->getEntities())
+				{
+					if (entity)
 					{
-						if (entity.second->containsComponent<EventListener>())
-							entity.second->onWindowFocus(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						if (entity->getLayer()->getActive() && entity->containsComponent<EventListener>())
+							entity->onWindowFocus(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
 					}
 				}
 			}
@@ -168,6 +190,9 @@ namespace Engine
 	{
 		if (s_enabled)
 		{
+			// Check window is valid
+			if (!window) return;
+
 			window->onWindowLostFocus(e);
 
 			// Pass input event to layers and entities 
@@ -178,14 +203,20 @@ namespace Engine
 				{
 					for (auto& layer : scene->getLayerManager()->getLayers())
 					{
-						if (layer->getActive())
-							layer->onWindowLostFocus(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						if (layer)
+						{
+							if (layer->getActive())
+								layer->onWindowLostFocus(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						}
 					}
+				}
 
-					for (auto& entity : scene->getRootEntities())
+				for (auto& entity : scene->getEntities())
+				{
+					if (entity)
 					{
-						if (entity.second->containsComponent<EventListener>())
-							entity.second->onWindowLostFocus(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						if (entity->getLayer()->getActive() && entity->containsComponent<EventListener>())
+							entity->onWindowLostFocus(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
 					}
 				}
 			}
@@ -201,6 +232,9 @@ namespace Engine
 	{
 		if (s_enabled)
 		{
+			// Check window is valid
+			if (!window) return;
+
 			window->onWindowMoved(e);
 
 			// Pass input event to layers and entities 
@@ -211,14 +245,20 @@ namespace Engine
 				{
 					for (auto& layer : scene->getLayerManager()->getLayers())
 					{
-						if (layer->getActive())
-							layer->onWindowMoved(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						if (layer)
+						{
+							if (layer->getActive())
+								layer->onWindowMoved(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						}
 					}
+				}
 
-					for (auto& entity : scene->getRootEntities())
+				for (auto& entity : scene->getEntities())
+				{
+					if (entity)
 					{
-						if (entity.second->containsComponent<EventListener>())
-							entity.second->onWindowMoved(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						if (entity->getLayer()->getActive() && entity->containsComponent<EventListener>())
+							entity->onWindowMoved(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
 					}
 				}
 			}
@@ -234,6 +274,9 @@ namespace Engine
 	{
 		if (s_enabled && e.getKeyCode() != -1)
 		{
+			// Check window is valid
+			if (!window) return;
+
 			// Pass input event to layers and entities 
 			Scene* scene = SceneManager::getActiveScene();
 			if (scene)
@@ -242,14 +285,20 @@ namespace Engine
 				{
 					for (auto& layer : scene->getLayerManager()->getLayers())
 					{
-						if (layer->getActive())
-							layer->onKeyPress(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						if (layer)
+						{
+							if (layer->getActive())
+								layer->onKeyPress(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						}
 					}
+				}
 
-					for (auto& entity : scene->getRootEntities())
+				for (auto& entity : scene->getEntities())
+				{
+					if (entity)
 					{
-						if (entity.second->containsComponent<EventListener>())
-							entity.second->onKeyPress(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						if (entity->getLayer()->getActive() && entity->containsComponent<EventListener>())
+							entity->onKeyPress(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
 					}
 				}
 			}
@@ -265,31 +314,54 @@ namespace Engine
 	{
 		if (s_enabled)
 		{
-			if (e.getKeyCode() == Keys::ESC)
-				window->close();
+			// Check window is valid
+			if (!window) return;
 
-			if (e.getKeyCode() == Keys::F5)
-				window->setFullscreen(!window->getProperties().getFullScreen());
+			Scene* scene = SceneManager::getActiveScene();
+
+			if (!scene || !window)
+			{
+				ENGINE_ERROR("[EventManager::onKeyReleased] The current window or active scene is invalid.");
+				return;
+			}
 
 			// Pass input event to layers and entities 
-			Scene* scene = SceneManager::getActiveScene();
 			if (scene)
 			{
 				if (scene->getLayerManager())
 				{
 					for (auto& layer : scene->getLayerManager()->getLayers())
 					{
-						if (layer->getActive())
-							layer->onKeyRelease(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						if (layer)
+						{
+							if (layer->getActive())
+								layer->onKeyRelease(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						}
 					}
+				}
 
-					for (auto& entity : scene->getRootEntities())
+				for (auto& entity : scene->getEntities())
+				{
+					if (entity)
 					{
-						if (entity.second->containsComponent<EventListener>())
-							entity.second->onKeyRelease(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						if (entity->getLayer()->getActive() && entity->containsComponent<EventListener>())
+							entity->onKeyRelease(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
 					}
 				}
 			}
+
+			if (e.getKeyCode() == Keys::ESC)
+			{
+				if (SceneManager::getScene("mainMenu"))
+				{
+					SceneManager::setActiveScene("mainMenu", false);
+					window->setCursorInputMode(CursorInputMode::Visible);
+				}
+				else ENGINE_ERROR("No main menu to return to!");
+			}
+ 
+			if (e.getKeyCode() == Keys::F5)
+				window->setFullscreen(!window->getProperties().getFullScreen()); // Toggle Fullscreen
 		}
 	}
 
@@ -302,6 +374,8 @@ namespace Engine
 	{
 		if (s_enabled)
 		{
+			// Check window is valid
+			if (!window) return;
 		}
 	}
 
@@ -314,22 +388,32 @@ namespace Engine
 	{
 		if (s_enabled && e.getButton() != -1)
 		{
+			// Check window is valid
+			if (!window) return;
+
 			// Pass input event to layers and entities 
 			Scene* scene = SceneManager::getActiveScene();
+			// Pass input event to layers and entities 
 			if (scene)
 			{
 				if (scene->getLayerManager())
 				{
 					for (auto& layer : scene->getLayerManager()->getLayers())
 					{
-						if (layer->getActive())
-							layer->onMousePress(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						if (layer)
+						{
+							if (layer->getActive())
+								layer->onMousePress(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						}
 					}
+				}
 
-					for (auto& entity : scene->getRootEntities())
+				for (auto& entity : scene->getEntities())
+				{
+					if (entity)
 					{
-						if (entity.second->containsComponent<EventListener>())
-							entity.second->onMousePress(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						if (entity->getLayer()->getActive() && entity->containsComponent<EventListener>())
+							entity->onMousePress(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
 					}
 				}
 			}
@@ -345,22 +429,32 @@ namespace Engine
 	{
 		if (s_enabled)
 		{
+			// Check window is valid
+			if (!window) return;
+
 			// Pass input event to layers and entities 
 			Scene* scene = SceneManager::getActiveScene();
+			// Pass input event to layers and entities 
 			if (scene)
 			{
 				if (scene->getLayerManager())
 				{
 					for (auto& layer : scene->getLayerManager()->getLayers())
 					{
-						if (layer->getActive())
-							layer->onMouseRelease(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						if (layer)
+						{
+							if (layer->getActive())
+								layer->onMouseRelease(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						}
 					}
+				}
 
-					for (auto& entity : scene->getRootEntities())
+				for (auto& entity : scene->getEntities())
+				{
+					if (entity)
 					{
-						if (entity.second->containsComponent<EventListener>())
-							entity.second->onMouseRelease(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						if (entity->getLayer()->getActive() && entity->containsComponent<EventListener>())
+							entity->onMouseRelease(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
 					}
 				}
 			}
@@ -376,25 +470,35 @@ namespace Engine
 	{
 		if (s_enabled)
 		{
+			// Check window is valid
+			if (!window) return;
+
 			// Update event data and mouse position change
 			if (window == WindowManager::getFocusedWindow()) calculateMouseOffset(e);
 
 			// Pass input event to layers and entities 
 			Scene* scene = SceneManager::getActiveScene();
+			// Pass input event to layers and entities 
 			if (scene)
 			{
 				if (scene->getLayerManager())
 				{
 					for (auto& layer : scene->getLayerManager()->getLayers())
 					{
-						if (layer->getActive())
-							layer->onMouseMoved(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						if (layer)
+						{
+							if (layer->getActive())
+								layer->onMouseMoved(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						}
 					}
+				}
 
-					for (auto& entity : scene->getRootEntities())
+				for (auto& entity : scene->getEntities())
+				{
+					if (entity)
 					{
-						if (entity.second->containsComponent<EventListener>())
-							entity.second->onMouseMoved(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						if (entity->getLayer()->getActive() && entity->containsComponent<EventListener>())
+							entity->onMouseMoved(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
 					}
 				}
 			}
@@ -410,22 +514,32 @@ namespace Engine
 	{
 		if (s_enabled)
 		{
+			// Check window is valid
+			if (!window) return;
+
 			// Pass input event to layers and entities 
 			Scene* scene = SceneManager::getActiveScene();
+			// Pass input event to layers and entities 
 			if (scene)
 			{
 				if (scene->getLayerManager())
 				{
 					for (auto& layer : scene->getLayerManager()->getLayers())
 					{
-						if (layer->getActive())
-							layer->onMouseScrolled(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						if (layer)
+						{
+							if (layer->getActive())
+								layer->onMouseScrolled(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						}
 					}
+				}
 
-					for (auto& entity : scene->getRootEntities())
+				for (auto& entity : scene->getEntities())
+				{
+					if (entity)
 					{
-						if (entity.second->containsComponent<EventListener>())
-							entity.second->onMouseScrolled(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
+						if (entity->getLayer()->getActive() && entity->containsComponent<EventListener>())
+							entity->onMouseScrolled(e, TimerSystem::getStoredTime("FPS"), TimerSystem::getStoredTime("TotalTime"));
 					}
 				}
 			}
@@ -444,40 +558,61 @@ namespace Engine
 			// Update FPS and total time
 			updateTime();
 
-			// Call entity preupdate
-			for (auto& entity : SceneManager::getActiveScene()->getRootEntities())
+			// Check active scene & window
+			Scene* scene = SceneManager::getActiveScene();
+			if (!scene)
 			{
-				if (entity.second->containsComponent<EventListener>())
-					entity.second->onPreUpdate(timestep, totalTime);
+				ENGINE_ERROR("[EventManager::onUpdate] Invalid active scene.");
+				return;
+			}
+			Window* window = WindowManager::getFocusedWindow();
+			if (!window)
+			{
+				ENGINE_ERROR("[EventManager::onUpdate] Invalid focused window.");
+				return;
+			}
+
+			// Call entity preupdate
+			for (auto& entity : scene->getEntities())
+			{
+				if (entity)
+				{
+					if (entity->containsComponent<EventListener>())
+						entity->onPreUpdate(timestep, totalTime);
+				}
 			}
 
 			// Use input poller to check for input and send event
 			for (auto key : InputPoller::isAnyKeyPressed())
 			{
 				KeyPressedEvent keyE(key, 1);
-				onKeyPressed(WindowManager::getFocusedWindow(), keyE);
+				onKeyPressed(window, keyE);
 			}
 
 			for (auto button : InputPoller::isAnyMouseButtonPressed())
 			{
 				MousePressedEvent mouseE(button);
-				onMousePressed(WindowManager::getFocusedWindow(), mouseE);
+				onMousePressed(window, mouseE);
 			}
 
 			// Update Active scene
-			if (SceneManager::getActiveScene()) SceneManager::getActiveScene()->onUpdate(timestep, totalTime);
-
+			if (scene) scene->onUpdate(timestep, totalTime);
+		
 			// Update all registered windows
 			for (auto& window : WindowManager::getRegisteredWindows())
 				if (window.second)
 					window.second->onUpdate(timestep, totalTime);
 
 			// Call entity postupdate
-			for (auto& entity : SceneManager::getActiveScene()->getRootEntities())
+			for (auto& entity : scene->getEntities())
 			{
-				if (entity.second->containsComponent<EventListener>())
-					entity.second->onPostUpdate(timestep, totalTime);
+				if (entity)
+				{
+					if (entity->containsComponent<EventListener>())
+						entity->onPostUpdate(timestep, totalTime);
+				}
 			}
+
 		}
 	}
 
@@ -526,7 +661,7 @@ namespace Engine
 			ENGINE_TRACE("===========");
 		}
 		else
-			ENGINE_ERROR("[WindowManager::printEventData] This system has not been enabled.");
+			ENGINE_ERROR("[EventManager::printEventData] This system has not been enabled.");
 	}
 
 	//! updateTime

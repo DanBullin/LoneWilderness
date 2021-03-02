@@ -12,7 +12,7 @@
 #include "independent/systems/system.h"
 #include "independent/systems/components/window.h"
 
-namespace Engine 
+namespace Engine
 {
 	/*! \class WindowManager
 	* \brief A window manager which manages windows
@@ -29,16 +29,16 @@ namespace Engine
 		void stop() override; //!< Stop the system
 
 		static const bool windowExists(const std::string& windowName); //!< Check if the window name exists
-		static void registerWindow(const char* name, const WindowProperties& props); //!< Register a window with the window manager
-		static void deregisterWindow(const char* name); //!< Deregister a window with the window manager
+		static Window* registerWindow(const std::string& name, const WindowProperties& props); //!< Register a window with the window manager
+		static void deregisterWindow(const std::string& name); //!< Deregister a window with the window manager
 		static void deregisterScheduledWindows(); //!< Deregister all windows scheduled for deletion
 
-		static Window* getWindowByName(const char* name); //!< Get a window by name
+		static Window* getWindowByName(const std::string& name); //!< Get a window by name
 		static Window* getFocusedWindow(); //!< Get the window which is currently focused
 		static std::map<std::string, Window*>& getRegisteredWindows(); //!< Get a list of all registered windows
 
-		static void setFocusedWindowByName(const char* windowName); //!< Set a window to be focused
-		static void setFullscreenWindowByName(const char* windowName); //!< Set a window to be fullscreen
+		static void setFocusedWindowByName(const std::string& windowName); //!< Set a window to be focused
+		static void setFullscreenWindowByName(const std::string& windowName); //!< Set a window to be fullscreen
 
 		static void printWindowManagerDetails(); //!< Print manager details
 	};

@@ -69,7 +69,6 @@ namespace Engine
 	void Layer::setDisplayed(const bool display)
 	{
 		m_display = display;
-		getLayerManager()->getParentScene()->setNewEntitiesFlag(true);
 	}
 
 	//! getActive()
@@ -120,11 +119,14 @@ namespace Engine
 		std::vector<Entity*> list;
 
 		// Go through all the entities
-		for (auto& entity : getLayerManager()->getParentScene()->getRootEntities())
+		for (auto& entity : getLayerManager()->getParentScene()->getEntities())
 		{
 			// If the layer the entity is on matches this layer
-			if (entity.second->getLayer() == this)
-				list.emplace_back(entity.second);
+			if (entity)
+			{
+				if (entity->getLayer() == this)
+					list.emplace_back(entity);
+			}
 		}
 		return list;
 	}
@@ -138,14 +140,17 @@ namespace Engine
 		std::vector<Entity*> list;
 
 		// Go through all the entities
-		for (auto& entity : getLayerManager()->getParentScene()->getRootEntities())
+		for (auto& entity : getLayerManager()->getParentScene()->getEntities())
 		{
 			// If the layer the entity is on matches this layer
-			if (entity.second->getLayer() == this)
+			if (entity)
 			{
-				// If the entity contains some rendering component
-				if (entity.second->containsComponent<MeshRender3D>() || entity.second->containsComponent<MeshRender2D>() || entity.second->containsComponent<Text>())
-					list.emplace_back(entity.second);
+				if (entity->getLayer() == this)
+				{
+					// If the entity contains some rendering component
+					if (entity->containsComponent<MeshRender3D>() || entity->containsComponent<MeshRender2D>() || entity->containsComponent<Text>())
+						list.emplace_back(entity);
+				}
 			}
 		}
 		return list;

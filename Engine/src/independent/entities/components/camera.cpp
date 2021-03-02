@@ -7,8 +7,10 @@
 */
 #include "independent/entities/components/camera.h"
 #include "independent/entities/entity.h"
-#include "independent/systems/systemManager.h"
+#include "independent/systems/systems/windowManager.h"
+#include "independent/systems/systems/log.h"
 #include "independent/utils/mathUtils.h"
+#include "independent/systems/components/scene.h"
 
 namespace Engine
 {
@@ -16,8 +18,7 @@ namespace Engine
 	/*!
 	\param cameraData a const CameraData& - The camera's data
 	*/
-	Camera::Camera(const CameraData& cameraData)
-		: EntityComponent(ComponentType::Camera), m_cameraData(cameraData)
+	Camera::Camera(const CameraData& cameraData) : EntityComponent(ComponentType::Camera), m_cameraData(cameraData)
 	{
 		// Update all the applicable camera vectors
 		m_mainCamera = false;
@@ -28,7 +29,11 @@ namespace Engine
 	//! ~Camera()
 	Camera::~Camera()
 	{
-		if (m_skybox) delete m_skybox;
+		// Skybox uses raw pointers, so delete it
+		if(m_skybox)
+			delete m_skybox;
+
+		m_skybox = nullptr;
 	}
 
 	//! onAttach()
@@ -56,25 +61,10 @@ namespace Engine
 	*/
 	void Camera::setClearColour(const glm::vec4& colour)
 	{
-		m_clearColour = colour;
-	}
-
-	//! getSkybox()
-	/*!
-	\return a Skybox* - A pointer to the skybox
-	*/
-	Skybox* Camera::getSkybox()
-	{
-		return m_skybox;
-	}
-
-	//! setSkybox()
-	/*!
-	\param skybox a Skybox* - A pointer to the skybox
-	*/
-	void Camera::setSkybox(Skybox* skybox)
-	{
-		m_skybox = skybox;
+		if (colour.r >= 0.f && colour.g >= 0.f && colour.b >= 0.f && colour.a >= 0.f)
+			m_clearColour = colour;
+		else
+			ENGINE_ERROR("Camera::setClearColour] An invalid colour was provided. Cannot set.");
 	}
 
 	//! getViewMatrix()
@@ -84,10 +74,24 @@ namespace Engine
 	*/
 	glm::mat4 Camera::getViewMatrix(const bool perspective)
 	{
-		if (perspective)
-			return glm::lookAt(getParent()->getComponent<Transform3D>()->getPosition() + m_cameraData.Position, getParent()->getComponent<Transform3D>()->getPosition() + m_cameraData.Position + m_cameraData.Front, m_cameraData.Up);
+		Entity* parent = getParent();
+
+		if (parent)
+		{
+			Transform* trans = parent->getComponent<Transform>();
+			if (trans)
+			{
+				if (perspective)
+					return glm::lookAt(trans->getPosition(), trans->getPosition() + m_cameraData.Front, m_cameraData.Up);
+				else
+					return glm::mat4(1.f);
+			}
+			else
+				ENGINE_ERROR("[Camera::getViewMatrix] The entity this camera is attached to does not have a transform. Entity Name: {0}.", parent->getName());
+		}
 		else
-			return glm::mat4(1.f);
+			ENGINE_ERROR("[Camera::getViewMatrix] The entity the camera is attached to is invalid. Camera Name: {0}.", m_name);
+		return glm::mat4(1.f);
 	}
 
 	//! getProjectionMatrix()
@@ -97,37 +101,39 @@ namespace Engine
 	*/
 	glm::mat4 Camera::getProjectionMatrix(const bool perspective)
 	{
-		if (perspective)
-			return glm::perspective(glm::radians(m_cameraData.Zoom), WindowManager::getFocusedWindow()->getProperties().getAspectRatio(), m_projection.NearPlane, m_projection.FarPlane);
+		Window* window = WindowManager::getFocusedWindow();
+
+		if (window)
+		{
+			if (perspective)
+				return glm::perspective(glm::radians(m_cameraData.Zoom), window->getProperties().getAspectRatio(), m_projection.NearPlane, m_projection.FarPlane);
+			else
+				return glm::ortho(0.f, m_projection.Right, m_projection.Bottom, 0.f);
+		}
 		else
-			return glm::ortho(0.f, m_projection.Right, m_projection.Bottom, 0.f);
-	}
-
-	//! getLocalPosition()
-	/*!
-	\return a const glm::vec3& - The camera's local position
-	*/
-	const glm::vec3& Camera::getLocalPosition() const
-	{
-		return m_cameraData.Position;
-	}
-
-	//! setLocalPosition()
-	/*!
-	\param pos a const glm::vec3 - The new position
-	*/
-	void Camera::setLocalPosition(const glm::vec3 pos)
-	{
-		m_cameraData.Position = pos;
+			ENGINE_ERROR("[Camera::getProjectionMatrix] There is no currently focused window. Camera Name: {0}.", m_name);
+		return glm::ortho(0.f, m_projection.Right, m_projection.Bottom, 0.f);
 	}
 
 	//! getWorldPosition()
 	/*!
 	\return a const glm::vec3 - The world position of the camera
 	*/
-	const glm::vec3 Camera::getWorldPosition()
+	glm::vec3 Camera::getWorldPosition()
 	{
-		return getParent()->getComponent<Transform3D>()->getPosition() + m_cameraData.Position;
+		Entity* parent = getParent();
+
+		if (parent)
+		{
+			Transform* trans = parent->getComponent<Transform>();
+			if (trans)
+				return trans->getPosition();
+			else
+				ENGINE_ERROR("[Camera::getWorldPosition] The entity the camera is attached to does not have a transform. Entity Name: {0}.", parent->getName());
+		}
+		else
+			ENGINE_ERROR("[Camera::getWorldPosition] The entity the camera is attached to is invalid. Camera Name: {0}.", m_name);
+		return glm::vec3(0.f, 0.f, 0.f);
 	}
 
 	//! setProjection()
@@ -184,6 +190,34 @@ namespace Engine
 		return m_mainCamera;
 	}
 
+	//! setSkybox()
+	/*!
+	\param skybox a Skybox* - Pointer to attatched skybox
+	*/
+	void Camera::setSkybox(Skybox* skybox)
+	{
+		Entity* parent = getParent();
+
+		if (skybox)
+			m_skybox = skybox;
+		else
+		{
+			if (parent)
+				ENGINE_ERROR("[Camera::setSkybox] An invalid skybox was provided. Entity Name: {0}", parent->getName());
+			else
+				ENGINE_ERROR("[Camera::setSkybox] An invalid skybox was provided. No entity attached.");
+		}
+	}
+	
+	//! getSkybox()
+	/*!
+	\return a Skybox* - Pointer to the attached skybox
+	*/
+	Skybox* Camera::getSkybox()
+	{
+		return m_skybox;
+	}
+
 	//! onUpdate()
 	/*!
 	\param timestep a const float - The time step
@@ -193,72 +227,17 @@ namespace Engine
 	{
 	}
 
-	//! move()
-	/*!
-	\param direction a const CameraMovement - The direction to move
-	\param deltaTime a const float - Delta time which is a measure of how long it took to render last frame
-	*/
-	void Camera::move(const CameraMovement direction, const float deltaTime)
-	{
-		// Translate the camera
-		Transform3D* trans = getParent()->getComponent<Transform3D>();
-
-		float velocity = m_cameraData.MovementSpeed * deltaTime;
-		if (direction == CameraMovement::FORWARD)
-			trans->setPosition(trans->getPosition() += m_cameraData.Front * velocity);
-		if (direction == CameraMovement::BACKWARD)
-			trans->setPosition(trans->getPosition() -= m_cameraData.Front * velocity);
-		if (direction == CameraMovement::LEFT)
-			trans->setPosition(trans->getPosition() -= m_cameraData.Right * velocity);
-		if (direction == CameraMovement::RIGHT)
-			trans->setPosition(trans->getPosition() += m_cameraData.Right * velocity);
-	}
-
-	//! rotate()
-	/*!
-	\param xoffset a float - The yaw rotation offset
-	\param yoffset a float - The pitch rotation offset
-	\param constrainPitch a bool - Constrain the pitch?
-	*/
-	void Camera::rotate(float xoffset, float yoffset, bool constrainPitch)
-	{
-		// Rotate the camera
-		xoffset *= m_cameraData.MouseSensitivity;
-		yoffset *= m_cameraData.MouseSensitivity;
-
-		m_cameraData.Yaw += xoffset;
-		m_cameraData.Pitch += yoffset;
-
-		// Makes sure that when pitch is out of bounds, screen doesn't get flipped
-		if (constrainPitch)
-		{
-			if (m_cameraData.Pitch > 89.0f)
-				m_cameraData.Pitch = 89.0f;
-			if (m_cameraData.Pitch < -89.0f)
-				m_cameraData.Pitch = -89.0f;
-		}
-
-		// update Front, Right and Up Vectors using the updated Euler angles
-		updateCameraVectors();
-	}
-
-	//! zoom()
-	/*!
-	\param yoffset a float - The pitch rotation offset
-	*/
-	void Camera::zoom(float yoffset)
-	{
-		// Affect the zoom
-		m_cameraData.Zoom -= (float)yoffset;
-		if (m_cameraData.Zoom < 1.0f)
-			m_cameraData.Zoom = 1.0f;
-		if (m_cameraData.Zoom > 45.0f)
-			m_cameraData.Zoom = 45.0f;
-	}
-
 	//! printComponentDetails()
 	void Camera::printComponentDetails()
 	{
+		Entity* parent = getParent();
+
+		if (!parent)
+		{
+			ENGINE_ERROR("[Camera::printComponentDetails] This component does not have a valid parent entity. Component Name: {0}.", m_name);
+			return;
+		}
+
 		glm::mat4 perpViewMatrix = getViewMatrix(true);
 		glm::mat4 perpProjMatrix = getProjectionMatrix(true);
 		glm::mat4 orthoViewMatrix = getViewMatrix(false);
@@ -269,17 +248,29 @@ namespace Engine
 		auto dArray3 = MathUtils::convertMat4ToArray(orthoProjectionMatrix);
 
 		ENGINE_TRACE("==========================================");
-		ENGINE_TRACE("Camera Details for Entity: {0}", getParent()->getName());
+		ENGINE_TRACE("Camera Details for Entity: {0}", parent->getName());
 		ENGINE_TRACE("==========================================");
-		ENGINE_TRACE("Local Position: {0}, {1}, {2}.", m_cameraData.Position.x, m_cameraData.Position.y, m_cameraData.Position.z);
 		ENGINE_TRACE("World Position: {0}, {1}, {2}.", getWorldPosition().x, getWorldPosition().y, getWorldPosition().z);
 		ENGINE_TRACE("Front: {0}, {1}, {2}.", m_cameraData.Front.x, m_cameraData.Front.y, m_cameraData.Front.z);
 		ENGINE_TRACE("Yaw: {0}.", m_cameraData.Yaw);
 		ENGINE_TRACE("Pitch: {0}.", m_cameraData.Pitch);
-		ENGINE_TRACE("Speed: {0}.", m_cameraData.MovementSpeed);
-		ENGINE_TRACE("Sensitivity: {0}.", m_cameraData.MouseSensitivity);
 		ENGINE_TRACE("Zoom: {0}.", m_cameraData.Zoom);
 		ENGINE_TRACE("Main Camera: {0}.", m_mainCamera);
+		ENGINE_TRACE("Clear Colour: {0}, {1}, {2}, {3}.", m_clearColour.r, m_clearColour.g, m_clearColour.b, m_clearColour.a);
+		
+		if (m_skybox)
+		{
+			Material* mat = m_skybox->getMaterial();
+			Model3D* model = m_skybox->getModel();
+
+			if(mat && model)
+				ENGINE_TRACE("Skybox: Model: {0}, Material: {1}.", model->getName(), mat->getName());
+			else
+				ENGINE_ERROR("[Camera::printComponentDetails] This skybox has an invalid material or model. Entity Name: {0}.", parent->getName());
+		}
+		else
+			ENGINE_TRACE("Skybox: No Skybox attached.");
+
 		ENGINE_TRACE("Perspective View Matrix: {0}, {1}, {2}, {3}", dArray[0], dArray[1], dArray[2], dArray[3]);
 		ENGINE_TRACE("Perspective View Matrix: {0}, {1}, {2}, {3}", dArray[4], dArray[5], dArray[6], dArray[7]);
 		ENGINE_TRACE("Perspective View Matrix: {0}, {1}, {2}, {3}", dArray[8], dArray[9], dArray[10], dArray[11]);

@@ -61,18 +61,27 @@ namespace Engine
 	//! createScene()
 	/*!
 	\param sceneName a const std::string& - The name of the scene to load
+	\param sceneFolderPath a const std::string& - The file path to the folder of the scene
 	\return a Scene* - A pointer to the new scene
 	*/
-	Scene* SceneManager::createScene(const std::string& sceneName)
+	Scene* SceneManager::createScene(const std::string& sceneName, const std::string& sceneFolderPath)
 	{
 		if (s_enabled)
 		{
+			// Prevent empty scene names or folder paths
+			if (sceneName == "" || sceneFolderPath == "")
+			{
+				ENGINE_ERROR("[SceneManager::createScene] You can't provide an empty scene name or empty folder path. Name: {0}, Folder Path: {1}.", sceneName, sceneFolderPath);
+				return nullptr;
+			}
+
 			// Check if the scene name is already taken
 			if (!sceneExists(sceneName))
 			{
 				// Scene name is free, so load the scene
-				Scene* newScene = new Scene(sceneName.c_str());
-				s_scenesList[sceneName] = newScene;
+				Scene* newScene = new Scene(sceneName, sceneFolderPath);
+				
+				if(newScene) s_scenesList[sceneName] = newScene;
 	
 				// If this is the first scene to be loaded, set it as the active scene
 				if (s_scenesList.size() == 1)
@@ -103,10 +112,13 @@ namespace Engine
 				if (sceneExists(sceneName))
 				{
 					// Only if the scene to be deleted is NOT the current active scene
-					if (sceneName != s_activeSceneName || s_scenesList.size() != 1)
+					if (sceneName != s_activeSceneName)
+					{
+						// Now we tag the scene to be deleted, the delete occurs after all rendering and updates, see Application.cpp
 						s_scenesList[sceneName]->destroy();
+					}
 					else
-						ENGINE_ERROR("[SceneManager::deleteScene] Cannot destroy scene as it is currently set as the active scene or is the last scene available. Name: {0}.", sceneName);
+						ENGINE_ERROR("[SceneManager::deleteScene] Cannot destroy scene as it is currently set as the active scene. Name: {0}.", sceneName);
 				}
 				else
 					ENGINE_ERROR("[SceneManager::deleteScene] Cannot destroy scene as name cannot be found. Name: {0}", sceneName);
@@ -116,7 +128,9 @@ namespace Engine
 				// Name is blank, delete all scenes
 				for (auto& scene : s_scenesList)
 				{
-					delete scene.second;
+					if(scene.second)
+						delete scene.second;
+
 					scene.second = nullptr;
 				}
 
@@ -133,15 +147,20 @@ namespace Engine
 	{
 		if (s_enabled)
 		{
+			// Go through each scene
 			for (auto it = s_scenesList.cbegin(); it != s_scenesList.cend(); )
 			{
-				if (it->second->getDestroyed())
+				// If the scene is valid
+				if (it->second)
 				{
-					delete it->second;
-					s_scenesList.erase(it++);
+					if (it->second->getDestroyed())
+					{
+						delete it->second;
+						s_scenesList.erase(it++);
+					}
+					else
+						++it;
 				}
-				else
-					++it;
 			}
 		}
 		else
@@ -150,16 +169,18 @@ namespace Engine
 
 	//! getScene()
 	/*!
-	\param sceneName a const char* - The name of the scene to get
+	\param sceneName a const std::string& - The name of the scene to get
 	\return a Scene* - A pointer to the scene
 	*/
-	Scene* SceneManager::getScene(const char* sceneName)
+	Scene* SceneManager::getScene(const std::string& sceneName)
 	{
 		if (s_enabled)
 		{
 			// Find the scene by name
 			if (sceneExists(sceneName))
 				return s_scenesList[sceneName];
+			else
+				ENGINE_ERROR("[SceneManager::getScene] The scene was not found. Scene Name: {0}.", sceneName);
 		}
 		else
 			ENGINE_ERROR("[SceneManager::getScene] This system has not been enabled.");
@@ -173,9 +194,6 @@ namespace Engine
 	*/
 	std::map<std::string, Scene*>& SceneManager::getSceneList()
 	{
-		if (!s_enabled)
-			ENGINE_ERROR("[SceneManager::getSceneList] This system has not been enabled.");
-
 		// Check if scene list is empty
 		if (s_scenesList.size() == 0)
 			ENGINE_ERROR("[SceneManager::getScenes] There are no scenes in the scene list.");
@@ -192,18 +210,27 @@ namespace Engine
 		Scene* scene = nullptr;
 
 		if (s_enabled)
-			scene = getScene(s_activeSceneName.c_str());
+			scene = getScene(s_activeSceneName);
 		else
 			ENGINE_ERROR("[SceneManager::getActiveScene] This system has not been enabled.");
 		return scene;
 	}
 
+	//! getActiveSceneName()
+	/*!
+	\return a const std::string& - The name of the active scene
+	*/
+	const std::string& SceneManager::getActiveSceneName()
+	{
+		return s_activeSceneName;
+	}
+
 	//! setActiveScene()
 	/*!
-	\param sceneName a const char* - The name of the scene to set as active
+	\param sceneName a const std::string& - The name of the scene to set as active
 	\param deleteOldScene a const bool - Delete the old active scene
 	*/
-	void SceneManager::setActiveScene(const char* sceneName, const bool deleteOldScene)
+	void SceneManager::setActiveScene(const std::string& sceneName, const bool deleteOldScene)
 	{
 		if (s_enabled)
 		{
@@ -213,12 +240,20 @@ namespace Engine
 				//	Check to make sure the we're not setting the active scene as the current active scene
 				if (s_activeSceneName != sceneName)
 				{
+					// Check if the new scene is valid
+					if (!s_scenesList[sceneName])
+					{
+						ENGINE_ERROR("[SceneManager::setActiveScene] The new scene is not a valid scene. Name: {0}", sceneName);
+					}
+
 					std::string oldSceneName = s_activeSceneName;
 					s_activeSceneName = sceneName;
 
+					if (getActiveScene()) getActiveScene()->setEntityListUpdated(true);
+
 					// Destroy the old active scene if needed
 					if (deleteOldScene)
-						destroyScene(oldSceneName.c_str());
+						destroyScene(oldSceneName);
 				}
 				else
 					ENGINE_ERROR("[SceneManager::setActiveScene] This scene is already set as the active scene. Name: {0}", sceneName);
@@ -252,7 +287,10 @@ namespace Engine
 		if (s_enabled)
 		{
 			for (auto& scene : s_scenesList)
-				scene.second->printSceneDetails();
+			{
+				if(scene.second)
+					scene.second->printSceneDetails();
+			}
 		}
 		else
 			ENGINE_ERROR("[SceneManager::printScenesDetails] This system has not been enabled.");

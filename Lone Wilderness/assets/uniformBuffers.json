@@ -1,0 +1,27 @@
+{
+	"uniformBuffers": 
+	[
+		{ 
+			"name": "CameraUBO",
+			"layout": [ "u_view", "Mat4", "u_projection", "Mat4", "u_viewPos", "Float3" ]
+		},
+		{ 
+			"name": "BloomUBO",
+			"layout": [ "u_horizontal", "Bool", "u_enableBloom", "Bool" ]
+		},
+		{ 
+			"name": "DirLightUBO",
+			"layout": [ "DirLight", "DirectionalLight" ]
+		},
+		{ 
+			"name": "PointLightUBO",
+			"layout": [ "PointLight0", "PointLight", "PointLight1", "PointLight", "PointLight2", "PointLight", "PointLight3", "PointLight", "PointLight4", "PointLight",
+						"PointLight5", "PointLight", "PointLight6", "PointLight", "PointLight7", "PointLight", "PointLight8", "PointLight", "PointLight9", "PointLight" ]
+		},
+		{ 
+			"name": "SpotLightUBO",
+			"layout": [ "SpotLight0", "SpotLight", "SpotLight1", "SpotLight", "SpotLight2", "SpotLight", "SpotLight3", "SpotLight", "SpotLight4", "SpotLight",
+						"SpotLight5", "SpotLight", "SpotLight6", "SpotLight", "SpotLight7", "SpotLight", "SpotLight8", "SpotLight", "SpotLight9", "SpotLight" ]
+		}
+	]	
+}

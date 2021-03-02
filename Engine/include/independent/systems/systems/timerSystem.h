@@ -12,7 +12,7 @@
 #include "independent/systems/system.h"
 #include "independent/systems/components/timer.h"
 
-namespace Engine 
+namespace Engine
 {
 	/*! \class TimerSystem
 	* \brief A timer system which handles timers and stores recorded times

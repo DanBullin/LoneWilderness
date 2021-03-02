@@ -20,6 +20,7 @@ class Cyborg : public Entity
 public:
 	Cyborg(); //!< Constructor
 	~Cyborg(); //!< Destructor
+	void onPreUpdate(const float timestep, const float totalTime) override; //!< Call before game update
 	void onKeyRelease(KeyReleasedEvent& e, const float timestep, const float totalTime) override; //!< Call upon key release
 };
 #endif

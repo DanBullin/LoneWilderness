@@ -10,7 +10,7 @@
 
 #include <inttypes.h>
 
-namespace Engine 
+namespace Engine
 {
 	/*! \enum EventType
 	* \brief An enum for all different event types

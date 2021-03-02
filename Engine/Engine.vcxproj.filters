@@ -177,27 +177,6 @@
     <ClCompile Include="src\independent\layers\layerManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\independent\entities\components\camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\independent\entities\components\eventListener.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\independent\entities\components\meshRender2D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\independent\entities\components\meshRender3D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\independent\entities\components\text.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\independent\entities\components\transform2D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\independent\entities\components\transform3D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\independent\entities\entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -231,10 +210,43 @@
     <ClCompile Include="src\independent\rendering\renderPasses\renderPass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\independent\rendering\renderPasses\passes\menuPass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\independent\rendering\renderPasses\passes\fourthPass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\independent\rendering\renderPasses\passes\thirdPass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\independent\entities\components\camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\independent\entities\components\characterController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\independent\entities\components\eventListener.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\independent\entities\components\light.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\independent\entities\components\meshRender2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\independent\entities\components\meshRender3D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\independent\entities\components\text.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\independent\entities\components\transform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\independent\entities\components\components\skybox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\independent\rendering\renderPasses\passes\menuPass.cpp">
+    <ClCompile Include="src\independent\entities\components\components\skybox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -458,12 +470,6 @@
     <ClInclude Include="include\independent\entities\components\text.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\independent\entities\components\transform2D.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\independent\entities\components\transform3D.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\independent\entities\entityComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -494,10 +500,28 @@
     <ClInclude Include="include\independent\rendering\renderers\renderer2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\independent\rendering\renderPasses\passes\menuPass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\independent\entities\components\characterController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\independent\entities\components\light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\independent\entities\components\transform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\independent\rendering\renderPasses\passes\fourthPass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\independent\rendering\renderPasses\passes\thirdPass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\independent\entities\components\components\skybox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\independent\rendering\renderPasses\passes\menuPass.h">
+    <ClInclude Include="include\independent\entities\components\components\skybox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

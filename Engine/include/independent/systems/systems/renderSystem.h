@@ -24,6 +24,7 @@ namespace Engine
 	{
 	private:
 		static bool s_enabled; //!< Is this system enabled
+		static bool s_renderersInitialised; //!< Are the renderers initialised
 		static TextureUnitManager* s_unitManager; //!< The texture unit manager
 		static std::array<int32_t, 16> s_unit; //!< The texture units
 	public:

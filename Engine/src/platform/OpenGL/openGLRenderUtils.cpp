@@ -6,10 +6,9 @@
 *
 */
 #include "platform/OpenGL/openGLRenderUtils.h"
-#include <glad/glad.h>
-
+#include "independent/systems/systems/resourceManager.h"
 #include "independent/systems/systems/log.h"
-#include "independent/rendering/geometry/indirectBuffer.h"
+#include <glad/glad.h>
 
 namespace Engine
 {
@@ -58,11 +57,15 @@ namespace Engine
 		{
 			glEnable(GL_CULL_FACE);
 			s_faceCulling = true;
+			if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages)) 
+				ENGINE_TRACE("[OpenGLRenderUtils::enableFaceCulling] Enabled face culling.");
 		}
 		else if (!enable && s_depthTesting)
 		{
 			glDisable(GL_CULL_FACE);
 			s_faceCulling = false;
+			if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
+				ENGINE_TRACE("[OpenGLRenderUtils::enableFaceCulling] Disabled face culling.");
 		}
 	}
 
@@ -78,11 +81,15 @@ namespace Engine
 		{
 			glEnable(GL_DEPTH_TEST);
 			s_depthTesting = true;
+			if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
+				ENGINE_TRACE("[OpenGLRenderUtils::enableDepthTesting] Enabled depth testing.");
 		}
 		else if (!enable && s_depthTesting)
 		{
 			glDisable(GL_DEPTH_TEST);
 			s_depthTesting = false;
+			if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
+				ENGINE_TRACE("[OpenGLRenderUtils::enableDepthTesting] Disabled depth testing.");
 		}
 	}
 
@@ -98,11 +105,15 @@ namespace Engine
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			s_wireframeMode = true;
+			if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
+				ENGINE_TRACE("[OpenGLRenderUtils::enableWireframe] Enabled wireframe mode.");
 		}
 		else if (!enable && s_wireframeMode)
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			s_wireframeMode = false;
+			if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
+				ENGINE_TRACE("[OpenGLRenderUtils::enableWireframe] Disabled wireframe mode.");
 		}
 	}
 
@@ -118,11 +129,15 @@ namespace Engine
 		{
 			glDepthMask(GL_TRUE);
 			s_depthWriting = true;
+			if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
+				ENGINE_TRACE("[OpenGLRenderUtils::enableDepthWriting] Enabled depth writing.");
 		}
 		else if (!enable && s_depthTesting)
 		{
 			glDepthMask(GL_FALSE);
 			s_depthWriting = false;
+			if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
+				ENGINE_TRACE("[OpenGLRenderUtils::enableDepthWriting] Disabled depth writing.");
 		}
 	}
 
@@ -137,11 +152,15 @@ namespace Engine
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			s_blending = true;
+			if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
+				ENGINE_TRACE("[OpenGLRenderUtils::enableBlending] Enabled blending.");
 		}
 		else if (!enable && s_blending)
 		{
 			glDisable(GL_BLEND);
 			s_blending = false;
+			if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
+				ENGINE_TRACE("[OpenGLRenderUtils::enableBlending] Disabled blending.");
 		}
 	}
 
@@ -154,6 +173,8 @@ namespace Engine
 	{
 		glClearColor(colour.r, colour.g, colour.b, colour.a);
 		glClear(RenderParameters::toGLType(buffers));
+		if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
+			ENGINE_TRACE("[OpenGLRenderUtils::clearBuffers] Clearing buffers to: {0}, {1}, {2}, {3}.", colour.r, colour.g, colour.b, colour.a);
 	}
 
 	//! setDepthComparison()
@@ -163,6 +184,8 @@ namespace Engine
 	void OpenGLRenderUtils::setDepthComparison(const RenderParameter comparison)
 	{
 		glDepthFunc(RenderParameters::toGLType(comparison));
+		if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
+			ENGINE_TRACE("[OpenGLRenderUtils::setDepthComparison] Setting depth comparison to {0}.", static_cast<uint32_t>(comparison));
 	}
 
 	//! resizeViewport()
@@ -175,6 +198,8 @@ namespace Engine
 	void OpenGLRenderUtils::setViewport(const int x, const int y, const int width, const int height)
 	{
 		glViewport(x, y, width, height);
+		if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
+			ENGINE_TRACE("[OpenGLRenderUtils::setViewport] Resizing viewport. X: {0}, Y: {1}, Width: {2}, Height: {3}.", x, y, width, height);
 	}
 
 	//! draw()
@@ -184,6 +209,8 @@ namespace Engine
 	void OpenGLRenderUtils::draw(const uint32_t drawCount)
 	{
 		glDrawElements(GL_TRIANGLES, drawCount, GL_UNSIGNED_INT, nullptr);
+		if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
+			ENGINE_TRACE("[OpenGLRenderUtils::draw] Drawing elements. Count: {0}.", drawCount);
 	}
 
 	//! drawMultiIndirect()
@@ -193,5 +220,7 @@ namespace Engine
 	void OpenGLRenderUtils::drawMultiIndirect(const uint32_t commandsSize)
 	{
 		glMultiDrawElementsIndirect(GL_TRIANGLES, GL_UNSIGNED_INT, (GLvoid*)0, commandsSize, 0);
+		if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
+			ENGINE_TRACE("[OpenGLRenderUtils::drawMultiIndirect] Drawing multi elements. Count: {0}.", commandsSize);
 	}
 }

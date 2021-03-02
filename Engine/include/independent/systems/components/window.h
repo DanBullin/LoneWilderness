@@ -14,7 +14,7 @@
 #include "independent/events/events.h"
 #include "independent/core/destroyable.h"
 
-namespace Engine 
+namespace Engine
 {
 	/*! \class Window
 	* \brief Base windows class
@@ -99,7 +99,7 @@ namespace Engine
 
 		virtual void printWindowDetails() = 0; //!< Print the details of the window with logger
 
-		static Window* create(const char* windowName, const WindowProperties& properties = WindowProperties()); //!< Create a window
+		static Window* create(const std::string& windowName, const WindowProperties& properties = WindowProperties()); //!< Create a window
 	};
 }
 #endif

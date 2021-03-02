@@ -22,13 +22,13 @@ namespace Engine
 	*/
 	ChronoTimer::ChronoTimer(const char* timerName) : m_timerName(timerName)
 	{
-		ENGINE_INFO("[ChronoTimer::ChronoTimer] Creating a timer named: {0}.", m_timerName);
+		ENGINE_TRACE("[ChronoTimer::ChronoTimer] Creating a timer named: {0}.", m_timerName);
 	}
 
 	//! ~ChronoTimer()
 	ChronoTimer::~ChronoTimer()
 	{
-		ENGINE_INFO("[ChronoTimer::~ChronoTimer] Destroying a timer named: {0}.", m_timerName);
+		ENGINE_TRACE("[ChronoTimer::~ChronoTimer] Destroying a timer named: {0}.", m_timerName);
 	}
 
 	//! getElapsedTime()

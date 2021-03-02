@@ -31,15 +31,16 @@ namespace Engine
 		void stop() override; //!< Stop the system
 
 		static bool sceneExists(const std::string& sceneName); //!< Check whether scene name exists
-		static Scene* createScene(const std::string& sceneName); //!< Create a new scene
+		static Scene* createScene(const std::string& sceneName, const std::string& sceneFolderPath); //!< Create a new scene
 		static void destroyScene(const std::string& sceneName = ""); //!< Destory a scene
 		static void destroyScheduledScenes(); //!< Destroy all scheduled scenes
 
-		static Scene* getScene(const char* sceneName); //!< Get a scene by name
+		static Scene* getScene(const std::string& sceneName); //!< Get a scene by name
 		static std::map<std::string, Scene*>& getSceneList(); //!< Get a list of all the scenes
 
 		static Scene* getActiveScene(); //!< Get the active scene
-		static void setActiveScene(const char* sceneName, const bool deleteOldScene); //!< Set the active scene
+		static const std::string& getActiveSceneName(); //!< Get the active scene name held in this class
+		static void setActiveScene(const std::string& sceneName, const bool deleteOldScene); //!< Set the active scene
 
 		static void printSceneManagerDetails(); //!< Print scene manager details
 		static void printScenesDetails(); //!< Print scenes details

@@ -1,0 +1,30 @@
+{
+	"vertexArrays": 
+	[
+		{ 
+			"name": "QuadArray",
+			"vertexBuffers": [ "QuadVBuffer" ],
+			"indexBuffer": "QuadIBuffer"
+		},
+		{ 
+			"name": "QuadMultiTexturedArray",
+			"vertexBuffers": [ "QuadVMultiTexturesBuffer" ],
+			"indexBuffer": "QuadIBuffer"
+		},
+		{ 
+			"name": "vertexArray1",
+			"vertexBuffers": [ "Vertex3DBuffer", "ModelInstanceBuffer", "TexUnit1InstanceBuffer", "TexUnit2InstanceBuffer", "TintInstanceBuffer", "ShininessInstanceBuffer", "UV1InstanceBuffer" ],
+			"indexBuffer": "IndexBuffer3D"
+		},
+		{ 
+			"name": "vertexArray2",
+			"vertexBuffers": [ "Vertex3DBuffer", "TexUnit1InstanceBuffer", "TintInstanceBuffer" ],
+			"indexBuffer": "IndexBuffer3D"
+		},
+		{ 
+			"name": "lightSourceArray",
+			"vertexBuffers": [ "Vertex3DBuffer", "ModelInstanceBuffer", "TintInstanceBuffer" ],
+			"indexBuffer": "IndexBuffer3D"
+		}
+	]	
+}

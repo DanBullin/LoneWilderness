@@ -10,15 +10,35 @@
 
 #include "independent/core/common.h"
 
-namespace Engine 
+namespace Engine
 {
 	/*! \enum CursorInputMode
 	* \brief The type of cursor input for the window
 	*/
 	enum class CursorInputMode
 	{
-		Visible, Hidden = 1, Disabled
+		Visible = 0, Hidden = 1, Disabled = 2
 	};
+
+	//! toCursorInputMode()
+	/*!
+	\param a const uint32_t - An unsigned integer value representing the input mode
+	\return a CursorInputMode - The type of cursor input for the window
+	*/
+	static CursorInputMode toCursorInputMode(const uint32_t value)
+	{
+		switch (value)
+		{
+			case 0:
+				return CursorInputMode::Visible;
+			case 1:
+				return CursorInputMode::Hidden;
+			case 2:
+				return CursorInputMode::Disabled;
+			default:
+				return CursorInputMode::Visible;
+		}
+	}
 
 	/*! \class WindowProperties
 	* \brief Contains the properties of the window
@@ -39,14 +59,14 @@ namespace Engine
 		bool m_hidden;					   //!< Is the window hidden
 		CursorInputMode m_cursorInputMode; //!< The cursor input mode (Visible, hidden, etc)
 	public:
-		WindowProperties(const char* title = "Default", const uint32_t width = 800, const uint32_t height = 600,
+		WindowProperties(const std::string& title = "Default", const uint32_t width = 800, const uint32_t height = 600,
 			const glm::ivec2& position = glm::ivec2(100, 100), const bool vSync = true, const bool fullScreen = false,
 			const bool minimised = false, const float opacity = 1.f, const bool focused = true, const bool hide = false,
 			const CursorInputMode mode = CursorInputMode::Visible); //!< Constructor
 		~WindowProperties(); //!< Destructor
 
 		const std::string& getTitle() const; //!< Get the title of the window
-		void setTitle(const char* title); //!< Set the title of the window
+		void setTitle(const std::string& title); //!< Set the title of the window
 
 		const uint32_t getWidth() const; //!< Get the width of the window
 		const float getWidthf() const; //!< Get the width of the window as a float

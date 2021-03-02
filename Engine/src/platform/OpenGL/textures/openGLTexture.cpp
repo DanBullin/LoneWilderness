@@ -7,6 +7,7 @@
 */
 #include <glad/glad.h>
 #include "independent/systems/systems/log.h"
+#include "independent/systems/systems/resourceManager.h"
 #include "platform/OpenGL/textures/openGLTexture.h"
 #include <stb_image.h>
 
@@ -32,6 +33,34 @@ namespace Engine
 			case TextureParameter::NearestMipmapLinear: return GL_NEAREST_MIPMAP_LINEAR;
 			case TextureParameter::LinearMipmapLinear: return GL_LINEAR_MIPMAP_LINEAR;
 			default: return GL_INVALID_ENUM;
+		}
+	}
+
+	//! toString()
+	/*!
+	\param texParam a const uint32_t - The texture parameter's integer value
+	\return a std::string - The string literal of the texture parameter
+	*/
+	static std::string toString(const uint32_t texParam)
+	{
+		switch (texParam)
+		{
+			case GL_FLOAT:
+				return "Float";
+			case GL_UNSIGNED_BYTE:
+				return "Unsigned Byte";
+			case GL_RGBA:
+				return "RGBA";
+			case GL_RGB:
+				return "RGB";
+			case GL_RED:
+				return "R";
+			case GL_RGBA16F:
+				return "RGBA16F";
+			case GL_DEPTH_COMPONENT:
+				return "Depth";
+			default:
+				return "None";
 		}
 	}
 
@@ -81,6 +110,15 @@ namespace Engine
 			dataFormat = GL_RGBA;
 			type = GL_UNSIGNED_BYTE;
 		}
+		else if (channels == 5)
+		{
+			internalFormat = GL_RGBA16F;
+			dataFormat = GL_RGBA;
+			type = GL_FLOAT;
+		}
+
+		m_pixelDataType = type;
+		m_internalFormat = internalFormat;
 
 		// Load data to GPU
 		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, m_textureProperties.Width, m_textureProperties.Height, 0, dataFormat, type, data);
@@ -101,6 +139,8 @@ namespace Engine
 		: Texture2D(textureName, properties)
 	{
 		int width, height, channels;
+		m_pixelDataType = 0;
+		m_internalFormat = 0;
 
 		// Should we flip the UVs?
 		if (m_textureProperties.FlipUVs)
@@ -130,13 +170,16 @@ namespace Engine
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& textureName, const TextureProperties& properties, const uint32_t channels, unsigned char* data)
 		: Texture2D(textureName, properties)
 	{
+		m_pixelDataType = 0;
+		m_internalFormat = 0;
 		init(data, channels);
 	}
 
 	//! ~OpenGLTexture2D()
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
-		ENGINE_INFO("[OpenGLTexture2D::~OpenGLTexture2D] Deleting texture with ID: {0}, Name: {1}.", m_textureID, m_name);
+		if (ResourceManager::getConfigValue(Config::PrintResourcesInDestructor))
+			ENGINE_INFO("[OpenGLTexture2D::~OpenGLTexture2D] Deleting texture with ID: {0}, Name: {1}.", m_textureID, m_name);
 		glDeleteTextures(1, &m_textureID);
 	}
 
@@ -159,6 +202,9 @@ namespace Engine
 			else if (m_channels == 4)
 				glTextureSubImage2D(m_textureID, 0, offsetX, offsetY, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		}
+
+		if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages)) 
+			ENGINE_TRACE("OpenGLTexture2D::edit] Editing texture {0} from offset: {1}, {2} with size of: {3}, {4}.", m_name, offsetX, offsetY, width, height);
 	}
 
 	//! bind()
@@ -169,6 +215,25 @@ namespace Engine
 	{
 		glActiveTexture(GL_TEXTURE0 + slot);
 		glBindTexture(GL_TEXTURE_2D, m_textureID);
+	}
+
+	//! printDetails()
+	void OpenGLTexture2D::printDetails()
+	{
+		ENGINE_TRACE("Texture ID: {0}.", m_textureID);
+		ENGINE_TRACE("Number of Channels: {0}.", m_channels);
+		ENGINE_TRACE("Internal Format: {0}.", toString(m_internalFormat));
+		ENGINE_TRACE("Pixel Data type: {0}.", toString(m_pixelDataType));
+		ENGINE_TRACE("Number of Channels: {0}.", m_channels);
+		ENGINE_TRACE("Width: {0}.", m_textureProperties.Width);
+		ENGINE_TRACE("Height: {0}.", m_textureProperties.Height);
+		ENGINE_TRACE("WrapS: {0}.", toString(m_textureProperties.WrapS));
+		ENGINE_TRACE("WrapT: {0}.", toString(m_textureProperties.WrapT));
+		ENGINE_TRACE("WrapR: {0}.", toString(m_textureProperties.WrapR));
+		ENGINE_TRACE("MinFilter: {0}.", toString(m_textureProperties.MinFilter));
+		ENGINE_TRACE("MaxFilter: {0}.", toString(m_textureProperties.MaxFilter));
+		ENGINE_TRACE("Gamma Correct: {0}.", m_textureProperties.GammaCorrect);
+		ENGINE_TRACE("Flip UVs: {0}.", m_textureProperties.FlipUVs);
 	}
 
 	//! OpenGLCubeMapTexture()
@@ -189,6 +254,7 @@ namespace Engine
 		glBindTexture(GL_TEXTURE_CUBE_MAP, m_textureID);
 
 		int width, height, channels;
+		m_folderPath = folderPath;
 
 		// Loop through each face for the cubemap
 		for (unsigned int i = 0; i < faces.size(); i++)
@@ -225,7 +291,8 @@ namespace Engine
 	//! ~OpenGLCubeMapTexture()
 	OpenGLCubeMapTexture::~OpenGLCubeMapTexture()
 	{
-		ENGINE_INFO("[OpenGLCubeMapTexture::~OpenGLCubeMapTexture] Deleting cubemap texture with ID: {0}, Name: {1}.", m_textureID, m_name);
+		if (ResourceManager::getConfigValue(Config::PrintResourcesInDestructor))
+			ENGINE_INFO("[OpenGLCubeMapTexture::~OpenGLCubeMapTexture] Deleting texture with ID: {0}, Name: {1}.", m_textureID, m_name);
 		glDeleteTextures(1, &m_textureID);
 	}
 
@@ -237,5 +304,12 @@ namespace Engine
 	{
 		glActiveTexture(GL_TEXTURE0 + slot);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, m_textureID);
+	}
+
+	//! printDetails()
+	void OpenGLCubeMapTexture::printDetails()
+	{
+		ENGINE_TRACE("Texture ID: {0}.", m_textureID);
+		ENGINE_TRACE("Folder Path: {0}.", m_folderPath);
 	}
 }

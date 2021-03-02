@@ -1,15 +1,14 @@
 /*! \file skybox.h
 *
-* \brief A Skybox class
+* \brief A skybox component that is attached to the main camera
 *
-* \author: Daniel Bullin
+* \author Daniel Bullin
 *
 */
 #ifndef SKYBOX_H
 #define SKYBOX_H
 
-#include "independent/rendering/geometry/model3D.h"
-#include "independent/rendering/materials/material.h"
+#include "independent/entities/entityComponent.h"
 
 namespace Engine
 {

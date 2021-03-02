@@ -52,6 +52,40 @@ namespace Engine
 		return TextureParameter::None;
 	}
 
+	//! toString()
+	/*!
+	\param texParam a const TextureParameter - The texture parameter enum value
+	\return a std::string - The string literal of the texture parameter
+	*/
+	static std::string toString(const TextureParameter texParam)
+	{
+		switch (texParam)
+		{
+			case TextureParameter::ClampToBorder:
+				return "ClampToBorder";
+			case TextureParameter::ClampToEdge:
+				return "ClampToEdge";
+			case TextureParameter::Repeat:
+				return "Repeat";
+			case TextureParameter::MirroredRepeat:
+				return "MirroredRepeat";
+			case TextureParameter::Nearest:
+				return "Nearest";
+			case TextureParameter::Linear:
+				return "Linear";
+			case TextureParameter::NearestMipmapNearest:
+				return "NearestMipmapNearest";
+			case TextureParameter::LinearMipmapNearest:
+				return "LinearMipmapNearest";
+			case TextureParameter::NearestMipmapLinear:
+				return "NearestMipmapLinear";
+			case TextureParameter::LinearMipmapLinear:
+				return "LinearMipmapLinear";
+			default:
+				return "None";
+		}
+	}
+
 	/*! \struct TextureProperties
 	* \brief All texture properties can be configured by creating an instance of this struct and passing it to the relevant create functions
 	*/
@@ -92,6 +126,7 @@ namespace Engine
 		virtual ~Texture(); //!< Destructor
 		virtual void bind(const uint32_t slot = 0) = 0; //!< Bind the texture to a texture unit
 			/*!< \param slot a const uint32_t - Bind the texture to texture unit */
+		virtual void printDetails() override = 0; //!< Print the resource details
 		inline const uint32_t getID() const { return m_textureID; } //!< Get the texture ID
 			/*!< \return a const uint32_t - The ID of the texture */
 	};
@@ -104,6 +139,8 @@ namespace Engine
 	protected:
 		uint32_t m_channels; //!< The number of channels in the pixel data
 		TextureProperties m_textureProperties; //!< The texture properties
+		uint32_t m_internalFormat; //!< The internal format of the texture
+		uint32_t m_pixelDataType; //!< The data type of the pixel data
 	public:
 		static Texture2D* create(const std::string& textureName, const TextureProperties& properties, const uint32_t channels, unsigned char* data); //!< Create a texture providing the pixel data
 		static Texture2D* create(const std::string& textureName, const char* filePath, TextureProperties properties = TextureProperties()); //!< Create a texture from file
@@ -125,6 +162,7 @@ namespace Engine
 
 		virtual void bind(const uint32_t slot = 0) = 0; //!< Bind the texture to a texture unit
 			/*!< \param slot a const uint32_t - Bind the texture to texture unit */
+		virtual void printDetails() override = 0; //!< Print the resource details
 	};
 
 	/*! \class CubeMapTexture
@@ -132,6 +170,8 @@ namespace Engine
 	*/
 	class CubeMapTexture : public Texture
 	{
+	protected:
+		std::string m_folderPath; //!< The folder path containing the textures
 	public:
 		static CubeMapTexture* create(const std::string& textureName, const std::string& folderPath, const std::string& fileType); //!< Create a cubemap texture from file
 
@@ -140,6 +180,7 @@ namespace Engine
 
 		virtual void bind(const uint32_t slot = 0) = 0; //!< Bind the texture to a texture unit
 			/*!< \param slot a const uint32_t - Bind the texture to texture unit */
+		virtual void printDetails() override = 0; //!< Print the resource details
 	};
 }
 #endif

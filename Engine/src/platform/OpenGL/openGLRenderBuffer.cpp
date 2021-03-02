@@ -8,6 +8,7 @@
 #include "platform/OpenGL/openGLRenderBuffer.h"
 #include <glad/glad.h>
 #include "independent/systems/systems/log.h"
+#include "independent/systems/systems/resourceManager.h"
 
 namespace Engine
 {
@@ -18,6 +19,12 @@ namespace Engine
 	*/
 	OpenGLRenderBuffer::OpenGLRenderBuffer(const AttachmentType type, const glm::ivec2& size)
 	{
+		if (size.x < 0 || size.y < 0)
+		{
+			ENGINE_INFO("[OpenGLRenderBuffer::OpenGLRenderBuffer] Invalid size: {0}, {1}.", size.x, size.y);
+			return;
+		}
+
 		// Gen buffers
 		glGenRenderbuffers(1, &m_bufferID);
 		glBindRenderbuffer(GL_RENDERBUFFER, m_bufferID);
@@ -45,7 +52,8 @@ namespace Engine
 	OpenGLRenderBuffer::~OpenGLRenderBuffer()
 	{
 		// Delete the buffer
-		ENGINE_INFO("[OpenGLRenderBuffer::~OpenGLRenderBuffer] Deleting Renderbuffer with ID: {0}", m_bufferID);
+		if (ResourceManager::getConfigValue(Config::PrintResourcesInDestructor))
+			ENGINE_INFO("[OpenGLRenderBuffer::~OpenGLRenderBuffer] Deleting Renderbuffer with ID: {0}", m_bufferID);
 		glDeleteRenderbuffers(1, &m_bufferID);
 	}
 }

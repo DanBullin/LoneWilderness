@@ -6,6 +6,7 @@
 *
 */
 #include "independent/systems/systems/fontManager.h"
+#include "independent/systems/systems/resourceManager.h"
 #include "independent/systems/systems/log.h"
 
 namespace Engine
@@ -24,7 +25,6 @@ namespace Engine
 	//! ~FontManager
 	FontManager::~FontManager()
 	{
-
 	}
 
 	//! start()
@@ -42,8 +42,13 @@ namespace Engine
 			// Set the first and last chars to load (ASCII values)
 			s_firstGlyph = 32;
 			s_lastGlyph = 126;
-
+			
 			s_enabled = true;
+
+			// Load all fonts stored in config file
+			nlohmann::json configData = ResourceManager::getJSON("assets/config.json")["fonts"];
+			for (auto& font : configData)
+				FontManager::loadFont(font["name"].get<std::string>(), font["filePath"].get<std::string>(), font["characterSize"]);
 		}
 	}
 
@@ -58,7 +63,10 @@ namespace Engine
 			if (s_fontsList.size() > 0)
 			{
 				for (auto& fontElement : s_fontsList)
-					delete fontElement.second;
+				{
+					if(fontElement.second)
+						delete fontElement.second;
+				}
 
 				s_fontsList.clear();
 			}
@@ -78,14 +86,19 @@ namespace Engine
 		if (s_enabled)
 		{
 			// Check if the font name is already taken
-			if (s_fontsList.find(fontName) == s_fontsList.end())
+			if (s_fontsList.find(fontName) == s_fontsList.end() && fontName != "" && fontFilePath != "")
 			{
 				// Font name is free, so load the font
 				Font* newFont = new Font(s_freetype, fontName.c_str(), fontFilePath.c_str(), pixelSize, s_firstGlyph, s_lastGlyph);
-				s_fontsList[fontName] = newFont;
+
+				// If the font was not loaded correctly, it will be a valid pointer but no name
+				if (newFont->getName() == "")
+					delete newFont;
+				else
+					s_fontsList[fontName] = newFont;
 			}
 			else
-				ENGINE_ERROR("[FontManager::loadFont] Font name already exists, cannot load the new font. Name: {0}", fontName);
+				ENGINE_ERROR("[FontManager::loadFont] Font name already exists or an invalid name was given, cannot load the new font. Name: {0}, Path: {1}.", fontName, fontFilePath);
 		}
 		else
 			ENGINE_ERROR("[FontManager::loadFont] This system has not been enabled.");
@@ -102,7 +115,9 @@ namespace Engine
 			// Check if the font name exists
 			if (s_fontsList.find(fontName) != s_fontsList.end())
 			{
-				delete s_fontsList[fontName];
+				if(s_fontsList[fontName])
+					delete s_fontsList[fontName];
+
 				s_fontsList.erase(fontName);
 			}
 			else
@@ -122,9 +137,7 @@ namespace Engine
 		if (s_enabled)
 		{
 			if (s_fontsList.find(fontName) != s_fontsList.end())
-			{
 				return s_fontsList[fontName];
-			}
 			else
 				ENGINE_ERROR("[FontManager::getFont] Cannot find the font. Name: {0}", fontName);
 		}

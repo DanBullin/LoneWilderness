@@ -18,14 +18,41 @@ namespace Engine
 	//! MenuPass()
 	MenuPass::MenuPass()
 	{
-		m_frameBuffer = ResourceManager::getResourceAndRef<FrameBuffer>("frameBuffer1");
+		m_frameBuffer = ResourceManager::getResource<FrameBuffer>("defaultFBO");
 	}
 
 	//! ~MenuPass()
 	MenuPass::~MenuPass()
 	{
-		m_frameBuffer->decreaseCount();
 		m_frameBuffer = nullptr;
+	}
+
+	//! prepare()
+	/*
+	\param stage a const uint32_t - The current stage of the renderer
+	*/
+	void MenuPass::prepare(const uint32_t stage)
+	{
+		// Functions to call to prepare before or after rendering calls
+		switch (stage)
+		{
+			case 0:
+			{
+				RenderUtils::clearBuffers(RenderParameter::COLOR_AND_DEPTH_BUFFER_BIT, m_attachedScene->getMainCamera()->getClearColour());
+
+				RenderUtils::enableBlending(true);
+
+				UniformBuffer* cameraUBO = ResourceManager::getResource<UniformBuffer>("CameraUBO");
+				cameraUBO->uploadData("u_view", static_cast<void*>(&m_attachedScene->getMainCamera()->getViewMatrix(false)));
+				cameraUBO->uploadData("u_projection", static_cast<void*>(&m_attachedScene->getMainCamera()->getProjectionMatrix(false)));
+				break;
+			}
+			case 1:
+			{
+				RenderUtils::enableBlending(false);
+				break;
+			}
+		}
 	}
 
 	//! onRender()
@@ -34,31 +61,18 @@ namespace Engine
 	*/
 	void MenuPass::onRender(std::vector<Entity*>& entities)
 	{
-		/////
-		// 2D Rendering
-		//
-
 		m_frameBuffer->bind();
 
-		RenderUtils::clearBuffers(RenderParameter::COLOR_AND_DEPTH_BUFFER_BIT, m_attachedScene->getMainCamera()->getClearColour());
-
-		RenderUtils::enableBlending(true);
-
-		UniformBuffer* cameraUBO = ResourceManager::getResource<UniformBuffer>("CameraUBO");
-		cameraUBO->uploadData("u_view", static_cast<void*>(&m_attachedScene->getMainCamera()->getViewMatrix(false)));
-		cameraUBO->uploadData("u_projection", static_cast<void*>(&m_attachedScene->getMainCamera()->getProjectionMatrix(false)));
+		prepare(0);
 
 		Renderer2D::begin(nullptr);
 
 		for (auto& entity : entities)
-		{
-			if (entity->getDisplay())
-				entity->onRender(Renderers::Renderer2D);
-		}
+			if (entity->getLayer()->getDisplayed() && entity->getDisplay()) entity->onRender(Renderers::Renderer2D);
 
 		Renderer2D::end();
 
-		RenderUtils::enableBlending(false);
+		prepare(1);
 	}
 
 	//! getFrameBuffer()

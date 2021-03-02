@@ -70,6 +70,7 @@ namespace Engine
 			/*!< \return a const std::vector<T>& - The elements in the buffer layout */
 		void addElement(const T element); //!< Add an element to the layout
 		void recalculateStride(const uint32_t overrideStride = 0); //!< Recalculate the stride
+		void calculateUniformBufferLayout(); //!< Calculate uniform buffer layout using std140 memory layout
 		inline typename std::vector<T>::iterator begin() { return m_elements.begin(); } //!< Get the begin iterator for the elements
 			/*!< \return a std::vector<T>::iterator - The begin iterator of the elements list */
 		inline typename std::vector<T>::iterator end() { return m_elements.end(); } //!< Get the end iterator for the elements
@@ -91,6 +92,31 @@ namespace Engine
 		{
 			element.m_offset = offset;
 			offset += element.m_size;
+		}
+
+		if (m_stride == 0) { m_stride = offset; }
+	}
+
+	template<class T>
+	//! calculateUniformBufferLayout()
+	void BufferLayout<T>::calculateUniformBufferLayout()
+	{
+		uint32_t offset = 0;
+
+		// Calculate the offset for each element and the overall stride
+		for (auto& element : m_elements)
+		{
+			uint32_t remainder = 0;
+
+			if(offset != 0)
+				remainder = offset % SDT::getAlignmentOffset(element.m_dataType);
+			
+			if (remainder == 0)
+				element.m_offset = offset;
+			else
+				element.m_offset = offset - remainder + SDT::getAlignmentOffset(element.m_dataType);
+
+			offset = element.m_offset + element.m_size;
 		}
 
 		if (m_stride == 0) { m_stride = offset; }
@@ -125,7 +151,7 @@ namespace Engine
 			for (auto& element : m_elements)
 				stride += element.m_size;
 
-			m_stride = stride;
+			m_stride = m_elements.back().m_offset + m_elements.back().m_size;
 		}
 	}
 

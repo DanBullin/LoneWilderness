@@ -91,7 +91,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>NG_PLATFORM_WINDOWS;NG_DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NG_PLATFORM_WINDOWS;NG_DEBUG;NG_DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -121,7 +121,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>NG_PLATFORM_WINDOWS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NG_PLATFORM_WINDOWS;NG_DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -134,9 +134,12 @@
   <ItemGroup>
     <ClInclude Include="include\entities\cyborg.h" />
     <ClInclude Include="include\entities\FPSCounter.h" />
+    <ClInclude Include="include\entities\lightTest.h" />
     <ClInclude Include="include\entities\mainMenu\menuText.h" />
     <ClInclude Include="include\entities\player.h" />
     <ClInclude Include="include\entities\rectangleShape.h" />
+    <ClInclude Include="include\entities\sign.h" />
+    <ClInclude Include="include\entities\street.h" />
     <ClInclude Include="include\gameApplication.h" />
     <ClInclude Include="include\layers\defaultLayer.h" />
     <ClInclude Include="include\layers\UILayer.h" />
@@ -145,9 +148,12 @@
   <ItemGroup>
     <ClCompile Include="src\entities\cyborg.cpp" />
     <ClCompile Include="src\entities\FPSCounter.cpp" />
+    <ClCompile Include="src\entities\lightTest.cpp" />
     <ClCompile Include="src\entities\mainMenu\menuText.cpp" />
     <ClCompile Include="src\entities\player.cpp" />
     <ClCompile Include="src\entities\rectangleShape.cpp" />
+    <ClCompile Include="src\entities\sign.cpp" />
+    <ClCompile Include="src\entities\street.cpp" />
     <ClCompile Include="src\gameApplication.cpp" />
     <ClCompile Include="src\layers\defaultLayer.cpp" />
     <ClCompile Include="src\layers\UILayer.cpp" />

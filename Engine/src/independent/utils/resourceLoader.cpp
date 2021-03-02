@@ -15,35 +15,57 @@ namespace Engine
 {
 	//! getSize()
 	/*!
-	\param className a const std::string& - The name of the class
+	\param dataTypeName a const std::string& - The name of the data type
 	\return a uint32_t - The size of the class in bytes
 	*/
-	uint32_t ResourceLoader::getSize(const std::string& className)
+	uint32_t ResourceLoader::getSize(const std::string& dataTypeName)
 	{
-		// Only support the needed classes
-		if (className == "Vertex3D") return static_cast<uint32_t>(sizeof(Vertex3D));
-		else if (className == "Vertex2D") return static_cast<uint32_t>(sizeof(Vertex2D));
-		else if (className == "Mat4") return static_cast<uint32_t>(sizeof(glm::mat4));
-		else if (className == "Vec4") return static_cast<uint32_t>(sizeof(glm::vec4));
-		else if (className == "uint32_t") return static_cast<uint32_t>(sizeof(uint32_t));
-		else if (className == "int32_t") return static_cast<uint32_t>(sizeof(int32_t));
+		// This function returns the size of the data type which matches the string literal passed (Used because files need a way to reference a data type)
+		// This is required for objects which require the size of a data type
+		// Update this function when necassary
+
+		if (dataTypeName == "Vertex3D")
+			return static_cast<uint32_t>(sizeof(Vertex3D));
+		else if (dataTypeName == "Vertex2D")
+			return static_cast<uint32_t>(sizeof(Vertex2D));
+		else if (dataTypeName == "Vertex2DMultiTextured")
+			return static_cast<uint32_t>(sizeof(Vertex2DMultiTextured));
+		else if (dataTypeName == "Mat4")
+			return static_cast<uint32_t>(sizeof(glm::mat4));
+		else if (dataTypeName == "Vec4")
+			return static_cast<uint32_t>(sizeof(glm::vec4));
+		else if (dataTypeName == "uint32_t")
+			return static_cast<uint32_t>(sizeof(uint32_t));
+		else if (dataTypeName == "int32_t")
+			return static_cast<uint32_t>(sizeof(int32_t));
+		else if (dataTypeName == "float")
+			return static_cast<uint32_t>(sizeof(float));
 		return 0;
 	}
 
-	//! getSize()
+	//! getCapacity()
 	/*!
 	\param capacityLocation a const std::string& - The name of the type of capacity to apply
 	\return a uint32_t - The size of the class in bytes
 	*/
 	uint32_t ResourceLoader::getCapacity(const std::string& capacityLocation)
 	{
-		// Only support the certain capacitys
-		if (capacityLocation == "VertexCapacity3D") return ResourceManager::getConfigValue(ConfigData::VertexCapacity3D);
-		else if (capacityLocation == "VertexCapacity2D") return ResourceManager::getConfigValue(ConfigData::BatchCapacity2D) * 4;
-		else if (capacityLocation == "IndexCapacity3D") return ResourceManager::getConfigValue(ConfigData::IndexCapacity3D);
-		else if (capacityLocation == "IndexCapacity2D") return ResourceManager::getConfigValue(ConfigData::BatchCapacity2D) * 6;
-		else if (capacityLocation == "Batch3DCapacity") return ResourceManager::getConfigValue(ConfigData::BatchCapacity3D);
-		else if (capacityLocation == "Batch2DCapacity") return ResourceManager::getConfigValue(ConfigData::BatchCapacity2D);
+		// This function returns the capacity values which are stored as config values in the resource manager
+		// This is required for objects which require some capacity size
+		// Update this function when necassary
+
+		if (capacityLocation == "VertexCapacity3D")
+			return ResourceManager::getConfigValue(Config::VertexCapacity3D);
+		else if (capacityLocation == "VertexCapacity2D")
+			return ResourceManager::getConfigValue(Config::BatchCapacity2D) * 4; // 4 vertices per quad
+		else if (capacityLocation == "IndexCapacity3D")
+			return ResourceManager::getConfigValue(Config::IndexCapacity3D);
+		else if (capacityLocation == "IndexCapacity2D")
+			return ResourceManager::getConfigValue(Config::BatchCapacity2D) * 6; // 6 indices per quad
+		else if (capacityLocation == "Batch3DCapacity")
+			return ResourceManager::getConfigValue(Config::BatchCapacity3D); // Number of 3D Submissions
+		else if (capacityLocation == "Batch2DCapacity")
+			return ResourceManager::getConfigValue(Config::BatchCapacity2D); // Number of quads
 		return 0;
 	}
 
@@ -54,6 +76,8 @@ namespace Engine
 	void ResourceLoader::loadVertexBuffers(const std::string& filePath)
 	{
 		nlohmann::json jsonData = ResourceManager::getJSON(filePath);
+
+		ENGINE_INFO("[ResourceLoader::loadVertexBuffers] Loading Vertex Buffers");
 
 		// Go through each buffer and load it
 		for (auto& buffer : jsonData["vertexBuffers"])
@@ -75,18 +99,34 @@ namespace Engine
 				VertexBufferLayout layout = { {}, getSize(buffer["dataType"].get<std::string>()) };
 				for (int i = 0; i < buffer["layout"].size();)
 				{
+					ShaderDataType sdt = SDT::convertStringToSDT(buffer["layout"][i].get<std::string>());
+					if (sdt == ShaderDataType::None)
+						ENGINE_ERROR("[ResourceLoader::loadVertexBuffers] Invalid SDT provided. Name: {0}", name);
+
 					// Format is: [TYPE], [NORMALISED], [TYPE], [NORMALISED], etc
-					layout.addElement({ SDT::convertStringToSDT(buffer["layout"][i].get<std::string>()) , buffer["layout"][i + 1].get<bool>(), buffer["layout"][i + 2].get<uint32_t>() });
+					layout.addElement({ sdt , buffer["layout"][i + 1].get<bool>(), buffer["layout"][i + 2].get<uint32_t>() });
 					i += 3;
+				}
+
+				uint32_t size = getSize(buffer["dataType"].get<std::string>());
+				if (size == 0)
+				{
+					ENGINE_ERROR("[ResourceLoader::loadVertexBuffers] Invalid size provided. Name: {0}", name);
+				}
+
+				uint32_t capacity = getCapacity(buffer["size"].get<std::string>());
+				if (capacity == 0)
+				{
+					ENGINE_ERROR("[ResourceLoader::loadVertexBuffers] Invalid capacity provided. Name: {0}", name);
 				}
 
 				// Need to work out the size, we'll have to compare the string literals provided
 				// First we need to get the datatype we'll be storing in the buffer to work out its size
-				newBuffer = VertexBuffer::create(name, nullptr, getSize(buffer["dataType"].get<std::string>()) * getCapacity(buffer["size"].get<std::string>()), layout, usage);
+				newBuffer = VertexBuffer::create(name, nullptr, size * capacity, layout, usage);
 
 				// Register buffer with resource manager
 				ResourceManager::registerResource(name, newBuffer);
-				ENGINE_INFO("[ResourceLoader::loadVertexBuffers] Loaded {0} from {1}.", name, filePath);
+				ENGINE_TRACE("Loaded {0} from {1}.", name, filePath);
 			}
 			else
 				ENGINE_ERROR("[ResourceLoader::loadVertexBuffers] Resource name already taken. Name: {0}", name);
@@ -101,6 +141,8 @@ namespace Engine
 	{
 		nlohmann::json jsonData = ResourceManager::getJSON(filePath);
 
+		ENGINE_INFO("[ResourceLoader::loadIndexBuffers] Loading Index Buffers");
+
 		// Go through each buffer and load it
 		for (auto& buffer : jsonData["indexBuffers"])
 		{
@@ -113,11 +155,17 @@ namespace Engine
 				// Resource name is free, so we can now create a index buffer and assign that resource name to that resource
 				IndexBuffer* newBuffer;
 
-				newBuffer = IndexBuffer::create(name, nullptr, getCapacity(buffer["size"].get<std::string>()));
+				uint32_t capacity = getCapacity(buffer["size"].get<std::string>());
+				if (capacity == 0)
+				{
+					ENGINE_ERROR("[ResourceLoader::loadIndexBuffers] Invalid capacity provided. Name: {0}", name);
+				}
+
+				newBuffer = IndexBuffer::create(name, nullptr, capacity);
 
 				// Register buffer with resource manager
 				ResourceManager::registerResource(name, newBuffer);
-				ENGINE_INFO("[ResourceLoader::loadIndexBuffers] Loaded {0} from {1}.", name, filePath);
+				ENGINE_TRACE("Loaded {0} from {1}.", name, filePath);
 			}
 			else
 				ENGINE_ERROR("[ResourceLoader::loadIndexBuffers] Resource name already taken. Name: {0}", name);
@@ -131,6 +179,8 @@ namespace Engine
 	void ResourceLoader::loadVertexArrays(const std::string& filePath)
 	{
 		nlohmann::json jsonData = ResourceManager::getJSON(filePath);
+
+		ENGINE_INFO("[ResourceLoader::loadVertexArrays] Loading Vertex Arrays");
 
 		// Go through each array and load it
 		for (auto& array : jsonData["vertexArrays"])
@@ -152,17 +202,23 @@ namespace Engine
 				{
 					// Go through each buffer and retrieve the buffer from the Resource Manager, increasing the reference counter
 					if (ResourceManager::resourceExists(buffer.get<std::string>()))
-						newArray->addVertexBuffer(ResourceManager::getResourceAndRef<VertexBuffer>(buffer.get<std::string>()));
+						newArray->addVertexBuffer(ResourceManager::getResource<VertexBuffer>(buffer.get<std::string>()));
+					else
+						ENGINE_ERROR("[ResourceLoader::loadVertexArrays] The vertex buffer does not exist in the ResourceManager. Name: {0}", buffer.get<std::string>());
 				}
 
 				// Now all vertex buffers have been added, lets set the index buffer
 				if (ResourceManager::resourceExists(array["indexBuffer"].get<std::string>()))
-					newArray->setIndexBuffer(ResourceManager::getResourceAndRef<IndexBuffer>(array["indexBuffer"].get<std::string>()));
+					newArray->setIndexBuffer(ResourceManager::getResource<IndexBuffer>(array["indexBuffer"].get<std::string>()));
+				else
+					ENGINE_ERROR("[ResourceLoader::loadVertexArrays] The index buffer does not exist in the ResourceManager. Name: {0}", array["indexBuffer"].get<std::string>());
 
+				// Unbind for safety
 				newArray->unbind();
+
 				// Register array with resource manager
 				ResourceManager::registerResource(name, newArray);
-				ENGINE_INFO("[ResourceLoader::loadVertexArrays] Loaded {0} from {1}.", name, filePath);
+				ENGINE_TRACE("Loaded {0} from {1}.", name, filePath);
 			}
 			else
 				ENGINE_ERROR("[ResourceLoader::loadVertexArrays] Resource name already taken. Name: {0}", name);
@@ -177,6 +233,8 @@ namespace Engine
 	{
 		nlohmann::json jsonData = ResourceManager::getJSON(filePath);
 
+		ENGINE_INFO("[ResourceLoader::loadIndirectBuffers] Loading Indirect Buffers");
+
 		// Go through each buffer and load it
 		for (auto& buffer : jsonData["indirectBuffers"])
 		{
@@ -189,13 +247,19 @@ namespace Engine
 				// Resource name is free, so we can now create a indirect buffer and assign that resource name to that resource
 				IndirectBuffer* newBuffer;
 
+				uint32_t capacity = getCapacity(buffer["size"].get<std::string>());
+				if (capacity == 0)
+				{
+					ENGINE_ERROR("[ResourceLoader::loadIndirectBuffers] Invalid capacity provided. Name: {0}", name);
+				}
+
 				// Need to work out the size, we'll have to compare the string literals provided
 				// Only need a count
-				newBuffer = IndirectBuffer::create(name, nullptr, getCapacity(buffer["size"].get<std::string>()));
+				newBuffer = IndirectBuffer::create(name, nullptr, capacity);
 
 				// Register buffer with resource manager
 				ResourceManager::registerResource(name, newBuffer);
-				ENGINE_INFO("[ResourceLoader::loadIndirectBuffers] Loaded {0} from {1}.", name, filePath);
+				ENGINE_TRACE("Loaded {0} from {1}.", name, filePath);
 			}
 			else
 				ENGINE_ERROR("[ResourceLoader::loadIndirectBuffers] Resource name already taken. Name: {0}", name);
@@ -209,6 +273,8 @@ namespace Engine
 	void ResourceLoader::loadUniformBuffers(const std::string& filePath)
 	{
 		nlohmann::json jsonData = ResourceManager::getJSON(filePath);
+
+		ENGINE_INFO("[ResourceLoader::loadUniformBuffers] Loading Uniform Buffers");
 
 		// Go through each buffer and load it
 		for (auto& buffer : jsonData["uniformBuffers"])
@@ -226,11 +292,16 @@ namespace Engine
 				UniformBufferLayout layout;
 				for (int i = 0; i < buffer["layout"].size();)
 				{
+					ShaderDataType sdt = SDT::convertStringToSDT(buffer["layout"][i + 1].get<std::string>());
+					if (sdt == ShaderDataType::None)
+						ENGINE_ERROR("[ResourceLoader::loadUniformBuffers] Invalid SDT provided. Name: {0}", name);
+
 					// Format is: [UNIFORM NAME], [TYPE], [UNIFORM NAME], [TYPE], etc
-					layout.addElement({ buffer["layout"][i].get<std::string>().c_str(), SDT::convertStringToSDT(buffer["layout"][i+1].get<std::string>()) });
+					layout.addElement({ buffer["layout"][i].get<std::string>().c_str(), sdt });
 					i += 2;
 				}
 
+				layout.calculateUniformBufferLayout();
 				layout.recalculateStride();
 
 				// Only need to provide the layout
@@ -238,7 +309,7 @@ namespace Engine
 
 				// Register buffer with resource manager
 				ResourceManager::registerResource(name, newBuffer);
-				ENGINE_INFO("[ResourceLoader::loadUniformBuffers] Loaded {0} from {1}.", name, filePath);
+				ENGINE_TRACE("Loaded {0} from {1}.", name, filePath);
 			}
 			else
 				ENGINE_ERROR("[ResourceLoader::loadUniformBuffers] Resource name already taken. Name: {0}", name);
@@ -252,6 +323,8 @@ namespace Engine
 	void ResourceLoader::loadFrameBuffers(const std::string& filePath)
 	{
 		nlohmann::json jsonData = ResourceManager::getJSON(filePath);
+
+		ENGINE_INFO("[ResourceLoader::loadFrameBuffers] Loading Framebuffers");
 
 		// Go through each buffer and load it
 		for (auto& buffer : jsonData["frameBuffers"])
@@ -272,29 +345,44 @@ namespace Engine
 					FrameBufferLayout layout;
 					for (int i = 0; i < buffer["layout"].size();)
 					{
-						// Format is: [UNIFORM NAME], [TYPE], [UNIFORM NAME], [TYPE], etc
-						layout.addAttachment(BufferAttachments::convertStringToAttachment(buffer["layout"][i].get<std::string>()), buffer["layout"][i + 1].get<bool>());
+						AttachmentType attachment = BufferAttachments::convertStringToAttachment(buffer["layout"][i].get<std::string>());
+						if (attachment == AttachmentType::None)
+							ENGINE_ERROR("[ResourceLoader::loadFrameBuffers] Invalid attachment type provided. Name: {0}", name);
+
+						// Format is: [ATTACHMENT TYPE], [SAMPLED], [ATTACHMENT TYPE], [SAMPLED], etc
+						layout.addAttachment(attachment, buffer["layout"][i + 1].get<bool>());
+						// Move i forward 2
 						i += 2;
 					}
 
 					// We now need to calculate the dimensions, first check if we should use the window dimensions
 					glm::ivec2 dimensions;
 
-					// We can either use the dimensions of the window or manually provide the dimensions
-					if (buffer["useWindowDimensions"].get<bool>())
-						dimensions = WindowManager::getFocusedWindow()->getProperties().getSize();
+					// We can either use the dimensions of the scene view (starts as size of window) or enter them manually
+					if (buffer["useSceneSize"].get<bool>())
+					{
+						auto window = WindowManager::getFocusedWindow();
+
+						if (window)
+							dimensions = WindowManager::getFocusedWindow()->getProperties().getSize();
+						else
+						{
+							dimensions = glm::ivec2(buffer["size"][0], buffer["size"][1]);
+							ENGINE_ERROR("[ResourceLoader::loadFrameBuffers] There isn't a valid focused window, cannot retrieve window dimensions.");
+						}
+					}
 					else
 						dimensions = glm::ivec2(buffer["size"][0], buffer["size"][1]);
 
 					// Only need to provide the layout
-					newBuffer = FrameBuffer::create(name, dimensions, layout);
+					newBuffer = FrameBuffer::create(name, buffer["useSceneSize"].get<bool>(), dimensions, layout);
 				}
 				else
 					newBuffer = FrameBuffer::createDefault(name);
 
 				// Register buffer with resource manager
 				ResourceManager::registerResource(name, newBuffer);
-				ENGINE_INFO("[ResourceLoader::loadFrameBuffers] Loaded {0} from {1}.", name, filePath);
+				ENGINE_TRACE("Loaded {0} from {1}.", name, filePath);
 			}
 			else
 				ENGINE_ERROR("[ResourceLoader::loadFrameBuffers] Resource name already taken. Name: {0}", name);
@@ -309,6 +397,8 @@ namespace Engine
 	{
 		nlohmann::json jsonData = ResourceManager::getJSON(filePath);
 
+		ENGINE_INFO("[ResourceLoader::loadShaderPrograms] Loading Shader programs");
+
 		// Go through each shader program and load it
 		for (auto& shader : jsonData["programs"])
 		{
@@ -318,9 +408,6 @@ namespace Engine
 			// Check if it exists
 			if (!ResourceManager::resourceExists(name))
 			{
-				// Shader name doesn't exist, we can use it. Now let's load the shader
-				ShaderProgram* newShader = ShaderProgram::create(name);
-
 				// Now build the shader program
 				const std::string vertexShader = shader["vertexShader"].get<std::string>();
 				const std::string fragmentShader = shader["fragmentShader"].get<std::string>();
@@ -328,7 +415,15 @@ namespace Engine
 				const std::string tessControlShader = shader["tessControlShader"].get<std::string>();
 				const std::string tessEvaluationShader = shader["tessEvaluationShader"].get<std::string>();
 
-				VertexArray* vArray = ResourceManager::getResourceAndRef<VertexArray>(shader["vertexArray"].get<std::string>());
+				VertexArray* vArray = ResourceManager::getResource<VertexArray>(shader["vertexArray"].get<std::string>());
+				if (!vArray)
+				{
+					ENGINE_ERROR("[ResourceLoader::loadShaderPrograms] The vertex array wasn't a valid array. Name: {0}", shader["vertexArray"].get<std::string>());
+					return;
+				}
+
+				// Shader name doesn't exist, we can use it. Now let's load the shader
+				ShaderProgram* newShader = ShaderProgram::create(name);
 
 				// Build
 				newShader->build(vArray, vertexShader.c_str(), fragmentShader.c_str(), geometryShader.c_str(), tessControlShader.c_str(), tessEvaluationShader.c_str());
@@ -342,17 +437,20 @@ namespace Engine
 				for (int i = 0; i < shader["uniformBuffers"].size();)
 				{
 					// Format is: [UNIFORM BLOCK NAME], [UNIFORM BUFFER NAME], [UNIFORM BLOCK NAME], [UNIFORM BUFFER NAME], etc
-					ubos[shader["uniformBuffers"][i].get<std::string>()] = (ResourceManager::getResourceAndRef<UniformBuffer>(shader["uniformBuffers"][i+1].get<std::string>()));
+
+					// Uniform Block name must match the name in the shader program
+					// Uniform buffer name is the buffer to provide that data
+					ubos[shader["uniformBuffers"][i].get<std::string>()] = (ResourceManager::getResource<UniformBuffer>(shader["uniformBuffers"][i + 1].get<std::string>()));
 					i += 2;
 				}
 
 				newShader->setUniforms(uniforms);
 				newShader->setUniformBuffers(ubos);
-				newShader->setOrderImportance(shader["order"].get<uint32_t>());
+				newShader->setOrderImportance(shader["orderImportance"].get<uint32_t>());
 
 				// Register shader with resource manager
 				ResourceManager::registerResource(name, newShader);
-				ENGINE_INFO("[ResourceLoader::loadShaderPrograms] Loaded {0} from {1}.", name, filePath);
+				ENGINE_TRACE("Loaded {0} from {1}.", name, filePath);
 			}
 			else
 				ENGINE_ERROR("[ResourceLoader::loadShaderPrograms] Resource name already taken. Name: {0}", name);
@@ -367,6 +465,8 @@ namespace Engine
 	{
 		nlohmann::json jsonData = ResourceManager::getJSON(filePath);
 
+		ENGINE_INFO("[ResourceLoader::loadTextures] Loading Textures");
+
 		// Go through each 2D texture and load it
 		for (auto& texture : jsonData["textures2D"])
 		{
@@ -378,17 +478,24 @@ namespace Engine
 			{
 				// Fill texture properties
 				// [Width], [Height], [WrapS], [WrapT], [WrapR], [MinFilter], [MaxFilter], [gammaCorrect], [FlipUVs]
-				TextureProperties properties(0, 0,
-					texture["wrapS"].get<std::string>(), texture["wrapT"].get<std::string>(), texture["wrapR"].get<std::string>(), 
+				TextureProperties properties(texture["width"], texture["height"],
+					texture["wrapS"].get<std::string>(), texture["wrapT"].get<std::string>(), texture["wrapR"].get<std::string>(),
 					texture["minFilter"].get<std::string>(), texture["maxFilter"].get<std::string>(),
 					texture["gammaCorrect"].get<bool>(), texture["flipUV"].get<bool>());
 
-				// Create new texture
-				Texture2D* newTexture = Texture2D::create(name, texture["filePath"].get<std::string>().c_str(), properties);
+				// Check if we're loading an image from file
+				std::string filePath = texture["filePath"].get<std::string>().c_str();
+				Texture2D* newTexture;
+
+				// Either load an image into the texture or just leave texture blank
+				if (filePath != "")
+					newTexture = Texture2D::create(name, texture["filePath"].get<std::string>().c_str(), properties);
+				else
+					newTexture = Texture2D::create(name, properties, texture["channels"], nullptr);
 
 				// Register texture with resource manager
 				ResourceManager::registerResource(name, newTexture);
-				ENGINE_INFO("[ResourceLoader::loadTextures] Loaded {0} from {1}.", name, filePath);
+				ENGINE_TRACE("Loaded {0} from {1}.", name, filePath);
 			}
 			else
 				ENGINE_ERROR("[ResourceLoader::loadTextures] Resource name already taken. Name: {0}", name);
@@ -407,7 +514,7 @@ namespace Engine
 
 				// Register texture with resource manager
 				ResourceManager::registerResource(name, newTexture);
-				ENGINE_INFO("[ResourceLoader::loadTextures] Loaded {0} from {1}.", name, filePath);
+				ENGINE_TRACE("Loaded {0} from {1}.", name, filePath);
 			}
 			else
 				ENGINE_ERROR("[ResourceLoader::loadTextures] Resource name already taken. Name: {0}", name);
@@ -422,6 +529,8 @@ namespace Engine
 	{
 		nlohmann::json jsonData = ResourceManager::getJSON(filePath);
 
+		ENGINE_INFO("[ResourceLoader::loadSubTextures] Loading Subtextures");
+
 		// Go through each subtexture and load it
 		for (auto& subTexture : jsonData["subTextures"])
 		{
@@ -432,7 +541,7 @@ namespace Engine
 			if (!ResourceManager::resourceExists(name))
 			{
 				// Get the base texture name
-				Texture2D* baseTexture = ResourceManager::getResourceAndRef<Texture2D>(subTexture["baseTextureName"].get<std::string>());
+				Texture2D* baseTexture = ResourceManager::getResource<Texture2D>(subTexture["baseTextureName"].get<std::string>());
 
 				if (baseTexture)
 				{
@@ -440,10 +549,10 @@ namespace Engine
 					// [Texture], [UVStart], [UVEnd]
 
 					SubTexture* newSubTexture = new SubTexture(name, baseTexture, { subTexture["UVStart"][0], subTexture["UVStart"][1] }, { subTexture["UVEnd"][0], subTexture["UVEnd"][1] }, subTexture["ConvertBottomLeft"].get<bool>());
-					
+
 					// Register subTexture with resource manager
 					ResourceManager::registerResource(name, newSubTexture);
-					ENGINE_INFO("[ResourceLoader::loadSubTextures] Loaded {0} from {1}.", name, filePath);
+					ENGINE_TRACE("Loaded {0} from {1}.", name, filePath);
 				}
 				else
 					ENGINE_ERROR("[ResourceLoader::loadSubTextures] Invalid base texture provided. Name: {0}", name);
@@ -461,6 +570,8 @@ namespace Engine
 	{
 		nlohmann::json jsonData = ResourceManager::getJSON(filePath);
 
+		ENGINE_INFO("[ResourceLoader::load3DModels] Loading 3D Models");
+
 		// Go through each model and load it
 		for (auto& model : jsonData["models"])
 		{
@@ -476,10 +587,13 @@ namespace Engine
 				// We will use ASSIMP to read the model file
 				if (model["filePath"].get<std::string>() != "")
 					AssimpLoader::loadModel(model["filePath"].get<std::string>(), newModel->getMeshes());
+				
+				if (newModel->getMeshes().size() == 0)
+					ENGINE_ERROR("[ResourceLoader::load3DModels] The geometry was not successfully loaded. Name: {0}.", name);
 
 				// Register model with resource manager
 				ResourceManager::registerResource(name, newModel);
-				ENGINE_INFO("[ResourceLoader::load3DModels] Loaded {0} from {1}.", name, filePath);
+				ENGINE_TRACE("Loaded {0} from {1}.", name, filePath);
 			}
 			else
 				ENGINE_ERROR("[ResourceLoader::load3DModels] Resource name already taken. Name: {0}", name);
@@ -494,6 +608,8 @@ namespace Engine
 	{
 		nlohmann::json jsonData = ResourceManager::getJSON(filePath);
 
+		ENGINE_INFO("[ResourceLoader::loadMaterials] Loading Materials");
+
 		// Go through each material and load it
 		for (auto& material : jsonData["materials"])
 		{
@@ -505,25 +621,49 @@ namespace Engine
 			{
 				// Create material
 				Material* newMaterial;
-				std::vector<SubTexture*> textures;
+				std::vector<SubTexture*> subTextures;
 				std::vector<CubeMapTexture*> cubeTextures;
-				textures.reserve(ResourceManager::getConfigValue(ConfigData::MaxSubTexturesPerMaterial));
-				cubeTextures.reserve(ResourceManager::getConfigValue(ConfigData::MaxSubTexturesPerMaterial));
+				subTextures.reserve(ResourceManager::getConfigValue(Config::MaxSubTexturesPerMaterial));
+				cubeTextures.reserve(ResourceManager::getConfigValue(Config::MaxSubTexturesPerMaterial));
 
 				// Loop through all subtextures and add to the list
 				for (auto& subTexture : material["subTextures"])
-					textures.push_back(ResourceManager::getResourceAndRef<SubTexture>(subTexture.get<std::string>()));
+				{
+					auto sub = ResourceManager::getResource<SubTexture>(subTexture.get<std::string>());
+
+					if (sub)
+						subTextures.push_back(sub);
+					else
+						ENGINE_ERROR("[ResourceLoader::loadMaterials] The resource manager does not contain a subtexture called {0}.", subTexture.get<std::string>());
+				}
 
 				// Loop through all cubemap textures and add to the list
 				for (auto& cubeTexture : material["cubeMapTextures"])
-					cubeTextures.push_back(static_cast<CubeMapTexture*>(ResourceManager::getResourceAndRef<Texture>(cubeTexture.get<std::string>())));
+				{
+					auto cube = ResourceManager::getResource<CubeMapTexture>(cubeTexture.get<std::string>());
 
-				newMaterial = new Material(name, textures, cubeTextures, ResourceManager::getResourceAndRef<ShaderProgram>(material["shader"].get<std::string>()),
-					{ material["tint"][0], material["tint"][1], material["tint"][2], material["tint"][3] });
+					if (cube)
+						cubeTextures.push_back(cube);
+					else
+						ENGINE_ERROR("[ResourceLoader::loadMaterials] The resource manager does not contain a cubemap texture called {0}.", cubeTexture.get<std::string>());
+
+					cubeTextures.push_back(cube);
+				}
+
+				ShaderProgram* shader = ResourceManager::getResource<ShaderProgram>(material["shader"].get<std::string>());
+
+				if (!shader)
+				{
+					ENGINE_ERROR("[ResourceLoader::loadMaterials] The resource manager does not contain a shader program called {0} for material {1}.", material["shader"].get<std::string>(), name);
+					continue;
+				}
+
+				newMaterial = new Material(name, subTextures, cubeTextures, shader,
+					{ material["tint"][0], material["tint"][1], material["tint"][2], material["tint"][3] }, material["shininess"]);
 
 				// Register model with resource manager
 				ResourceManager::registerResource(name, newMaterial);
-				ENGINE_INFO("[ResourceLoader::loadMaterials] Loaded {0} from {1}.", name, filePath);
+				ENGINE_TRACE("Loaded {0} from {1}.", name, filePath);
 			}
 			else
 				ENGINE_ERROR("[ResourceLoader::loadMaterials] Resource name already taken. Name: {0}", name);

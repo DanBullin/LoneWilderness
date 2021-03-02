@@ -60,15 +60,11 @@ namespace Engine
 	//! ~OpenGLShaderProgram()
 	OpenGLShaderProgram::~OpenGLShaderProgram()
 	{
-		ENGINE_INFO("[OpenGLShaderProgram::~OpenGLShaderProgram] Deleting shader program with ID: {0}, Name: {1}.", m_programID, m_name);
+		if (ResourceManager::getConfigValue(Config::PrintResourcesInDestructor))
+			ENGINE_INFO("[OpenGLShaderProgram::~OpenGLShaderProgram] Deleting shader program with ID: {0}, Name: {1}.", m_programID, m_name);
 		glDeleteProgram(m_programID);
 
-		if (m_vertexArray) m_vertexArray->decreaseCount();
 		m_vertexArray = nullptr;
-
-		for (auto& ubo : m_uniformBuffers)
-			ubo.second->decreaseCount();
-
 		m_uniformBuffers.clear();
 	}
 
@@ -290,5 +286,33 @@ namespace Engine
 	{
 		if (m_uniforms.find(uniformName) != m_uniforms.end())
 			glUniformMatrix4fv(m_uniforms.at(uniformName), 1, GL_FALSE, &mat[0][0]);
+	}
+
+	//! printDetails()
+	void OpenGLShaderProgram::printDetails()
+	{
+		ENGINE_TRACE("Program ID: {0}.", m_programID);
+		ENGINE_TRACE("Order Importance: {0}.", m_order);
+		ENGINE_TRACE("Vertex Path: {0}.", m_vertexPath);
+		ENGINE_TRACE("Fragment Path: {0}.", m_fragmentPath);
+		ENGINE_TRACE("Geometry Path: {0}.", m_geometryPath);
+		ENGINE_TRACE("Tessellation Control Path: {0}.", m_tessellationControlPath);
+		ENGINE_TRACE("Tessellation Evaluation Path: {0}.", m_tessellationEvalPath);
+
+		for (auto& uniform : m_uniforms)
+			ENGINE_TRACE("Uniform: {0}, Location: {1}.", uniform.first, uniform.second);
+
+		if (m_vertexArray)
+			ENGINE_TRACE("VertexArray: {0}", m_vertexArray->getName());
+		else
+			ENGINE_TRACE("VertexArray: NULL");
+
+		for (auto& UBO : m_uniformBuffers)
+		{
+			if (UBO.second)
+				ENGINE_TRACE("Uniform Block Name: {0}, Uniform Buffer associated: {1}", UBO.first, UBO.second->getName());
+			else
+				ENGINE_TRACE("Uniform Block Name: {0}, Uniform Buffer associated: NULL", UBO.first);
+		}
 	}
 }

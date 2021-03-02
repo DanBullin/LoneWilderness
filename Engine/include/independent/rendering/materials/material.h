@@ -26,8 +26,9 @@ namespace Engine
 		std::vector<CubeMapTexture*> m_cubeMapTextures; //!< A list of all cubmeap textures attached to this material
 		ShaderProgram* m_shader; //!< The shader program to use when applying this material
 		glm::vec4 m_tint; //!< The tint to apply to objects
+		float m_shininess; //!< The shininess value used in specular lighting calculations
 	public:
-		Material(const std::string& materialName, const std::vector<SubTexture*>& subTextures, const std::vector<CubeMapTexture*>& cubemaps, ShaderProgram* shader, const glm::vec4& tint); //!< Constructor
+		Material(const std::string& materialName, const std::vector<SubTexture*>& subTextures, const std::vector<CubeMapTexture*>& cubemaps, ShaderProgram* shader, const glm::vec4& tint, const float shininess); //!< Constructor
 		~Material(); //!< Destructor
 
 		void addSubTexture(SubTexture* texture); //!< Add the subtexture
@@ -45,6 +46,11 @@ namespace Engine
 
 		void setTint(const glm::vec4& tint); //!< Set the material tint
 		glm::vec4& getTint(); //!< Get the material tint
+
+		void setShininess(const float shininess); //!< Set the material's shininess
+		float getShininess() const; //!< Get the material's shininess
+
+		void printDetails() override; //!< Print the resource details
 	};
 }
 #endif

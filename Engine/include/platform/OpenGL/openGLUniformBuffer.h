@@ -25,6 +25,7 @@ namespace Engine
 
 		void attachShaderBlock(ShaderProgram* shader, const char* blockName) override; //!< Attach shader block
 		void uploadData(const char* uniformName, void* data) override; //!< Upload data to buffer
+		void printDetails() override; //!< Print the resource details
 	};
 }
 #endif

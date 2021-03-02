@@ -15,7 +15,6 @@
 
 namespace Engine
 {
-
 	/*! \struct GlyphData
 	* \brief A struct containing glyph data
 	*/
@@ -35,16 +34,18 @@ namespace Engine
 	{
 	private:
 		std::string m_fontName; //!< The name of the font
+		std::string m_fontFilePath; //!< The filepath of the font
 		FT_Face m_fontFace; //!< A font face
 		std::vector<GlyphData> m_glyphData; //!< All the loaded glyph data
 		std::shared_ptr<TextureAtlas> m_glyphAtlas; //!< Texture atlas for the glyphs
 		unsigned char m_firstGlyph; //!< The first glyph
 		unsigned char m_lastGlyph; //!< The last glyph
 	public:
-		Font(FT_Library& ft, const char* fontName, const char* fontFilePath, const uint32_t pixelSize, unsigned char firstGlyph, unsigned char lastGlyph); //!< Constructor
+		Font(FT_Library& ft, const std::string& fontName, const std::string& fontFilePath, const uint32_t pixelSize, unsigned char firstGlyph, unsigned char lastGlyph); //!< Constructor
 		~Font(); //!< Destructor
 
 		const std::string& getName() const; //!< Get the name of the font
+		const std::string& getFilePath() const; //!< Get the filepath of the font
 		const unsigned char getFirstGlyph() const; //!< Get the first glyph
 		const unsigned char getLastGlyph() const; //!< Get the last glyph
 		std::vector<GlyphData>& getGlyphData(); //!< Get the glyph data

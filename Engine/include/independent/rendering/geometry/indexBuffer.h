@@ -42,6 +42,7 @@ namespace Engine
 
 		virtual void bind() = 0; //!< Bind the buffer
 		virtual void unbind() = 0; //!< Unbind the buffer
+		virtual void printDetails() override = 0; //!< Print the resource details
 	};
 }
 #endif

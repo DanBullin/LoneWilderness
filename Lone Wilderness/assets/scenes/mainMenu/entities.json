@@ -10,7 +10,7 @@
 			[
 				{
 					"name": "Transform",
-					"type": "Transform3D",
+					"type": "Transform",
 					"position": [ 0.0, 0.0, 0.0],
 					"rotation": [ 0.0, 0.0, 0.0],
 					"scale": [ 1.0, 1.0, 1.0 ]
@@ -19,14 +19,11 @@
 					"name": "Camera",
 					"type": "Camera",
 					"clearColour": [ 0.1, 0.2, 0.3, 1.0],
-					"localPosition": [ 0.0, 0.0, 0.0 ],
 					"front": [ 0.0, 0.0, -1.0],
 					"up": [ 0.0, 1.0, 0.0],
 					"worldUp": [ 0.0, 1.0, 0.0],
 					"Yaw": 270.0,
 					"Pitch": 0.0,
-					"Speed": 5.0,
-					"Sensitivity": 0.15,
 					"Zoom": 45.0,
 					"setMainCamera": true
 				},
@@ -37,7 +34,7 @@
 			]
 		},
 		{
-			"name": "MenuText",
+			"name": "PlayGame",
 			"type": "MenuText",
 			"layer": "UI",
 			"display": true,
@@ -45,30 +42,44 @@
 			[
 				{
 					"name": "Transform",
-					"type": "Transform2D",
-					"position": [ 0.0, 0.0 ],
-					"rotation": 0.0,
-					"scale": [ 1.0, 1.0 ]
+					"type": "Transform",
+					"position": [ 365.0, 130.0, 0.0 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 71.0, 27.0, 1.0 ]
 				},
 				{
-					"name": "Play",
+					"name": "Text1",
 					"type": "Text",
 					"text": "Play",
 					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
-					"fontName": "Arial",
-					"localPosition": [ 350.0, 200.0, 0.15 ],
-					"localRotation": 0.0,
-					"localScale": [ 92.0, 49.0 ]
+					"fontName": "Arial"
 				},
 				{
-					"name": "Quit",
+					"name": "EventListener",
+					"type": "EventListener"
+				}
+			]
+		},
+		{
+			"name": "QuitText",
+			"type": "MenuText",
+			"layer": "UI",
+			"display": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 365.0, 530.0, 0.0 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 68.0, 30.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
 					"type": "Text",
 					"text": "Quit",
 					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
-					"fontName": "Arial",
-					"localPosition": [ 350.0, 400.0, 0.15 ],
-					"localRotation": 0.0,
-					"localScale": [ 92.0, 42.0 ]
+					"fontName": "Arial"
 				},
 				{
 					"name": "EventListener",

@@ -11,7 +11,7 @@
 #include <chrono>
 #include <string>
 
-namespace Engine 
+namespace Engine
 {
 	/*! \class Timer
 	* \brief Interface class for timers

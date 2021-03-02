@@ -19,6 +19,7 @@ namespace Engine
 		bool m_destroy = false; //!< Should this object be destroyed
 	public:
 		void destroy(); //!< Destroy this object
+		void undestroy(); //!< Undestroys an object that has not yet been deleted but is waiting to
 		const bool getDestroyed() const; //!< Get whether this object is to be destroyed
 	};
 }

@@ -49,6 +49,8 @@ namespace Engine
 			/*!< \return a const uint32_t - The ID of the buffer */
 		inline const uint32_t getCount() const { return m_commandCount; }  //!< Get the command count
 			/*!< \return a const uint32_t - The command count */
+
+		virtual void printDetails() override = 0; //!< Print the resource details
 	};
 }
 #endif

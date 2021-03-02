@@ -1,0 +1,14 @@
+{
+	"layers": 
+	[
+		{ "name": "Default", "active": true, "displayed": true },
+		{ "name": "UI", "active": true, "displayed": true }
+	],
+	"renderPasses":
+	[
+		{ "name": "FirstPass", "enabled": true },
+		{ "name": "SecondPass", "enabled": true },
+		{ "name": "ThirdPass", "enabled": true },
+		{ "name": "FourthPass", "enabled": true }
+	]
+}

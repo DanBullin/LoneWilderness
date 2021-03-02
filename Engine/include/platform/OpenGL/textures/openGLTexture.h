@@ -25,6 +25,7 @@ namespace Engine
 		~OpenGLTexture2D(); //!< Destructor
 		void edit(const uint32_t offsetX, const uint32_t offsetY, const uint32_t width, const uint32_t height, const unsigned char* data) override; //!< Edit the texture data
 		void bind(const uint32_t slot = 0) override; //!< Bind the texture to a texture unit
+		void printDetails() override; //!< Print the resource details
 	};
 
 	/*! \class OpenGLCubeMapTexture
@@ -37,6 +38,7 @@ namespace Engine
 		~OpenGLCubeMapTexture(); //!< Destructor
 
 		void bind(const uint32_t slot = 0) override; //!< Bind the texture to a texture unit
+		void printDetails() override; //!< Print the resource details
 	};
 }
 #endif

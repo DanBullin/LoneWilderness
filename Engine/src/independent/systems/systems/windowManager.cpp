@@ -7,6 +7,7 @@
 */
 #include "independent/systems/systems/windowManager.h"
 #include "independent/systems/systems/eventManager.h"
+#include "independent/systems/systems/resourceManager.h"
 #include "independent/systems/systems/log.h"
 
 namespace Engine
@@ -33,6 +34,23 @@ namespace Engine
 		{
 			ENGINE_INFO("[WindowManager::start] Starting the window manager.");
 			s_enabled = true;
+
+			// Create the main window right here before further systems are loaded
+			nlohmann::json configData = ResourceManager::getJSON("assets/config.json")["window"][0];
+			WindowProperties props(configData["title"].get<std::string>(),
+				configData["size"][0],
+				configData["size"][1],
+				{ configData["position"][0], configData["position"][1] },
+				configData["vSync"].get<bool>(),
+				configData["fullScreen"].get<bool>(),
+				configData["minimised"].get<bool>(),
+				configData["opacity"],
+				configData["focused"].get<bool>(),
+				configData["hide"].get<bool>(),
+				toCursorInputMode(configData["cursorInputMode"].get<uint32_t>()));
+
+			auto window = WindowManager::registerWindow(configData["name"].get<std::string>(), props);
+			if(window) window->setIcon("assets/textures/icon.png");
 		}
 	}
 
@@ -46,7 +64,10 @@ namespace Engine
 
 			// Delete all windows
 			for (auto& window : s_registeredWindows)
-				delete window.second;
+			{
+				if(window.second)
+					delete window.second;
+			}
 
 			s_registeredWindows.clear();
 
@@ -68,10 +89,11 @@ namespace Engine
 
 	//! registerWindow()
 	/*!
-	\param name a const char* - The name of the window
+	\param name a const std::string& - The name of the window
 	\param props a const WindowProperties& - The properties of the window
+	\return a Window* - A pointer to the window
 	*/
-	void WindowManager::registerWindow(const char* name, const WindowProperties& props)
+	Window* WindowManager::registerWindow(const std::string& name, const WindowProperties& props)
 	{
 		if (s_enabled)
 		{
@@ -83,33 +105,38 @@ namespace Engine
 				// REMOVE THE BELOW CODE WHEN YOU WANT TO REENABLE MULTIPLE WINDOWS
 				////
 				if (s_registeredWindows.size() == 1)
-					return;
-
-				// End of multiple window restriction
+				{
+					ENGINE_ERROR("[WindowManager::registerWindow] Maximum number of windows has been reached.");
+					return nullptr;
+				}
 
 				s_registeredWindows[name] = Window::create(name, props);
-				// Call onFocus for the new window which will be brought to focus
-				WindowFocusEvent e;
-				EventManager::onWindowFocus(s_registeredWindows[name], e);
+				if(s_registeredWindows[name]) setFocusedWindowByName(name);
+				return s_registeredWindows[name];
 			}
 			else
 				ENGINE_ERROR("[WindowManager::registerWindow] Window name {0} is already taken.", name);
 		}
 		else
 			ENGINE_ERROR("[WindowManager::registerWindow] This system has not been enabled.");
+
+		return nullptr;
 	}
 
 	//! deregisterWindow()
 	/*!
-	\param name a const char* - The name of the window
+	\param name a const std::string& - The name of the window
 	*/
-	void WindowManager::deregisterWindow(const char* name)
+	void WindowManager::deregisterWindow(const std::string& name)
 	{
 		if (s_enabled)
 		{
 			// Check if window exists, close it if it does
 			if (windowExists(name))
-				s_registeredWindows[name]->close();
+			{
+				if(s_registeredWindows[name])
+					s_registeredWindows[name]->close();
+			}
 			else
 				ENGINE_ERROR("[WindowManager::deregisterWindow] The window name cannot be found. Name: {0}.", name);
 		}
@@ -125,16 +152,20 @@ namespace Engine
 			// Loop through all registered windows and check if it is scheduled for deletion
 			for (auto it = s_registeredWindows.cbegin(); it != s_registeredWindows.cend();)
 			{
-				if (it->second->getDestroyed())
+				if (it->second)
 				{
-					// Delete window
-					if (s_focusedWindow == it->second)
-						s_focusedWindow = nullptr;
-					delete it->second;
-					s_registeredWindows.erase((it++)->first);
+					if (it->second->getDestroyed())
+					{
+						// Delete window
+						if (s_focusedWindow == it->second)
+							s_focusedWindow = nullptr;
+
+						delete it->second;
+						s_registeredWindows.erase((it++)->first);
+					}
+					else
+						++it;
 				}
-				else
-					++it;
 			}
 		}
 		else
@@ -143,10 +174,10 @@ namespace Engine
 
 	//! getWindowByName()
 	/*!
-	\param name a const char* - The name of the window
+	\param name a const std::string& - The name of the window
 	\return a Window* - A pointer to the window
 	*/
-	Window* WindowManager::getWindowByName(const char* name)
+	Window* WindowManager::getWindowByName(const std::string& name)
 	{
 		if (s_enabled)
 		{
@@ -167,8 +198,6 @@ namespace Engine
 	*/
 	Window* WindowManager::getFocusedWindow()
 	{
-		if (!s_enabled)
-			ENGINE_ERROR("[WindowManager::getFocusedWindow] This system has not been enabled.");
 		return s_focusedWindow;
 	}
 
@@ -178,25 +207,28 @@ namespace Engine
 	*/
 	std::map<std::string, Window*>& WindowManager::getRegisteredWindows()
 	{
-		if (!s_enabled)
-			ENGINE_ERROR("[WindowManager::getRegisteredWindows] This system has not been enabled.");
 		return s_registeredWindows;
 	}
 
 	//! setFocusedWindowByName()
 	/*!
-	\param windowName a const char* - The name of the window
+	\param windowName a const std::string& - The name of the window
 	*/
-	void WindowManager::setFocusedWindowByName(const char* windowName)
+	void WindowManager::setFocusedWindowByName(const std::string& windowName)
 	{
 		if (s_enabled)
 		{
 			// Check if window exists
 			if (windowExists(windowName))
 			{
-				// Set the currently focused window
-				s_focusedWindow = s_registeredWindows[windowName];
-				s_registeredWindows[windowName]->focus();
+				if (s_registeredWindows[windowName])
+				{
+					// Set the currently focused window
+					s_focusedWindow = s_registeredWindows[windowName];
+					s_registeredWindows[windowName]->focus();
+				}
+				else
+					ENGINE_ERROR("[WindowManager::setFocusedWindowByName] Not a valid window. Name: {0}.", windowName);
 			}
 			else
 				ENGINE_ERROR("[WindowManager::setFocusedWindowByName] The window cannot be found. Name: {0}.", windowName);
@@ -207,16 +239,21 @@ namespace Engine
 
 	//! setFullscreenWindowByName()
 	/*!
-	\param windowName a const char* - The name of the window
+	\param windowName a const std::string& - The name of the window
 	*/
-	void WindowManager::setFullscreenWindowByName(const char* windowName)
+	void WindowManager::setFullscreenWindowByName(const std::string& windowName)
 	{
 		if (s_enabled)
 		{
 			// Check if window exists
 			if (windowExists(windowName))
 			{
-				s_registeredWindows[windowName]->setFullscreen(true);
+				if (s_registeredWindows[windowName])
+				{
+					s_registeredWindows[windowName]->setFullscreen(true);
+				}
+				else
+					ENGINE_ERROR("[WindowManager::setFullscreenWindowByName] Not a valid window. Name: {0}.", windowName);
 			}
 			else
 				ENGINE_ERROR("[WindowManager::setFullscreenWindowByName] The window cannot be found. Name: {0}.", windowName);
@@ -239,7 +276,10 @@ namespace Engine
 
 			// Loop through each window and print their details
 			for (auto& window : s_registeredWindows)
-				window.second->printWindowDetails();
+			{
+				if(window.second)
+					window.second->printWindowDetails();
+			}
 		}
 		else
 			ENGINE_ERROR("[WindowManager::printWindowManagerDetails] This system has not been enabled.");

@@ -1,8 +1,0 @@
-{
-	"indexBuffers": 
-	[
-		{ 
-			"name": "QuadIBuffer", "size": "IndexCapacity2D"
-		}
-	]	
-}

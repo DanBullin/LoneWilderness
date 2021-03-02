@@ -14,21 +14,18 @@ namespace Engine
 	//!	Font()
 	/*!
 	\param ft a FT_Library& - A reference to the freetype library
-	\param fontName a const char* - The name of the font
-	\param fontFilePath a const char* - The filepath of the font
+	\param fontName a const std::string& - The name of the font
+	\param fontFilePath a const std::string& - The filepath of the font
 	\param pixelSize a const uint32_t - The size of the font
 	\param firstGlyph an unsigned char - The ASCII value of the first glyph
 	\param lastGlyph an unsigned char - The ASCII value of the last glyph
 	*/
-	Font::Font(FT_Library& ft, const char* fontName, const char* fontFilePath, const uint32_t pixelSize, unsigned char firstGlyph, unsigned char lastGlyph)
+	Font::Font(FT_Library& ft, const std::string& fontName, const std::string& fontFilePath, const uint32_t pixelSize, unsigned char firstGlyph, unsigned char lastGlyph)
 	{
-		ENGINE_INFO("[Font::Font] Creating font named: {0} from file path: {1}.", fontName, fontFilePath);
-		m_fontName = fontName;
-		m_firstGlyph = firstGlyph;
-		m_lastGlyph = lastGlyph;
+		ENGINE_TRACE("[Font::Font] Creating font named: {0} from file path: {1}.", fontName, fontFilePath);
 
 		// Load font into font face
-		if (FT_New_Face(ft, fontFilePath, 0, &m_fontFace))
+		if (FT_New_Face(ft, fontFilePath.c_str(), 0, &m_fontFace))
 		{
 			ENGINE_ERROR("[Font::Font] Could not load font from filepath: {0}.", fontFilePath);
 			return;
@@ -41,8 +38,13 @@ namespace Engine
 			return;
 		}
 
+		m_fontName = fontName;
+		m_fontFilePath = fontFilePath;
+		m_firstGlyph = firstGlyph;
+		m_lastGlyph = lastGlyph;
+
 		// Create the texture atlas which will create all the glyph subtextures
-		m_glyphAtlas.reset(new TextureAtlas);
+		m_glyphAtlas.reset(new TextureAtlas("Font_" + m_fontName));
 
 		// Resize all the glyph data about the glyphs we will load
 		m_glyphData.resize(lastGlyph - firstGlyph);
@@ -50,6 +52,18 @@ namespace Engine
 		// Create some tmp glyph data
 		std::vector<std::pair<unsigned char, std::pair<GlyphData, unsigned char*>>> tmpGlyphdata;
 		tmpGlyphdata.resize(lastGlyph - firstGlyph);
+
+		if (tmpGlyphdata.size() < 1 || tmpGlyphdata.size() > 500)
+		{
+			ENGINE_ERROR("[Font::Font] Unusual glyph data list size. Cannot continue with font: {0}.", m_fontName);
+			return;
+		}
+
+		if (!m_glyphAtlas)
+		{
+			ENGINE_ERROR("[Font::Font] Invalid texture atlas. Cannot continue with font: {0}.", m_fontName);
+			return;
+		}
 
 		// Fill the texture atlas
 		for (unsigned char ch = firstGlyph; ch < lastGlyph; ch++)
@@ -117,7 +131,7 @@ namespace Engine
 		);
 
 		// Registering the texture atlas for this font with the resource manager
-		ResourceManager::registerResource(getName(), m_glyphAtlas->getBaseTexture());
+		if(m_glyphAtlas) ResourceManager::registerResource(getName(), m_glyphAtlas->getBaseTexture());
 
 	}
 
@@ -126,9 +140,15 @@ namespace Engine
 	{
 		ENGINE_INFO("[Font::~Font] Deleting font: {0}.", getName());
 
-		for (auto& sub : m_glyphData)
+		if (m_glyphData.size() > 0)
 		{
-			delete sub.subTexture;
+			for (auto& sub : m_glyphData)
+			{
+				if (sub.subTexture)
+					delete sub.subTexture;
+			}
+
+			m_glyphData.clear();
 		}
 	}
 
@@ -139,6 +159,15 @@ namespace Engine
 	const std::string& Font::getName() const
 	{
 		return m_fontName;
+	}
+
+	//!	getFilePath()
+	/*!
+	\return a const std::string& - The filepath of the font
+	*/
+	const std::string & Font::getFilePath() const
+	{
+		return m_fontFilePath;
 	}
 
 	//!	getFirstGlyph()
@@ -176,7 +205,12 @@ namespace Engine
 		ENGINE_TRACE("Glyph Data List Size: {0}", m_glyphData.size());
 		ENGINE_TRACE("First Glyph: {0}", m_firstGlyph);
 		ENGINE_TRACE("Last Glyph: {0}", m_lastGlyph);
-		ENGINE_TRACE("Glyph Atlas Base Texture ID: {0}", m_glyphAtlas->getBaseTexture()->getID());
+
+		if(m_glyphAtlas)
+			ENGINE_TRACE("Glyph Atlas Base Texture ID: {0}, Name: {1}.", m_glyphAtlas->getBaseTexture()->getID(), m_glyphAtlas->getBaseTexture()->getName());
+		else
+			ENGINE_TRACE("Invalid Glyph Atlas.");
+
 		ENGINE_TRACE("==========================");
 	}
 
@@ -194,6 +228,12 @@ namespace Engine
 		ENGINE_TRACE("Glyph Data Size: {0}, {1}.", m_glyphData.at(character - m_firstGlyph).size.x, m_glyphData.at(character - m_firstGlyph).size.y);
 		ENGINE_TRACE("Glyph Data UVStart: {0}, {1},", m_glyphData.at(character - m_firstGlyph).subTexture->getUVStart().x, m_glyphData.at(character - m_firstGlyph).subTexture->getUVStart().y);
 		ENGINE_TRACE("Glyph Data UVEnd: {0}, {1},", m_glyphData.at(character - m_firstGlyph).subTexture->getUVEnd().x, m_glyphData.at(character - m_firstGlyph).subTexture->getUVEnd().y);
+		
+		if (m_glyphData.at(character - m_firstGlyph).subTexture)
+			ENGINE_TRACE("Glyph SubTexture: Name: {0}, Base Texture Name: {1}.", m_glyphData.at(character - m_firstGlyph).subTexture->getName(), m_glyphData.at(character - m_firstGlyph).subTexture->getBaseTexture()->getName());
+		else
+			ENGINE_TRACE("Glyph SubTexture: Invalid.");
+
 		ENGINE_TRACE("==========================");
 	}
 

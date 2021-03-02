@@ -10,7 +10,7 @@
 #include "platform/GLFW/GLFWInputPoller.h"
 #include "independent/systems/systems/windowManager.h"
 
-namespace Engine 
+namespace Engine
 {
 	//! isAnyKeyPressed()
 	/*!
@@ -91,10 +91,13 @@ namespace Engine
 		// If the window is valid
 		if (WindowManager::getFocusedWindow())
 		{
-			// Get mouse pos
-			double x, y;
-			glfwGetCursorPos(static_cast<GLFWwindow*>(WindowManager::getFocusedWindow()->getNativeWindow()), &x, &y);
-			return glm::vec2(static_cast<float>(x), static_cast<float>(y));
+			if (WindowManager::getFocusedWindow()->getNativeWindow())
+			{
+				// Get mouse pos
+				double x, y;
+				glfwGetCursorPos(static_cast<GLFWwindow*>(WindowManager::getFocusedWindow()->getNativeWindow()), &x, &y);
+				return glm::vec2(static_cast<float>(x), static_cast<float>(y));
+			}
 		}
 		return glm::vec2(-1.f, 1.f);
 	}

@@ -120,6 +120,12 @@ namespace Engine
 	*/
 	void TextureUnitManager::bindToUnit(Texture* texture)
 	{
+		if (!texture)
+		{
+			ENGINE_ERROR("[TextureUnitManager::bindToUnit] This is an invalid texture.");
+			return;
+		}
+
 		// Find the texture unit the texture is bound to, and bind it
 		for (int i = 0; i < m_buffer.size(); i++)
 			if (m_buffer[i] == texture->getID())

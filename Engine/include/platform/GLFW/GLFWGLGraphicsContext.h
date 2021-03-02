@@ -10,7 +10,7 @@
 
 #include "independent/core/graphicsContext.h"
 
-namespace Engine 
+namespace Engine
 {
 	/*! \class GLFWGLGraphicsContext
 	* \brief An GLFW OpenGL graphics context

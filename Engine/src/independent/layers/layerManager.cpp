@@ -18,16 +18,26 @@ namespace Engine
 	*/
 	LayerManager::LayerManager(Scene* scene)
 	{
-		m_layers.reserve(ResourceManager::getConfigValue(ConfigData::MaxLayersPerScene));
-		m_attachedScene = scene;
+		m_layers.reserve(ResourceManager::getConfigValue(Config::MaxLayersPerScene));
+
+		if (scene)
+			m_attachedScene = scene;
+		else
+			ENGINE_ERROR("[LayerManager::LayerManager] An invalid scene was provided.");
 	}
 
 	//! ~LayerManager()
 	LayerManager::~LayerManager()
 	{
-		// Delete all layers
-		ENGINE_INFO("[LayerManager::~LayerManager] Deleting layer manager attached to {0}.", getParentScene()->getName());
-		
+		if (getParentScene())
+		{
+			// Delete all layers
+			ENGINE_INFO("[LayerManager::~LayerManager] Deleting layer manager attached to {0}.", getParentScene()->getName());
+			m_attachedScene = nullptr;
+		}
+		else
+			ENGINE_INFO("[LayerManager::~LayerManager] Deleting layer manager which has no scene attached.");
+
 		// Go through the list in reverse
 		for (std::vector<Layer*>::reverse_iterator i = m_layers.rbegin(); i != m_layers.rend(); ++i)
 		{
@@ -36,15 +46,13 @@ namespace Engine
 			{
 				// Call the onDetach function
 				(*i)->onDetach();
-				delete (*i);
+				if ((*i)) delete (*i);
 			}
 			else
 				ENGINE_ERROR("[LayerManager::~LayerManager] Layer is a null pointer.");
 		}
 		// All layers have been detached, clear the list
 		m_layers.clear();
-
-		m_attachedScene = nullptr;
 	}
 
 	//! attachLayer()
@@ -53,14 +61,22 @@ namespace Engine
 	*/
 	void LayerManager::attachLayer(Layer* newLayer)
 	{
+		if (!newLayer)
+		{
+			ENGINE_ERROR("[LayerManager::attachLayer] An invalid layer was provided.");
+			return;
+		}
+
 		// Loop through each layer and check its name, if it exists, just exit out of function
 		for (auto& layer : m_layers)
 		{
-			if (layer->getLayerName() == newLayer->getLayerName())
+			if (layer)
 			{
-				ENGINE_ERROR("[LayerManager::attachLayer] Layer name is already taken. Name: {0}. Scene Name: {1}.", layer->getLayerName(), getParentScene()->getName());
-				delete newLayer;
-				return;
+				if (layer->getLayerName() == newLayer->getLayerName())
+				{
+					ENGINE_ERROR("[LayerManager::attachLayer] Layer name is already taken. Name: {0}.", layer->getLayerName());
+					return;
+				}
 			}
 		}
 
@@ -82,8 +98,11 @@ namespace Engine
 		// Loop through each layer and check its name
 		for (auto& layer : m_layers)
 		{
-			if (layer->getLayerName() == layerName)
-				return layer;
+			if (layer)
+			{
+				if (layer->getLayerName() == layerName)
+					return layer;
+			}
 		}
 		ENGINE_ERROR("[LayerManager::getLayer] Could not get layer as layer name could not be found. Name: {0}, Scene: {1}.", layerName, getParentScene()->getName());
 		return nullptr;
@@ -108,8 +127,13 @@ namespace Engine
 		// Loop through each layer and check its name
 		for (auto& layerElement : m_layers)
 		{
-			if (layerElement->getLayerName() == layer->getLayerName())
-				return true;
+			if (layer)
+			{
+				if (layerElement->getLayerName() == layer->getLayerName())
+					return true;
+			}
+			else
+				ENGINE_ERROR("[LayerManager::layerExists] An invalid layer was provided.");
 		}
 		return false;
 	}
@@ -133,17 +157,24 @@ namespace Engine
 		// Update all layers
 		for (auto& layer : m_layers)
 		{
-			if (layer->getActive())
-				layer->onUpdate(timestep, totalTime);
+			if (layer)
+			{
+				if (layer->getActive())
+					layer->onUpdate(timestep, totalTime);
+			}
 		}
 	}
 
 	//! printLayerManagerDetails()
 	void LayerManager::printLayerManagerDetails()
 	{
-		ENGINE_TRACE("Layer Manager Details for Scene: {0}", getParentScene()->getName());
+		ENGINE_TRACE("Layer Manager Details");
 		ENGINE_TRACE("============================================");
 		ENGINE_TRACE("Layer List Size: {0}", m_layers.size());
+		if(m_attachedScene)
+			ENGINE_TRACE("Attached to scene: {0}", getParentScene()->getName());
+		else
+			ENGINE_TRACE("Attached to scene: NULL");
 		ENGINE_TRACE("============================================");
 	}
 
@@ -151,6 +182,8 @@ namespace Engine
 	void LayerManager::printLayerDetails()
 	{
 		for (auto& layer : m_layers)
-			layer->printLayerDetails();
+		{
+			if(layer) layer->printLayerDetails();
+		}
 	}
 }

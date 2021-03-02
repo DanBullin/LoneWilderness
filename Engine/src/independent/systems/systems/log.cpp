@@ -7,7 +7,7 @@
 */
 #include "independent/systems/systems/log.h"
 
-namespace Engine 
+namespace Engine
 {
 	bool Log::s_enabled = false; //!< Set to false
 	std::shared_ptr<spdlog::logger> Log::s_consoleLogger = nullptr; //!< Initialise the console logger
