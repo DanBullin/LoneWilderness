@@ -320,6 +320,30 @@ namespace Engine
 		return std::string();
 	}
 
+	//! getLineFromString()
+	/*
+	\param stringContents a const std::string& - The string to look at
+	\param lineIndex a const uint32_t - The index of the line to return
+	\return a std::string - The line's contents
+	*/
+	std::string ResourceManager::getLineFromString(const std::string& stringContents, const uint32_t lineIndex)
+	{
+		if (stringContents != "")
+		{
+			std::istringstream iss(stringContents);
+			uint32_t count = 0;
+
+			for (std::string line; std::getline(iss, line); )
+			{
+				if (count == lineIndex)
+					return line;
+
+				count++;
+			}
+		}
+		return "";
+	}
+
 	//! getJSON()
 	/*!
 	\param filePath a const std::string& - A reference to the file path

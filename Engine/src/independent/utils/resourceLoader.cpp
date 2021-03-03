@@ -585,11 +585,41 @@ namespace Engine
 				Model3D* newModel = new Model3D(name);
 
 				// We will use ASSIMP to read the model file
-				if (model["filePath"].get<std::string>() != "")
-					AssimpLoader::loadModel(model["filePath"].get<std::string>(), newModel->getMeshes());
-				
+				if (model["modelFilePath"].get<std::string>() != "")
+				{
+					AssimpLoader::loadModel(model["modelFilePath"].get<std::string>(), newModel->getMeshes());
+				}
+
 				if (newModel->getMeshes().size() == 0)
+				{
 					ENGINE_ERROR("[ResourceLoader::load3DModels] The geometry was not successfully loaded. Name: {0}.", name);
+					delete newModel;
+					return;
+				}
+				else
+				{
+					// Load the material file contents into a string
+					std::string materialFileContents = "";
+					std::string materialPath = model["materialFilePath"].get<std::string>();
+
+					// If a valid path was given, load the file and read into it
+					if (materialPath != "")
+						materialFileContents = ResourceManager::getContents(materialPath);
+
+					for (int i = 0; i < newModel->getMeshes().size(); i++)
+					{
+						if (materialFileContents != "")
+						{
+							std::string materialName = ResourceManager::getLineFromString(materialFileContents, i);
+							if (materialName != "") newModel->getMeshes().at(i).setMaterial(ResourceManager::getResource<Material>(materialName));
+							else newModel->getMeshes().at(i).setMaterial(ResourceManager::getResource<Material>("defaultMaterial3D"));
+						}
+						else
+						{
+							newModel->getMeshes().at(i).setMaterial(ResourceManager::getResource<Material>("defaultMaterial3D"));
+						}
+					}
+				}
 
 				// Register model with resource manager
 				ResourceManager::registerResource(name, newModel);

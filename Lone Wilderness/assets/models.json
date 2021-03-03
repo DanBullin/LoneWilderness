@@ -3,39 +3,38 @@
 	[
 		{ 
 			"name": "plane", 
-			"filePath": "assets/models/plane/plane.obj"
+			"modelFilePath": "assets/models/plane/plane.obj",
+			"materialFilePath": ""
 		},
 		{ 
 			"name": "cube", 
-			"filePath": "assets/models/cube/cube.obj"
+			"modelFilePath": "assets/models/cube/cube.obj",
+			"materialFilePath": ""
+		},
+		{ 
+			"name": "cube2", 
+			"modelFilePath": "assets/models/cube2/cube2.obj",
+			"materialFilePath": "assets/models/cube2/cube2.txt"
 		},
 		{ 
 			"name": "sphere", 
-			"filePath": "assets/models/sphere/sphere.obj"
+			"modelFilePath": "assets/models/sphere/sphere.obj",
+			"materialFilePath": ""
 		},
 		{ 
 			"name": "cyborg", 
-			"filePath": "assets/models/cyborg/cyborg.obj"
-		},
-		{
-			"name": "japaneseSign",
-			"filePath": "assets/models/signs/japaneseSign.obj"
-		},
-		{
-			"name": "openSign",
-			"filePath": "assets/models/signs/openSign.obj"
-		},
-		{
-			"name": "barSign",
-			"filePath": "assets/models/signs/barSign.obj"
+			"modelFilePath": "assets/models/cyborg/cyborg.obj",
+			"materialFilePath": ""
 		},
 		{
 			"name": "terrain",
-			"filePath": "assets/models/terrain/terrain.obj"
+			"modelFilePath": "assets/models/terrain/terrain.obj",
+			"materialFilePath": ""
 		},
 		{
 			"name": "street",
-			"filePath": "assets/models/street/Scenario_Terror.obj"
+			"modelFilePath": "assets/models/street/Scenario_Terror.obj",
+			"materialFilePath": ""
 		}
 	]	
 }

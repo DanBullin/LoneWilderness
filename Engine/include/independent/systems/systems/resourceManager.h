@@ -66,6 +66,7 @@ namespace Engine
 
 		static std::string getCurrentDirectory(); //!< Returns the current directory
 		static std::string getContents(const std::string& filePath); //!< Return the file contents
+		static std::string getLineFromString(const std::string& stringContents, const uint32_t lineIndex); //!< Return the contents on line
 		static nlohmann::json getJSON(const std::string& filePath); //!< Load the contents of a file into a JSON object and return the object
 
 		static const uint32_t getConfigValue(const Config::ConfigData data); //!< Get a config value

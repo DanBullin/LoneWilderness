@@ -212,11 +212,16 @@ namespace Engine
 				{
 					Material* material = meshRender->getMaterial();
 
-					if (!material || material->getName() == "")
-						material = ResourceManager::getResource<Material>("defaultMaterial3D");
-
-					for (auto& mesh : meshRender->getModel()->getMeshes())
-						Renderer3D::submit(mesh.getGeometry(), material, getComponent<Transform>()->getModelMatrix());
+					if (material)
+					{
+						for (auto& mesh : meshRender->getModel()->getMeshes())
+							Renderer3D::submit(mesh.getGeometry(), material, getComponent<Transform>()->getModelMatrix());
+					}
+					else
+					{
+						for (auto& mesh : meshRender->getModel()->getMeshes())
+							Renderer3D::submit(mesh.getGeometry(), mesh.getMaterial(), getComponent<Transform>()->getModelMatrix());
+					}
 				}
 			}
 		}

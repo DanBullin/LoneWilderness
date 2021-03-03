@@ -11,6 +11,7 @@
 #include "independent/core/common.h"
 #include "independent/rendering/geometry/vertex.h"
 #include "independent/rendering/geometry/vertexBuffer.h"
+#include "independent/rendering/materials/material.h"
 
 namespace Engine
 {
@@ -34,11 +35,14 @@ namespace Engine
 	{
 	private:
 		Geometry3D m_geometry; //!< The geometry of this 3D mesh
+		Material* m_material; //!< The material to apply to this mesh
 	public:
 		Mesh3D(const Geometry3D& geometry); //!< Constructor
 		~Mesh3D(); //!< Destructor
 
 		const Geometry3D& getGeometry() const; //!< Get the geometry
+		Material* getMaterial(); //!< Get the material applied to this mesh
+		void setMaterial(Material* material); //!< Set the material to apply to this mesh
 	};
 }
 #endif

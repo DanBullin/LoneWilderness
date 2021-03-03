@@ -31,4 +31,25 @@ namespace Engine
 	{
 		return m_geometry;
 	}
+
+	//! getMaterial()
+	/*
+	\return a Material* - A pointer to the material
+	*/
+	Material* Mesh3D::getMaterial()
+	{
+		return m_material;
+	}
+
+	//! setMaterial()
+	/*
+	\param material a Material* - A pointer to the material
+	*/
+	void Mesh3D::setMaterial(Material* material)
+	{
+		if (material)
+			m_material = material;
+		else
+			ENGINE_ERROR("[Mesh3D::setMaterial] The material provided is an invalid material.");
+	}
 }
