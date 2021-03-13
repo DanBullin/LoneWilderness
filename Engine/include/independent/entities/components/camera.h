@@ -100,7 +100,7 @@ namespace Engine
 		Skybox* getSkybox(); //!< Get the attatched skybox
 
 		void updateCameraVectors(); //!< Update all camera vectors
-		void updateProjection(); //!< Update the projection
+		void updateProjection(const glm::vec2& size); //!< Update the projection aspect ratio
 	};
 }
 #endif

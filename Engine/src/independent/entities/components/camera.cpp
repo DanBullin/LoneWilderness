@@ -101,18 +101,10 @@ namespace Engine
 	*/
 	glm::mat4 Camera::getProjectionMatrix(const bool perspective)
 	{
-		Window* window = WindowManager::getFocusedWindow();
-
-		if (window)
-		{
-			if (perspective)
-				return glm::perspective(glm::radians(m_cameraData.Zoom), m_projection.AspectRatio, m_projection.NearPlane, m_projection.FarPlane);
-			else
-				return glm::ortho(0.f, m_projection.Right, m_projection.Bottom, 0.f, -1.f, 1.f);
-		}
+		if (perspective)
+			return glm::perspective(glm::radians(m_cameraData.Zoom), m_projection.AspectRatio, m_projection.NearPlane, m_projection.FarPlane);
 		else
-			ENGINE_ERROR("[Camera::getProjectionMatrix] There is no currently focused window. Camera Name: {0}.", m_name);
-		return glm::ortho(0.f, m_projection.Right, m_projection.Bottom, 0.f, -1.f, 1.f);
+			return glm::ortho(0.f, m_projection.Right, m_projection.Bottom, 0.f, -1.f, 1.f);
 	}
 
 	//! getWorldPosition()
@@ -305,11 +297,13 @@ namespace Engine
 	}
 
 	//! updateProjection()
-	void Camera::updateProjection()
+	/*
+	\param size a const glm::vec2& - The new size of the matrix
+	*/
+	void Camera::updateProjection(const glm::vec2& size)
 	{
-		glm::ivec2 size = WindowManager::getFocusedWindow()->getProperties().getSize();
-		m_projection.Right = static_cast<float>(size.x);
-		m_projection.Bottom = static_cast<float>(size.y);
-		m_projection.AspectRatio = static_cast<float>(size.x) / static_cast<float>(size.y);
+		m_projection.Right = size.x;
+		m_projection.Bottom = size.y;
+		m_projection.AspectRatio = size.x / size.y;
 	}
 }

@@ -8,6 +8,7 @@
 #include "independent/systems/systems/sceneManager.h"
 #include "independent/systems/systems/log.h"
 #include "independent/systems/systems/resourceManager.h"
+#include "independent/systems/systems/windowManager.h"
 
 namespace Engine
 {
@@ -250,7 +251,7 @@ namespace Engine
 					s_activeSceneName = sceneName;
 
 					if (getActiveScene()) getActiveScene()->setEntityListUpdated(true);
-					if (getActiveScene()) getActiveScene()->getMainCamera()->updateProjection();
+					if (getActiveScene()) getActiveScene()->getMainCamera()->updateProjection(WindowManager::getFocusedWindow()->getProperties().getSizef());
 
 					// Destroy the old active scene if needed
 					if (deleteOldScene)

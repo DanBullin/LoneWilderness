@@ -107,7 +107,7 @@ namespace Engine
 			if (!window) return;
 
 			window->onWindowResize(e);
-			s_currentScene->getMainCamera()->updateProjection();
+			s_currentScene->getMainCamera()->updateProjection(window->getProperties().getSizef());
 
 			// Pass input event to layers and entities 
 			if (s_currentScene)

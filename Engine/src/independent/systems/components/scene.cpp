@@ -8,6 +8,7 @@
 #include "independent/systems/components/scene.h"
 #include "independent/systems/systems/log.h"
 #include "independent/systems/systems/resourceManager.h"
+#include "independent/systems/systems/windowManager.h"
 
 namespace Engine
 {
@@ -318,7 +319,7 @@ namespace Engine
 			// Update main camera with camera passed
 			m_mainCamera = camera;
 			camera->setMainCamera(true);
-			camera->updateProjection();
+			camera->updateProjection(WindowManager::getFocusedWindow()->getProperties().getSizef());
 		}
 	}
 
