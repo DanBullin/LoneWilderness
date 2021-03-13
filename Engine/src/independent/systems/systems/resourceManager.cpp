@@ -12,7 +12,7 @@
 namespace Engine
 {
 	bool ResourceManager::s_enabled = false; //!< Set to false
-	std::vector<uint32_t> ResourceManager::s_configValues;
+	std::vector<uint32_t> ResourceManager::s_configValues; //!< The list of config values
 	std::map<std::string, Resource*> ResourceManager::s_loadedResources; //!< A list of loaded resources
 
 	//! getConfigAsString()
@@ -24,31 +24,31 @@ namespace Engine
 	{
 		switch (data)
 		{
-			case Config::ConfigData::MaxSubTexturesPerMaterial:
-				return "[MaxSubtexturesPerMaterial]";
-			case Config::ConfigData::VertexCapacity3D:
-				return "[VertexCapacity3D]";
-			case Config::ConfigData::IndexCapacity3D:
-				return "[IndexCapacity3D]";
-			case Config::ConfigData::BatchCapacity3D:
-				return "[BatchCapacity3D]";
-			case Config::ConfigData::BatchCapacity2D:
-				return "[BatchCapacity2D]";
-			case Config::ConfigData::MaxLayersPerScene:
-				return "[MaxLayersPerScene]";
-			case Config::ConfigData::MaxRenderPassesPerScene:
-				return "[MaxRenderPassesPerScene]";
-			case Config::ConfigData::MaxLightsPerDraw:
-				return "[MaxLightsPerRenderCall]";
-			case Config::ConfigData::UseBloom:
-				return "[UseBloom]";
-			case Config::ConfigData::BloomBlurFactor:
-				return "[BloomBlurFactor]";
-			case Config::ConfigData::PrintResourcesInDestructor:
-				return "[PrintResourcesInDestructor]";
-			case Config::ConfigData::PrintOpenGLDebugMessages:
-				return "[PrintOpenGLDebugMessages]";
-			default: return 0;
+		case Config::ConfigData::MaxSubTexturesPerMaterial:
+			return "[MaxSubtexturesPerMaterial]";
+		case Config::ConfigData::VertexCapacity3D:
+			return "[VertexCapacity3D]";
+		case Config::ConfigData::IndexCapacity3D:
+			return "[IndexCapacity3D]";
+		case Config::ConfigData::BatchCapacity3D:
+			return "[BatchCapacity3D]";
+		case Config::ConfigData::BatchCapacity2D:
+			return "[BatchCapacity2D]";
+		case Config::ConfigData::MaxLayersPerScene:
+			return "[MaxLayersPerScene]";
+		case Config::ConfigData::MaxRenderPassesPerScene:
+			return "[MaxRenderPassesPerScene]";
+		case Config::ConfigData::MaxLightsPerDraw:
+			return "[MaxLightsPerRenderCall]";
+		case Config::ConfigData::UseBloom:
+			return "[UseBloom]";
+		case Config::ConfigData::BloomBlurFactor:
+			return "[BloomBlurFactor]";
+		case Config::ConfigData::PrintResourcesInDestructor:
+			return "[PrintResourcesInDestructor]";
+		case Config::ConfigData::PrintOpenGLDebugMessages:
+			return "[PrintOpenGLDebugMessages]";
+		default: return 0;
 		}
 	}
 
@@ -85,21 +85,6 @@ namespace Engine
 			s_configValues.push_back(configData["bloomBlurFactor"]);
 			s_configValues.push_back(configData["printResourcesInDestructor"]);
 			s_configValues.push_back(configData["printOpenGLDebugMessages"]);
-
-			ENGINE_INFO("[ResourceManager::start] Loading common resources.");
-			ResourceLoader::loadVertexBuffers("assets/vertexBuffers.json");
-			ResourceLoader::loadIndexBuffers("assets/indexBuffers.json");
-			ResourceLoader::loadVertexArrays("assets/vertexArrays.json");
-			ResourceLoader::loadIndirectBuffers("assets/indirectBuffers.json");
-			ResourceLoader::loadUniformBuffers("assets/uniformBuffers.json");
-			ResourceLoader::loadFrameBuffers("assets/frameBuffers.json");
-			ResourceLoader::loadShaderPrograms("assets/shaders.json");
-			ResourceLoader::loadTextures("assets/textures.json");
-			ResourceLoader::loadSubTextures("assets/subTextures.json");
-			ResourceLoader::loadMaterials("assets/materials.json");
-			ResourceLoader::load3DModels("assets/models.json");
-
-			printResourceManagerDetails();
 		}
 	}
 
@@ -145,7 +130,7 @@ namespace Engine
 				s_loadedResources[resourceName] = resource;
 			}
 			else
-				ENGINE_ERROR("[ResourceManager::registerResource] This resource name has already been taken by another resource. Name: {0}.", resourceName);
+				ENGINE_WARN("[ResourceManager::registerResource] This resource name has already been taken by another resource. Name: {0}.", resourceName);
 		}
 	}
 
@@ -176,7 +161,7 @@ namespace Engine
 				if (res.second)
 				{
 					ResourceType currentType = res.second->getType();
-					if(type != currentType)
+					if (type != currentType)
 						ENGINE_INFO("[ResourceManager::destroyResource] Deleting all resources of type: {0}.", toString(currentType));
 
 					type = currentType;
@@ -207,6 +192,23 @@ namespace Engine
 			else
 				ENGINE_ERROR("[ResourceManager::destroyResource] The resource by name was not found. Name: {0}", resourceName);
 		}
+	}
+
+	//! loadResources()
+	void ResourceManager::loadResources()
+	{
+		ENGINE_INFO("[ResourceManager::start] Loading common resources.");
+		ResourceLoader::loadVertexBuffers("assets/vertexBuffers.json");
+		ResourceLoader::loadVertexArrays("assets/vertexArrays.json");
+		ResourceLoader::loadUniformBuffers("assets/uniformBuffers.json");
+		ResourceLoader::loadFrameBuffers("assets/frameBuffers.json");
+		ResourceLoader::loadShaderPrograms("assets/shaders.json");
+		ResourceLoader::loadTextures("assets/textures.json");
+		ResourceLoader::loadSubTextures("assets/subTextures.json");
+		ResourceLoader::loadMaterials("assets/materials.json");
+		ResourceLoader::load3DModels("assets/models.json");
+
+		printResourceManagerDetails();
 	}
 
 	//! getResources()
@@ -316,7 +318,7 @@ namespace Engine
 		}
 		else
 			ENGINE_ERROR("[ResourceManager::getContents] This system has not been enabled.");
-		
+
 		return std::string();
 	}
 

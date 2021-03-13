@@ -25,12 +25,12 @@ namespace Engine
 		Transform = 2,			 //!< A 3D transform of an entity
 		MeshRender3D = 3,		 //!< The render details for a 3D entity
 		MeshRender2D = 4,		 //!< The render details for a 2D entity
-		EventListener = 5,		 //!< An event listener to respond to inputs and updates
-		Text = 6,				 //!< A text render component
-		CharacterController = 7, //!< A character controller
-		DirectionalLight = 8,	 //!< A directional light source
-		PointLight = 9,		     //!< A point light source
-		SpotLight = 10			 //!< A spot light source
+		Text = 5,				 //!< A text render component
+		CharacterController = 6, //!< A character controller
+		DirectionalLight = 7,	 //!< A directional light source
+		PointLight = 8,		     //!< A point light source
+		SpotLight = 9,			 //!< A spot light source
+		NativeScript = 10		 //!< A native script
 	};
 
 	/*! \class EntityComponent
@@ -84,12 +84,12 @@ namespace Engine
 			case ComponentType::Transform: return "Transform";
 			case ComponentType::MeshRender3D: return "MeshRender3D";
 			case ComponentType::MeshRender2D: return "MeshRender2D";
-			case ComponentType::EventListener: return "EventListener";
 			case ComponentType::Text: return "Text";
 			case ComponentType::CharacterController: return "CharacterController";
 			case ComponentType::DirectionalLight: return "DirectionalLight";
 			case ComponentType::PointLight: return "PointLight";
 			case ComponentType::SpotLight: return "SpotLight";
+			case ComponentType::NativeScript: return "NativeScript";
 			default: return "Not a valid component type.";
 			}
 		}
@@ -106,8 +106,6 @@ namespace Engine
 				return ComponentType::Camera;
 			else if (classType == "class Engine::Transform" || classType == "Transform")
 				return ComponentType::Transform;
-			else if (classType == "class Engine::EventListener" || classType == "EventListener")
-				return ComponentType::EventListener;
 			else if (classType == "class Engine::MeshRender3D" || classType == "MeshRender3D")
 				return ComponentType::MeshRender3D;
 			else if (classType == "class Engine::MeshRender2D" || classType == "MeshRender2D")
@@ -122,6 +120,8 @@ namespace Engine
 				return ComponentType::SpotLight;
 			else if (classType == "class Engine::DirectionalLight" || classType == "DirectionalLight")
 				return ComponentType::DirectionalLight;
+			else if (classType == "class Engine::NativeScript" || classType == "NativeScript")
+				return ComponentType::NativeScript;
 			else
 				return ComponentType::None;
 		}

@@ -80,6 +80,10 @@ namespace Engine
 		Geometry3D geometry;
 		geometry.VertexBuffer = ResourceManager::getResource<VertexBuffer>("Vertex3DBuffer");
 		Renderer3D::addGeometry(vertices, indices, geometry);
+
+		if (geometry.VertexCount == 0)
+			ENGINE_ERROR("[AssimpLoader::processMesh] Vertices were not uploaded to the vertex buffer correctly.");
+
 		return Mesh3D(geometry);
 	}
 

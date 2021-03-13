@@ -21,34 +21,34 @@
     <ClInclude Include="include\loaders\sceneLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\entities\cyborg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\entities\FPSCounter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\entities\player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\entities\rectangleShape.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\layers\defaultLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\layers\UILayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\entities\mainMenu\menuText.h">
+    <ClInclude Include="include\scripts\mainMenu\menuText.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\entities\lightTest.h">
+    <ClInclude Include="include\scripts\FPSCounter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\entities\sign.h">
+    <ClInclude Include="include\scripts\cyborg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\entities\street.h">
+    <ClInclude Include="include\scripts\lightTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scripts\player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scripts\rectangleShape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scripts\sign.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scripts\street.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -59,34 +59,34 @@
     <ClCompile Include="src\loaders\sceneLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\entities\cyborg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\entities\FPSCounter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\entities\player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\entities\rectangleShape.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\layers\defaultLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\layers\UILayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\entities\mainMenu\menuText.cpp">
+    <ClCompile Include="src\scripts\mainMenu\menuText.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\entities\lightTest.cpp">
+    <ClCompile Include="src\scripts\cyborg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\entities\sign.cpp">
+    <ClCompile Include="src\scripts\FPSCounter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\entities\street.cpp">
+    <ClCompile Include="src\scripts\lightTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scripts\player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scripts\rectangleShape.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scripts\sign.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scripts\street.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

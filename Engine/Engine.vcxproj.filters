@@ -225,9 +225,6 @@
     <ClCompile Include="src\independent\entities\components\characterController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\independent\entities\components\eventListener.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\independent\entities\components\light.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -247,6 +244,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\independent\entities\components\components\skybox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\independent\entities\components\nativeScript.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\independent\rendering\renderers\utils\fillBuffers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -458,9 +461,6 @@
     <ClInclude Include="include\independent\entities\components\camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\independent\entities\components\eventListener.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\independent\entities\components\meshRender2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -522,6 +522,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\independent\entities\components\components\skybox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\independent\entities\components\nativeScript.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\independent\rendering\renderers\utils\fillBuffers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

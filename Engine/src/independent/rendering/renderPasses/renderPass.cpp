@@ -11,12 +11,39 @@
 
 namespace Engine
 {
+	bool RenderPass::s_initialised = false; //!< Initialise to false
+
 	//! RenderPass()
 	RenderPass::RenderPass()
 	{
 		m_attachedScene = nullptr;
 		m_index = 0;
 		m_enabled = true;
+
+		if (!s_initialised)
+		{
+			// Create the Text related resources (SubTextures, Shader and Material)
+			SubTexture* textSubTexture = new SubTexture("textSubTexture", ResourceManager::getResource<Texture2D>("defaultTexture"), { 0.f, 0.f }, { 1.f, 1.f }, false);
+			ResourceManager::registerResource("textSubTexture", textSubTexture);
+
+			ShaderProgram* newShader = ShaderProgram::create("textShader");
+			newShader->build(ResourceManager::getResource<VertexArray>("QuadArray"), "assets/shaders/quad/vertex.vs", "assets/shaders/quad/fragment.fs", "", "", "");
+			newShader->setUniforms({ "u_textures" });
+			newShader->setUniformBuffers({ { "Camera", ResourceManager::getResource<UniformBuffer>("CameraUBO") } });
+			newShader->setOrderImportance(2);
+			ResourceManager::registerResource("textShader", newShader);
+
+			Material* textMaterial = new Material("textMaterial", { textSubTexture }, {}, ResourceManager::getResource<ShaderProgram>("textShader"), { 1.f, 1.f, 1.f, 1.f }, 32.f);
+			ResourceManager::registerResource("textMaterial", textMaterial);
+
+			// Create the screen quad subtextures
+			SubTexture* newSubTexture1 = new SubTexture("screenQuadSubTexture1", ResourceManager::getResource<Texture2D>("defaultTexture"), { 0.f, 0.f }, { 1.f, 1.f }, true);
+			SubTexture* newSubTexture2 = new SubTexture("screenQuadSubTexture2", ResourceManager::getResource<Texture2D>("defaultTexture"), { 0.f, 0.f }, { 1.f, 1.f }, true);
+			ResourceManager::registerResource("screenQuadSubTexture1", newSubTexture1);
+			ResourceManager::registerResource("screenQuadSubTexture2", newSubTexture2);
+
+			s_initialised = true;
+		}
 	}
 
 	//! ~RenderPass()
@@ -24,6 +51,7 @@ namespace Engine
 	{
 		ENGINE_INFO("[RenderPass::~RenderPass] Deleting render pass.");
 		m_attachedScene = nullptr;
+		s_initialised = false;
 	}
 
 	//! attachScene()

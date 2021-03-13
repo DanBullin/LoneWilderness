@@ -33,6 +33,8 @@ namespace Engine
 		SystemManager::addSystem(SystemType::SceneManager);
 		SystemManager::addSystem(SystemType::RenderSystem);
 		
+		ResourceManager::loadResources();
+
 		// Start timers for FPS and total application time
 		TimerSystem::startTimer("FPS");
 		TimerSystem::startTimer("TotalTime");
@@ -65,7 +67,7 @@ namespace Engine
 			float totalTime = GET_TIME("TotalTime", false, true);
 
 			// Update all necassary items through the event manager
-			EventManager::onUpdate(timestep, totalTime);
+			EventManager::onUpdate(scene, timestep, totalTime);
 
 			// If we have a valid focused window, render the current active scene
 			if (WindowManager::getFocusedWindow())

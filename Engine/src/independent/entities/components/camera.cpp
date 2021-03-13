@@ -108,11 +108,11 @@ namespace Engine
 			if (perspective)
 				return glm::perspective(glm::radians(m_cameraData.Zoom), window->getProperties().getAspectRatio(), m_projection.NearPlane, m_projection.FarPlane);
 			else
-				return glm::ortho(0.f, m_projection.Right, m_projection.Bottom, 0.f);
+				return glm::ortho(0.f, m_projection.Right, m_projection.Bottom, 0.f, -1.f, 1.f);
 		}
 		else
 			ENGINE_ERROR("[Camera::getProjectionMatrix] There is no currently focused window. Camera Name: {0}.", m_name);
-		return glm::ortho(0.f, m_projection.Right, m_projection.Bottom, 0.f);
+		return glm::ortho(0.f, m_projection.Right, m_projection.Bottom, 0.f, -1.f, 1.f);
 	}
 
 	//! getWorldPosition()
@@ -302,5 +302,14 @@ namespace Engine
 		// also re-calculate the Right and Up vector
 		m_cameraData.Right = glm::normalize(glm::cross(m_cameraData.Front, m_cameraData.WorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
 		m_cameraData.Up = glm::normalize(glm::cross(m_cameraData.Right, m_cameraData.Front));
+	}
+
+	//! updateProjection()
+	void Camera::updateProjection()
+	{
+		glm::ivec2 size = WindowManager::getFocusedWindow()->getProperties().getSize();
+		m_projection.Right = static_cast<float>(size.x);
+		m_projection.Bottom = static_cast<float>(size.y);
+		m_projection.AspectRatio = static_cast<float>(size.x / size.y);
 	}
 }

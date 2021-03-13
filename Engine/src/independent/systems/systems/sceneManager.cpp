@@ -250,6 +250,7 @@ namespace Engine
 					s_activeSceneName = sceneName;
 
 					if (getActiveScene()) getActiveScene()->setEntityListUpdated(true);
+					if (getActiveScene()) getActiveScene()->getMainCamera()->updateProjection();
 
 					// Destroy the old active scene if needed
 					if (deleteOldScene)

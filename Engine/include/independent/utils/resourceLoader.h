@@ -23,9 +23,7 @@ namespace Engine
 		static uint32_t getCapacity(const std::string& capacityLocation); //!< Get the capacity
 	public:
 		static void loadVertexBuffers(const std::string& filePath); //!< Load the vertex buffers needed in this scene
-		static void loadIndexBuffers(const std::string& filePath); //!< Load the index buffers needed in this scene
 		static void loadVertexArrays(const std::string& filePath); //!< Load the vertex arrays needed in this scene
-		static void loadIndirectBuffers(const std::string& filePath); //!< Load the indirect buffers needed in this scene
 		static void loadUniformBuffers(const std::string& filePath); //!< Load the uniform buffers needed in this scene
 		static void loadFrameBuffers(const std::string& filePath); //!< Load the frame buffers needed in this scene
 		static void loadShaderPrograms(const std::string& filePath); //!< Load the shader programs needed in this scene

@@ -78,7 +78,7 @@ namespace Engine
 	{
 		// Destroy the window
 		ENGINE_INFO("[GLFWWindowImplementation::~GLFWWindowImplementation] Closing the window.");
-		if(m_native) glfwDestroyWindow(m_native);
+		if (m_native) glfwDestroyWindow(m_native);
 		m_native = nullptr;
 	}
 
@@ -124,7 +124,7 @@ namespace Engine
 		{
 			m_properties.setSize(e.getSize());
 			m_properties.setAspectRatio(e.getSize());
-			if(m_properties.getMinimised())
+			if (m_properties.getMinimised())
 				m_properties.setMinimised(false);
 
 			m_graphicsContext->updateViewport(0, 0, e.getWidth(), e.getHeight());
@@ -317,7 +317,7 @@ namespace Engine
 	*/
 	void GLFWWindowImplementation::setPosition(const uint32_t x, const uint32_t y)
 	{
-		if(m_native)
+		if (m_native)
 			setPosition(glm::ivec2(x, y));
 		else
 			ENGINE_ERROR("[GLFWWindowImplementation::setPosition] Couldn't find GLFW window: {0}.", m_windowName);
@@ -472,21 +472,21 @@ namespace Engine
 			// Set the input mode based on argument
 			switch (mode)
 			{
-				case CursorInputMode::Visible:
-				{
-					glfwMode = GLFW_CURSOR_NORMAL;
-					break;
-				}
-				case CursorInputMode::Hidden:
-				{
-					glfwMode = GLFW_CURSOR_HIDDEN;
-					break;
-				}
-				case CursorInputMode::Disabled:
-				{
-					glfwMode = GLFW_CURSOR_DISABLED;
-					break;
-				}
+			case CursorInputMode::Visible:
+			{
+				glfwMode = GLFW_CURSOR_NORMAL;
+				break;
+			}
+			case CursorInputMode::Hidden:
+			{
+				glfwMode = GLFW_CURSOR_HIDDEN;
+				break;
+			}
+			case CursorInputMode::Disabled:
+			{
+				glfwMode = GLFW_CURSOR_DISABLED;
+				break;
+			}
 			}
 
 			// Tell GLFW the input mode
@@ -498,7 +498,7 @@ namespace Engine
 	}
 
 	//! setCursorInputMode()
-	/*! 
+	/*!
 	\param width a const uint32_t - The width of the icon
 	\param height a const uint32_t - The height of the icon
 	\param pixels an unsigned char* - The pixel data (4 channel pixel data)

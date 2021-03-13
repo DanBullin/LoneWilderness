@@ -35,6 +35,7 @@ namespace Engine
 
 		static void initialise(); //!< Initialise the render system after all systems have been added and started
 		static void onRender(Scene* scene); //!< Render the scene
+		static TextureUnitManager* getTextureUnitManager(); //!< Get the texture unit manager
 	};
 }
 #endif

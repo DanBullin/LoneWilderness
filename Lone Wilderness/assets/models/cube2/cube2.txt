@@ -1,2 +1,2 @@
-cyborgMaterial
 defaultMaterial3D
+cyborgMaterial

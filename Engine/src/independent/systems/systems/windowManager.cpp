@@ -50,7 +50,7 @@ namespace Engine
 				toCursorInputMode(configData["cursorInputMode"].get<uint32_t>()));
 
 			auto window = WindowManager::registerWindow(configData["name"].get<std::string>(), props);
-			if(window) window->setIcon("assets/textures/icon.png");
+			if (window) window->setIcon(configData["icon"].get<std::string>());
 		}
 	}
 

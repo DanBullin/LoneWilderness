@@ -26,7 +26,7 @@ namespace Engine
 		float Top; //!< The top ortho bound
 		float Bottom; //!< The bottom ortho bound
 
-		Projection(const float left = 0.f, const float right = 800.f, const float top = 0.f, const float bottom = 600.f, const float ratio = 1.33f, const float nearPlane = 0.1f, const float farPlane = 1000.f)
+		Projection(const float left = 0.f, const float right = 1024.f, const float top = 0.f, const float bottom = 768.f, const float ratio = 1.33f, const float nearPlane = 0.1f, const float farPlane = 1000.f)
 			: Left(left), Right(right), Top(top), Bottom(bottom), AspectRatio(ratio), NearPlane(nearPlane), FarPlane(farPlane) {} //!< Ortho constructor
 			/*!< \param left a const float - The left value
 				 \param right a const float - The right value
@@ -100,6 +100,7 @@ namespace Engine
 		Skybox* getSkybox(); //!< Get the attatched skybox
 
 		void updateCameraVectors(); //!< Update all camera vectors
+		void updateProjection(); //!< Update the projection
 	};
 }
 #endif

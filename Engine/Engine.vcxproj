@@ -130,10 +130,10 @@
     <ClCompile Include="src\independent\entities\components\camera.cpp" />
     <ClCompile Include="src\independent\entities\components\characterController.cpp" />
     <ClCompile Include="src\independent\entities\components\components\skybox.cpp" />
-    <ClCompile Include="src\independent\entities\components\eventListener.cpp" />
     <ClCompile Include="src\independent\entities\components\light.cpp" />
     <ClCompile Include="src\independent\entities\components\meshRender2D.cpp" />
     <ClCompile Include="src\independent\entities\components\meshRender3D.cpp" />
+    <ClCompile Include="src\independent\entities\components\nativeScript.cpp" />
     <ClCompile Include="src\independent\entities\components\text.cpp" />
     <ClCompile Include="src\independent\entities\components\transform.cpp" />
     <ClCompile Include="src\independent\entities\entity.cpp" />
@@ -153,6 +153,7 @@
     <ClCompile Include="src\independent\rendering\renderBuffer.cpp" />
     <ClCompile Include="src\independent\rendering\renderers\renderer2D.cpp" />
     <ClCompile Include="src\independent\rendering\renderers\renderer3D.cpp" />
+    <ClCompile Include="src\independent\rendering\renderers\utils\fillBuffers.cpp" />
     <ClCompile Include="src\independent\rendering\renderPasses\passes\firstPass.cpp" />
     <ClCompile Include="src\independent\rendering\renderPasses\passes\fourthPass.cpp" />
     <ClCompile Include="src\independent\rendering\renderPasses\passes\menuPass.cpp" />
@@ -212,10 +213,10 @@
     <ClInclude Include="include\independent\entities\components\camera.h" />
     <ClInclude Include="include\independent\entities\components\characterController.h" />
     <ClInclude Include="include\independent\entities\components\components\skybox.h" />
-    <ClInclude Include="include\independent\entities\components\eventListener.h" />
     <ClInclude Include="include\independent\entities\components\light.h" />
     <ClInclude Include="include\independent\entities\components\meshRender2D.h" />
     <ClInclude Include="include\independent\entities\components\meshRender3D.h" />
+    <ClInclude Include="include\independent\entities\components\nativeScript.h" />
     <ClInclude Include="include\independent\entities\components\text.h" />
     <ClInclude Include="include\independent\entities\components\transform.h" />
     <ClInclude Include="include\independent\entities\entity.h" />
@@ -293,6 +294,7 @@
     <ClInclude Include="include\platform\OpenGL\openGLUniformBuffer.h" />
     <ClInclude Include="include\platform\OpenGL\shaders\openGLShaderProgram.h" />
     <ClInclude Include="include\platform\OpenGL\textures\openGLTexture.h" />
+    <ClInclude Include="include\independent\rendering\renderers\utils\fillBuffers.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

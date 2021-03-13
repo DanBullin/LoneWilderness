@@ -4,15 +4,16 @@
 		{
 			"name": "Main",
 			"title": "Lone Wilderness",
-			"size": [ 800, 600 ],
-			"position": [ 500, 300 ],
+			"size": [ 1024, 768 ],
+			"position": [ 200, 200 ],
 			"vSync": true,
 			"fullScreen": false,
 			"minimised": false,
 			"opacity": 1.0,
 			"focused": true,
 			"hide": false,
-			"cursorInputMode": 0
+			"cursorInputMode": 0,
+			"icon": "assets/textures/icon.png"
 		}
 	],
 	"fonts":
@@ -20,6 +21,11 @@
 		{
 			"name": "Arial",
 			"filePath": "assets/fonts/arial/arial.ttf",
+			"characterSize": 38
+		},
+		{
+			"name": "Forte",
+			"filePath": "assets/fonts/Forte/forte.ttf",
 			"characterSize": 38
 		}
 	],

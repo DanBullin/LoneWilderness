@@ -36,6 +36,8 @@ namespace Engine
 
 		void setMaterial(Material* material); //!< Set the material
 		Material* getMaterial(); //!< Get the material
+
+		void onRender(); //!< A render submission command
 	};
 }
 #endif

@@ -1,6 +1,6 @@
 /*! \file firstPass.cpp
 *
-* \brief A first render pass
+* \brief A first render pass. This pass draws all 3D objects in the scene to the HDR colour buffer + a brightness HDR buffer
 *
 * \author Daniel Bullin
 *
@@ -9,13 +9,35 @@
 #include "independent/systems/components/scene.h"
 #include "independent/rendering/renderUtils.h"
 #include "independent/systems/systems/resourceManager.h"
-#include "independent/systems/systemManager.h"
 #include "independent/systems/systems/windowManager.h"
 #include "independent/rendering/renderers/renderer3D.h"
-#include "independent/rendering/renderers/renderer2D.h"
 
 namespace Engine
 {
+	bool FirstPass::s_initialised = false; //!< Initialise to false
+
+	//! FirstPass()
+	FirstPass::FirstPass()
+	{
+		m_frameBuffer = ResourceManager::getResource<FrameBuffer>("hdrFBO");
+		m_cameraUBO = ResourceManager::getResource<UniformBuffer>("CameraUBO");
+		m_dirLightUBO = ResourceManager::getResource<UniformBuffer>("DirLightUBO");
+		m_pointLightUBO = ResourceManager::getResource<UniformBuffer>("PointLightUBO");
+		m_spotLightUBO = ResourceManager::getResource<UniformBuffer>("SpotLightUBO");
+		s_initialised = true;
+	}
+
+	//! ~FirstPass()
+	FirstPass::~FirstPass()
+	{
+		m_frameBuffer = nullptr;
+		m_cameraUBO = nullptr;
+		m_dirLightUBO = nullptr;
+		m_pointLightUBO = nullptr;
+		m_spotLightUBO = nullptr;
+		s_initialised = false;
+	}
+
 	//! uploadLightData()
 	void FirstPass::uploadLightData()
 	{
@@ -27,7 +49,6 @@ namespace Engine
 		// DIRECTIONAL LIGHTING
 		/////////
 
-		UniformBuffer* lightUBO = ResourceManager::getResource<UniformBuffer>("DirLightUBO");
 		std::string name = "DirLight";
 		DirectionalLightSDT dirLightSDT;
 		if (dirLights.size() != 0)
@@ -44,13 +65,12 @@ namespace Engine
 			dirLightSDT.diffuse = glm::vec4(0.f, 0.f, 0.f, 0.f);
 			dirLightSDT.specular = glm::vec4(0.f, 0.f, 0.f, 0.f);
 		}
-		lightUBO->uploadData(name.c_str(), static_cast<void*>(&dirLightSDT));
+		m_dirLightUBO->uploadData(name.c_str(), static_cast<void*>(&dirLightSDT));
 
 		/////////
 		// POINT LIGHTING
 		/////////
 
-		lightUBO = ResourceManager::getResource<UniformBuffer>("PointLightUBO");
 		for (uint32_t i = 0; i < ResourceManager::getConfigValue(Config::MaxLightsPerDraw); i++)
 		{
 			PointLightSDT lightSDT;
@@ -76,14 +96,12 @@ namespace Engine
 				lightSDT.linear = 0.f;
 				lightSDT.quadratic = 0.f;
 			}
-			lightUBO->uploadData(name.c_str(), static_cast<void*>(&lightSDT));
+			m_pointLightUBO->uploadData(name.c_str(), static_cast<void*>(&lightSDT));
 		}
 
 		/////////
 		// SPOT LIGHTING
 		/////////
-
-		lightUBO = ResourceManager::getResource<UniformBuffer>("SpotLightUBO");
 		for (uint32_t i = 0; i < ResourceManager::getConfigValue(Config::MaxLightsPerDraw); i++)
 		{
 			SpotLightSDT lightSDT;
@@ -115,57 +133,28 @@ namespace Engine
 				lightSDT.cutOff = 0.f;
 				lightSDT.outerCutOff = 0.f;
 			}
-			lightUBO->uploadData(name.c_str(), static_cast<void*>(&lightSDT));
+			m_spotLightUBO->uploadData(name.c_str(), static_cast<void*>(&lightSDT));
 		}
 
 	}
 
-	//! FirstPass()
-	FirstPass::FirstPass()
+	//! setupPass()
+	void FirstPass::setupPass()
 	{
-		m_frameBuffer = ResourceManager::getResource<FrameBuffer>("hdrFBO");
-	}
+		RenderUtils::clearBuffers(RenderParameter::COLOR_AND_DEPTH_BUFFER_BIT, m_attachedScene->getMainCamera()->getClearColour());
 
-	//! ~FirstPass()
-	FirstPass::~FirstPass()
-	{
-		m_frameBuffer = nullptr;
-	}
+		// Set some rendering settings
+		RenderUtils::setDepthComparison(RenderParameter::LESS_THAN_OR_EQUAL);
+		RenderUtils::enableDepthTesting(true);
 
-	//! prepare()
-	/*
-	\param stage a const uint32_t - The current stage of the renderer
-	*/
-	void FirstPass::prepare(const uint32_t stage)
-	{
-		// Functions to call to prepare before or after rendering calls
-		switch (stage)
-		{
-			case 0:
-			{
-				// Clear both colour buffers in the HDR FBO
-				RenderUtils::clearBuffers(RenderParameter::COLOR_AND_DEPTH_BUFFER_BIT, m_attachedScene->getMainCamera()->getClearColour());
+		// Upload light data to the light UBO
+		uploadLightData();
 
-				// Set some rendering settings
-				RenderUtils::setDepthComparison(RenderParameter::LESS_THAN_OR_EQUAL);
-				RenderUtils::enableDepthTesting(true);
-
-				// Upload light data to the light UBO
-				uploadLightData();
-
-				// Upload camera perspective data to UBO
-				UniformBuffer* cameraUBO = ResourceManager::getResource<UniformBuffer>("CameraUBO");
-				cameraUBO->uploadData("u_view", static_cast<void*>(&m_attachedScene->getMainCamera()->getViewMatrix(true)));
-				cameraUBO->uploadData("u_projection", static_cast<void*>(&m_attachedScene->getMainCamera()->getProjectionMatrix(true)));
-				cameraUBO->uploadData("u_viewPos", static_cast<void*>(&m_attachedScene->getMainCamera()->getWorldPosition()));
-				break;
-			}
-			case 1:
-			{
-				// Set depth comparison back to default
-				RenderUtils::setDepthComparison(RenderParameter::LESS);
-			}
-		}
+		// Upload camera perspective data to UBO
+		Camera* cam = m_attachedScene->getMainCamera();
+		m_cameraUBO->uploadData("u_view", static_cast<void*>(&cam->getViewMatrix(true)));
+		m_cameraUBO->uploadData("u_projection", static_cast<void*>(&cam->getProjectionMatrix(true)));
+		m_cameraUBO->uploadData("u_viewPos", static_cast<void*>(&cam->getWorldPosition()));
 	}
 
 	//! onRender()
@@ -174,26 +163,32 @@ namespace Engine
 	*/
 	void FirstPass::onRender(std::vector<Entity*>& entities)
 	{
-		// Bind the HDR FBO
+		// Bind FBO
 		m_frameBuffer->bind();
 
 		// Set settings
-		prepare(0);
+		setupPass();
 
 		Renderer3D::begin();
 
-		// Go through each 3D object (including light source objects) + skybox and render them
+		// Go through each 3D object (including light source objects) + skybox and render them to HDR buffer + brightness texture
 		for (auto& entity : entities)
-			if(entity->getLayer()->getDisplayed() && entity->getDisplay()) entity->onRender(Renderers::Renderer3D);
+		{
+			if (entity->getLayer()->getDisplayed() && entity->getDisplay())
+			{
+				if (entity->containsComponent<MeshRender3D>())
+					entity->getComponent<MeshRender3D>()->onRender();
 
-		if (m_attachedScene->getMainCamera()->getSkybox())
-			m_attachedScene->getMainCamera()->getSkybox()->onRender();
+				if (entity->containsComponent<NativeScript>())
+					entity->getComponent<NativeScript>()->onRender(Renderers::Renderer3D);
+			}
+		}
+
+		Skybox* skybox = m_attachedScene->getMainCamera()->getSkybox();
+		if (skybox)
+			skybox->onRender();
 
 		Renderer3D::end();
-
-		// Set settings
-		prepare(1);
-
 	}
 
 	//! getFrameBuffer()

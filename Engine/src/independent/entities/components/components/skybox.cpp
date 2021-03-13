@@ -41,7 +41,7 @@ namespace Engine
 
 			if (m_model)
 			{
-				Renderer3D::submit(m_model->getMeshes().at(0).getGeometry(), m_material, glm::mat4(1.f));
+				Renderer3D::submit("Skybox", m_model->getMeshes().at(0).getGeometry(), m_material, glm::mat4(1.f));
 			}
 			else
 				ENGINE_ERROR("[Skybox::onRender] Cannot render as the model is invalid.");

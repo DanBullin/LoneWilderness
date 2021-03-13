@@ -78,10 +78,7 @@ namespace Engine
 		if (m_default)
 		{
 			auto window = WindowManager::getFocusedWindow();
-			if(window)
-				glViewport(0, 0, window->getProperties().getSize().x, window->getProperties().getSize().y);
-			else
-				glViewport(0, 0, 800, 600);
+			glViewport(0, 0, window->getProperties().getSize().x, window->getProperties().getSize().y);
 		}
 		else
 			glViewport(0, 0, m_size.x, m_size.y);

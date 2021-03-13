@@ -180,7 +180,7 @@ namespace Engine
 
 	//! detach()
 	/*
-	\param type a const ComponentType - The type of component to delete
+	\param component an EntityComponent* - A pointer to the component
 	*/
 	void Entity::detach(EntityComponent* component)
 	{
@@ -193,52 +193,6 @@ namespace Engine
 		}
 		else
 			ENGINE_ERROR("[Entity::detach] The entity does not have a component of this type. Entity Name: {0}, Component Type: {1}.", m_entityName, Components::toString(component->getComponentType()));
-	}
-
-	//! onRender()
-	/*!
-	\param renderer a const Renderers - The renderer type
-	*/
-	void Entity::onRender(const Renderers renderer)
-	{
-		// This function will be called if it's not overridden by child entity classes
-		// This provides this default action which can be overriden if sandbox needs more control over what and when to render an entity
-		if (renderer == Renderers::Renderer3D)
-		{
-			if (containsComponent<MeshRender3D>())
-			{
-				MeshRender3D* meshRender = getComponent<MeshRender3D>();
-				if (meshRender)
-				{
-					Material* material = meshRender->getMaterial();
-
-					if (material)
-					{
-						for (auto& mesh : meshRender->getModel()->getMeshes())
-							Renderer3D::submit(mesh.getGeometry(), material, getComponent<Transform>()->getModelMatrix());
-					}
-					else
-					{
-						for (auto& mesh : meshRender->getModel()->getMeshes())
-							Renderer3D::submit(mesh.getGeometry(), mesh.getMaterial(), getComponent<Transform>()->getModelMatrix());
-					}
-				}
-			}
-		}
-		else if (renderer == Renderers::Renderer2D)
-		{
-			if (containsComponent<MeshRender2D>())
-			{
-				MeshRender2D* meshRender = getComponent<MeshRender2D>();
-				Renderer2D::submit(meshRender->getMaterial()->getShader(), meshRender->getMaterial()->getSubTextures(), getComponent<Transform>()->getModelMatrix(), meshRender->getMaterial()->getTint());
-			}
-			if (containsComponent<Text>())
-			{
-				// Submit all text components
-				Text* textRender = getComponent<Text>();
-				Renderer2D::submitText(textRender, getComponent<Transform>()->getModelMatrix());
-			}
-		}
 	}
 
 	//! printEntityDetails()

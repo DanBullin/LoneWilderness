@@ -37,7 +37,6 @@ namespace Engine
 			s_unitManager = new TextureUnitManager(16, 0);
 			s_renderersInitialised = false;
 			s_enabled = true;
-
 			RenderSystem::initialise();
 		}
 	}
@@ -94,5 +93,14 @@ namespace Engine
 			if(renderPass->getEnabled())
 				renderPass->onRender(entityList);
 		}
+	}
+
+	//! getTextureUnitManager
+	/*
+	\return a TextureUnitManager - The texture unit manager
+	*/
+	TextureUnitManager* RenderSystem::getTextureUnitManager()
+	{
+		return s_unitManager;
 	}
 }

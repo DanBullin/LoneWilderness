@@ -35,7 +35,6 @@ namespace Engine
 		void setPosition(const glm::vec3& newPos); //!< Set the position of the entity in the world
 
 		glm::vec3 getOrientation() const; //!< Get the orientation of the entity in the world
-		glm::quat getOrientationAsQuat() const; //!< Get the orientation of the entity as a quaternion
 		void setOrientation(const float xRotation, const float yRotation, const float zRotation); //!< Set the orientation of the entity in the world
 		void setOrientation(const glm::vec3& newOrientation); //!< Set the orientation of the entity in the world
 

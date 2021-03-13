@@ -7,18 +7,16 @@
 */
 #include "independent/rendering/renderers/renderer2D.h"
 #include "independent/systems/systems/log.h"
-#include "independent/systems/systems/resourceManager.h"
 #include "independent/systems/systems/fontManager.h"
-#include "independent/systems/systems/sceneManager.h"
+#include "independent/rendering/renderers/utils/fillBuffers.h"
+#include "independent/rendering/renderUtils.h"
 
 namespace Engine
 {
-	ShaderProgram* Renderer2D::s_overridingShader = nullptr; //!< Initialise with null pointer
 	uint32_t Renderer2D::s_batchCapacity = 0; //!< Set to 0
 	TextureUnitManager* Renderer2D::s_unitManager = nullptr; //!< Set to null pointer
 	std::array<int32_t, 16> Renderer2D::s_unit; //!< Initialise to empty array
-	std::map<ShaderProgram*, std::vector<BatchEntry2D>> Renderer2D::s_batchQueue = std::map<ShaderProgram*, std::vector<BatchEntry2D>>(); //!< Initialise to empty list
-	uint32_t Renderer2D::s_drawCount = 0; //!< The number of quads we're drawing
+	std::vector<BatchEntry2D> Renderer2D::s_batchQueue = std::vector<BatchEntry2D>(); //!< Initialise to empty list
 
 	//! initialise()
 	/*!
@@ -28,57 +26,83 @@ namespace Engine
 	{
 		ENGINE_TRACE("[Renderer2D::initialise] Initialising the 2D renderer.");
 
+		if (batchCapacity <= 0)
+			ENGINE_ERROR("[Renderer2D::initialise] An unusual batch capacity was provided. Value: {0}.", batchCapacity);
+
 		// Set the batch capacity
 		s_batchCapacity = batchCapacity;
 
-		// Generate all the quads indices and store the resutls
-		std::vector<uint32_t> indicesData = getQuadIndices(batchCapacity);
-		ResourceManager::getResource<IndexBuffer>("QuadIBuffer")->edit(indicesData.data(), static_cast<uint32_t>(indicesData.size()), 0);
+		// Create the index buffer used for 2D rendering and register it with the resource manager to handle
+		std::vector<uint32_t> indicesData = Quad::getIndices(batchCapacity);
+		IndexBuffer* indexBuffer = IndexBuffer::create("QuadIBuffer", indicesData.data(), static_cast<uint32_t>(indicesData.size()));
+		ResourceManager::registerResource("QuadIBuffer", indexBuffer);
 	}
 
 	//! begin()
-	/*!
-	\param shaderProgram a ShaderProgram* - A pointer to the shader program
-	\param sceneWideUniforms a const SceneWideUniforms& - A reference to the scene wide uniforms
-	*/
-	void Renderer2D::begin(ShaderProgram* shaderProgram)
+	void Renderer2D::begin()
 	{
-		// FBO already bound by this point
+		s_batchQueue.clear();
+	}
 
-		// Set the overriding shader program, we can check later if its null to decide whether to use material shader or the overriding one
-		s_overridingShader = shaderProgram;
-		// Set the draw count to 0
-		s_drawCount = 0;
+	//! submissionChecks()
+	/*
+	\param shaderProgram a ShaderProgram* - A pointer to the shader program
+	\param subTextures a const std::vector<SubTexture*>& - A list of subtextures
+	*/
+	bool Renderer2D::submissionChecks(ShaderProgram* shaderProgram, const std::vector<SubTexture*>& subTextures)
+	{
+		// Check shader program, base textures and subtextures for validity
+		if (!shaderProgram)
+		{
+			ENGINE_ERROR("[Renderer2D::submissionChecks] An invalid shader program was provided");
+			return false;
+		}
+
+		for (auto& subTexture : subTextures)
+		{
+			if (subTexture)
+			{
+				if (!subTexture->getBaseTexture())
+				{
+					ENGINE_ERROR("[Renderer2D::submissionChecks] An invalid base texture was provided for subtexture: {0}.", subTexture->getName());
+					return false;
+				}
+			}
+			else
+			{
+				ENGINE_ERROR("[Renderer2D::submissionChecks] An invalid subtexture was provided.");
+				return false;
+			}
+		}
+		return true;
 	}
 
 	//! submit()
 	/*!
-	\param material a Material* - A pointer to a material
+	\param shaderProgram a ShaderProgram* - A pointer to the shader program
+	\param subTextures a const std::vector<SubTexture*>& - A list of subtextures
 	\param modelMatrix a const glm::mat4& - A model matrix
-	\param tint a const glm::vec4& - The tint to override the material (Optional)
+	\param tint a const glm::vec4& - The tint to apply
 	*/
-	void Renderer2D::submit(ShaderProgram* shaderProgram, std::vector<SubTexture*>& subTextures, const glm::mat4& modelMatrix, const glm::vec4& tint)
+	void Renderer2D::submit(ShaderProgram* shaderProgram, const std::vector<SubTexture*>& subTextures, const glm::mat4& modelMatrix, const glm::vec4& tint)
 	{
-		// Submit the geometry
-
-		// Check what shader we're submitting with
-		ShaderProgram* shader;
-		if (s_overridingShader) shader = s_overridingShader;
-		else shader = shaderProgram;
-
-		// Now we have the shader to submit our 2D geometry under, check if that shader's list of submissions is full or would be full if we were to submit
-		if (s_batchQueue[shader].size() >= s_batchCapacity)
+		// First lets do some error checking
+		if (submissionChecks(shaderProgram, subTextures))
 		{
-			// Our number of entries under this shader program matches or exceeds the number of quads we've set as our limit
-			// So flush the current contents of the queue
-			flush();
-		}
-		else
-		{
+			/////
+			// Submitting
+			/////
+
+			// We need to check if this new submission would take us over capacity, if it does, flush the current contents and try submitting again
+			if (s_batchQueue.size() >= s_batchCapacity)
+				flush();
+
+			// Each subtexture has a base texture which needs a texture unit to be bound to, so lets create a units list equal to the subtexture size
 			std::vector<int32_t> units;
 			units.resize(subTextures.size());
-			s_batchQueue[shader].push_back( { subTextures, units, modelMatrix, tint } );
-			s_drawCount++;
+
+			// Add to the back of the queue [SHADER, SUBTEXTURES, UNITS, MODELMATRIX, TINT]
+			s_batchQueue.push_back({ shaderProgram, subTextures, units, modelMatrix, tint });
 		}
 	}
 
@@ -89,23 +113,52 @@ namespace Engine
 	*/
 	void Renderer2D::submitText(Text* text, const glm::mat4& modelMatrix)
 	{
+		// First, let's check the text component is valid
+		if (!text)
+		{
+			ENGINE_ERROR("[Renderer2D::submitText] An invalid text component was provided.");
+			return;
+		}
+
+		submitText(text->getText(), text->getFont(), text->getColour(), modelMatrix);
+	}
+
+	//! submitText()
+	/*!
+	\param text a const std::string& - The text to render
+	\param fontName a const std::string& - The font to use
+	\param tint a const glm::vec4& - The colour of the text
+	\param modelMatrix a const glm::mat4& - A model matrix
+	*/
+	void Renderer2D::submitText(const std::string& text, const std::string& fontName, const glm::vec4& tint, const glm::mat4& modelMatrix)
+	{
 		// Get the length of the text we're rendering
-		uint32_t len = static_cast<uint32_t>(strlen(text->getText().c_str()));
+		uint32_t len = static_cast<uint32_t>(strlen(text.c_str()));
+
+		// If the legnth of the text is 0, lets not bother doing any more processing and return
+		if (len == 0) return;
 
 		// Text will only ever use one specific material, so lets check that from the resource manager
 		Material* material = ResourceManager::getResource<Material>("textMaterial");
+		if (!material) return;
 
-		// Get x position of the entity
+		// Get x position of the entity from the model matrix, and keep the current advance
 		float advance = 0.f, x = modelMatrix[3][0];
 
 		// Get the font for this text render
-		auto font = FontManager::getFont(text->getFont().c_str());
+		auto font = FontManager::getFont(fontName);
+
+		if (!font)
+		{
+			ENGINE_ERROR("[Renderer2D::submitText] An invalid font name was provided. Name: {0}.", fontName);
+			return;
+		}
 
 		// For each character we want to render
 		for (int i = 0; i < static_cast<int>(len); i++)
 		{
 			// Get the character by indexing
-			char ch = text->getText().at(i);
+			char ch = text.at(i);
 
 			// Check whether this character has a glyph data associated with it, we check this by making sure the character is in between the range of the
 			// first and last glyph
@@ -129,119 +182,124 @@ namespace Engine
 				// Update the material's subtexture to the subtexture of the glyph we want to render
 				material->setSubTexture(0, gd.subTexture);
 				// Now we can submit this new quad
-				submit(material->getShader(), material->getSubTextures(), model, text->getColour());
+				submit(material->getShader(), material->getSubTextures(), model, tint);
 			}
 
+			// Move the x position along by the advance
 			x += advance;
 		}
 	}
 
-	//! generateVertexList()
+	//! sortSubmissions()
 	/*
-	\param shader a ShaderProgram* - A pointer to the shader program
-	\param batchEntries a std::vector<BatchEntry2D>& - A list of batch entries
+	\param submissions a std::vector<BatchEntry2D>& - A list of submissions
 	*/
-	void Renderer2D::generateVertexList(ShaderProgram* shader, std::vector<BatchEntry2D>& batchEntries)
+	void Renderer2D::sortSubmissions(std::vector<BatchEntry2D>& submissions)
 	{
-		// Generate a list of vertices and edit the VBO depending on the vertex array
-
-		if(shader->getVertexArray() == ResourceManager::getResource<VertexArray>("QuadArray"))
-			generateListOfVertex2D(shader, batchEntries);
-		else if (shader->getVertexArray() == ResourceManager::getResource<VertexArray>("QuadMultiTexturedArray"))
-			generateListOfVertex2DMutlitextured(shader, batchEntries);
+		// Sort by shader importance and by shader address
+		std::sort(submissions.begin(), submissions.end(),
+			[](BatchEntry2D& a, BatchEntry2D& b)
+		{
+			if (a.shader->getOrderImportance() != b.shader->getOrderImportance()) return a.shader->getOrderImportance() < b.shader->getOrderImportance();
+			return a.modelMatrix[3][2] < b.modelMatrix[3][2];
+		}
+		);
 	}
 
 	//! flush()
 	void Renderer2D::flush()
 	{
-		// A flush has been called, now let's go through each shader entry in the batch queue
-		if (s_drawCount > 0)
+		/////
+		// SORTING SHADERS
+		/////
+		sortSubmissions(s_batchQueue);
+
+		/////
+		// Begin setting the necassary data
+		/////
+		std::vector<BatchEntry2D> tmpList;
+		ShaderProgram* currentShader = s_batchQueue.at(0).shader;
+		for (auto& submission : s_batchQueue)
 		{
-			// Sort shader entries by some property
-			std::vector<std::pair<ShaderProgram*, std::vector<BatchEntry2D>>> mapConvertedVector(s_batchQueue.begin(), s_batchQueue.end());
-
-			std::sort(mapConvertedVector.begin(), mapConvertedVector.end(),
-				[](std::pair<ShaderProgram*, std::vector<BatchEntry2D>> a, std::pair<ShaderProgram*, std::vector<BatchEntry2D>> b)
+			// If we've moved onto a new shader, draw the current list
+			if (submission.shader != currentShader)
 			{
-				return a.first->getOrderImportance() < b.first->getOrderImportance();
-			}
-			);
-
-			for (auto& shaderEntry : mapConvertedVector)
-			{
-				// Now we can go through each batch entry and create the relevant vertices and add them to the appropriate vertex list
-				for (auto& submissionEntry : shaderEntry.second)
-				{
-					// WE HAVE: List of SubTextures, Model Matrix, Tint
-
-					// Bind Textures
-
-					// Check if we can bind the textures first
-					if (s_unitManager->getRemainingUnitCount() < submissionEntry.subTextures.size())
-					{
-						// If we cannot bind all the textures, lets draw the current queue to free the unit manager up
-						draw(shaderEntry.first);
-					}
-
-					// Unit manager can bind textures now
-					int32_t unit = 0;
-					for (int i = 0; i < submissionEntry.subTextures.size(); i++)
-					{
-						// For each subtexture, lets bind the texture to a unit
-						if (s_unitManager->getUnit(submissionEntry.subTextures[i]->getBaseTexture()->getID(), unit))
-							s_unitManager->bindToUnit(submissionEntry.subTextures[i]->getBaseTexture());
-
-						submissionEntry.textureUnits.at(i) = unit;
-					}
-				}
-
-				generateVertexList(shaderEntry.first, shaderEntry.second);
-				draw(shaderEntry.first);
+				generateVertexList(tmpList);
+				draw(tmpList);
+				tmpList.clear();
+				currentShader = submission.shader;
 			}
 
-			s_batchQueue.clear();
-			s_drawCount = 0;
+			// If we cannot bind the textures for the current submission, draw the current list
+			if (s_unitManager->getRemainingUnitCount() < submission.subTextures.size())
+			{
+				generateVertexList(tmpList);
+				draw(tmpList);
+				s_unitManager->clear(true);
+				tmpList.clear();
+			}
+
+			// Bind the textures
+			int32_t unit = 0;
+			for (int i = 0; i < submission.subTextures.size(); i++)
+			{
+				// For each subtexture, lets bind the texture to a unit
+				if (s_unitManager->getUnit(submission.subTextures[i]->getBaseTexture()->getID(), unit))
+					s_unitManager->bindToUnit(submission.subTextures[i]->getBaseTexture());
+
+				// Store the unit in the texture units list of the submission entry
+				submission.textureUnits.at(i) = unit;
+			}
+
+			tmpList.push_back(submission);
 		}
+
+		// Draw anything left in the list
+		if (tmpList.size() != 0)
+		{
+			generateVertexList(tmpList);
+			draw(tmpList);
+		}
+
+		// All shader entries have been drawn, lets clear all data
+		s_batchQueue.clear();
+		tmpList.clear();
 	}
 
 	//! draw()
 	/*
-	\param shader a ShaderProgram* - The shader program to send our geometry to
+	\param submissionList a std::vector<BatchEntry2D>& - A list of submissions
 	*/
-	void Renderer2D::draw(ShaderProgram* shader)
+	void Renderer2D::draw(std::vector<BatchEntry2D>& submissionList)
 	{
 		// Use the shader program
-		shader->start();
+		submissionList.at(0).shader->start();
 
 		// Attach the UBO
-		for (auto& dataPair : shader->getUniformBuffers())
+		for (auto& dataPair : submissionList.at(0).shader->getUniformBuffers())
 		{
 			const char* nameOfUniformBlock = dataPair.first.c_str();
-			dataPair.second->attachShaderBlock(shader, nameOfUniformBlock);
+			dataPair.second->attachShaderBlock(submissionList.at(0).shader, nameOfUniformBlock);
 		}
 
 		// Normally we need to check what kind of uniforms we have to send
 		// I don't think we will ever use anything other than 2D samplers for 2D rendering
 		// This will be different for 3D rendering
-		shader->sendIntArray("u_textures", s_unit.data(), 16);
+		submissionList.at(0).shader->sendIntArray("u_textures", s_unit.data(), 16);
 
 		// Bind VAO
-		shader->getVertexArray()->bind();
+		submissionList.at(0).shader->getVertexArray()->bind();
 
 		// Issue the draw call
-		// The number of submissions in the shader entry in the queue * 6 indices
-		RenderUtils::draw(static_cast<uint32_t>(s_batchQueue[shader].size()) * 6);
-
-		// Clean up
-		s_drawCount -= static_cast<uint32_t>(s_batchQueue[shader].size());
-		s_batchQueue[shader].clear();
+		// The number of submissions for the shader that we want to render * 6 indices
+		RenderUtils::draw(static_cast<uint32_t>(submissionList.size()) * 6);
 	}
 
 	//! end()
 	void Renderer2D::end()
 	{
 		// If we have something to draw, draw it
-		if (s_drawCount > 0)
+		if (s_batchQueue.size() > 0)
 			flush();
 	}
 
@@ -251,8 +309,6 @@ namespace Engine
 		ENGINE_TRACE("[Renderer2D::destroy] Destroying the 2D renderer.");
 
 		// Clean up renderer data
-		s_overridingShader = nullptr;
-
 		s_unitManager = nullptr;
 		s_batchQueue.clear();
 	}
@@ -266,76 +322,5 @@ namespace Engine
 	{
 		s_unitManager = unitManager;
 		s_unit = unit;
-	}
-
-	//! generateListOfVertex2D()
-	/*
-	\param shader a ShaderProgram* - A pointer to the shader program
-	\param batchEntries a std::vector<BatchEntry2D>& - A list of batch entries
-	*/
-	void Renderer2D::generateListOfVertex2D(ShaderProgram* shader, std::vector<BatchEntry2D>& batchEntries)
-	{
-		// Create a fresh new list of vertices and then edit the VBO
-		std::vector<Vertex2D> vertexList;
-		vertexList.resize(ResourceManager::getConfigValue(Config::BatchCapacity2D) * 4);
-
-		// Starting from the beginning of the list
-		uint32_t startIndex = 0;
-		for (auto& entry : batchEntries)
-		{
-			// Edit the next 4 vertices in the list
-			for (int i = 0; i < 4; i++)
-			{
-				vertexList[i + startIndex].Position = entry.modelMatrix * getQuadVertices().at(i).Position;
-				vertexList[i + startIndex].TexUnit = entry.textureUnits[0];
-				vertexList[i + startIndex].Tint = MemoryUtils::pack(entry.tint);
-			}
-
-			vertexList[startIndex].TexCoords = entry.subTextures.at(0)->getUVEnd();
-			vertexList[startIndex + 1].TexCoords = { entry.subTextures.at(0)->getUVEnd().x, entry.subTextures.at(0)->getUVStart().y };
-			vertexList[startIndex + 2].TexCoords = entry.subTextures.at(0)->getUVStart();
-			vertexList[startIndex + 3].TexCoords = { entry.subTextures.at(0)->getUVStart().x, entry.subTextures.at(0)->getUVEnd().y };
-
-			startIndex += 4;
-		}
-
-		shader->getVertexArray()->getVertexBuffers().at(0)->edit(vertexList.data(), static_cast<uint32_t>(sizeof(Vertex2D) * vertexList.size()), 0);
-
-	}
-
-	//! generateListOfVertex2DMutlitextured()
-	/*
-	\param shader a ShaderProgram* - A pointer to the shader program
-	\param batchEntries a std::vector<BatchEntry2D>& - A list of batch entries
-	*/
-	void Renderer2D::generateListOfVertex2DMutlitextured(ShaderProgram * shader, std::vector<BatchEntry2D>& batchEntries)
-	{
-		// Create a fresh new list of vertices and then edit the VBO
-		std::vector<Vertex2DMultiTextured> vertexList;
-		vertexList.resize(ResourceManager::getConfigValue(Config::BatchCapacity2D) * 4);
-
-		// Starting from the beginning of the list
-		uint32_t startIndex = 0;
-		for (auto& entry : batchEntries)
-		{
-			// Edit the next 4 vertices in the list
-			for (int i = 0; i < 4; i++)
-			{
-				vertexList[i + startIndex].Position = entry.modelMatrix * getQuadVertices().at(i).Position;
-				vertexList[i + startIndex].TexUnit1 = entry.textureUnits[0];
-				vertexList[i + startIndex].TexUnit2 = entry.textureUnits[1];
-				vertexList[i + startIndex].Tint = MemoryUtils::pack(entry.tint);
-			}
-
-			vertexList[startIndex].TexCoords = entry.subTextures.at(0)->getUVEnd();
-			vertexList[startIndex + 1].TexCoords = { entry.subTextures.at(0)->getUVEnd().x, entry.subTextures.at(0)->getUVStart().y };
-			vertexList[startIndex + 2].TexCoords = entry.subTextures.at(0)->getUVStart();
-			vertexList[startIndex + 3].TexCoords = { entry.subTextures.at(0)->getUVStart().x, entry.subTextures.at(0)->getUVEnd().y };
-
-			startIndex += 4;
-		}
-
-		shader->getVertexArray()->getVertexBuffers().at(0)->edit(vertexList.data(), static_cast<uint32_t>(sizeof(Vertex2DMultiTextured) * vertexList.size()), 0);
-
 	}
 }

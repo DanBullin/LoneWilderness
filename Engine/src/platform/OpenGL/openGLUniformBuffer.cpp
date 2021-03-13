@@ -72,7 +72,7 @@ namespace Engine
 		auto& pair = m_uniformCache[uniformName];
 		glBindBuffer(GL_UNIFORM_BUFFER, m_bufferID);
 		glBufferSubData(GL_UNIFORM_BUFFER, pair.first, pair.second, data);
-		if(ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages)) ENGINE_TRACE("OpenGLUniformBuffer::uploadData] Uploading {0} bytes to {1} from offset: {2}.", pair.second, m_name, pair.first);
+		if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages)) ENGINE_TRACE("OpenGLUniformBuffer::uploadData] Uploading {0} bytes to {1} from offset: {2}.", pair.second, m_name, pair.first);
 	}
 
 	//! printDetails()
@@ -86,7 +86,7 @@ namespace Engine
 
 		for (auto& uniform : m_uniformCache)
 			ENGINE_TRACE("Uniform: Name: {0}, Offset: {1}, Size: {2}.", uniform.first, uniform.second.first, uniform.second.second);
-	
+
 		ENGINE_TRACE("Block Number: {0}.", m_blockNumber);
 	}
 }

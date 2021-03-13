@@ -8,6 +8,7 @@
 #include "independent/entities/components/meshRender3D.h"
 #include "independent/entities/entity.h"
 #include "independent/systems/systems/log.h"
+#include "independent/rendering/renderers/renderer3D.h"
 
 namespace Engine
 {
@@ -19,8 +20,6 @@ namespace Engine
 	MeshRender3D::MeshRender3D(Model3D* model, Material* material) 
 		: EntityComponent(ComponentType::MeshRender3D), m_model(model), m_material(material)
 	{
-		if (!m_model || !m_material)
-			ENGINE_ERROR("[MeshRender3D::MeshRender3D] An invalid model or material was provided.");
 	}
 
 	//! ~MeshRender3D()
@@ -108,5 +107,35 @@ namespace Engine
 	Material* MeshRender3D::getMaterial()
 	{
 		return m_material;
+	}
+
+	//! onRender()
+	void MeshRender3D::onRender()
+	{
+		if (getParent()->containsComponent<Transform>())
+		{
+			if (m_material)
+			{
+				if (getParent()->containsComponent<NativeScript>())
+				{
+					getParent()->getComponent<NativeScript>()->onSubmit(Renderers::Renderer3D);
+				}
+
+				for (auto& mesh : m_model->getMeshes())
+					Renderer3D::submit(getParent()->getName(), mesh.getGeometry(), m_material, getParent()->getComponent<Transform>()->getModelMatrix());
+			}
+			else
+			{
+				if (getParent()->containsComponent<NativeScript>())
+				{
+					getParent()->getComponent<NativeScript>()->onSubmit(Renderers::Renderer3D);
+				}
+
+				for (auto& mesh : m_model->getMeshes())
+					Renderer3D::submit(getParent()->getName(), mesh.getGeometry(), mesh.getMaterial(), getParent()->getComponent<Transform>()->getModelMatrix());
+			}
+		}
+		else
+			ENGINE_ERROR("[MeshRender3D::onRender] The entity this mesh render is attached to does not have a valid transform.");
 	}
 }

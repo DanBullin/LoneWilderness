@@ -36,6 +36,7 @@ namespace Engine
 		void setReservedUnit(const uint32_t reservedSlot, const uint32_t textureID); //!< Set the unit of a reserved slot
 		uint32_t getRemainingUnitCount(); //!< Get the count of free units
 		void bindToUnit(Texture* texture); //!< Bind texture to unit
+		std::vector<std::string> getBufferByTextureNames(); //!< Get the buffer by texture names
 	};
 }
 #endif

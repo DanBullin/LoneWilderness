@@ -59,6 +59,7 @@ namespace Engine
 
 		static void registerResource(const std::string& resourceName, Resource* resource); //!< Register a resource
 		static void destroyResource(const std::string& resourceName = ""); //!< Destroy a resource by name or all of them
+		static void loadResources(); //!< Load resources
 
 		template<typename T> static T* getResource(const std::string& resourceName); //!< Get a resource by name
 		template<typename T> static std::vector<T*> getResourcesOfType(const ResourceType type); //!< Get all resources of a certain type

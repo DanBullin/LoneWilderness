@@ -15,6 +15,8 @@
 
 namespace Engine
 {
+	class Scene; //!< Forward declare scene
+
 	/*! \struct EventData
 	* \brief Struct containing event related data such as mouse position last frame, etc
 	*/
@@ -36,9 +38,9 @@ namespace Engine
 	private:
 		static bool s_enabled; //!< Is the event manager enabled
 		static EventData s_eventData; //!< Event related variables
+		static Scene* s_currentScene; //!< The scene to be sent updates
 		static void calculateMouseOffset(MouseMovedEvent& e); //!< Calculate change in mouse position when moved
 		static void updateTime(); //!< Update FPS and TotalTime
-		
 	public:
 		EventManager(); //!< Constructor
 		~EventManager(); //!< Destructor
@@ -58,7 +60,7 @@ namespace Engine
 		static void onMouseMoved(Window* window, MouseMovedEvent& e); //!< Called when mouse moves
 		static void onMouseScrolled(Window* window, MouseScrolledEvent& e); //!< Called when mouse is scrolled
 
-		static void onUpdate(const float timestep, const float totalTime); //!< Called once every frame
+		static void onUpdate(Scene* scene, const float timestep, const float totalTime); //!< Called once every frame
 
 		static void enable(); //!< Enable the event manager
 		static void disable(); //!< Disable the event manager

@@ -113,15 +113,6 @@ namespace Engine
 		return m_orientation;
 	}
 
-	//! getOrientationAsQuat()
-	/*!
-	\return a glm::quat - The orientation of the transform
-	*/
-	glm::quat Transform::getOrientationAsQuat() const
-	{
-		return glm::quat(m_orientation);
-	}
-
 	//! setOrientation()
 	/*!
 	\param xRotation a const float - The rotation around the x axis of the entity

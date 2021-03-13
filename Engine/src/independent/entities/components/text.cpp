@@ -8,6 +8,7 @@
 #include "independent/entities/components/text.h"
 #include "independent/entities/entity.h"
 #include "independent/systems/systems/log.h"
+#include "independent/rendering/renderers/renderer2D.h"
 #include "systems/systems/fontManager.h"
 
 namespace Engine
@@ -132,5 +133,21 @@ namespace Engine
 	const std::string& Text::getFont() const
 	{
 		return m_font;
+	}
+
+	//! onRender()
+	void Text::onRender()
+	{
+		if (getParent()->containsComponent<Transform>())
+		{
+			if (getParent()->containsComponent<NativeScript>())
+			{
+				getParent()->getComponent<NativeScript>()->onSubmit(Renderers::Renderer2D);
+			}
+
+			Renderer2D::submitText(this, getParent()->getComponent<Transform>()->getModelMatrix());
+		}
+		else
+			ENGINE_ERROR("[Text::onRender] The entity this mesh render is attached to does not have a valid transform.");
 	}
 }

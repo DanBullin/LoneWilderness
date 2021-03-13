@@ -3,7 +3,6 @@
 	[
 		{
 			"name": "Player1",
-			"type": "Player",
 			"layer": "Default",
 			"display": true,
 			"components": 
@@ -25,7 +24,7 @@
 					"worldUp": [ 0.0, 1.0, 0.0],
 					"Yaw": 90.0,
 					"Pitch": 0.0,
-					"Zoom": 45.0,
+					"Zoom": 70.0,
 					"setMainCamera": true
 				},
 				{
@@ -37,21 +36,21 @@
 					"specular": [ 0.1, 0.1, 0.1 ]
 				},
 				{
-					"name": "EventListener",
-					"type": "EventListener"
-				},
-				{
 					"name": "CController",
 					"type": "CharacterController",
 					"speed": 22.0,
 					"sensitivity": 0.15,
 					"frozen": false
+				},
+				{
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "Player"
 				}
 			]
 		},
 		{
 			"name": "Cyborg1",
-			"type": "Cyborg",
 			"layer": "Default",
 			"display": true,
 			"components": 
@@ -67,17 +66,17 @@
 					"name": "MeshRender1",
 					"type": "MeshRender3D",
 					"modelName": "cyborg",
-					"materialName": "defaultMaterial3D"
+					"materialName": ""
 				},
 				{
-					"name": "EventListener",
-					"type": "EventListener"
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "Cyborg"
 				}
 			]
 		},
 		{
-			"name": "Cyborg2",
-			"type": "Cyborg",
+			"name": "CubeDemo",
 			"layer": "Default",
 			"display": true,
 			"components": 
@@ -85,7 +84,7 @@
 				{
 					"name": "Transform",
 					"type": "Transform",
-					"position": [ -12.0, 2.0, 19.0 ],
+					"position": [ -12.0, 2.0, 10.0 ],
 					"rotation": [ 0.0, 0.0, 0.0],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
@@ -96,14 +95,50 @@
 					"materialName": ""
 				},
 				{
-					"name": "EventListener",
-					"type": "EventListener"
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "Cyborg"
+				}
+			]
+		},
+		{
+			"name": "Cube2",
+			"layer": "Default",
+			"display": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ -12.0, 2.0, -10.0 ],
+					"rotation": [ 0.0, 0.0, 0.0],
+					"scale": [ 0.25, 0.25, 0.25 ]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender3D",
+					"modelName": "sphere",
+					"materialName": "lightSourceMaterial"
+				},
+				{
+					"name": "Light1",
+					"type": "PointLight",
+					"ambient": [ 0.2, 0.2, 0.2 ],
+					"diffuse": [ 5.0, 0.0, 0.0 ],
+					"specular": [ 1.0, 1.0, 1.0 ],
+					"constant": 1.0,
+					"linear": 0.35,
+					"quadratic": 0.44
+				},
+				{
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "LightTest"
 				}
 			]
 		},
 		{
 			"name": "LightSource1",
-			"type": "LightTest",
 			"layer": "Default",
 			"display": true,
 			"components": 
@@ -126,14 +161,14 @@
 					"quadratic": 1.8
 				},
 				{
-					"name": "EventListener",
-					"type": "EventListener"
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "LightTest"
 				}
 			]
 		},
 		{
 			"name": "LightSource2",
-			"type": "LightTest",
 			"layer": "Default",
 			"display": true,
 			"components": 
@@ -156,14 +191,14 @@
 					"quadratic": 1.8
 				},
 				{
-					"name": "EventListener",
-					"type": "EventListener"
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "LightTest"
 				}
 			]
 		},
 		{
 			"name": "LightSource3",
-			"type": "LightTest",
 			"layer": "Default",
 			"display": true,
 			"components": 
@@ -186,14 +221,14 @@
 					"quadratic": 1.8
 				},
 				{
-					"name": "EventListener",
-					"type": "EventListener"
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "LightTest"
 				}
 			]
 		},
 		{
 			"name": "LightSource4",
-			"type": "LightTest",
 			"layer": "Default",
 			"display": true,
 			"components": 
@@ -216,14 +251,14 @@
 					"quadratic": 1.8
 				},
 				{
-					"name": "EventListener",
-					"type": "EventListener"
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "LightTest"
 				}
 			]
 		},
 		{
 			"name": "LightSource5",
-			"type": "LightTest",
 			"layer": "Default",
 			"display": true,
 			"components": 
@@ -246,14 +281,14 @@
 					"quadratic": 1.8
 				},
 				{
-					"name": "EventListener",
-					"type": "EventListener"
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "LightTest"
 				}
 			]
 		},
 		{
 			"name": "LightSource7",
-			"type": "LightTest",
 			"layer": "Default",
 			"display": true,
 			"components": 
@@ -276,14 +311,14 @@
 					"quadratic": 1.8
 				},
 				{
-					"name": "EventListener",
-					"type": "EventListener"
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "LightTest"
 				}
 			]
 		},
 		{
 			"name": "LightSource6",
-			"type": "LightTest",
 			"layer": "Default",
 			"display": true,
 			"components": 
@@ -293,7 +328,7 @@
 					"type": "Transform",
 					"position": [ -12.5, 300.12, 2.3],
 					"rotation": [ 0.0, 0.0, 0.0],
-					"scale": [ 8.0, 8.0, 8.0 ]
+					"scale": [ 5.0, 5.0, 5.0 ]
 				},
 				{
 					"name": "MeshRender1",
@@ -312,14 +347,14 @@
 					"quadratic": 0.032
 				},
 				{
-					"name": "EventListener",
-					"type": "EventListener"
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "LightTest"
 				}
 			]
 		},
 		{
 			"name": "Street",
-			"type": "Sign",
 			"layer": "Default",
 			"display": true,
 			"components": 
@@ -338,14 +373,14 @@
 					"materialName": "streetMaterial"
 				},
 				{
-					"name": "EventListener",
-					"type": "EventListener"
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "Sign"
 				}
 			]
 		},
 		{
 			"name": "HotbarUI",
-			"type": "Rectangle",
 			"layer": "UI",
 			"display": true,
 			"components": 
@@ -353,7 +388,7 @@
 				{
 					"name": "Transform",
 					"type": "Transform",
-					"position": [ 350.0, 540.0, 0.0 ],
+					"position": [ 350.0, 540.0, 0.2 ],
 					"rotation": [ 0.0, 0.0, 0.0 ],
 					"scale": [ 408.0, 100.0, 1.0 ]
 				},
@@ -363,14 +398,14 @@
 					"materialName": "hotbarMaterial"
 				},
 				{
-					"name": "EventListener",
-					"type": "EventListener"
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "Rectangle"
 				}
 			]
 		},
 		{
 			"name": "MapUI",
-			"type": "Rectangle",
 			"layer": "UI",
 			"display": true,
 			"components": 
@@ -378,7 +413,7 @@
 				{
 					"name": "Transform",
 					"type": "Transform",
-					"position": [ 720.0, 520.0, 0.0 ],
+					"position": [ 720.0, 520.0, 0.2 ],
 					"rotation": [ 0.0, 0.0, 0.0 ],
 					"scale": [ 150.0, 150.0, 1.0 ]
 				},
@@ -388,14 +423,14 @@
 					"materialName": "mapMaterial"
 				},
 				{
-					"name": "EventListener",
-					"type": "EventListener"
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "Rectangle"
 				}
 			]
 		},
 		{
 			"name": "FPSText",
-			"type": "FPSCounter",
 			"layer": "UI",
 			"display": true,
 			"components": 
@@ -403,7 +438,7 @@
 				{
 					"name": "Transform",
 					"type": "Transform",
-					"position": [ 5.0, 45.0, 0.0 ],
+					"position": [ 5.0, 45.0, 0.2 ],
 					"rotation": [ 0.0, 0.0, 0.0 ],
 					"scale": [ 400.0, 400.0, 1.0 ]
 				},
@@ -415,8 +450,9 @@
 					"fontName": "Arial"
 				},
 				{
-					"name": "EventListener",
-					"type": "EventListener"
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "FPSCounter"
 				}
 			]
 		}

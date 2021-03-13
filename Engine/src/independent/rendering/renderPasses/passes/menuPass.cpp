@@ -9,50 +9,46 @@
 #include "independent/systems/components/scene.h"
 #include "independent/rendering/renderUtils.h"
 #include "independent/systems/systems/resourceManager.h"
-#include "independent/systems/systems/windowManager.h"
-#include "independent/rendering/renderers/renderer3D.h"
 #include "independent/rendering/renderers/renderer2D.h"
 
 namespace Engine
 {
+	bool MenuPass::s_initialised = false; //!< Initialise to false
+
 	//! MenuPass()
 	MenuPass::MenuPass()
 	{
 		m_frameBuffer = ResourceManager::getResource<FrameBuffer>("defaultFBO");
+		m_cameraUBO = ResourceManager::getResource<UniformBuffer>("CameraUBO");
+		s_initialised = true;
 	}
 
 	//! ~MenuPass()
 	MenuPass::~MenuPass()
 	{
 		m_frameBuffer = nullptr;
+		m_cameraUBO = nullptr;
+		s_initialised = false;
 	}
 
-	//! prepare()
-	/*
-	\param stage a const uint32_t - The current stage of the renderer
-	*/
-	void MenuPass::prepare(const uint32_t stage)
+	//! setupPass()
+	void MenuPass::setupPass()
 	{
-		// Functions to call to prepare before or after rendering calls
-		switch (stage)
-		{
-			case 0:
-			{
-				RenderUtils::clearBuffers(RenderParameter::COLOR_AND_DEPTH_BUFFER_BIT, m_attachedScene->getMainCamera()->getClearColour());
+		RenderUtils::clearBuffers(RenderParameter::COLOR_AND_DEPTH_BUFFER_BIT, m_attachedScene->getMainCamera()->getClearColour());
+		RenderUtils::enableBlending(true);
+		RenderUtils::enableDepthTesting(true);
+		RenderUtils::setDepthComparison(RenderParameter::LESS_THAN_OR_EQUAL);
 
-				RenderUtils::enableBlending(true);
+		Camera* cam = m_attachedScene->getMainCamera();
+		m_cameraUBO->uploadData("u_view", static_cast<void*>(&cam->getViewMatrix(false)));
+		m_cameraUBO->uploadData("u_projection", static_cast<void*>(&cam->getProjectionMatrix(false)));
+	}
 
-				UniformBuffer* cameraUBO = ResourceManager::getResource<UniformBuffer>("CameraUBO");
-				cameraUBO->uploadData("u_view", static_cast<void*>(&m_attachedScene->getMainCamera()->getViewMatrix(false)));
-				cameraUBO->uploadData("u_projection", static_cast<void*>(&m_attachedScene->getMainCamera()->getProjectionMatrix(false)));
-				break;
-			}
-			case 1:
-			{
-				RenderUtils::enableBlending(false);
-				break;
-			}
-		}
+	//! endPass()
+	void MenuPass::endPass()
+	{
+		RenderUtils::enableBlending(false);
+		RenderUtils::setDepthComparison(RenderParameter::LESS);
 	}
 
 	//! onRender()
@@ -63,16 +59,28 @@ namespace Engine
 	{
 		m_frameBuffer->bind();
 
-		prepare(0);
+		setupPass();
 
-		Renderer2D::begin(nullptr);
+		Renderer2D::begin();
 
 		for (auto& entity : entities)
-			if (entity->getLayer()->getDisplayed() && entity->getDisplay()) entity->onRender(Renderers::Renderer2D);
+		{
+			if (entity->getLayer()->getDisplayed() && entity->getDisplay())
+			{
+				if (entity->containsComponent<MeshRender2D>())
+					entity->getComponent<MeshRender2D>()->onRender();
+
+				if (entity->containsComponent<Text>())
+					entity->getComponent<Text>()->onRender();
+
+				if (entity->containsComponent<NativeScript>())
+					entity->getComponent<NativeScript>()->onRender(Renderers::Renderer2D);
+			}
+		}
 
 		Renderer2D::end();
 
-		prepare(1);
+		endPass();
 	}
 
 	//! getFrameBuffer()

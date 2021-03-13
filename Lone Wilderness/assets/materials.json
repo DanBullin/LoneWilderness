@@ -24,13 +24,13 @@
 			"shininess": 32
 		},
 		{ 
-			"name": "textMaterial", 
+			"name": "menuImageMaterial", 
 			"subTextures": [
-				"textSubTexture"
+				"menuImageSubTexture"
 			],
 			"cubeMapTextures": [
 			],			
-			"shader": "textShader", 
+			"shader": "quad", 
 			"tint": [ 1.0, 1.0, 1.0, 1.0 ],
 			"shininess": 32
 		},
@@ -76,48 +76,6 @@
 			"tint": [ 1.0, 1.0, 1.0, 1.0],
 			"shininess": 32
 		},
-		{
-			"name": "signMaterial2",
-			"subTextures": [
-				"defaultSubTexture", "SpecularNoneSubTexture"
-			],
-			"shader": "blinnPhong",
-			"tint": [ 1.0, 0.0, 1.0, 1.0],
-			"shininess": 32
-		},
-		{ 
-			"name": "bloomMaterial", 
-			"subTextures": [
-				"screenQuadSubTexture1", "screenQuadSubTexture2"
-			],
-			"cubeMapTextures": [
-			],	
-			"shader": "sceneQuad", 
-			"tint": [ 1.0, 1.0, 1.0, 1.0 ],
-			"shininess": 32
-		},
-		{ 
-			"name": "bloomBlurMaterial", 
-			"subTextures": [
-				"screenQuadSubTexture1"
-			],
-			"cubeMapTextures": [
-			],	
-			"shader": "blurBright", 
-			"tint": [ 1.0, 1.0, 1.0, 1.0 ],
-			"shininess": 32
-		},
-		{ 
-			"name": "screenMaterial", 
-			"subTextures": [
-				"screenQuadSubTexture1"
-			],
-			"cubeMapTextures": [
-			],	
-			"shader": "sceneQuadPlain", 
-			"tint": [ 1.0, 1.0, 1.0, 1.0 ],
-			"shininess": 32
-		},
 		{ 
 			"name": "skyboxMaterial", 
 			"subTextures": [
@@ -134,30 +92,31 @@
 			"subTextures": [
 			],
 			"shader": "lightSource",
-			"tint": [ 1.0, 0.0, 0.0, 1.0],
+			"tint": [ 1.0, 1.0, 1.0, 1.0],
 			"shininess": 32
 		},
-		{ 
-			"name": "streetMaterial", 
-			"subTextures": [
-				"streetSubTexture", "SpecularNoneSubTexture"
-			],
-			"cubeMapTextures": [
-			],	
-			"shader": "blinnPhong", 
-			"tint": [ 1.0, 1.0, 1.0, 1.0 ],
-			"shininess": 32		
+		{
+		  "name": "streetMaterial",
+		  "subTextures": [
+			"streetSubTexture",
+			"SpecularNoneSubTexture"
+		  ],
+		  "cubeMapTextures": [
+		  ],
+		  "shader": "blinnPhong",
+		  "tint": [ 1.0, 1.0, 1.0, 1.0 ],
+		  "shininess": 32
 		},
-		{ 
-			"name": "wireframeMaterial", 
-			"subTextures": [
-				"wireframeSubTexture", "SpecularNoneSubTexture"
-			],
-			"cubeMapTextures": [
-			],	
-			"shader": "blinnPhong",
-			"tint": [ 1.0, 1.0, 1.0, 1.0 ], 
-			"shininess":  32
+		{
+		  "name": "tunnelMaterial",
+		  "subTextures": [
+			"tunnelSubTexture", "SpecularNoneSubTexture"
+		  ],
+		  "cubeMapTextures": [
+		  ],
+		  "shader": "blinnPhong",
+		  "tint": [ 1.0, 1.0, 1.0, 1.0 ],
+		  "shininess": 32
 		}
 	]
 }

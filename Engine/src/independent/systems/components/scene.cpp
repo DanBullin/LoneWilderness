@@ -56,13 +56,17 @@ namespace Engine
 		if (m_renderPasses.size() != 0)
 		{
 			for (auto& renderPass : m_renderPasses)
-				if (renderPass) delete renderPass;
+				if (renderPass)
+				{
+					renderPass->onDetach();
+					delete renderPass;
+				}
 
 			m_renderPasses.clear();
 		}
 
 		// Camera pointer is deleted by the entity it is attached to, so we only need to set the pointer
-		if(m_mainCamera) m_mainCamera = nullptr;
+		if (m_mainCamera) m_mainCamera = nullptr;
 
 		m_entityListUpdated = true;
 		m_entitiesList.clear();
@@ -111,7 +115,7 @@ namespace Engine
 					}
 
 					// Check for validness again and then delete
-					if(it->second) delete it->second;
+					if (it->second) delete it->second;
 					m_rootEntities.erase(it++);
 					setEntityListUpdated(true);
 				}
@@ -123,7 +127,7 @@ namespace Engine
 						for (auto& component : it->second->getAllComponents())
 						{
 							// Check if component is valid
-							if(component)
+							if (component)
 								component->onUpdate(timestep, totalTime);
 						}
 						++it;
@@ -133,7 +137,7 @@ namespace Engine
 		}
 
 		// Update the layer manager if it is valid
-		if(m_layerManager)
+		if (m_layerManager)
 			m_layerManager->onUpdate(timestep, totalTime);
 	}
 
@@ -173,7 +177,7 @@ namespace Engine
 		// Check if entity name exists
 		if (checkRootEntityNameTaken(name) && name != "")
 		{
-			if(!m_rootEntities[name])
+			if (!m_rootEntities[name])
 				ENGINE_ERROR("[Scene::getEntity] The entity we're retrieving is an invalid entity. Scene Name: {0}", m_sceneName);
 
 			return m_rootEntities[name];
@@ -223,7 +227,7 @@ namespace Engine
 		for (auto& entity : getEntities())
 		{
 			auto pointLight = entity->getComponent<PointLight>();
-			if(pointLight) pointLights.emplace_back(pointLight);
+			if (pointLight) pointLights.emplace_back(pointLight);
 		}
 
 		std::sort(pointLights.begin(), pointLights.end(),
@@ -314,6 +318,7 @@ namespace Engine
 			// Update main camera with camera passed
 			m_mainCamera = camera;
 			camera->setMainCamera(true);
+			camera->updateProjection();
 		}
 	}
 
@@ -350,6 +355,7 @@ namespace Engine
 				m_renderPasses.emplace_back(pass);
 				pass->attachScene(this);
 				pass->setIndex(static_cast<uint32_t>(m_renderPasses.size()) - 1);
+				pass->onAttach();
 			}
 			else
 				ENGINE_ERROR("[Scene::addRenderPass] The pass we're attempting to add is invalid. Scene Name: {0}", m_sceneName);
@@ -388,7 +394,7 @@ namespace Engine
 	*/
 	FrameBuffer* Scene::getFinalFrameBuffer()
 	{
-		if(m_renderPasses.back())
+		if (m_renderPasses.back())
 			return m_renderPasses.back()->getFrameBuffer();
 		else
 		{

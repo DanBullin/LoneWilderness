@@ -14,12 +14,12 @@
 
 #include "independent/entities/components/camera.h"
 #include "independent/entities/components/transform.h"
-#include "independent/entities/components/eventListener.h"
 #include "independent/entities/components/meshRender3D.h"
 #include "independent/entities/components/meshRender2D.h"
 #include "independent/entities/components/text.h"
 #include "independent/entities/components/characterController.h"
 #include "independent/entities/components/light.h"
+#include "independent/entities/components/nativeScript.h"
 
 #include "independent/systems/systems/log.h"
 
@@ -58,59 +58,13 @@ namespace Engine
 		bool containsPoint(const glm::vec2& coordinate); //!< Returns whether the screen point is inside this entity's bounding box
 
 		const std::vector<EntityComponent*>& getAllComponents(); //!< Get list of all components
+		template<typename T> void attach(EntityComponent* component); //!< Attach an already created component
 		template<typename T, typename ...Args> void attach(const std::string& componentName, Args&&... args); //!< Attach a component to the entity
 		template<typename T> void detach(); //!< Delete a component from the entity
 		void detach(EntityComponent* component); //!< Delete a component from the entity
 		template<typename T> T* getComponent(); //!< Get first instance of component by template type
 		template<typename T> bool containsComponent(); //!< Check if the entity has a type of component attached
 
-		virtual void onPreUpdate(const float timestep, const float totalTime) {} //!< Call before game update
-			/*!< \param timestep a const float - The timestep
-				 \param totalTime a const float - The total runtime of the application */
-		virtual void onPostUpdate(const float timestep, const float totalTime) {} //!< Call after game update
-			/*!< \param timestep a const float - The timestep
-				 \param totalTime a const float - The total runtime of the application */
-		virtual void onWindowResize(WindowResizeEvent& e, const float timestep, const float totalTime) {} //!< Called when a window is resized
-			/* \param e a WindowResizeEvent& - Reference to the window resize event
-			   \param timestep a const float - The timestep
-			   \param totalTime a const float - The total runtime of the application */
-		virtual void onWindowFocus(WindowFocusEvent& e, const float timestep, const float totalTime) {} //!< Called when a window gains focus
-			/* \param e a WindowFocusEvent& - Reference to the window focus event
-			   \param timestep a const float - The timestep
-			   \param totalTime a const float - The total runtime of the application */
-		virtual void onWindowLostFocus(WindowLostFocusEvent& e, const float timestep, const float totalTime) {} //!< Called when a window loses focus
-			/* \param e a WindowLostFocusEvent& - Reference to the window lost focus event
-			   \param timestep a const float - The timestep
-			   \param totalTime a const float - The total runtime of the application */
-		virtual void onWindowMoved(WindowMovedEvent& e, const float timestep, const float totalTime) {} //!< Called when a window is moved
-			/* \param e a WindowMovedEvent& - Reference to the window moved event
-			   \param timestep a const float - The timestep
-			   \param totalTime a const float - The total runtime of the application */
-		virtual void onKeyPress(KeyPressedEvent& e, const float timestep, const float totalTime) {} //!< Call upon key press
-			/* \param e a KeyPressedEvent& - Reference to the key pressed event
-			   \param timestep a const float - The timestep
-			   \param totalTime a const float - The total runtime of the application */
-		virtual void onKeyRelease(KeyReleasedEvent& e, const float timestep, const float totalTime) {} //!< Call upon key release
-			/* \param e a onKeyRelease& - Reference to the key release event
-			   \param timestep a const float - The timestep
-			   \param totalTime a const float - The total runtime of the application */
-		virtual void onMousePress(MousePressedEvent& e, const float timestep, const float totalTime) {} //!< Call upon mouse press
-			/* \param e a MousePressedEvent& - Reference to the mouse press event
-			   \param timestep a const float - The timestep
-			   \param totalTime a const float - The total runtime of the application */
-		virtual void onMouseRelease(MouseReleasedEvent& e, const float timestep, const float totalTime) {} //!< Call upon mouse release
-			/* \param e a MouseReleasedEvent& - Reference to the mouse release event
-			   \param timestep a const float - The timestep
-			   \param totalTime a const float - The total runtime of the application */
-		virtual void onMouseScrolled(MouseScrolledEvent& e, const float timestep, const float totalTime) {} //!< Call upon mouse scroll
-			/* \param e a MouseScrolledEvent& - Reference to the mouse scroll event
-			   \param timestep a const float - The timestep
-			   \param totalTime a const float - The total runtime of the application */
-		virtual void onMouseMoved(MouseMovedEvent& e, const float timestep, const float totalTime) {} //!< Call upon mouse move
-			/* \param e a MouseMovedEvent& - Reference to the mouse move event
-			   \param timestep a const float - The timestep
-			   \param totalTime a const float - The total runtime of the application */
-		virtual void onRender(const Renderers renderer); //!< Call upon render if mesh render component attached
 		virtual void printEntityDetails(); //!< Print entity details
 	};
 
@@ -135,6 +89,33 @@ namespace Engine
 	}
 
 	template<typename T>
+	//! attach()
+	/*
+	\param component an EntityComponent* - A pointer to the component to attach
+	*/
+	void Entity::attach(EntityComponent* component)
+	{
+		if (!containsComponent<T>())
+		{
+			if (component)
+			{
+				m_components.emplace_back(component);
+				m_components.back()->setParent(this);
+				m_components.back()->onAttach();
+			}
+			else
+				ENGINE_ERROR("[Entity::attach] Cannot add component as component isn't valid. Entity Name: {0}.", m_entityName);
+		}
+		else
+		{
+			ENGINE_ERROR("[Entity::attach] Cannot add component as entity already this component attached. Entity Name: {0}", m_entityName);
+
+			if (component)
+				delete component;
+		}
+	}
+
+	template<typename T>
 	//! detach()
 	void Entity::detach()
 	{
@@ -154,7 +135,7 @@ namespace Engine
 		{
 			if (component)
 			{
-				if (typeid(*component) == typeid(T))
+				if (typeid(*component) == typeid(T) || component->getComponentType() == Components::toType(typeid(T).name()))
 					return static_cast<T*>(component);
 			}
 		}
@@ -173,7 +154,7 @@ namespace Engine
 		{
 			if (component)
 			{
-				if (typeid(*component) == typeid(T))
+				if (typeid(*component) == typeid(T) || component->getComponentType() == Components::toType(typeid(T).name()))
 					return true;
 			}
 		}

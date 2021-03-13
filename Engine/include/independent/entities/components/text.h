@@ -38,6 +38,8 @@ namespace Engine
 
 		void setFont(const std::string& fontName); //!< Set the font name
 		const std::string& getFont() const; //!< Get the font name
+
+		void onRender(); //!< A render submission command
 	};
 }
 #endif

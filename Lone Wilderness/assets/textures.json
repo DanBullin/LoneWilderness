@@ -1,19 +1,13 @@
 {
 	"textures2D": 
-	[
-		{ "name": "default", "filePath": "assets/textures/default.png", "width": 0, "height": 0, "channels": 0, "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
+	[	
+		{ "name": "defaultTexture", "filePath": "assets/textures/default.png", "width": 0, "height": 0, "channels": 0, "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
 			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
 			
 		{ "name": "specular_full", "filePath": "assets/textures/specular_full.png", "width": 0, "height": 0, "channels": 0, "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
 			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
 			
-		{ "name": "testTexture", "filePath": "", "width": 240, "height": 300, "channels": 4, "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
-			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
-			
 		{ "name": "specular_none", "filePath": "assets/textures/specular_none.png", "width": 0, "height": 0, "channels": 0, "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
-			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
-			
-		{ "name": "text", "filePath": "assets/textures/text.png", "width": 0, "height": 0, "channels": 0, "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
 			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
 			
 		{ "name": "cyborg_diffuse", "filePath": "assets/textures/cyborg/cyborg_diffuse.png", "width": 0, "height": 0, "channels": 0, "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
@@ -28,7 +22,10 @@
 		{ "name": "street_diffuse", "filePath": "assets/textures/street/concrete.jpg", "width": 0, "height": 0, "channels": 0, "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
 			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
 		
-		{ "name": "wireframe", "filePath": "assets/textures/wireframe/wireframe.jpg", "width": 0, "height": 0, "channels": 0, "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
+		{ "name": "tunnel_diffuse", "filePath": "assets/textures/sewer/tiles.jpg", "width": 0, "height": 0, "channels": 0, "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
+			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
+			
+		{ "name": "menuImage", "filePath": "assets/textures/menuImage.png", "width": 0, "height": 0, "channels": 0, "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
 			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false}
 
 	],

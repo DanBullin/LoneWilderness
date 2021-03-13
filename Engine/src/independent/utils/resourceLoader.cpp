@@ -133,45 +133,6 @@ namespace Engine
 		}
 	}
 
-	//! loadIndexBuffer()
-	/*!
-	\param filePath a const std::string& - The path to the index buffer data
-	*/
-	void ResourceLoader::loadIndexBuffers(const std::string& filePath)
-	{
-		nlohmann::json jsonData = ResourceManager::getJSON(filePath);
-
-		ENGINE_INFO("[ResourceLoader::loadIndexBuffers] Loading Index Buffers");
-
-		// Go through each buffer and load it
-		for (auto& buffer : jsonData["indexBuffers"])
-		{
-			// Get the index buffer name
-			std::string name = buffer["name"].get<std::string>();
-
-			// Check if it exists
-			if (!ResourceManager::resourceExists(name))
-			{
-				// Resource name is free, so we can now create a index buffer and assign that resource name to that resource
-				IndexBuffer* newBuffer;
-
-				uint32_t capacity = getCapacity(buffer["size"].get<std::string>());
-				if (capacity == 0)
-				{
-					ENGINE_ERROR("[ResourceLoader::loadIndexBuffers] Invalid capacity provided. Name: {0}", name);
-				}
-
-				newBuffer = IndexBuffer::create(name, nullptr, capacity);
-
-				// Register buffer with resource manager
-				ResourceManager::registerResource(name, newBuffer);
-				ENGINE_TRACE("Loaded {0} from {1}.", name, filePath);
-			}
-			else
-				ENGINE_ERROR("[ResourceLoader::loadIndexBuffers] Resource name already taken. Name: {0}", name);
-		}
-	}
-
 	//! loadVertexArray()
 	/*!
 	\param filePath a const std::string& - The path to the current file
@@ -222,47 +183,6 @@ namespace Engine
 			}
 			else
 				ENGINE_ERROR("[ResourceLoader::loadVertexArrays] Resource name already taken. Name: {0}", name);
-		}
-	}
-
-	//! loadIndirectBuffer()
-	/*!
-	\param filePath a const std::string& - The path to the current file
-	*/
-	void ResourceLoader::loadIndirectBuffers(const std::string& filePath)
-	{
-		nlohmann::json jsonData = ResourceManager::getJSON(filePath);
-
-		ENGINE_INFO("[ResourceLoader::loadIndirectBuffers] Loading Indirect Buffers");
-
-		// Go through each buffer and load it
-		for (auto& buffer : jsonData["indirectBuffers"])
-		{
-			// Get the indirect buffer name
-			std::string name = buffer["name"].get<std::string>();
-
-			// Check if it exists
-			if (!ResourceManager::resourceExists(name))
-			{
-				// Resource name is free, so we can now create a indirect buffer and assign that resource name to that resource
-				IndirectBuffer* newBuffer;
-
-				uint32_t capacity = getCapacity(buffer["size"].get<std::string>());
-				if (capacity == 0)
-				{
-					ENGINE_ERROR("[ResourceLoader::loadIndirectBuffers] Invalid capacity provided. Name: {0}", name);
-				}
-
-				// Need to work out the size, we'll have to compare the string literals provided
-				// Only need a count
-				newBuffer = IndirectBuffer::create(name, nullptr, capacity);
-
-				// Register buffer with resource manager
-				ResourceManager::registerResource(name, newBuffer);
-				ENGINE_TRACE("Loaded {0} from {1}.", name, filePath);
-			}
-			else
-				ENGINE_ERROR("[ResourceLoader::loadIndirectBuffers] Resource name already taken. Name: {0}", name);
 		}
 	}
 
@@ -547,7 +467,6 @@ namespace Engine
 				{
 					// Create new subtexture
 					// [Texture], [UVStart], [UVEnd]
-
 					SubTexture* newSubTexture = new SubTexture(name, baseTexture, { subTexture["UVStart"][0], subTexture["UVStart"][1] }, { subTexture["UVEnd"][0], subTexture["UVEnd"][1] }, subTexture["ConvertBottomLeft"].get<bool>());
 
 					// Register subTexture with resource manager
@@ -591,11 +510,7 @@ namespace Engine
 				}
 
 				if (newModel->getMeshes().size() == 0)
-				{
 					ENGINE_ERROR("[ResourceLoader::load3DModels] The geometry was not successfully loaded. Name: {0}.", name);
-					delete newModel;
-					return;
-				}
 				else
 				{
 					// Load the material file contents into a string

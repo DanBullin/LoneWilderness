@@ -9,51 +9,65 @@
 #include "independent/systems/components/scene.h"
 #include "independent/rendering/renderUtils.h"
 #include "independent/systems/systems/resourceManager.h"
-#include "independent/systems/systems/windowManager.h"
 #include "independent/systems/systems/sceneManager.h"
 #include "independent/rendering/renderers/renderer2D.h"
 #include "independent/rendering/geometry/quad.h"
 
 namespace Engine
 {
+	bool FourthPass::s_initialised = false; //!< Initialise to false
+
 	//! FourthPass()
 	FourthPass::FourthPass()
 	{
-		m_frameBuffer = nullptr;
+		m_frameBuffer = ResourceManager::getResource<FrameBuffer>("defaultFBO");
+		m_cameraUBO = ResourceManager::getResource<UniformBuffer>("CameraUBO");
+
+		m_subTexture = ResourceManager::getResource<SubTexture>("screenQuadSubTexture1");
+
+		if (!s_initialised)
+		{
+			Material* screenMaterial = new Material("screenMaterial", { m_subTexture }, {}, ResourceManager::getResource<ShaderProgram>("quad"), { 1.f, 1.f, 1.f, 1.f }, 32.f);
+			ResourceManager::registerResource("screenMaterial", screenMaterial);
+			m_screenQuadMaterial = ResourceManager::getResource<Material>("screenMaterial");
+			s_initialised = true;
+		}
+
+		m_previousFBO = nullptr;
 	}
 
 	//! ~FourthPass()
 	FourthPass::~FourthPass()
 	{
 		m_frameBuffer = nullptr;
+		m_cameraUBO = nullptr;
+		m_subTexture = nullptr;
+		m_screenQuadMaterial = nullptr;
+		s_initialised = false;
 	}
 
-	//! prepare()
-	/*
-	\param stage a const uint32_t - The current stage of the renderer
-	*/
-	void FourthPass::prepare(const uint32_t stage)
+	//! setupPass()
+	void FourthPass::setupPass()
 	{
-		// Functions to call to prepare before or after rendering calls
-		switch (stage)
-		{
-		case 0:
-		{
-			RenderUtils::clearBuffers(RenderParameter::COLOR_AND_DEPTH_BUFFER_BIT, m_attachedScene->getMainCamera()->getClearColour());
-			RenderUtils::enableBlending(true);
+		RenderUtils::clearBuffers(RenderParameter::COLOR_AND_DEPTH_BUFFER_BIT, m_attachedScene->getMainCamera()->getClearColour());
+		RenderUtils::enableBlending(true);
+		RenderUtils::setDepthComparison(RenderParameter::LESS_THAN_OR_EQUAL);
 
-			UniformBuffer* cameraUBO = ResourceManager::getResource<UniformBuffer>("CameraUBO");
-			cameraUBO->uploadData("u_view", static_cast<void*>(&m_attachedScene->getMainCamera()->getViewMatrix(false)));
-			cameraUBO->uploadData("u_projection", static_cast<void*>(&m_attachedScene->getMainCamera()->getProjectionMatrix(false)));
+		Camera* cam = m_attachedScene->getMainCamera();
+		m_cameraUBO->uploadData("u_view", static_cast<void*>(&cam->getViewMatrix(false)));
+		m_cameraUBO->uploadData("u_projection", static_cast<void*>(&cam->getProjectionMatrix(false)));
+	}
 
-			break;
-		}
-		case 1:
-		{
-			RenderUtils::enableBlending(false);
-			break;
-		}
-		}
+	//! endPass()
+	void FourthPass::endPass()
+	{
+		RenderUtils::enableBlending(false);
+	}
+
+	//! onAttach()
+	void FourthPass::onAttach()
+	{
+		if (!m_previousFBO) m_previousFBO = m_attachedScene->getRenderPass(m_index - 1)->getFrameBuffer();
 	}
 
 	//! onRender()
@@ -62,34 +76,21 @@ namespace Engine
 	*/
 	void FourthPass::onRender(std::vector<Entity*>& entities)
 	{
-		// Get the screen quad's mesh render
-		Material* material = ResourceManager::getResource<Material>("screenMaterial");
-
-		m_frameBuffer = ResourceManager::getResource<FrameBuffer>("defaultFBO");
-
 		// Bind the framebuffer chosen
 		m_frameBuffer->bind();
 
 		// Set settings
-		prepare(0);
+		setupPass();
 
-		Renderer2D::begin(nullptr);
+		Renderer2D::begin();
 
-		material->getSubTexture(0)->setBaseTexture(m_attachedScene->getRenderPass(m_index - 1)->getFrameBuffer()->getSampledTarget("Colour0"),
-			{ 0.f, 0.f }, { 1.f, 1.f }, true);
-
-		// The entire scene has been rendered to a texture, so we simply render that quad to the framebuffer bound
-		// screenMaterial is just a simple quad material with a single texture
-		// Use Colour0 of the previous pass
-		Renderer2D::submit(ResourceManager::getResource<ShaderProgram>("sceneQuadPlain"),
-			ResourceManager::getResource<Material>("screenMaterial")->getSubTextures(),
-			getScreenQuad(),
-			ResourceManager::getResource<Material>("screenMaterial")->getTint());
+		m_subTexture->setBaseTexture(m_previousFBO->getSampledTarget("Colour0"), { 0.f, 0.f }, { 1.f, 1.f }, true);
+		Renderer2D::submit(m_screenQuadMaterial->getShader(), m_screenQuadMaterial->getSubTextures(), Quad::getScreenQuadMatrix(), m_screenQuadMaterial->getTint());
 
 		Renderer2D::end();
 
 		// Set settings
-		prepare(1);
+		endPass();
 	}
 
 	//! getFrameBuffer()

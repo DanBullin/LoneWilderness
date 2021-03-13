@@ -8,6 +8,7 @@
 #include "independent/entities/components/meshRender2D.h"
 #include "independent/entities/entity.h"
 #include "independent/systems/systems/log.h"
+#include "independent/rendering/renderers/renderer2D.h"
 
 namespace Engine
 {
@@ -82,5 +83,26 @@ namespace Engine
 	Material* MeshRender2D::getMaterial()
 	{
 		return m_material;
+	}
+
+	//! onRender()
+	void MeshRender2D::onRender()
+	{
+		if (m_material)
+		{
+			if (getParent()->containsComponent<Transform>())
+			{
+				if (getParent()->containsComponent<NativeScript>())
+				{
+					getParent()->getComponent<NativeScript>()->onSubmit(Renderers::Renderer2D);
+				}
+
+				Renderer2D::submit(m_material->getShader(), m_material->getSubTextures(), getParent()->getComponent<Transform>()->getModelMatrix(), m_material->getTint());
+			}
+			else
+				ENGINE_ERROR("[MeshRender2D::onRender] The entity this mesh render is attached to does not have a valid transform.");
+		}
+		else
+			ENGINE_ERROR("[MeshRender2D::onRender] This mesh render does not have a valid material attached. Entity Name: {0}.", getParent()->getName());
 	}
 }

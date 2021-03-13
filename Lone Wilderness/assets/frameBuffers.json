@@ -9,16 +9,16 @@
 			"useSceneSize": false
 		},
 		{ 
-			"name": "hdrFBO",
+			"name": "finalFBO",
 			"useDefault": false,
-			"layout": [ "Colour16", true, "Colour16", true, "DepthAndStencil", false ],
+			"layout": [ "Colour", true, "DepthAndStencil", false ],
 			"dimensions": [],
 			"useSceneSize": true
 		},
 		{ 
-			"name": "bloomFBO",
+			"name": "hdrFBO",
 			"useDefault": false,
-			"layout": [ "Colour", true, "DepthAndStencil", false ],
+			"layout": [ "Colour16", true, "Colour16", true, "DepthAndStencil", false ],
 			"dimensions": [],
 			"useSceneSize": true
 		},
@@ -37,7 +37,7 @@
 			"useSceneSize": true
 		},
 		{ 
-			"name": "inspectorFBO",
+			"name": "applyBloomFBO",
 			"useDefault": false,
 			"layout": [ "Colour", true, "DepthAndStencil", false ],
 			"dimensions": [],

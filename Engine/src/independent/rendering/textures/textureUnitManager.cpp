@@ -6,6 +6,7 @@
 *
 */
 #include "independent/rendering/textures/textureUnitManager.h"
+#include "independent/systems/systems/resourceManager.h"
 #include "independent/systems/systems/log.h"
 
 namespace Engine
@@ -111,6 +112,7 @@ namespace Engine
 	*/
 	uint32_t TextureUnitManager::getRemainingUnitCount()
 	{
+		if (m_full) return 0;
 		return m_capacity - m_head;
 	}
 
@@ -130,5 +132,29 @@ namespace Engine
 		for (int i = 0; i < m_buffer.size(); i++)
 			if (m_buffer[i] == texture->getID())
 				texture->bind(i);
+	}
+
+	//! getBufferByTextureNames
+	/*
+	\return a std::vector<std::string> - The buffer by texture names than ID
+	*/
+	std::vector<std::string> TextureUnitManager::getBufferByTextureNames()
+	{
+		std::vector<std::string> buffer;
+		auto textureList = ResourceManager::getResourcesOfType<Texture>(ResourceType::Texture);
+
+		for (auto& element : m_buffer)
+		{
+			for (auto& texture : textureList)
+			{
+				if (element == texture->getID())
+				{
+					buffer.push_back(texture->getName());
+					break;
+				}
+			}
+		}
+
+		return buffer;
 	}
 }

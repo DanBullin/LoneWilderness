@@ -18,7 +18,6 @@ namespace Engine
 	private:
 		static Application* s_instance; //!< Singleton instance of the application
 		static bool s_running; //!< Is the application running? Default value of true
-
 	protected:
 		Application(); //!< Default Constructor
 	public:

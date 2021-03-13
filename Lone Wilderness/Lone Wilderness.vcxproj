@@ -132,28 +132,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\entities\cyborg.h" />
-    <ClInclude Include="include\entities\FPSCounter.h" />
-    <ClInclude Include="include\entities\lightTest.h" />
-    <ClInclude Include="include\entities\mainMenu\menuText.h" />
-    <ClInclude Include="include\entities\player.h" />
-    <ClInclude Include="include\entities\rectangleShape.h" />
-    <ClInclude Include="include\entities\sign.h" />
-    <ClInclude Include="include\entities\street.h" />
+    <ClInclude Include="include\scripts\cyborg.h" />
+    <ClInclude Include="include\scripts\FPSCounter.h" />
+    <ClInclude Include="include\scripts\lightTest.h" />
+    <ClInclude Include="include\scripts\mainMenu\menuText.h" />
+    <ClInclude Include="include\scripts\player.h" />
+    <ClInclude Include="include\scripts\rectangleShape.h" />
+    <ClInclude Include="include\scripts\sign.h" />
+    <ClInclude Include="include\scripts\street.h" />
     <ClInclude Include="include\gameApplication.h" />
     <ClInclude Include="include\layers\defaultLayer.h" />
     <ClInclude Include="include\layers\UILayer.h" />
     <ClInclude Include="include\loaders\sceneLoader.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\entities\cyborg.cpp" />
-    <ClCompile Include="src\entities\FPSCounter.cpp" />
-    <ClCompile Include="src\entities\lightTest.cpp" />
-    <ClCompile Include="src\entities\mainMenu\menuText.cpp" />
-    <ClCompile Include="src\entities\player.cpp" />
-    <ClCompile Include="src\entities\rectangleShape.cpp" />
-    <ClCompile Include="src\entities\sign.cpp" />
-    <ClCompile Include="src\entities\street.cpp" />
+    <ClCompile Include="src\scripts\cyborg.cpp" />
+    <ClCompile Include="src\scripts\FPSCounter.cpp" />
+    <ClCompile Include="src\scripts\lightTest.cpp" />
+    <ClCompile Include="src\scripts\mainMenu\menuText.cpp" />
+    <ClCompile Include="src\scripts\player.cpp" />
+    <ClCompile Include="src\scripts\rectangleShape.cpp" />
+    <ClCompile Include="src\scripts\sign.cpp" />
+    <ClCompile Include="src\scripts\street.cpp" />
     <ClCompile Include="src\gameApplication.cpp" />
     <ClCompile Include="src\layers\defaultLayer.cpp" />
     <ClCompile Include="src\layers\UILayer.cpp" />

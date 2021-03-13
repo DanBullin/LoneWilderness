@@ -16,50 +16,63 @@
 
 namespace Engine
 {
+	bool ThirdPass::s_initialised = false; //!< Initialise to false
+
 	//! ThirdPass()
 	ThirdPass::ThirdPass()
 	{
-		// Bloom FBO is the FBO we use to take the contents of the HDR buffer and the blurred brightness buffer
-		m_frameBuffer = ResourceManager::getResource<FrameBuffer>("bloomFBO");
+		m_frameBuffer = ResourceManager::getResource<FrameBuffer>("applyBloomFBO");
+		m_cameraUBO = ResourceManager::getResource<UniformBuffer>("CameraUBO");
+		m_bloomUBO = ResourceManager::getResource<UniformBuffer>("BloomUBO");
+
+		m_subTexture1 = ResourceManager::getResource<SubTexture>("screenQuadSubTexture1");
+		m_subTexture2 = ResourceManager::getResource<SubTexture>("screenQuadSubTexture2");
+
+		if (!s_initialised)
+		{
+			ShaderProgram* newShader = ShaderProgram::create("bloomShader");
+			newShader->build(ResourceManager::getResource<VertexArray>("QuadMultiTexturedArray"), "assets/shaders/bloomShader/vertex.vs", "assets/shaders/bloomShader/fragment.fs", "", "", "");
+			newShader->setUniforms({ "u_textures" });
+			newShader->setUniformBuffers({ { "Camera", m_cameraUBO }, { "Bloom", m_bloomUBO } });
+			newShader->setOrderImportance(0);
+			ResourceManager::registerResource("bloomShader", newShader);
+
+			Material* bloomMaterial = new Material("bloomMaterial", { m_subTexture1, m_subTexture2 }, {}, newShader, { 1.f, 1.f, 1.f, 1.f }, 32.f);
+			ResourceManager::registerResource("bloomMaterial", bloomMaterial);
+			m_bloomMaterial = bloomMaterial;
+			s_initialised = true;
+		}
+
 	}
 
 	//! ~ThirdPass()
 	ThirdPass::~ThirdPass()
 	{
 		m_frameBuffer = nullptr;
+		m_cameraUBO = nullptr;
+		m_bloomUBO = nullptr;
+		m_subTexture1 = nullptr;
+		m_subTexture2 = nullptr;
+		m_bloomMaterial = nullptr;
+		s_initialised = false;
 	}
 
-	//! prepare()
-	/*
-	\param stage a const uint32_t - The current stage of the renderer
-	*/
-	void ThirdPass::prepare(const uint32_t stage)
+	//! setupPass()
+	void ThirdPass::setupPass()
 	{
-		// Functions to call to prepare before or after rendering calls
-		switch (stage)
-		{
-			case 0:
-			{
-				// Clear the bloom FBO buffers
-				RenderUtils::clearBuffers(RenderParameter::COLOR_AND_DEPTH_BUFFER_BIT, m_attachedScene->getMainCamera()->getClearColour());
-				RenderUtils::enableBlending(true);
+		// Clear the bloom FBO buffers
+		RenderUtils::clearBuffers(RenderParameter::COLOR_AND_DEPTH_BUFFER_BIT, m_attachedScene->getMainCamera()->getClearColour());
+		RenderUtils::enableBlending(true);
+		RenderUtils::setDepthComparison(RenderParameter::LESS_THAN_OR_EQUAL);
 
-				// Upload 2D camera values
-				UniformBuffer* cameraUBO = ResourceManager::getResource<UniformBuffer>("CameraUBO");
-				cameraUBO->uploadData("u_view", static_cast<void*>(&m_attachedScene->getMainCamera()->getViewMatrix(false)));
-				cameraUBO->uploadData("u_projection", static_cast<void*>(&m_attachedScene->getMainCamera()->getProjectionMatrix(false)));
+		// Upload 2D camera values
+		Camera* cam = m_attachedScene->getMainCamera();
+		m_cameraUBO->uploadData("u_view", static_cast<void*>(&cam->getViewMatrix(false)));
+		m_cameraUBO->uploadData("u_projection", static_cast<void*>(&cam->getProjectionMatrix(false)));
 
-				// Upload bloom bool variable
-				uint32_t useBloom = ResourceManager::getConfigValue(Config::UseBloom);
-				UniformBuffer* bloomUBO = ResourceManager::getResource<UniformBuffer>("BloomUBO");
-				bloomUBO->uploadData("u_enableBloom", static_cast<void*>(&useBloom));
-
-				break;
-			}
-			case 1:
-			{
-			}
-		}
+		// Upload bloom bool variable
+		uint32_t useBloom = ResourceManager::getConfigValue(Config::UseBloom);
+		m_bloomUBO->uploadData("u_enableBloom", static_cast<void*>(&useBloom));
 	}
 
 	//! onRender()
@@ -68,39 +81,36 @@ namespace Engine
 	*/
 	void ThirdPass::onRender(std::vector<Entity*>& entities)
 	{
-		// Get the screen quad's mesh render
-		Material* material = ResourceManager::getResource<Material>("bloomMaterial");
-
 		// Bind the bloom fbo (Blur)
 		m_frameBuffer->bind();
-		
+
 		// Set settings
-		prepare(0);
+		setupPass();
 
-		Renderer2D::begin(nullptr);
+		Renderer2D::begin();
 
-		// Now we render a quad with the bloom material
-		// We need to set the first subtexture to the HDR colour 0 buffer
-		// We need to set the second subtexture to the blurred bright texture from the previous pass's buffer
-		material->getSubTexture(0)->setBaseTexture(m_attachedScene->getRenderPass(0)->getFrameBuffer()->getSampledTarget("Colour0"),
-			{ 0.f, 0.f }, { 1.f, 1.f }, true);
-		material->getSubTexture(1)->setBaseTexture(m_attachedScene->getRenderPass(m_index-1)->getFrameBuffer()->getSampledTarget("Colour0"),
-			{ 0.f, 0.f }, { 1.f, 1.f }, true);
-		
-		Renderer2D::submit(ResourceManager::getResource<ShaderProgram>("sceneQuad"),
-			material->getSubTextures(),
-			getScreenQuad(),
-			material->getTint());
+		m_subTexture1->setBaseTexture(m_attachedScene->getRenderPass(0)->getFrameBuffer()->getSampledTarget("Colour0"), { 0.f, 0.f }, { 1.f, 1.f }, true);
+		m_subTexture2->setBaseTexture(m_attachedScene->getRenderPass(m_index - 1)->getFrameBuffer()->getSampledTarget("Colour0"), { 0.f, 0.f }, { 1.f, 1.f }, true);
+		Renderer2D::submit(m_bloomMaterial->getShader(), m_bloomMaterial->getSubTextures(), Quad::getScreenQuadMatrix(), m_bloomMaterial->getTint());
 
 		for (auto& entity : entities)
 		{
 			if (entity->getLayer()->getDisplayed() && entity->getDisplay())
-				entity->onRender(Renderers::Renderer2D);
+			{
+				if (entity->containsComponent<MeshRender2D>())
+				{
+					entity->getComponent<MeshRender2D>()->onRender();
+				}
+				if (entity->containsComponent<Text>())
+				{
+					entity->getComponent<Text>()->onRender();
+				}
+				if (entity->containsComponent<NativeScript>())
+					entity->getComponent<NativeScript>()->onRender(Renderers::Renderer2D);
+			}
 		}
 
 		Renderer2D::end();
-
-		prepare(1);
 	}
 
 	//! getFrameBuffer()

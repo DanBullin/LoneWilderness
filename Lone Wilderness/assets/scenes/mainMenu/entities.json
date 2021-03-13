@@ -3,7 +3,6 @@
 	[
 		{
 			"name": "Player1",
-			"type": "Player",
 			"layer": "UI",
 			"display": true,
 			"components": 
@@ -28,14 +27,14 @@
 					"setMainCamera": true
 				},
 				{
-					"name": "EventListener",
-					"type": "EventListener"
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "Player"
 				}
 			]
 		},
 		{
 			"name": "PlayGame",
-			"type": "MenuText",
 			"layer": "UI",
 			"display": true,
 			"components": 
@@ -43,26 +42,26 @@
 				{
 					"name": "Transform",
 					"type": "Transform",
-					"position": [ 365.0, 130.0, 0.0 ],
+					"position": [ 240.0, 130.0, 1.0 ],
 					"rotation": [ 0.0, 0.0, 0.0 ],
-					"scale": [ 71.0, 27.0, 1.0 ]
+					"scale": [ 311.0, 32.0, 1.0 ]
 				},
 				{
 					"name": "Text1",
 					"type": "Text",
-					"text": "Play",
+					"text": "Play Game",
 					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
 					"fontName": "Arial"
 				},
 				{
-					"name": "EventListener",
-					"type": "EventListener"
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "MenuText"
 				}
 			]
 		},
 		{
 			"name": "QuitText",
-			"type": "MenuText",
 			"layer": "UI",
 			"display": true,
 			"components": 
@@ -70,7 +69,7 @@
 				{
 					"name": "Transform",
 					"type": "Transform",
-					"position": [ 365.0, 530.0, 0.0 ],
+					"position": [ 365.0, 530.0, 0.5 ],
 					"rotation": [ 0.0, 0.0, 0.0 ],
 					"scale": [ 68.0, 30.0, 1.0 ]
 				},
@@ -82,8 +81,29 @@
 					"fontName": "Arial"
 				},
 				{
-					"name": "EventListener",
-					"type": "EventListener"
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "MenuText"
+				}
+			]
+		},
+		{
+			"name": "MenuImage",
+			"layer": "UI",
+			"display": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 512.0, 384.0, -1.0 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 1024.0, 768.0, 1.0 ]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender2D",
+					"materialName": "menuImageMaterial"
 				}
 			]
 		}

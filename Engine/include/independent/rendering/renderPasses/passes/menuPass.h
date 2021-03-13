@@ -18,12 +18,16 @@ namespace Engine
 	class MenuPass : public RenderPass
 	{
 	private:
+		static bool s_initialised; //!< Has the pass been initialised
 		FrameBuffer* m_frameBuffer; //!< A framebuffer
+		UniformBuffer* m_cameraUBO; //!< The camera UBO
+
+		void setupPass(); //!< Set up the pass by setting the settings
+		void endPass(); //!< Set the settings to end the pass
 	public:
 		MenuPass(); //!< Constructor
 		~MenuPass(); //!< Destructor
 
-		void prepare(const uint32_t stage) override; //!< A prepare function for a particular stage of the pass
 		void onRender(std::vector<Entity*>& entities) override; //!< The rendering to perform for this pass
 		FrameBuffer* getFrameBuffer() override; //!< Get the framebuffer of this render pass
 	};

@@ -22,17 +22,17 @@ namespace Engine
 	{
 		switch (type)
 		{
-			case TextureParameter::ClampToBorder: return GL_CLAMP_TO_BORDER;
-			case TextureParameter::ClampToEdge: return GL_CLAMP_TO_EDGE;
-			case TextureParameter::Repeat: return GL_REPEAT;
-			case TextureParameter::MirroredRepeat: return GL_MIRRORED_REPEAT;
-			case TextureParameter::Nearest: return GL_NEAREST;
-			case TextureParameter::Linear: return GL_LINEAR;
-			case TextureParameter::NearestMipmapNearest: return GL_NEAREST_MIPMAP_NEAREST;
-			case TextureParameter::LinearMipmapNearest: return GL_LINEAR_MIPMAP_NEAREST;
-			case TextureParameter::NearestMipmapLinear: return GL_NEAREST_MIPMAP_LINEAR;
-			case TextureParameter::LinearMipmapLinear: return GL_LINEAR_MIPMAP_LINEAR;
-			default: return GL_INVALID_ENUM;
+		case TextureParameter::ClampToBorder: return GL_CLAMP_TO_BORDER;
+		case TextureParameter::ClampToEdge: return GL_CLAMP_TO_EDGE;
+		case TextureParameter::Repeat: return GL_REPEAT;
+		case TextureParameter::MirroredRepeat: return GL_MIRRORED_REPEAT;
+		case TextureParameter::Nearest: return GL_NEAREST;
+		case TextureParameter::Linear: return GL_LINEAR;
+		case TextureParameter::NearestMipmapNearest: return GL_NEAREST_MIPMAP_NEAREST;
+		case TextureParameter::LinearMipmapNearest: return GL_LINEAR_MIPMAP_NEAREST;
+		case TextureParameter::NearestMipmapLinear: return GL_NEAREST_MIPMAP_LINEAR;
+		case TextureParameter::LinearMipmapLinear: return GL_LINEAR_MIPMAP_LINEAR;
+		default: return GL_INVALID_ENUM;
 		}
 	}
 
@@ -45,22 +45,22 @@ namespace Engine
 	{
 		switch (texParam)
 		{
-			case GL_FLOAT:
-				return "Float";
-			case GL_UNSIGNED_BYTE:
-				return "Unsigned Byte";
-			case GL_RGBA:
-				return "RGBA";
-			case GL_RGB:
-				return "RGB";
-			case GL_RED:
-				return "R";
-			case GL_RGBA16F:
-				return "RGBA16F";
-			case GL_DEPTH_COMPONENT:
-				return "Depth";
-			default:
-				return "None";
+		case GL_FLOAT:
+			return "Float";
+		case GL_UNSIGNED_BYTE:
+			return "Unsigned Byte";
+		case GL_RGBA:
+			return "RGBA";
+		case GL_RGB:
+			return "RGB";
+		case GL_RED:
+			return "R";
+		case GL_RGBA16F:
+			return "RGBA16F";
+		case GL_DEPTH_COMPONENT:
+			return "Depth";
+		default:
+			return "None";
 		}
 	}
 
@@ -203,7 +203,7 @@ namespace Engine
 				glTextureSubImage2D(m_textureID, 0, offsetX, offsetY, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		}
 
-		if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages)) 
+		if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
 			ENGINE_TRACE("OpenGLTexture2D::edit] Editing texture {0} from offset: {1}, {2} with size of: {3}, {4}.", m_name, offsetX, offsetY, width, height);
 	}
 
