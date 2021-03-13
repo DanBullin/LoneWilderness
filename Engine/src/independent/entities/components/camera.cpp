@@ -106,7 +106,7 @@ namespace Engine
 		if (window)
 		{
 			if (perspective)
-				return glm::perspective(glm::radians(m_cameraData.Zoom), window->getProperties().getAspectRatio(), m_projection.NearPlane, m_projection.FarPlane);
+				return glm::perspective(glm::radians(m_cameraData.Zoom), m_projection.AspectRatio, m_projection.NearPlane, m_projection.FarPlane);
 			else
 				return glm::ortho(0.f, m_projection.Right, m_projection.Bottom, 0.f, -1.f, 1.f);
 		}
@@ -310,6 +310,6 @@ namespace Engine
 		glm::ivec2 size = WindowManager::getFocusedWindow()->getProperties().getSize();
 		m_projection.Right = static_cast<float>(size.x);
 		m_projection.Bottom = static_cast<float>(size.y);
-		m_projection.AspectRatio = static_cast<float>(size.x / size.y);
+		m_projection.AspectRatio = static_cast<float>(size.x) / static_cast<float>(size.y);
 	}
 }
