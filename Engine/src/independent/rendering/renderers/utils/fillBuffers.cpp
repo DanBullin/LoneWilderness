@@ -102,6 +102,8 @@ namespace Engine
 			generateBasic3D(batchEntries);
 		else if (batchEntries.at(0).shader->getVertexArray()->getName() == "vertexArray2")
 			generateSkybox(batchEntries);
+		else if (batchEntries.at(0).shader->getVertexArray()->getName() == "vertexArray3")
+			generateTerrain(batchEntries);
 		else if (batchEntries.at(0).shader->getVertexArray()->getName() == "lightSourceArray")
 			generateLightSource(batchEntries);
 	}
@@ -174,5 +176,31 @@ namespace Engine
 
 		batchEntries.at(0).shader->getVertexArray()->getVertexBuffers().at(1)->edit(modelInstanceData.data(), sizeof(glm::mat4) * static_cast<uint32_t>(batchEntries.size()), 0);
 		batchEntries.at(0).shader->getVertexArray()->getVertexBuffers().at(2)->edit(tintInstanceData.data(), sizeof(glm::vec4) * static_cast<uint32_t>(batchEntries.size()), 0);
+	}
+
+	//! generateLightSource()
+	/*
+	\param batchEntries a std::vector<BatchEntry3D>& - A list of batch entries
+	*/
+	void generateTerrain(std::vector<BatchEntry3D>& batchEntries)
+	{
+		std::vector<glm::mat4> modelInstanceData; //!< The model matrix instance data
+		std::vector<glm::vec4> tintInstanceData; //!< The tint instance data
+		std::vector<int32_t> unit1InstanceData; //!< The texture unit data
+		std::vector<glm::vec4> subTextureUVs; //!< The Start and End UV coordinates of the subtexture
+
+		for (auto& entry : batchEntries)
+		{
+			modelInstanceData.push_back(entry.modelMatrix);
+			unit1InstanceData.push_back(entry.textureUnits[0]);
+			tintInstanceData.push_back(entry.tint);
+			subTextureUVs.push_back(glm::vec4(entry.subTextures.at(0)->getUVStart().x, entry.subTextures.at(0)->getUVStart().y,
+				entry.subTextures.at(0)->getUVEnd().x, entry.subTextures.at(0)->getUVEnd().y));
+		}
+
+		batchEntries.at(0).shader->getVertexArray()->getVertexBuffers().at(1)->edit(modelInstanceData.data(), sizeof(glm::mat4) * static_cast<uint32_t>(batchEntries.size()), 0);
+		batchEntries.at(0).shader->getVertexArray()->getVertexBuffers().at(2)->edit(unit1InstanceData.data(), sizeof(int32_t) * static_cast<uint32_t>(batchEntries.size()), 0);
+		batchEntries.at(0).shader->getVertexArray()->getVertexBuffers().at(3)->edit(tintInstanceData.data(), sizeof(glm::vec4) * static_cast<uint32_t>(batchEntries.size()), 0);
+		batchEntries.at(0).shader->getVertexArray()->getVertexBuffers().at(4)->edit(subTextureUVs.data(), sizeof(glm::vec4) * static_cast<uint32_t>(batchEntries.size()), 0);
 	}
 }

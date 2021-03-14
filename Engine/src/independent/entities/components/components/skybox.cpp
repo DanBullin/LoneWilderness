@@ -37,8 +37,6 @@ namespace Engine
 	{
 		if (m_material)
 		{
-			m_material->setTint({ 0.2f, 0.2f, 0.2f, 1.f });
-
 			if (m_model)
 			{
 				Renderer3D::submit("Skybox", m_model->getMeshes().at(0).getGeometry(), m_material, glm::mat4(1.f));

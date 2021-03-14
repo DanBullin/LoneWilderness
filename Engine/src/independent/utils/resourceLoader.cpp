@@ -26,6 +26,8 @@ namespace Engine
 
 		if (dataTypeName == "Vertex3D")
 			return static_cast<uint32_t>(sizeof(Vertex3D));
+		else if (dataTypeName == "TerrainVertex")
+			return static_cast<uint32_t>(sizeof(TerrainVertex));
 		else if (dataTypeName == "Vertex2D")
 			return static_cast<uint32_t>(sizeof(Vertex2D));
 		else if (dataTypeName == "Vertex2DMultiTextured")

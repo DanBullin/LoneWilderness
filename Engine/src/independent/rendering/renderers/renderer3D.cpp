@@ -427,4 +427,59 @@ namespace Engine
 		s_nextIndex += indexCount;
 		s_batchCommandsQueue[VBO].push_back({ 0, 0, 0, 0, 0 });
 	}
+
+	//! addGeometry()
+	/*!
+	\param vertices a std::vector<TerrainVertex>& - The list of vertices
+	\param indices a std::vector<uint32_t>& - The list of indices
+	\param geometry a Geometry3D& - A reference to the model's geometry
+	*/
+	void Renderer3D::addGeometry(std::vector<TerrainVertex>& vertices, std::vector<uint32_t> indices, Geometry3D& geometry)
+	{
+		uint32_t vertexCount = static_cast<uint32_t>(vertices.size()); // The total number of vertices we're adding
+		uint32_t indexCount = static_cast<uint32_t>(indices.size()); // The total number of indices we're adding
+
+		// Check a valid vertex count was provided
+		if (vertexCount == 0 || indexCount == 0)
+		{
+			ENGINE_ERROR("[Renderer3D::addGeometry] An invalid vertex count or index count was provided. Vertex Count: {0}, Index Count: {1}.", vertexCount, indexCount);
+			return;
+		}
+
+		auto VBO = geometry.VertexBuffer;
+		auto IBO = ResourceManager::getResource<IndexBuffer>("IndexBuffer3D");
+
+		// Check if we've seen this VBO before, if not set the next vertex to position 0
+		if (s_nextVertex.find(VBO) == s_nextVertex.end())
+			s_nextVertex[VBO] = 0;
+
+		// Check if adding this geometry goes over buffer capacity
+		// Total number + new amount > buffer capacity
+		if (s_nextVertex[VBO] + vertexCount > ResourceManager::getConfigValue(Config::VertexCapacity3D))
+		{
+			ENGINE_ERROR("[Renderer3D::addGeometry] Cannot add geometry as vertex buffer limit has been reached. VBO Name: {0}.", VBO->getName());
+			return;
+		}
+		if (s_nextIndex + indexCount > ResourceManager::getConfigValue(Config::IndexCapacity3D))
+		{
+			ENGINE_ERROR("[Renderer3D::addGeometry] Cannot add geometry as index buffer limit has been reached. IBO Name: {0}.", IBO->getName());
+			return;
+		}
+
+		// Capacity wont be reached, so add the data to the buffer
+		VBO->edit(vertices.data(), static_cast<uint32_t>(vertices.size()) * sizeof(TerrainVertex), s_nextVertex[VBO] * sizeof(TerrainVertex));
+		IBO->edit(indices.data(), indexCount, s_nextIndex);
+
+		// Create geometry data
+		geometry.ID = static_cast<uint32_t>(s_batchCommandsQueue[VBO].size());
+		geometry.FirstVertex = s_nextVertex[VBO];
+		geometry.FirstIndex = s_nextIndex;
+		geometry.VertexCount = vertexCount;
+		geometry.IndexCount = indexCount;
+
+		// Update the next vertex and index position
+		s_nextVertex[VBO] += vertexCount;
+		s_nextIndex += indexCount;
+		s_batchCommandsQueue[VBO].push_back({ 0, 0, 0, 0, 0 });
+	}
 }

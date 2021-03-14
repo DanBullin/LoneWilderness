@@ -42,6 +42,7 @@ namespace Engine
 		static void enableWireframe(const bool enable); //!< Enable/Disable wireframe mode
 		static void enableDepthWriting(const bool enable); //!< Enable/Disable depth writing
 		static void enableBlending(const bool enable); //!< Enable/Disable blending
+		static void enablePatchDrawing(const bool enable); //!< Enable/Disable drawing with patches
 
 		static void clearBuffers(const RenderParameter buffers, const glm::vec4& colour = glm::vec4(0.f, 0.f, 0.f, 1.f)); //!< Clear the buffers
 

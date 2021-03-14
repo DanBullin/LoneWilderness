@@ -33,6 +33,20 @@ namespace Engine
 				 \param bitangent a const std::array<int16_t, 3>& - The vertex bitangent */
 	};
 
+	/*! \struct TerrainVertex
+	* \brief A 3D vertex used in the terrain
+	*/
+	struct TerrainVertex
+	{
+		glm::vec3 Position; //!< Position of the vertex
+		glm::vec2 TexCoords; //!< The texture coordinate of the vertex
+		TerrainVertex() {}; //!< Default constructor
+		TerrainVertex(const glm::vec3& pos, const glm::vec2& texCoord)
+			: Position(pos), TexCoords(texCoord) {} //!< Constructor
+			/*!< \param pos a const glm::vec3& - The vertex position
+				 \param texCoord a const glm::vec2& - The vertex texture coordinate */
+	};
+
 	/*! \struct Vertex2D
 	* \brief A 2D vertex containing all the information about a 2D vertex
 	*/

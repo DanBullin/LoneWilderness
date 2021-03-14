@@ -23,12 +23,14 @@ namespace Engine
 		static bool s_depthWriting; //!< The depth mask which allows or disallows writing to the depth buffer
 		static bool s_wireframeMode; //!< Should we draw geometry in wireframe mode
 		static bool s_blending; //!< Should blending be enabled
+		static bool s_patchDrawing; //!< Should drawing primitive be patches
 	public:
 		static void enableFaceCulling(const bool enable); //!< Enable/Disable face culling
 		static void enableDepthTesting(const bool enable); //!< Enable/Disable depth testing
 		static void enableWireframe(const bool enable); //!< Enable/Disable wireframe mode
 		static void enableDepthWriting(const bool enable); //!< Enable/Disable depth writing
 		static void enableBlending(const bool enable); //!< Enable/Disable blending
+		static void enablePatchDrawing(const bool enable); //!< Enable/Disable drawing with patches
 
 		static void clearBuffers(const RenderParameter buffers, const glm::vec4& colour = glm::vec4(0.f, 0.f, 0.f, 1.f)); //!< Clear the buffers
 

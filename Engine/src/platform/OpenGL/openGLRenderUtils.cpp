@@ -17,6 +17,7 @@ namespace Engine
 	bool OpenGLRenderUtils::s_depthWriting = true; //!< Is depth writing enabled
 	bool OpenGLRenderUtils::s_wireframeMode = false; //!< Is wireframe mode enabled
 	bool OpenGLRenderUtils::s_blending = false; //!< Is blending enabled
+	bool OpenGLRenderUtils::s_patchDrawing = false; //!< Is patch drawing enabled
 
 	namespace RenderParameters
 	{
@@ -164,6 +165,26 @@ namespace Engine
 		}
 	}
 
+	//! enablePatchDrawing()
+	/*!
+	\param enable a bool - Enable patch drawing
+	*/
+	void OpenGLRenderUtils::enablePatchDrawing(const bool enable)
+	{
+		if (enable && !s_patchDrawing)
+		{
+			s_patchDrawing = true;
+			if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
+				ENGINE_TRACE("[OpenGLRenderUtils::enablePatchDrawing] Enabled Patch drawing.");
+		}
+		else if (!enable && s_patchDrawing)
+		{
+			s_patchDrawing = false;
+			if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
+				ENGINE_TRACE("[OpenGLRenderUtils::enablePatchDrawing] Disabled Patch drawing.");
+		}
+	}
+
 	//! clearBuffers()
 	/*!
 	\param buffers a const RenderParameter - The buffers to clear
@@ -208,7 +229,11 @@ namespace Engine
 	*/
 	void OpenGLRenderUtils::draw(const uint32_t drawCount)
 	{
-		glDrawElements(GL_TRIANGLES, drawCount, GL_UNSIGNED_INT, nullptr);
+		if (s_patchDrawing)
+			glDrawElements(GL_PATCHES, drawCount, GL_UNSIGNED_INT, nullptr);
+		else
+			glDrawElements(GL_TRIANGLES, drawCount, GL_UNSIGNED_INT, nullptr);
+
 		if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
 			ENGINE_TRACE("[OpenGLRenderUtils::draw] Drawing elements. Count: {0}.", drawCount);
 	}
@@ -219,7 +244,11 @@ namespace Engine
 	*/
 	void OpenGLRenderUtils::drawMultiIndirect(const uint32_t commandsSize)
 	{
-		glMultiDrawElementsIndirect(GL_TRIANGLES, GL_UNSIGNED_INT, (GLvoid*)0, commandsSize, 0);
+		if(s_patchDrawing)
+			glMultiDrawElementsIndirect(GL_PATCHES, GL_UNSIGNED_INT, (GLvoid*)0, commandsSize, 0);
+		else
+			glMultiDrawElementsIndirect(GL_TRIANGLES, GL_UNSIGNED_INT, (GLvoid*)0, commandsSize, 0);
+
 		if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
 			ENGINE_TRACE("[OpenGLRenderUtils::drawMultiIndirect] Drawing multi elements. Count: {0}.", commandsSize);
 	}

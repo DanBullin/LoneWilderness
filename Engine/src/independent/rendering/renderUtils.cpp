@@ -167,6 +167,37 @@ namespace Engine
 		}
 	}
 
+	//! enablePatchDrawing()
+	/*!
+	\param enable a bool - Enable patch drawing
+	*/
+	void RenderUtils::enablePatchDrawing(const bool enable)
+	{
+		switch (RenderAPI::getAPI())
+		{
+		case GraphicsAPI::None:
+		{
+			ENGINE_ERROR("[RenderUtils::enablePatchDrawing] No rendering API selected.");
+			break;
+		}
+		case GraphicsAPI::OpenGL:
+		{
+			OpenGLRenderUtils::enablePatchDrawing(enable);
+			break;
+		}
+		case GraphicsAPI::Direct3D:
+		{
+			ENGINE_ERROR("[RenderUtils::enablePatchDrawing] Direct3D not supported.");
+			break;
+		}
+		case GraphicsAPI::Vulkan:
+		{
+			ENGINE_ERROR("[RenderUtils::enablePatchDrawing] Vulkan not supported.");
+			break;
+		}
+		}
+	}
+
 	//! clearBuffers()
 	/*!
 	\param buffers a const RenderParameter - The buffers to clear

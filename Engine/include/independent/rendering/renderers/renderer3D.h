@@ -72,6 +72,7 @@ namespace Engine
 		static void setTextureUnitManager(TextureUnitManager*& unitManager, const std::array<int32_t, 16>& unit); //!< Set the texture unit manager and units to use
 
 		static void addGeometry(std::vector<Vertex3D>& vertices, std::vector<uint32_t> indices, Geometry3D& geometry); //!< Add a piece of 3D geometry to the renderer's vertex buffer
+		static void addGeometry(std::vector<TerrainVertex>& vertices, std::vector<uint32_t> indices, Geometry3D& geometry); //!< Add a piece of 3D geometry to the renderer's vertex buffer
 	};
 }
 #endif
