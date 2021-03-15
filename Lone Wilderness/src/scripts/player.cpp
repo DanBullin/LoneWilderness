@@ -96,7 +96,55 @@ void Player::onKeyRelease(KeyReleasedEvent & e, const float timestep, const floa
 {
 	if (e.getKeyCode() == Keys::B)
 	{
-		getParent()->getParentScene()->getEntity("Cyborg1")->getComponent<MeshRender3D>()->setModel(ResourceManager::getResource<Model3D>("cube2"));
+		Entity* ent = new Entity;
+
+		// TEST CRASHINGGGG
+		if (getParent()->getParentScene()->getEntity("Cyborg1")->addChildEntity("Child1", ent))
+		{
+			ent->attach<Transform>("Transform1", 2.f, 0.f, 0.f, 0.f, 0.f, 0.f, 1.f, 1.f, 1.f);
+			ent->setLayer(getParent()->getParentScene()->getLayerManager()->getLayer("Default"));
+			ent->setDisplay(true);
+			ent->attach<MeshRender3D>("MeshRender3D", ResourceManager::getResource<Model3D>("cyborg"), nullptr);
+
+			Entity* ent1 = new Entity;
+			if (ent->addChildEntity("Child2", ent1))
+			{
+				ent1->attach<Transform>("Transform1", 5.f, 0.f, 0.f, 0.f, 45.f, 0.f, 1.f, 1.f, 1.f);
+				ent1->setLayer(getParent()->getParentScene()->getLayerManager()->getLayer("Default"));
+				ent1->setDisplay(true);
+				ent1->attach<MeshRender3D>("MeshRender3D", ResourceManager::getResource<Model3D>("cyborg"), nullptr);
+
+				Entity* ent2 = new Entity;
+				if (ent1->addChildEntity("Child3", ent2))
+				{
+					ent2->attach<Transform>("Transform1", 5.f, 0.f, 0.f, 0.f, 45.f, 0.f, 1.f, 1.f, 1.f);
+					ent2->setLayer(getParent()->getParentScene()->getLayerManager()->getLayer("Default"));
+					ent2->setDisplay(true);
+					ent2->attach<MeshRender3D>("MeshRender3D", ResourceManager::getResource<Model3D>("cyborg"), nullptr);
+				}
+				else
+					delete ent1;
+
+			}
+			else
+				delete ent1;
+
+		}
+		else
+			delete ent;
+	}
+
+	if (e.getKeyCode() == Keys::N)
+	{
+		getParent()->getChildEntity("Child1")->destroy();
+	}
+
+	if (e.getKeyCode() == Keys::M)
+	{
+		auto t = getParent()->getChildEntities();
+
+		ENGINE_INFO("h");
+
 	}
 }
 

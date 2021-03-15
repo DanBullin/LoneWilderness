@@ -18,6 +18,7 @@ namespace Engine
 	{
 		m_entityName = "";
 		m_parentScene = nullptr;
+		m_parentEntity = nullptr;
 		m_layer = nullptr;
 		m_display = true;
 	}
@@ -35,8 +36,18 @@ namespace Engine
 				delete comp;
 			}
 		}
-		
+
 		m_components.clear();
+
+		for (auto& child : m_childEntities)
+		{
+			if (child.second)
+			{
+				delete child.second;
+			}
+		}
+
+		m_childEntities.clear();
 
 		m_parentScene = nullptr;
 		m_layer = nullptr;
@@ -58,6 +69,123 @@ namespace Engine
 	void Entity::setName(const std::string& entityName)
 	{
 		m_entityName = entityName;
+	}
+
+	//! onUpdate()
+	/*!
+	\param timestep a const float - The update time step
+	\param totalTime a const float - The total application time
+	*/
+	void Entity::onUpdate(const float timestep, const float totalTime)
+	{
+		// Delete any child entities that are scheuled to be deleted, can also update entities if entity is not to be deleted
+		for (auto it = m_childEntities.cbegin(); it != m_childEntities.cend(); )
+		{
+			// Check if entity is a valid entity
+			if (it->second)
+			{
+				// Check if the entity is to be destroyed
+				if (it->second->getDestroyed())
+				{
+					// Do NOT delete the entity which contains the main camera
+					if (it->second == getParentScene()->getMainCamera()->getParent())
+					{
+						ENGINE_ERROR("[Entity::onUpdate] Cannot delete the entity when it contains the scene's main camera. Scene: {0}, Entity: {1}.", getParentScene()->getName(), it->second->getName());
+						it->second->undestroy();
+						return;
+					}
+
+					// Check for validness again and then delete
+					if (it->second) delete it->second;
+					m_childEntities.erase(it++);
+					getParentScene()->setEntityListUpdated(true);
+				}
+				else
+				{
+					// Entity is not to be deleted, update components
+					if (it->second)
+					{
+						it->second->onUpdate(timestep, totalTime);
+						for (auto& component : it->second->getAllComponents())
+						{
+							// Check if component is valid
+							if (component)
+								component->onUpdate(timestep, totalTime);
+						}
+						++it;
+					}
+				}
+			}
+		}
+	}
+
+	//! setParentEntity()
+	/*
+	\param parent an Entity* - A pointer to the entity
+	*/
+	void Entity::setParentEntity(Entity* parent)
+	{
+		if (parent)
+			m_parentEntity = parent;
+	}
+
+	//! getParentEntity()
+	/*
+	\return an Entity* - A pointer to the parent entity
+	*/
+	Entity* Entity::getParentEntity() const
+	{
+		return m_parentEntity;
+	}
+
+	//! getChildEntity()
+	/*
+	\param childName a const std::string& - The name of the child entity
+	\return an Entity* - A pointer to the child entity
+	*/
+	Entity* Entity::getChildEntity(const std::string& childName)
+	{
+		// Check if entity name exists
+		if (checkChildEntityNameTaken(childName) && childName != "")
+		{
+			if (!m_childEntities[childName])
+				ENGINE_ERROR("[Entity::getChildEntity] The entity we're retrieving is an invalid entity. Entity Name: {0}", getName());
+
+			return m_childEntities[childName];
+		}
+		else
+			ENGINE_ERROR("[Entity::getChildEntity] Cannot get child entity named: {0}.", childName);
+
+		// Can't find entity
+		return nullptr;
+	}
+
+	//! getChildEntities()
+	/*
+	\return a std::map<std::string, Entity*>& - The list of child entities
+	*/
+	std::map<std::string, Entity*>& Entity::getChildEntities()
+	{
+		return m_childEntities;
+	}
+
+	//! getAllEntities()
+	/*
+	\param entityList a std::vector<Entity*>& - The current list of entities
+	*/
+	void Entity::getAllEntities(std::vector<Entity*>& entityList)
+	{
+		for (auto& entity : getChildEntities())
+		{
+			if (entity.second)
+			{
+				entityList.push_back(entity.second);
+				if (entity.second->getChildEntities().size() != 0)
+				{
+					entity.second->getAllEntities(entityList);
+				}
+			}
+		}
 	}
 
 	//! setParentScene()
@@ -166,6 +294,50 @@ namespace Engine
 		else
 			ENGINE_ERROR("[Entity::containsPoint] This entity does not have a valid transform. Entity Name: {0}.", m_entityName);
 
+		return false;
+	}
+
+	//! addChildEntity()
+	/*
+	\param childName a const std::string& - The name of the child
+	\param entity an Entity* - A pointer to the entity
+	\return a bool - The success of adding the child entity
+	*/
+	bool Entity::addChildEntity(const std::string& childName, Entity* entity)
+	{
+		// Add entity
+		if (!checkChildEntityNameTaken(childName) && childName != "")
+		{
+			// If an invalid entity was provided, just exit out the function
+			if (!entity)
+			{
+				ENGINE_ERROR("[Entity::addChildEntity] An invalid entity pointer was provided for child entity name: {0} for entity: {1}.", childName, m_entityName);
+				return false;
+			}
+
+			// Set the parent scene of the entity and its name
+			m_childEntities[childName] = entity;
+			entity->setParentScene(getParentScene());
+			entity->setParentEntity(this);
+			entity->setName(childName);
+			getParentScene()->setEntityListUpdated(true);
+			return true;
+		}
+		else
+			ENGINE_ERROR("[Entity::addChildEntity] Name for child entity already taken. Cannot add. Child entity Name: {0} for entity: {1}.", childName, m_entityName);
+		return false;
+	}
+
+	//! checkChildEntityNameTaken()
+	/*!
+	\param name a const std::string& - The name of the entity
+	\return a bool - Does the entity name exist in our entity list
+	*/
+	bool Entity::checkChildEntityNameTaken(const std::string& name) const
+	{
+		// Check if the name given exists in the entity list
+		if (m_childEntities.find(name) != m_childEntities.end() && name != "")
+			return true;
 		return false;
 	}
 

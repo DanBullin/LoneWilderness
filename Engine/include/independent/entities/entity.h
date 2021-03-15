@@ -35,8 +35,10 @@ namespace Engine
 	{
 	private:
 		std::string m_entityName; //!< The name of the entity
+		Entity* m_parentEntity; //!< The parent entity
 		Scene* m_parentScene; //!< The scene this entity belongs to
 		Layer* m_layer; //!< The layer this entity is attached to
+		std::map<std::string, Entity*> m_childEntities; //!< List of child entities
 		std::vector<EntityComponent*> m_components; //!< List of components attached to this entity
 		bool m_display; //!< Should the entity be displayed
 	public:
@@ -45,6 +47,14 @@ namespace Engine
 
 		const std::string& getName(); //!< Get the name of the entity
 		void setName(const std::string& entityName); //!< Set the name of the entity
+
+		void onUpdate(const float timestep, const float totalTime); //!< Update the entity
+
+		void setParentEntity(Entity* parent); //!< Set the entity this entity belongs to
+		Entity* getParentEntity() const; //!< Get the entity this entity belongs to
+		Entity* getChildEntity(const std::string& childName); //!< Get the child entity of this entity by name
+		std::map<std::string, Entity*>& getChildEntities(); //!< Get all the children
+		void getAllEntities(std::vector<Entity*>& entityList); //!< Get all entities belonging to this entity
 
 		void setParentScene(Scene* parent); //!< Set the scene this entity belongs to
 		Scene* getParentScene() const; //!< Get the scene this entity belongs to
@@ -56,6 +66,9 @@ namespace Engine
 		const bool getDisplay() const; //!< Get whether the entity should be displayed
 
 		bool containsPoint(const glm::vec2& coordinate); //!< Returns whether the screen point is inside this entity's bounding box
+
+		bool addChildEntity(const std::string& childName, Entity* entity); //!< Add a child entity
+		bool checkChildEntityNameTaken(const std::string& name) const; //!< Returns whether the entity name has been taken
 
 		const std::vector<EntityComponent*>& getAllComponents(); //!< Get list of all components
 		template<typename T> void attach(EntityComponent* component); //!< Attach an already created component

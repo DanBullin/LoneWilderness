@@ -125,6 +125,7 @@ namespace Engine
 					// Entity is not to be deleted, update components
 					if (it->second)
 					{
+						it->second->onUpdate(timestep, totalTime);
 						for (auto& component : it->second->getAllComponents())
 						{
 							// Check if component is valid
@@ -161,6 +162,7 @@ namespace Engine
 			// Set the parent scene of the entity and its name
 			m_rootEntities[name] = entity;
 			entity->setParentScene(this);
+			entity->setParentEntity(nullptr);
 			entity->setName(name);
 			setEntityListUpdated(true);
 		}
@@ -208,7 +210,10 @@ namespace Engine
 				// Only add entity if its valid
 				if (entity.second)
 				{
+					std::vector<Entity*> entList;
+					entity.second->getAllEntities(entList);
 					m_entitiesList.push_back(entity.second);
+					m_entitiesList.insert(m_entitiesList.end(), entList.begin(), entList.end());
 				}
 			}
 

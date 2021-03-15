@@ -79,9 +79,12 @@ namespace Engine
 	/*!
 	\return a glm::vec3 - The position of the entity in the game world
 	*/
-	glm::vec3 Transform::getPosition() const
+	glm::vec3 Transform::getPosition()
 	{
-		return m_position;
+		if (getParent()->getParentEntity())
+			return getParent()->getParentEntity()->getComponent<Transform>()->getPosition() + m_position;
+		else
+			return m_position;
 	}
 
 	//! setPosition()
@@ -108,9 +111,12 @@ namespace Engine
 	/*!
 	\return a glm::vec3 - The orientation of the transform in euler angles
 	*/
-	glm::vec3 Transform::getOrientation() const
+	glm::vec3 Transform::getOrientation()
 	{
-		return m_orientation;
+		if (getParent()->getParentEntity())
+			return getParent()->getParentEntity()->getComponent<Transform>()->getOrientation() + m_orientation;
+		else
+			return m_orientation;
 	}
 
 	//! setOrientation()
@@ -137,9 +143,12 @@ namespace Engine
 	/*!
 	\return a glm::vec3& - The scale of the transform
 	*/
-	glm::vec3 Transform::getScale() const
+	glm::vec3 Transform::getScale()
 	{
-		return m_scale;
+		if (getParent()->getParentEntity())
+			return getParent()->getParentEntity()->getComponent<Transform>()->getScale() * m_scale;
+		else
+			return m_scale;
 	}
 
 	//! setScale()
