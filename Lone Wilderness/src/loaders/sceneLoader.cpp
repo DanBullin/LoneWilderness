@@ -154,6 +154,133 @@ namespace Engine
 		return false;
 	}
 
+	//! loadEntity()
+	/*
+	\param scene a Scene* - A pointer to the scene
+	\param parent an Entity* - A pointer to the parent entity
+	\param entityData a json - The entity's JSON data
+	*/
+	void SceneLoader::loadEntity(Scene* scene, Entity* parent, json entityData)
+	{
+		std::string entityName = entityData["name"].get<std::string>();
+
+		Entity* newEntity = new Entity;
+		
+		if(parent)
+			parent->addChildEntity(entityName, newEntity);
+		else
+			scene->addEntity(entityName, newEntity);
+
+		bool entityCoreSuccess = loadEntityProperties(newEntity, entityData);
+		loadComponents(scene, newEntity, entityData["components"]);
+		
+		for (auto& child : entityData["childEntities"])
+		{
+			if (!newEntity->checkChildEntityNameTaken(child["name"].get<std::string>()))
+			{
+				loadEntity(scene, newEntity, child);
+			}
+			else
+				ENGINE_ERROR("[SceneLoader::loadEntity] Child name already taken. Parent: {0}, Child: {1}.", entityName, child["name"].get<std::string>());
+		}
+	}
+
+	//! loadComponents
+	/*
+	\param scene a Scene* - A pointer to the scene
+	\param entity an Entity* - A pointer to an entity
+	\param componentData a json - The json data for the components
+	*/
+	void SceneLoader::loadComponents(Scene* scene, Entity* entity, json componentData)
+	{
+		/////
+		// Loading all components
+		/////
+
+		for (auto& component : componentData)
+		{
+			std::string compName = component["name"].get<std::string>();
+			ComponentType componentType = Components::toType(component["type"].get<std::string>());
+
+			switch (componentType)
+			{
+				case ComponentType::Camera:
+				{
+					CameraData camData({ component["front"][0], component["front"][1], component["front"][2] }, { component["up"][0], component["up"][1], component["up"][2] }, { component["worldUp"][0], component["worldUp"][1], component["worldUp"][2] }, component["Yaw"], component["Pitch"], component["Zoom"]);
+					entity->attach<Camera>(compName, camData);
+					entity->getComponent<Camera>()->setClearColour({ component["clearColour"][0], component["clearColour"][1] , component["clearColour"][2] , component["clearColour"][3] });
+
+					// Load the cameras skybox if it has one
+					if (component["skybox"].size() != 0)
+						entity->getComponent<Camera>()->setSkybox(new Skybox(ResourceManager::getResource<Model3D>(component["skybox"][0]["model"].get<std::string>()), ResourceManager::getResource<Material>(component["skybox"][0]["material"].get<std::string>())));
+
+					// Camera is main camera, set the scene's main camera to this
+					if (component["setMainCamera"].get<bool>())
+						scene->setMainCamera(entity->getComponent<Camera>());
+
+					break;
+				}
+				case ComponentType::Transform:
+				{
+					entity->attach<Transform>(compName, component["position"][0], component["position"][1], component["position"][2], component["rotation"][0], component["rotation"][1], component["rotation"][2], component["scale"][0], component["scale"][1], component["scale"][2]);
+					break;
+				}
+				case ComponentType::Text:
+				{
+					entity->attach<Text>(compName, component["text"].get<std::string>(), glm::vec4(component["colour"][0], component["colour"][1], component["colour"][2], component["colour"][3]), component["fontName"].get<std::string>());
+					break;
+				}
+				case ComponentType::CharacterController:
+				{
+					entity->attach<CharacterController>(compName, component["speed"], component["sensitivity"]);
+					break;
+				}
+				case ComponentType::MeshRender3D:
+				{
+					entity->attach<MeshRender3D>(compName, ResourceManager::getResource<Model3D>(component["modelName"].get<std::string>()), ResourceManager::getResource<Material>(component["materialName"].get<std::string>()));
+					break;
+				}
+				case ComponentType::MeshRender2D:
+				{
+					entity->attach<MeshRender2D>(compName, ResourceManager::getResource<Material>(component["materialName"].get<std::string>()));
+					break;
+				}
+				case ComponentType::PointLight:
+				{
+					entity->attach<PointLight>(compName, glm::vec3(component["ambient"][0], component["ambient"][1], component["ambient"][2]), glm::vec3(component["diffuse"][0], component["diffuse"][1], component["diffuse"][2]), glm::vec3(component["specular"][0], component["specular"][1], component["specular"][2]), component["constant"], component["linear"], component["quadratic"]);
+					break;
+				}
+				case ComponentType::SpotLight:
+				{
+					entity->attach<SpotLight>(compName, glm::vec3(component["direction"][0], component["direction"][1], component["direction"][2]), glm::vec3(component["ambient"][0], component["ambient"][1], component["ambient"][2]), glm::vec3(component["diffuse"][0], component["diffuse"][1], component["diffuse"][2]), glm::vec3(component["specular"][0], component["specular"][1], component["specular"][2]), component["cutOff"], component["outerCutOff"], component["constant"], component["linear"], component["quadratic"]);
+					break;
+				}
+				case ComponentType::DirectionalLight:
+				{
+					entity->attach<DirectionalLight>(compName, glm::vec3(component["direction"][0], component["direction"][1], component["direction"][2]), glm::vec3(component["ambient"][0], component["ambient"][1], component["ambient"][2]), glm::vec3(component["diffuse"][0], component["diffuse"][1], component["diffuse"][2]), glm::vec3(component["specular"][0], component["specular"][1], component["specular"][2]));
+					break;
+				}
+				case ComponentType::NativeScript:
+				{
+					NativeScript* script = createNewScript(component["scriptName"].get<std::string>());
+					script->setName(compName);
+
+					if (script)
+						entity->attach<NativeScript>(script);
+					else
+						ENGINE_ERROR("[SceneLoader::load] The script name provided isn't a valid script name. Script: {0}.", component["scriptName"].get<std::string>());
+
+					break;
+				}
+				default:
+				{
+					ENGINE_ERROR("[SceneLoader::loadComponents] An invalid component type was provided. Entity Name: {0}. Type: {1}.", entity->getName(), component["type"].get<std::string>());
+					break;
+				}
+			}
+		}
+	}
+
 	//! load()
 	/*!
 	\param sceneName a const std::string& - The name of the scene
@@ -187,108 +314,15 @@ namespace Engine
 			sceneData = ResourceManager::getJSON(sceneFolderPath + "entities.json");
 
 			// Go through each entity and add its components
-			for (auto& entity : sceneData["entities"])
+			for (auto& rootEntity : sceneData["entities"])
 			{
-				std::string entityName = entity["name"].get<std::string>();
-
-				// First check if entity name already exists
-				if (!scene->checkRootEntityNameTaken(entityName))
+				std::string rootEntityName = rootEntity["name"].get<std::string>();
+				if (!scene->checkRootEntityNameTaken(rootEntityName))
 				{
-					Entity* newEntity = new Entity;
-
-					// Add entity to the scene
-					scene->addEntity(entityName, newEntity);
-					bool entityCoreSuccess = loadEntityProperties(newEntity, entity);
-
-					/////
-					// Loading all components
-					/////
-
-					for (auto& component : entity["components"])
-					{
-						std::string compName = component["name"].get<std::string>();
-						ComponentType componentType = Components::toType(component["type"].get<std::string>());
-
-						switch (componentType)
-						{
-						case ComponentType::Camera:
-						{
-							CameraData camData({ component["front"][0], component["front"][1], component["front"][2] }, { component["up"][0], component["up"][1], component["up"][2] }, { component["worldUp"][0], component["worldUp"][1], component["worldUp"][2] }, component["Yaw"], component["Pitch"], component["Zoom"]);
-							newEntity->attach<Camera>(compName, camData);
-							newEntity->getComponent<Camera>()->setClearColour({ component["clearColour"][0], component["clearColour"][1] , component["clearColour"][2] , component["clearColour"][3] });
-
-							// Load the cameras skybox if it has one
-							if (component["skybox"].size() != 0)
-								newEntity->getComponent<Camera>()->setSkybox(new Skybox(ResourceManager::getResource<Model3D>(component["skybox"][0]["model"].get<std::string>()), ResourceManager::getResource<Material>(component["skybox"][0]["material"].get<std::string>())));
-
-							// Camera is main camera, set the scene's main camera to this
-							if (component["setMainCamera"].get<bool>())
-								scene->setMainCamera(newEntity->getComponent<Camera>());
-
-							break;
-						}
-						case ComponentType::Transform:
-						{
-							newEntity->attach<Transform>(compName, component["position"][0], component["position"][1], component["position"][2], component["rotation"][0], component["rotation"][1], component["rotation"][2], component["scale"][0], component["scale"][1], component["scale"][2]);
-							break;
-						}
-						case ComponentType::Text:
-						{
-							newEntity->attach<Text>(compName, component["text"].get<std::string>(), glm::vec4(component["colour"][0], component["colour"][1], component["colour"][2], component["colour"][3]), component["fontName"].get<std::string>());
-							break;
-						}
-						case ComponentType::CharacterController:
-						{
-							newEntity->attach<CharacterController>(compName, component["speed"], component["sensitivity"]);
-							break;
-						}
-						case ComponentType::MeshRender3D:
-						{
-							newEntity->attach<MeshRender3D>(compName, ResourceManager::getResource<Model3D>(component["modelName"].get<std::string>()), ResourceManager::getResource<Material>(component["materialName"].get<std::string>()));
-							break;
-						}
-						case ComponentType::MeshRender2D:
-						{
-							newEntity->attach<MeshRender2D>(compName, ResourceManager::getResource<Material>(component["materialName"].get<std::string>()));
-							break;
-						}
-						case ComponentType::PointLight:
-						{
-							newEntity->attach<PointLight>(compName, glm::vec3(component["ambient"][0], component["ambient"][1], component["ambient"][2]), glm::vec3(component["diffuse"][0], component["diffuse"][1], component["diffuse"][2]), glm::vec3(component["specular"][0], component["specular"][1], component["specular"][2]), component["constant"], component["linear"], component["quadratic"]);
-							break;
-						}
-						case ComponentType::SpotLight:
-						{
-							newEntity->attach<SpotLight>(compName, glm::vec3(component["direction"][0], component["direction"][1], component["direction"][2]), glm::vec3(component["ambient"][0], component["ambient"][1], component["ambient"][2]), glm::vec3(component["diffuse"][0], component["diffuse"][1], component["diffuse"][2]), glm::vec3(component["specular"][0], component["specular"][1], component["specular"][2]), component["cutOff"], component["outerCutOff"], component["constant"], component["linear"], component["quadratic"]);
-							break;
-						}
-						case ComponentType::DirectionalLight:
-						{
-							newEntity->attach<DirectionalLight>(compName, glm::vec3(component["direction"][0], component["direction"][1], component["direction"][2]), glm::vec3(component["ambient"][0], component["ambient"][1], component["ambient"][2]), glm::vec3(component["diffuse"][0], component["diffuse"][1], component["diffuse"][2]), glm::vec3(component["specular"][0], component["specular"][1], component["specular"][2]));
-							break;
-						}
-						case ComponentType::NativeScript:
-						{
-							NativeScript* script = createNewScript(component["scriptName"].get<std::string>());
-							script->setName(compName);
-
-							if (script)
-								newEntity->attach<NativeScript>(script);
-							else
-								ENGINE_ERROR("[SceneLoader::load] The script name provided isn't a valid script name. Script: {0}.", component["scriptName"].get<std::string>());
-
-							break;
-						}
-						default:
-						{
-							ENGINE_ERROR("[SceneLoader::load] An invalid component type was provided. Entity Name: {0}. Type: {1}.", newEntity->getName(), component["type"].get<std::string>());
-							break;
-						}
-						}
-					}
+					loadEntity(scene, nullptr, rootEntity);
 				}
 				else
-					ENGINE_ERROR("[SceneLoader::load] This entity name is already taken. Name: {0}.", entityName);
+					ENGINE_ERROR("[SceneLoader::load] This root entity name is already taken. Name: {0}.", rootEntityName);
 			}
 		}
 		else

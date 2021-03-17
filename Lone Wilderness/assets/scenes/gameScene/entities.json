@@ -47,6 +47,9 @@
 					"type": "NativeScript",
 					"scriptName": "Player"
 				}
+			],
+			"childEntities": 
+			[
 			]
 		},
 		{
@@ -73,6 +76,67 @@
 					"type": "NativeScript",
 					"scriptName": "Cyborg"
 				}
+			],
+			"childEntities": 
+			[
+				{
+					"name": "Cyborg2",
+					"layer": "Default",
+					"display": true,
+					"components": 
+					[
+						{
+							"name": "Transform",
+							"type": "Transform",
+							"position": [ -5.0, 1.0, 0.0 ],
+							"rotation": [ 0.0, 0.0, 0.0],
+							"scale": [ 1.0, 1.0, 1.0 ]
+						},
+						{
+							"name": "MeshRender1",
+							"type": "MeshRender3D",
+							"modelName": "cyborg",
+							"materialName": ""
+						},
+						{
+							"name": "Script1",
+							"type": "NativeScript",
+							"scriptName": "Cyborg"
+						}
+					],
+					"childEntities": 
+					[
+						{
+							"name": "Cyborg1",
+							"layer": "Default",
+							"display": true,
+							"components": 
+							[
+								{
+									"name": "Transform",
+									"type": "Transform",
+									"position": [ -5.0, 1.0, 0.0 ],
+									"rotation": [ 0.0, 0.0, 0.0],
+									"scale": [ 1.0, 1.0, 1.0 ]
+								},
+								{
+									"name": "MeshRender1",
+									"type": "MeshRender3D",
+									"modelName": "cyborg",
+									"materialName": ""
+								},
+								{
+									"name": "Script1",
+									"type": "NativeScript",
+									"scriptName": "Cyborg"
+								}
+							],
+							"childEntities": 
+							[
+							]
+						}
+					]
+				}
 			]
 		},
 		{
@@ -98,6 +162,38 @@
 					"name": "Script1",
 					"type": "NativeScript",
 					"scriptName": "Cyborg"
+				}
+			],
+			"childEntities": 
+			[
+				{
+					"name": "Cyborg1",
+					"layer": "Default",
+					"display": true,
+					"components": 
+					[
+						{
+							"name": "Transform",
+							"type": "Transform",
+							"position": [ -5.0, 1.0, 0.0 ],
+							"rotation": [ 0.0, 0.0, 0.0],
+							"scale": [ 1.0, 1.0, 1.0 ]
+						},
+						{
+							"name": "MeshRender1",
+							"type": "MeshRender3D",
+							"modelName": "cyborg",
+							"materialName": ""
+						},
+						{
+							"name": "Script1",
+							"type": "NativeScript",
+							"scriptName": "Cyborg"
+						}
+					],
+					"childEntities": 
+					[
+					]
 				}
 			]
 		},
@@ -135,6 +231,9 @@
 					"type": "NativeScript",
 					"scriptName": "LightTest"
 				}
+			],
+			"childEntities": 
+			[
 			]
 		},
 		{
@@ -165,6 +264,9 @@
 					"type": "NativeScript",
 					"scriptName": "LightTest"
 				}
+			],
+			"childEntities": 
+			[
 			]
 		},
 		{
@@ -195,6 +297,9 @@
 					"type": "NativeScript",
 					"scriptName": "LightTest"
 				}
+			],
+			"childEntities": 
+			[
 			]
 		},
 		{
@@ -225,6 +330,9 @@
 					"type": "NativeScript",
 					"scriptName": "LightTest"
 				}
+			],
+			"childEntities": 
+			[
 			]
 		},
 		{
@@ -255,6 +363,9 @@
 					"type": "NativeScript",
 					"scriptName": "LightTest"
 				}
+			],
+			"childEntities": 
+			[
 			]
 		},
 		{
@@ -285,6 +396,9 @@
 					"type": "NativeScript",
 					"scriptName": "LightTest"
 				}
+			],
+			"childEntities": 
+			[
 			]
 		},
 		{
@@ -315,6 +429,9 @@
 					"type": "NativeScript",
 					"scriptName": "LightTest"
 				}
+			],
+			"childEntities": 
+			[
 			]
 		},
 		{
@@ -351,6 +468,9 @@
 					"type": "NativeScript",
 					"scriptName": "LightTest"
 				}
+			],
+			"childEntities": 
+			[
 			]
 		},
 		{
@@ -377,6 +497,9 @@
 					"type": "NativeScript",
 					"scriptName": "Sign"
 				}
+			],
+			"childEntities": 
+			[
 			]
 		},
 		{
@@ -402,6 +525,9 @@
 					"type": "NativeScript",
 					"scriptName": "Rectangle"
 				}
+			],
+			"childEntities": 
+			[
 			]
 		},
 		{
@@ -427,6 +553,9 @@
 					"type": "NativeScript",
 					"scriptName": "Rectangle"
 				}
+			],
+			"childEntities": 
+			[
 			]
 		},
 		{
@@ -454,6 +583,9 @@
 					"type": "NativeScript",
 					"scriptName": "FPSCounter"
 				}
+			],
+			"childEntities": 
+			[
 			]
 		}
 	]

@@ -32,6 +32,8 @@ namespace Engine
 		static RenderPass* createRenderPass(const std::string& passName); //!< Create a new render pass by converting string pass name literal
 		static bool loadSceneProperties(Scene* scene, json sceneData); //!< Load the scenes properties/core data
 		static bool loadEntityProperties(Entity* entity, json entityData); //!< Load the entity's properties/core data
+		static void loadEntity(Scene* scene, Entity* parent, json entityData); //!< Load an entity
+		static void loadComponents(Scene* scene, Entity* entity, json componentData); //!< Load components
 	public:
 		static void load(const std::string& sceneName, const std::string& sceneFolderPath); //!< Load the scene
 	};
