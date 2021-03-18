@@ -24,6 +24,8 @@ public:
 	Player(); //!< Constructor
 	~Player(); //!< Destructor
 
+	void testFunction(int& y);
+
 	void onAttach() override; //!< Called when attached to the entity
 	void onPreUpdate(const float timestep, const float totalTime) override; //!< Call before game update
 	void onPostUpdate(const float timestep, const float totalTime) override; //!< Call after game update

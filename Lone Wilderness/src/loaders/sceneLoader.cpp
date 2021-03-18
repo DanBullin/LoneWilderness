@@ -268,7 +268,7 @@ namespace Engine
 					if (script)
 						entity->attach<NativeScript>(script);
 					else
-						ENGINE_ERROR("[SceneLoader::load] The script name provided isn't a valid script name. Script: {0}.", component["scriptName"].get<std::string>());
+						ENGINE_ERROR("[SceneLoader::loadComponents] The script name provided isn't a valid script name. Script: {0}.", component["scriptName"].get<std::string>());
 
 					break;
 				}

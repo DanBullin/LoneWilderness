@@ -32,6 +32,7 @@ namespace Engine
 		SystemManager::addSystem(SystemType::FontManager);
 		SystemManager::addSystem(SystemType::SceneManager);
 		SystemManager::addSystem(SystemType::RenderSystem);
+		SystemManager::addSystem(SystemType::ThreadManager);
 		
 		ResourceManager::loadResources();
 

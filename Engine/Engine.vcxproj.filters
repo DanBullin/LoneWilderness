@@ -252,6 +252,12 @@
     <ClCompile Include="src\independent\rendering\renderers\utils\fillBuffers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\independent\systems\components\thread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\independent\systems\systems\threadManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\independent\core\application.h">
@@ -528,6 +534,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\independent\rendering\renderers\utils\fillBuffers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\independent\systems\components\thread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\independent\systems\systems\threadManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

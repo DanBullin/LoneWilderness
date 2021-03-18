@@ -17,7 +17,7 @@ namespace Engine
 	*/
 	enum class SystemType
 	{
-		Logger, Randomiser, TimerSystem, WindowAPISystem, WindowManager, EventManager, ResourceManager, SceneManager, FontManager, RenderSystem
+		Logger, Randomiser, TimerSystem, WindowAPISystem, WindowManager, EventManager, ResourceManager, SceneManager, FontManager, RenderSystem, ThreadManager
 	};
 
 	/*! \class System

@@ -140,6 +140,11 @@ namespace Engine
 						s_activeSystems.push_back(new RenderSystem);
 						break;
 					}
+					case SystemType::ThreadManager:
+					{
+						s_activeSystems.push_back(new ThreadManager);
+						break;
+					}
 					default:
 						break;
 					}

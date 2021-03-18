@@ -11,6 +11,7 @@
 #include "independent/systems/systems/windowManager.h"
 #include "independent/systems/systems/timerSystem.h"
 #include "independent/systems/systems/resourceManager.h"
+#include "independent/systems/systems/threadManager.h"
 #include "independent/entities/entity.h"
 
 namespace Engine
@@ -563,6 +564,8 @@ namespace Engine
 
 			// Update Active scene
 			if (s_currentScene) s_currentScene->onUpdate(timestep, totalTime);
+
+			ThreadManager::onUpdate(timestep, totalTime);
 
 			// Update all registered windows
 			for (auto& window : WindowManager::getRegisteredWindows())

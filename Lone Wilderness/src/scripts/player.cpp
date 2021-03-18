@@ -7,10 +7,9 @@
 */
 #include "scripts/player.h"
 #include "loaders/sceneLoader.h"
-#include "independent/systems/systems/sceneManager.h"
 #include "independent/systems/systems/eventManager.h"
-#include "independent/systems/systems/windowManager.h"
-#include "independent/systems/systems/fontManager.h"
+#include "independent/systems/systems/sceneManager.h"
+#include "independent/systems/systems/threadManager.h"
 
 //! Player()
 Player::Player()
@@ -23,9 +22,19 @@ Player::~Player()
 {
 }
 
+void Player::testFunction(int& y)
+{
+	ENGINE_INFO("Test: {0}", y);
+}
+
 void Player::onAttach()
 {
 	m_controller = getParent()->getComponent<CharacterController>();
+
+	auto t = std::bind(&Player::testFunction, this, std::placeholders::_1);
+	int y = 2;
+	ThreadManager::startThread("Thread1", true, t, y);
+
 }
 
 //! onPreUpdate()

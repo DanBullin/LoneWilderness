@@ -17,6 +17,7 @@
 #include "independent/systems/systems/sceneManager.h"
 #include "independent/systems/systems/fontManager.h"
 #include "independent/systems/systems/renderSystem.h"
+#include "independent/systems/systems/threadManager.h"
 
 namespace Engine
 {

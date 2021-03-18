@@ -170,6 +170,7 @@
     <ClCompile Include="src\independent\systems\components\font.cpp" />
     <ClCompile Include="src\independent\systems\components\resource.cpp" />
     <ClCompile Include="src\independent\systems\components\scene.cpp" />
+    <ClCompile Include="src\independent\systems\components\thread.cpp" />
     <ClCompile Include="src\independent\systems\components\timer.cpp" />
     <ClCompile Include="src\independent\systems\components\window.cpp" />
     <ClCompile Include="src\independent\systems\components\windowProperties.cpp" />
@@ -182,6 +183,7 @@
     <ClCompile Include="src\independent\systems\systems\renderSystem.cpp" />
     <ClCompile Include="src\independent\systems\systems\resourceManager.cpp" />
     <ClCompile Include="src\independent\systems\systems\sceneManager.cpp" />
+    <ClCompile Include="src\independent\systems\systems\threadManager.cpp" />
     <ClCompile Include="src\independent\systems\systems\timerSystem.cpp" />
     <ClCompile Include="src\independent\systems\systems\windowManager.cpp" />
     <ClCompile Include="src\independent\utils\assimpLoader.cpp" />
@@ -261,6 +263,7 @@
     <ClInclude Include="include\independent\systems\components\font.h" />
     <ClInclude Include="include\independent\systems\components\resource.h" />
     <ClInclude Include="include\independent\systems\components\scene.h" />
+    <ClInclude Include="include\independent\systems\components\thread.h" />
     <ClInclude Include="include\independent\systems\components\timer.h" />
     <ClInclude Include="include\independent\systems\components\window.h" />
     <ClInclude Include="include\independent\systems\components\windowProperties.h" />
@@ -273,6 +276,7 @@
     <ClInclude Include="include\independent\systems\systems\renderSystem.h" />
     <ClInclude Include="include\independent\systems\systems\resourceManager.h" />
     <ClInclude Include="include\independent\systems\systems\sceneManager.h" />
+    <ClInclude Include="include\independent\systems\systems\threadManager.h" />
     <ClInclude Include="include\independent\systems\systems\timerSystem.h" />
     <ClInclude Include="include\independent\systems\systems\windowManager.h" />
     <ClInclude Include="include\independent\utils\assimpLoader.h" />
