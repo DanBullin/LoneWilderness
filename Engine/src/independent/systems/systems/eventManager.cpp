@@ -110,6 +110,12 @@ namespace Engine
 			window->onWindowResize(e);
 			s_currentScene->getMainCamera()->updateProjection(window->getProperties().getSizef());
 
+			auto framebuffers = ResourceManager::getResourcesOfType<FrameBuffer>(ResourceType::FrameBuffer);
+			for (auto& fbo : framebuffers)
+			{
+				fbo->resize(e.getSize());
+			}
+
 			// Pass input event to layers and entities 
 			if (s_currentScene)
 			{
@@ -342,7 +348,11 @@ namespace Engine
 					SceneManager::setActiveScene("mainMenu", true);
 					window->setCursorInputMode(CursorInputMode::Visible);
 				}
-				else ENGINE_ERROR("No main menu to return to!");
+			}
+
+			if (e.getKeyCode() == Keys::F5)
+			{
+				window->setFullscreen(!window->getProperties().getFullScreen());
 			}
 		}
 	}

@@ -117,6 +117,14 @@
 		  "shader": "blinnPhong",
 		  "tint": [ 1.0, 1.0, 1.0, 1.0 ],
 		  "shininess": 32
+		},
+		{
+			"name": "TerrainMaterial",
+			"subTextures": [ "defaultSubTexture"
+			],
+			"shader": "terrainShader",
+			"tint": [ 1.0, 1.0, 1.0, 1.0],
+			"shininess": 32
 		}
 	]
 }

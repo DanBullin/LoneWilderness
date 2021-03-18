@@ -10,12 +10,11 @@
 
 #include "scripts/player.h"
 #include "scripts/cyborg.h"
-#include "scripts/sign.h"
 #include "scripts/rectangleShape.h"
 #include "scripts/FPSCounter.h"
 #include "scripts/mainMenu/menuText.h"
 #include "scripts/lightTest.h"
-#include "scripts/street.h"
+#include "scripts/terrain.h"
 
 #include "layers/defaultLayer.h"
 #include "layers/UILayer.h"
@@ -38,12 +37,11 @@ namespace Engine
 		// All subclasses of Entity must be added and returned here
 		if (scriptName == "Player") return new Player;
 		else if (scriptName == "Cyborg") return new Cyborg;
-		else if (scriptName == "Sign") return new Sign;
-		else if (scriptName == "Street") return new Street;
 		else if (scriptName == "Rectangle") return new RectangleShape;
 		else if (scriptName == "FPSCounter") return new FPSCounter;
 		else if (scriptName == "MenuText") return new MenuText;
 		else if (scriptName == "LightTest") return new LightTest;
+		else if (scriptName == "Terrain") return new Terrain;
 		return nullptr;
 	}
 

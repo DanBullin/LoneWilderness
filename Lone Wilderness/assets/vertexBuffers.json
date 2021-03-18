@@ -23,6 +23,13 @@
 			"usage": 1
 		},
 		{ 
+			"name": "TerrainVertexBuffer",
+			"layout": [ "Float3", false, 0, "Float2", false, 0 ],
+			"dataType": "TerrainVertex",
+			"size": "VertexCapacity3D",
+			"usage": 1
+		},
+		{ 
 			"name": "ModelInstanceBuffer",
 			"layout": [ "Mat4", false, 1 ],
 			"dataType": "Mat4",

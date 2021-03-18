@@ -1,0 +1,81 @@
+#version 450 core
+// Outputting three CP per patch
+layout (vertices = 3) out;
+
+// Receiving vertex data from the vertex shader
+in VS_OUT {
+	vec2 TexCoords;
+	flat int TexUnit;
+	vec4 Tint;
+	vec3 FragPos;
+} tcs_in[];
+
+// Output unedited vertex data to the TES
+out TCS_OUT {
+	vec2 TexCoords;
+	flat int TexUnit;
+	vec4 Tint;
+	vec3 FragPos;
+} tcs_out[];
+
+layout(std140) uniform Camera
+{
+	mat4 u_view;
+	mat4 u_projection;
+	vec3 u_viewPos;
+};
+
+layout(std140) uniform Tessellation
+{
+	bool u_useTessellation;
+};
+
+float GetTessLevel(float Distance0, float Distance1);
+
+void main()
+{
+	// Get the distance from the camera to each of the three vertices that make up the input patch
+	float distance0 = distance(u_viewPos, tcs_in[0].FragPos);
+	float distance1 = distance(u_viewPos, tcs_in[1].FragPos);
+	float distance2 = distance(u_viewPos, tcs_in[2].FragPos);
+
+	// gl_InvocationID is a number of the index of the vertex in the output patch
+	// because the values below only need to be set once per patch, this if statement makes sure we don't
+	// do any unneeded processing
+	if (gl_InvocationID==0)
+	{
+		// Calculate the tessellation levels
+        gl_TessLevelOuter[0] = GetTessLevel(distance1, distance2);
+        gl_TessLevelOuter[1] = GetTessLevel(distance0, distance2); 
+        gl_TessLevelOuter[2] = GetTessLevel(distance0, distance1);
+		gl_TessLevelInner[0] = gl_TessLevelOuter[2]; 
+	}
+
+	// Pass along the vertex data
+	tcs_out[gl_InvocationID].FragPos = tcs_in[gl_InvocationID].FragPos;
+	tcs_out[gl_InvocationID].TexCoords  = tcs_in[gl_InvocationID].TexCoords;
+	tcs_out[gl_InvocationID].Tint  = tcs_in[gl_InvocationID].Tint;
+	tcs_out[gl_InvocationID].TexUnit  = tcs_in[gl_InvocationID].TexUnit;
+}
+
+float GetTessLevel(float Distance0, float Distance1)
+{
+	if(u_useTessellation == false)
+	{
+		return 1;
+	}
+	
+	// Get the average distance of the two distances
+	float AvgDistance = (Distance0 + Distance1) / 2.0;
+	
+	if (AvgDistance <= 20.0)
+        return 20.0;
+    else if (AvgDistance <= 50.0)
+        return 10.0;
+	else if (AvgDistance <= 100.0)
+        return 3.0;
+	else if (AvgDistance <= 200.0)
+        return 2.0;
+    else
+        return 1.0;
+}

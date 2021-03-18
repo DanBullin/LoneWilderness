@@ -272,27 +272,30 @@ namespace Engine
 	*/
 	void Renderer2D::draw(std::vector<BatchEntry2D>& submissionList)
 	{
-		// Use the shader program
-		submissionList.at(0).shader->start();
-
-		// Attach the UBO
-		for (auto& dataPair : submissionList.at(0).shader->getUniformBuffers())
+		if (submissionList.size() != 0)
 		{
-			const char* nameOfUniformBlock = dataPair.first.c_str();
-			dataPair.second->attachShaderBlock(submissionList.at(0).shader, nameOfUniformBlock);
+			// Use the shader program
+			submissionList.at(0).shader->start();
+
+			// Attach the UBO
+			for (auto& dataPair : submissionList.at(0).shader->getUniformBuffers())
+			{
+				const char* nameOfUniformBlock = dataPair.first.c_str();
+				dataPair.second->attachShaderBlock(submissionList.at(0).shader, nameOfUniformBlock);
+			}
+
+			// Normally we need to check what kind of uniforms we have to send
+			// I don't think we will ever use anything other than 2D samplers for 2D rendering
+			// This will be different for 3D rendering
+			submissionList.at(0).shader->sendIntArray("u_textures", s_unit.data(), 16);
+
+			// Bind VAO
+			submissionList.at(0).shader->getVertexArray()->bind();
+
+			// Issue the draw call
+			// The number of submissions for the shader that we want to render * 6 indices
+			RenderUtils::draw(static_cast<uint32_t>(submissionList.size()) * 6);
 		}
-
-		// Normally we need to check what kind of uniforms we have to send
-		// I don't think we will ever use anything other than 2D samplers for 2D rendering
-		// This will be different for 3D rendering
-		submissionList.at(0).shader->sendIntArray("u_textures", s_unit.data(), 16);
-
-		// Bind VAO
-		submissionList.at(0).shader->getVertexArray()->bind();
-
-		// Issue the draw call
-		// The number of submissions for the shader that we want to render * 6 indices
-		RenderUtils::draw(static_cast<uint32_t>(submissionList.size()) * 6);
 	}
 
 	//! end()

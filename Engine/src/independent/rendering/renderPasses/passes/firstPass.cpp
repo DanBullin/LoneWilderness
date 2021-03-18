@@ -155,6 +155,11 @@ namespace Engine
 		m_cameraUBO->uploadData("u_view", static_cast<void*>(&cam->getViewMatrix(true)));
 		m_cameraUBO->uploadData("u_projection", static_cast<void*>(&cam->getProjectionMatrix(true)));
 		m_cameraUBO->uploadData("u_viewPos", static_cast<void*>(&cam->getWorldPosition()));
+
+		// Tessellation UBO
+		auto tessUBO = ResourceManager::getResource<UniformBuffer>("TessellationUBO");
+		uint32_t useTess = 1;
+		tessUBO->uploadData("u_useTessellation", static_cast<void*>(&useTess));
 	}
 
 	//! onRender()
@@ -174,7 +179,7 @@ namespace Engine
 		// Go through each 3D object (including light source objects) + skybox and render them to HDR buffer + brightness texture
 		for (auto& entity : entities)
 		{
-			if (entity->getLayer()->getDisplayed() && entity->getDisplay())
+			if (entity->getLayer()->getDisplayed() && entity->getDisplay() && entity->getName() != "Terrain1")
 			{
 				if (entity->containsComponent<MeshRender3D>())
 					entity->getComponent<MeshRender3D>()->onRender();
@@ -189,6 +194,14 @@ namespace Engine
 			skybox->onRender();
 
 		Renderer3D::end();
+
+		Renderer3D::begin();
+		RenderUtils::enableWireframe(true);
+		RenderUtils::enablePatchDrawing(true);
+		m_attachedScene->getEntity("Terrain1")->getComponent<NativeScript>()->onRender(Renderers::Renderer3D);
+		Renderer3D::end();
+		RenderUtils::enableWireframe(false);
+		RenderUtils::enablePatchDrawing(false);
 	}
 
 	//! getFrameBuffer()

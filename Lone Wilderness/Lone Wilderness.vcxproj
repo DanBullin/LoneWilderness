@@ -138,12 +138,11 @@
     <ClInclude Include="include\scripts\mainMenu\menuText.h" />
     <ClInclude Include="include\scripts\player.h" />
     <ClInclude Include="include\scripts\rectangleShape.h" />
-    <ClInclude Include="include\scripts\sign.h" />
-    <ClInclude Include="include\scripts\street.h" />
     <ClInclude Include="include\gameApplication.h" />
     <ClInclude Include="include\layers\defaultLayer.h" />
     <ClInclude Include="include\layers\UILayer.h" />
     <ClInclude Include="include\loaders\sceneLoader.h" />
+    <ClInclude Include="include\scripts\terrain.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\scripts\cyborg.cpp" />
@@ -152,12 +151,11 @@
     <ClCompile Include="src\scripts\mainMenu\menuText.cpp" />
     <ClCompile Include="src\scripts\player.cpp" />
     <ClCompile Include="src\scripts\rectangleShape.cpp" />
-    <ClCompile Include="src\scripts\sign.cpp" />
-    <ClCompile Include="src\scripts\street.cpp" />
     <ClCompile Include="src\gameApplication.cpp" />
     <ClCompile Include="src\layers\defaultLayer.cpp" />
     <ClCompile Include="src\layers\UILayer.cpp" />
     <ClCompile Include="src\loaders\sceneLoader.cpp" />
+    <ClCompile Include="src\scripts\terrain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.vcxproj">

@@ -15,11 +15,14 @@ namespace Engine
 	*/
 	void generateVertexList(std::vector<BatchEntry2D>& batchEntries)
 	{
-		// Generate a list of vertices and edit the VBO depending on the vertex array
-		if (batchEntries.at(0).shader->getVertexArray()->getName() == "QuadArray")
-			generateListOfVertex2D(batchEntries);
-		else if (batchEntries.at(0).shader->getVertexArray()->getName() == "QuadMultiTexturedArray")
-			generateListOfVertex2DMutlitextured(batchEntries);
+		if (batchEntries.size() != 0)
+		{
+			// Generate a list of vertices and edit the VBO depending on the vertex array
+			if (batchEntries.at(0).shader->getVertexArray()->getName() == "QuadArray")
+				generateListOfVertex2D(batchEntries);
+			else if (batchEntries.at(0).shader->getVertexArray()->getName() == "QuadMultiTexturedArray")
+				generateListOfVertex2DMutlitextured(batchEntries);
+		}
 	}
 
 	//! generateListOfVertex2D()
@@ -97,15 +100,18 @@ namespace Engine
 	*/
 	void generateInstanceData(std::vector<BatchEntry3D>& batchEntries)
 	{
-		// Generate a list of the instance data and edit the appropriate vertex buffers in the vao
-		if (batchEntries.at(0).shader->getVertexArray()->getName() == "vertexArray1")
-			generateBasic3D(batchEntries);
-		else if (batchEntries.at(0).shader->getVertexArray()->getName() == "vertexArray2")
-			generateSkybox(batchEntries);
-		else if (batchEntries.at(0).shader->getVertexArray()->getName() == "vertexArray3")
-			generateTerrain(batchEntries);
-		else if (batchEntries.at(0).shader->getVertexArray()->getName() == "lightSourceArray")
-			generateLightSource(batchEntries);
+		if (batchEntries.size() != 0)
+		{
+			// Generate a list of the instance data and edit the appropriate vertex buffers in the vao
+			if (batchEntries.at(0).shader->getVertexArray()->getName() == "vertexArray1")
+				generateBasic3D(batchEntries);
+			else if (batchEntries.at(0).shader->getVertexArray()->getName() == "vertexArray2")
+				generateSkybox(batchEntries);
+			else if (batchEntries.at(0).shader->getVertexArray()->getName() == "lightSourceArray")
+				generateLightSource(batchEntries);
+			else if (batchEntries.at(0).shader->getVertexArray()->getName() == "vertexArray3")
+				generateTerrain(batchEntries);
+		}
 	}
 
 	//! generateBasic3D()

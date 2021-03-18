@@ -25,6 +25,11 @@
 			"name": "lightSourceArray",
 			"vertexBuffers": [ "Vertex3DBuffer", "ModelInstanceBuffer", "TintInstanceBuffer" ],
 			"indexBuffer": "IndexBuffer3D"
+		},
+		{ 
+			"name": "vertexArray3",
+			"vertexBuffers": [ "TerrainVertexBuffer", "ModelInstanceBuffer", "TexUnit1InstanceBuffer", "TintInstanceBuffer", "UV1InstanceBuffer" ],
+			"indexBuffer": "IndexBuffer3D"
 		}
 	]	
 }

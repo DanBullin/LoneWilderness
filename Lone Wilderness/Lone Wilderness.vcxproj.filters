@@ -45,10 +45,7 @@
     <ClInclude Include="include\scripts\rectangleShape.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\scripts\sign.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\scripts\street.h">
+    <ClInclude Include="include\scripts\terrain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -83,10 +80,7 @@
     <ClCompile Include="src\scripts\rectangleShape.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\scripts\sign.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\scripts\street.cpp">
+    <ClCompile Include="src\scripts\terrain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

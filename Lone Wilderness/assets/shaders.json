@@ -26,6 +26,18 @@
 			"orderImportance": 1
 		},
 		{ 
+			"name": "terrainShader", 
+			"vertexShader": "assets/shaders/terrainShader/vertex.vs", 
+			"fragmentShader": "assets/shaders/terrainShader/fragment.fs", 
+			"geometryShader": "",
+			"tessControlShader": "assets/shaders/terrainShader/tessControlShader.tcs",
+			"tessEvaluationShader": "assets/shaders/terrainShader/tessEvaluationShader.tes",
+			"vertexArray": "vertexArray3",
+			"uniforms": [ "u_diffuseMap" ],
+			"uniformBuffers": [ "Camera", "CameraUBO", "Tessellation", "TessellationUBO" ],
+			"orderImportance": 0
+		},
+		{ 
 			"name": "quad", 
 			"vertexShader": "assets/shaders/quad/vertex.vs", 
 			"fragmentShader": "assets/shaders/quad/fragment.fs", 

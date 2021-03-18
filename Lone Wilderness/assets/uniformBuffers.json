@@ -22,6 +22,10 @@
 			"name": "SpotLightUBO",
 			"layout": [ "SpotLight0", "SpotLight", "SpotLight1", "SpotLight", "SpotLight2", "SpotLight", "SpotLight3", "SpotLight", "SpotLight4", "SpotLight",
 						"SpotLight5", "SpotLight", "SpotLight6", "SpotLight", "SpotLight7", "SpotLight", "SpotLight8", "SpotLight", "SpotLight9", "SpotLight" ]
+		},
+		{
+			"name": "TessellationUBO",
+			"layout": [ "u_useTessellation", "Bool" ]
 		}
 	]	
 }

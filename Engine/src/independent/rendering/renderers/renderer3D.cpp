@@ -306,38 +306,41 @@ namespace Engine
 	*/
 	void Renderer3D::flushBatchCommands(std::vector<BatchEntry3D>& queue)
 	{
-		// Check the variables to make sure they are valid
-		if (drawCheck(queue.at(0).shader, queue.at(0).shader->getUniformBuffers(), queue.at(0).shader->getVertexArray(), s_indirectBuffer))
+		if (queue.size() != 0)
 		{
-			// Start the shader
-			queue.at(0).shader->start();
-
-			// Attach all the UBOs to the shader blocks
-			for (auto& dataPair : queue.at(0).shader->getUniformBuffers())
+			// Check the variables to make sure they are valid
+			if (drawCheck(queue.at(0).shader, queue.at(0).shader->getUniformBuffers(), queue.at(0).shader->getVertexArray(), s_indirectBuffer))
 			{
-				const char* nameOfUniformBlock = dataPair.first.c_str();
-				dataPair.second->attachShaderBlock(queue.at(0).shader, nameOfUniformBlock);
+				// Start the shader
+				queue.at(0).shader->start();
+
+				// Attach all the UBOs to the shader blocks
+				for (auto& dataPair : queue.at(0).shader->getUniformBuffers())
+				{
+					const char* nameOfUniformBlock = dataPair.first.c_str();
+					dataPair.second->attachShaderBlock(queue.at(0).shader, nameOfUniformBlock);
+				}
+
+				// Upload texture units
+				auto uniforms = queue.at(0).shader->getUniforms();
+				if (uniforms.find("u_diffuseMap") != uniforms.end()) queue.at(0).shader->sendIntArray("u_diffuseMap", s_unit.data(), 16);
+				if (uniforms.find("u_cubeMap") != uniforms.end()) queue.at(0).shader->sendIntArray("u_cubeMap", s_unit.data(), 16);
+
+				// Bind VAO which provides all of the attributes and the VBOs which provide the data
+				VertexArray* vArray = queue.at(0).shader->getVertexArray();
+				vArray->bind();
+
+				// Edit Indirect buffer
+				auto& commands = s_batchCommandsQueue[vArray->getVertexBuffers().at(0)];
+				s_indirectBuffer->edit(commands.data(), static_cast<uint32_t>(commands.size()), 0);
+
+				// Test variables
+				auto queueList = queue;
+				auto commandQueue = s_batchCommandsQueue[vArray->getVertexBuffers().at(0)];
+
+				// Draw
+				RenderUtils::drawMultiIndirect(static_cast<uint32_t>(commands.size()));
 			}
-
-			// Upload texture units
-			auto uniforms = queue.at(0).shader->getUniforms();
-			if (uniforms.find("u_diffuseMap") != uniforms.end()) queue.at(0).shader->sendIntArray("u_diffuseMap", s_unit.data(), 16);
-			if (uniforms.find("u_cubeMap") != uniforms.end()) queue.at(0).shader->sendIntArray("u_cubeMap", s_unit.data(), 16);
-
-			// Bind VAO which provides all of the attributes and the VBOs which provide the data
-			VertexArray* vArray = queue.at(0).shader->getVertexArray();
-			vArray->bind();
-
-			// Edit Indirect buffer
-			auto& commands = s_batchCommandsQueue[vArray->getVertexBuffers().at(0)];
-			s_indirectBuffer->edit(commands.data(), static_cast<uint32_t>(commands.size()), 0);
-
-			// Test variables
-			auto queueList = queue;
-			auto commandQueue = s_batchCommandsQueue[vArray->getVertexBuffers().at(0)];
-
-			// Draw
-			RenderUtils::drawMultiIndirect(static_cast<uint32_t>(commands.size()));
 		}
 	}
 

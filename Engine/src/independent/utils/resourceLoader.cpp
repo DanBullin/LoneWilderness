@@ -42,6 +42,8 @@ namespace Engine
 			return static_cast<uint32_t>(sizeof(int32_t));
 		else if (dataTypeName == "float")
 			return static_cast<uint32_t>(sizeof(float));
+		else if (dataTypeName == "int")
+			return static_cast<uint32_t>(sizeof(int));
 		return 0;
 	}
 

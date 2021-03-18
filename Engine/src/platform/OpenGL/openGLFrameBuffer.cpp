@@ -9,6 +9,7 @@
 #include "independent/systems/systems/log.h"
 #include "independent/systems/systems/resourceManager.h"
 #include "independent/systems/systems/windowManager.h"
+#include "independent/systems/systems/renderSystem.h"
 #include <glad/glad.h>
 
 namespace Engine
@@ -93,6 +94,9 @@ namespace Engine
 		// Check to see if we need to delete the current framebuffer
 		if (ResourceManager::getConfigValue(Config::PrintResourcesInDestructor))
 			ENGINE_INFO("[OpenGLFrameBuffer::resize] Resizing framebuffer: {0}.", m_name);
+
+		if (m_default)
+			return;
 
 		if (m_bufferID)
 		{
@@ -194,6 +198,8 @@ namespace Engine
 
 		// Unbind for safety
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		RenderSystem::getTextureUnitManager()->clear(true);
 	}
 
 	//! printDetails()
