@@ -210,9 +210,6 @@
     <ClCompile Include="src\independent\rendering\renderPasses\renderPass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\independent\rendering\renderPasses\passes\menuPass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\independent\rendering\renderPasses\passes\fourthPass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -510,9 +507,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\independent\rendering\renderers\renderer2D.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\independent\rendering\renderPasses\passes\menuPass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\independent\entities\components\characterController.h">
