@@ -4,6 +4,7 @@ layout (location = 0) out vec4 FragColor;
 layout (location = 1) out vec4 BrightColor;
 
 in TES_OUT {
+	vec3 Normals;
 	vec2 TexCoords;
 	flat int TexUnit;
 	vec4 Tint;

@@ -94,10 +94,6 @@ void UILayer::onKeyPress(KeyPressedEvent& e, const float timestep, const float t
 */
 void UILayer::onKeyRelease(KeyReleasedEvent& e, const float timestep, const float totalTime)
 {
-	if (e.getKeyCode() == Keys::M)
-	{
-		setDisplayed(!getDisplayed());
-	}
 }
 
 //! onMousePress()

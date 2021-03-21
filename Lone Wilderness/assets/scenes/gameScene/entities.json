@@ -38,7 +38,7 @@
 				{
 					"name": "CController",
 					"type": "CharacterController",
-					"speed": 22.0,
+					"speed": 52.0,
 					"sensitivity": 0.15,
 					"frozen": false
 				},

@@ -57,6 +57,7 @@ namespace Engine
 		if (enable && !s_faceCulling)
 		{
 			glEnable(GL_CULL_FACE);
+			glCullFace(GL_FRONT);
 			s_faceCulling = true;
 			if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages)) 
 				ENGINE_TRACE("[OpenGLRenderUtils::enableFaceCulling] Enabled face culling.");

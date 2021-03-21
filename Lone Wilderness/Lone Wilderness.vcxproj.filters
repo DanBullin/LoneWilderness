@@ -48,6 +48,9 @@
     <ClInclude Include="include\scripts\terrain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\terrain\chunk.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\gameApplication.cpp">
@@ -81,6 +84,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\scripts\terrain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\terrain\chunk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

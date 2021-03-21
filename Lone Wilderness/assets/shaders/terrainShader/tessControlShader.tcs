@@ -16,6 +16,7 @@ out TCS_OUT {
 	flat int TexUnit;
 	vec4 Tint;
 	vec3 FragPos;
+	int TessLevel;
 } tcs_out[];
 
 layout(std140) uniform Camera
@@ -27,7 +28,14 @@ layout(std140) uniform Camera
 
 layout(std140) uniform Tessellation
 {
-	bool u_useTessellation;
+	int u_tessellationEquation;
+	bool u_generateY;
+	int u_octaves;
+	float u_scale;
+	float u_frequency;
+	float u_amplitude;
+	float u_amplitudeDivisor;
+	float u_frequencyMultiplier;
 };
 
 float GetTessLevel(float Distance0, float Distance1);
@@ -38,13 +46,17 @@ void main()
 	float distance0 = distance(u_viewPos, tcs_in[0].FragPos);
 	float distance1 = distance(u_viewPos, tcs_in[1].FragPos);
 	float distance2 = distance(u_viewPos, tcs_in[2].FragPos);
-
+	int tessLevel[3];
+	
 	// gl_InvocationID is a number of the index of the vertex in the output patch
 	// because the values below only need to be set once per patch, this if statement makes sure we don't
 	// do any unneeded processing
 	if (gl_InvocationID==0)
 	{
 		// Calculate the tessellation levels
+		tessLevel[0] = int(GetTessLevel(distance1, distance2));
+		tessLevel[1] = int(GetTessLevel(distance0, distance2));
+		tessLevel[2] = int(GetTessLevel(distance0, distance1));
         gl_TessLevelOuter[0] = GetTessLevel(distance1, distance2);
         gl_TessLevelOuter[1] = GetTessLevel(distance0, distance2); 
         gl_TessLevelOuter[2] = GetTessLevel(distance0, distance1);
@@ -56,11 +68,12 @@ void main()
 	tcs_out[gl_InvocationID].TexCoords  = tcs_in[gl_InvocationID].TexCoords;
 	tcs_out[gl_InvocationID].Tint  = tcs_in[gl_InvocationID].Tint;
 	tcs_out[gl_InvocationID].TexUnit  = tcs_in[gl_InvocationID].TexUnit;
+	tcs_out[gl_InvocationID].TessLevel = tessLevel[gl_InvocationID];
 }
 
 float GetTessLevel(float Distance0, float Distance1)
 {
-	if(u_useTessellation == false)
+	if(u_tessellationEquation == 0)
 	{
 		return 1;
 	}

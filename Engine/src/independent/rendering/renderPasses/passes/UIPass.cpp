@@ -73,7 +73,7 @@ namespace Engine
 					entity->getComponent<Text>()->onRender();
 				}
 				if (entity->containsComponent<NativeScript>())
-					entity->getComponent<NativeScript>()->onRender(Renderers::Renderer2D);
+					entity->getComponent<NativeScript>()->onRender(Renderers::Renderer2D, "Default");
 			}
 		}
 

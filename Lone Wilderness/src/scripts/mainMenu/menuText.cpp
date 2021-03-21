@@ -58,7 +58,7 @@ void MenuText::onMouseRelease(MouseReleasedEvent& e, const float timestep, const
 		else
 		{
 			SceneLoader::load("gameScene", "assets/scenes/gameScene/");
-			SceneManager::setActiveScene("gameScene", false);
+			SceneManager::setActiveScene("danScene", false);
 			WindowManager::getFocusedWindow()->setCursorInputMode(CursorInputMode::Disabled);
 		}
 	}

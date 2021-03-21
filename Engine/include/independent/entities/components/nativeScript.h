@@ -78,8 +78,9 @@ namespace Engine
 			   \param totalTime a const float - The total runtime of the application */
 		virtual void onSubmit(const Renderers renderer) {} //!< On submit to the renderer
 			/* \param renderer a const Renderers  - The renderer currently being used */
-		virtual void onRender(const Renderers renderer) {} //!< Call upon rendering
-			/* \param renderer a const Renderers  - The renderer currently being used */
+		virtual void onRender(const Renderers renderer, const std::string& renderState) {} //!< Call upon rendering
+			/* \param renderer a const Renderers  - The renderer currently being used 
+			   \param renderState a const std::string& - The render state */
 	};
 }
 #endif

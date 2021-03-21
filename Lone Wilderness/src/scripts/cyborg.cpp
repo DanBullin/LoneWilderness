@@ -27,15 +27,6 @@ Cyborg::~Cyborg()
 */
 void Cyborg::onPreUpdate(const float timestep, const float totalTime)
 {
-	if (getName() == "CubeDemo")
-	{
-		auto transform = getParent()->getComponent<Transform>();
-
-		if (originalScale == glm::vec3(0.f, 0.f, 0.f))
-			originalScale = transform->getScale();
-
-		transform->setScale(originalScale + glm::vec3(((sin(totalTime) + 1.f) / 2.f)));
-	}
 }
 
 //! onKeyPress()

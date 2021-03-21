@@ -14,7 +14,7 @@
 			"cubeMapTextures": [], "shader": "lightSource", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
 		},
 		{
-			"name": "TerrainMaterial", "subTextures": [ "cyborgSubTexture" ],
+			"name": "TerrainMaterial", "subTextures": [ "heightSubTexture" ],
 			"cubeMapTextures": [], "shader": "terrainShader", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
 		}
 	]

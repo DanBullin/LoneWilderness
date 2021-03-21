@@ -143,6 +143,7 @@
     <ClInclude Include="include\layers\UILayer.h" />
     <ClInclude Include="include\loaders\sceneLoader.h" />
     <ClInclude Include="include\scripts\terrain.h" />
+    <ClInclude Include="include\terrain\chunk.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\scripts\cyborg.cpp" />
@@ -156,6 +157,7 @@
     <ClCompile Include="src\layers\UILayer.cpp" />
     <ClCompile Include="src\loaders\sceneLoader.cpp" />
     <ClCompile Include="src\scripts\terrain.cpp" />
+    <ClCompile Include="src\terrain\chunk.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.vcxproj">

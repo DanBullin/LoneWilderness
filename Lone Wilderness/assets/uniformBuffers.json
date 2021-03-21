@@ -25,7 +25,8 @@
 		},
 		{
 			"name": "TessellationUBO",
-			"layout": [ "u_useTessellation", "Bool" ]
+			"layout": [ "u_tessellationEquation", "Int", "u_generateY", "Bool", "u_octaves", "Int", "u_scale", "Float",
+				"u_frequency", "Float", "u_amplitude", "Float", "u_amplitudeDivisor", "Float", "u_frequencyMultiplier", "Float"]
 		}
 	]	
 }
