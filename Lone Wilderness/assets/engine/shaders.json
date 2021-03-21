@@ -1,0 +1,77 @@
+{
+	"programs": 
+	[
+		{ 
+			"name": "quad", 
+			"vertexShader": "assets/shaders/quad/vertex.vs", 
+			"fragmentShader": "assets/shaders/quad/fragment.fs", 
+			"geometryShader": "",
+			"tessControlShader": "",
+			"tessEvaluationShader": "",
+			"vertexArray": "QuadArray",
+			"uniforms": [ "u_textures" ],
+			"uniformBuffers": [ "Camera", "CameraUBO" ],
+			"orderImportance": 0
+		},
+		{ 
+			"name": "textShader", 
+			"vertexShader": "assets/shaders/quad/vertex.vs", 
+			"fragmentShader": "assets/shaders/quad/fragment.fs", 
+			"geometryShader": "",
+			"tessControlShader": "",
+			"tessEvaluationShader": "",
+			"vertexArray": "QuadArray",
+			"uniforms": [ "u_textures" ],
+			"uniformBuffers": [ "Camera", "CameraUBO" ],
+			"orderImportance": 1
+		},
+		{ 
+			"name": "flatColourShader", 
+			"vertexShader": "assets/shaders/flatColourShader/vertex.vs", 
+			"fragmentShader": "assets/shaders/flatColourShader/fragment.fs", 
+			"geometryShader": "",
+			"tessControlShader": "",
+			"tessEvaluationShader": "",
+			"vertexArray": "lightSourceArray",
+			"uniforms": [ ],
+			"uniformBuffers": [ "Camera", "CameraUBO" ],
+			"orderImportance": 0
+		},
+		{ 
+			"name": "blur3DShader", 
+			"vertexShader": "assets/shaders/blur3DShader/vertex.vs", 
+			"fragmentShader": "assets/shaders/blur3DShader/fragment.fs", 
+			"geometryShader": "",
+			"tessControlShader": "",
+			"tessEvaluationShader": "",
+			"vertexArray": "QuadArray",
+			"uniforms": [ "u_textures" ],
+			"uniformBuffers": [ "Camera", "CameraUBO" ],
+			"orderImportance": 0
+		},
+		{ 
+			"name": "blurBrightnessShader", 
+			"vertexShader": "assets/shaders/blurBright/vertex.vs", 
+			"fragmentShader": "assets/shaders/blurBright/fragment.fs", 
+			"geometryShader": "",
+			"tessControlShader": "",
+			"tessEvaluationShader": "",
+			"vertexArray": "QuadArray",
+			"uniforms": [ "u_textures" ],
+			"uniformBuffers": [ "Camera", "CameraUBO", "Bloom", "BloomUBO" ],
+			"orderImportance": 0
+		},
+		{ 
+			"name": "bloomShader", 
+			"vertexShader": "assets/shaders/bloomShader/vertex.vs", 
+			"fragmentShader": "assets/shaders/bloomShader/fragment.fs", 
+			"geometryShader": "",
+			"tessControlShader": "",
+			"tessEvaluationShader": "",
+			"vertexArray": "QuadMultiTexturedArray",
+			"uniforms": [ "u_textures" ],
+			"uniformBuffers": [ "Camera", "CameraUBO", "Bloom", "BloomUBO" ],
+			"orderImportance": 0
+		}
+	]	
+}

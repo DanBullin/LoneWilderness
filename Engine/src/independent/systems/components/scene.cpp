@@ -185,8 +185,6 @@ namespace Engine
 
 			return m_rootEntities[name];
 		}
-		else
-			ENGINE_ERROR("[Scene::getEntity] Cannot get entity named: {0}.", name);
 
 		// Can't find entity
 		return nullptr;

@@ -10,20 +10,21 @@
 				{
 					"name": "Transform",
 					"type": "Transform",
-					"position": [ 0.0, 0.0, 0.0],
+					"position": [ 0.0, 3.0, 0.0],
 					"rotation": [ 0.0, 0.0, 0.0],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"name": "Camera",
 					"type": "Camera",
+					"skybox": [{"model" : "cube", "material": "skyboxMaterial"}],
 					"clearColour": [ 0.1, 0.2, 0.3, 1.0],
 					"front": [ 0.0, 0.0, -1.0],
 					"up": [ 0.0, 1.0, 0.0],
 					"worldUp": [ 0.0, 1.0, 0.0],
-					"Yaw": 270.0,
+					"Yaw": 90.0,
 					"Pitch": 0.0,
-					"Zoom": 45.0,
+					"Zoom": 70.0,
 					"setMainCamera": true
 				},
 				{
@@ -84,26 +85,6 @@
 					"name": "Script1",
 					"type": "NativeScript",
 					"scriptName": "MenuText"
-				}
-			]
-		},
-		{
-			"name": "MenuImage",
-			"layer": "UI",
-			"display": true,
-			"components": 
-			[
-				{
-					"name": "Transform",
-					"type": "Transform",
-					"position": [ 512.0, 384.0, -1.0 ],
-					"rotation": [ 0.0, 0.0, 0.0 ],
-					"scale": [ 1024.0, 768.0, 1.0 ]
-				},
-				{
-					"name": "MeshRender1",
-					"type": "MeshRender2D",
-					"materialName": "menuImageMaterial"
 				}
 			]
 		}

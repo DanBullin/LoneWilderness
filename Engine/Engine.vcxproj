@@ -154,11 +154,13 @@
     <ClCompile Include="src\independent\rendering\renderers\renderer2D.cpp" />
     <ClCompile Include="src\independent\rendering\renderers\renderer3D.cpp" />
     <ClCompile Include="src\independent\rendering\renderers\utils\fillBuffers.cpp" />
+    <ClCompile Include="src\independent\rendering\renderPasses\passes\blurPass.cpp" />
     <ClCompile Include="src\independent\rendering\renderPasses\passes\firstPass.cpp" />
     <ClCompile Include="src\independent\rendering\renderPasses\passes\fourthPass.cpp" />
     <ClCompile Include="src\independent\rendering\renderPasses\passes\menuPass.cpp" />
     <ClCompile Include="src\independent\rendering\renderPasses\passes\secondPass.cpp" />
     <ClCompile Include="src\independent\rendering\renderPasses\passes\thirdPass.cpp" />
+    <ClCompile Include="src\independent\rendering\renderPasses\passes\UIPass.cpp" />
     <ClCompile Include="src\independent\rendering\renderPasses\renderPass.cpp" />
     <ClCompile Include="src\independent\rendering\renderUtils.cpp" />
     <ClCompile Include="src\independent\rendering\shaders\shaderProgram.cpp" />
@@ -246,11 +248,13 @@
     <ClInclude Include="include\independent\rendering\renderBuffer.h" />
     <ClInclude Include="include\independent\rendering\renderers\renderer2D.h" />
     <ClInclude Include="include\independent\rendering\renderers\renderer3D.h" />
+    <ClInclude Include="include\independent\rendering\renderPasses\passes\blurPass.h" />
     <ClInclude Include="include\independent\rendering\renderPasses\passes\firstPass.h" />
     <ClInclude Include="include\independent\rendering\renderPasses\passes\fourthPass.h" />
     <ClInclude Include="include\independent\rendering\renderPasses\passes\menuPass.h" />
     <ClInclude Include="include\independent\rendering\renderPasses\passes\secondPass.h" />
     <ClInclude Include="include\independent\rendering\renderPasses\passes\thirdPass.h" />
+    <ClInclude Include="include\independent\rendering\renderPasses\passes\UIPass.h" />
     <ClInclude Include="include\independent\rendering\renderPasses\renderPass.h" />
     <ClInclude Include="include\independent\rendering\renderUtils.h" />
     <ClInclude Include="include\independent\rendering\shaders\shaderDataType.h" />

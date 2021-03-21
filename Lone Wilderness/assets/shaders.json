@@ -38,18 +38,6 @@
 			"orderImportance": 0
 		},
 		{ 
-			"name": "quad", 
-			"vertexShader": "assets/shaders/quad/vertex.vs", 
-			"fragmentShader": "assets/shaders/quad/fragment.fs", 
-			"geometryShader": "",
-			"tessControlShader": "",
-			"tessEvaluationShader": "",
-			"vertexArray": "QuadArray",
-			"uniforms": [ "u_textures" ],
-			"uniformBuffers": [ "Camera", "CameraUBO" ],
-			"orderImportance": 1
-		},
-		{ 
 			"name": "skyboxShader", 
 			"vertexShader": "assets/shaders/sky/vertex.vs", 
 			"fragmentShader": "assets/shaders/sky/fragment.fs", 

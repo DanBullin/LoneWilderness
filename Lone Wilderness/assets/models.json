@@ -25,36 +25,6 @@
 			"name": "cyborg", 
 			"modelFilePath": "assets/models/cyborg/cyborg.obj",
 			"materialFilePath": "assets/models/cyborg/cyborg.txt"
-		},
-		{
-			"name": "street",
-			"modelFilePath": "assets/models/street/Scenario_Terror.obj",
-			"materialFilePath": ""
-		},
-		{
-			"name": "tunnel_full",
-			"modelFilePath": "assets/models/sewer/full_tunnel.obj",
-			"materialFilePath": "assets/models/sewer/tunnel.txt"
-		},
-		{
-			"name": "tunnel_duel",
-			"modelFilePath": "assets/models/sewer/duel_tunnel.obj",
-			"materialFilePath": "assets/models/sewer/tunnel.txt"
-		},
-		{
-			"name": "tunnel_single",
-			"modelFilePath": "assets/models/sewer/single_tunnel.obj",
-			"materialFilePath": "assets/models/sewer/tunnel.txt"
-		},
-		{
-			"name": "tunnel_hole",
-			"modelFilePath": "assets/models/sewer/tunnel_hole.obj",
-			"materialFilePath": "assets/models/sewer/tunnel.txt"
-		},
-		{
-			"name": "tunnel_single_hole",
-			"modelFilePath": "assets/models/sewer/tunnel_single_hole.obj",
-			"materialFilePath": "assets/models/sewer/tunnel.txt"
 		}
 	]	
 }

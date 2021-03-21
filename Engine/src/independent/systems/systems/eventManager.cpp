@@ -345,7 +345,7 @@ namespace Engine
 			{
 				if (SceneManager::getScene("mainMenu"))
 				{
-					SceneManager::setActiveScene("mainMenu", true);
+					SceneManager::setActiveScene("mainMenu", false);
 					window->setCursorInputMode(CursorInputMode::Visible);
 				}
 			}

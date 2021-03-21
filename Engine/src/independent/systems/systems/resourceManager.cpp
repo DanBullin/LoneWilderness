@@ -203,9 +203,13 @@ namespace Engine
 		ResourceLoader::loadUniformBuffers("assets/uniformBuffers.json");
 		ResourceLoader::loadFrameBuffers("assets/frameBuffers.json");
 		ResourceLoader::loadShaderPrograms("assets/shaders.json");
+		ResourceLoader::loadShaderPrograms("assets/engine/shaders.json");
 		ResourceLoader::loadTextures("assets/textures.json");
+		ResourceLoader::loadTextures("assets/engine/textures.json");
 		ResourceLoader::loadSubTextures("assets/subTextures.json");
+		ResourceLoader::loadSubTextures("assets/engine/subTextures.json");
 		ResourceLoader::loadMaterials("assets/materials.json");
+		ResourceLoader::loadMaterials("assets/engine/materials.json");
 		ResourceLoader::load3DModels("assets/models.json");
 
 		printResourceManagerDetails();

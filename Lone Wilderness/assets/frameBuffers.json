@@ -16,6 +16,13 @@
 			"useSceneSize": true
 		},
 		{ 
+			"name": "blur3DFBO",
+			"useDefault": false,
+			"layout": [ "Colour", true, "DepthAndStencil", false ],
+			"dimensions": [],
+			"useSceneSize": true
+		},
+		{ 
 			"name": "hdrFBO",
 			"useDefault": false,
 			"layout": [ "Colour16", true, "Colour16", true, "DepthAndStencil", false ],

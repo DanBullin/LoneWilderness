@@ -2,129 +2,20 @@
 	"materials": 
 	[
 		{ 
-			"name": "defaultMaterial3D", 
-			"subTextures": [
-				"defaultSubTexture", "SpecularFullSubTexture"
-			],
-			"cubeMapTextures": [
-			],			
-			"shader": "blinnPhong", 
-			"tint": [ 1.0, 1.0, 1.0, 1.0 ],
-			"shininess": 32
+			"name": "cyborgMaterial", "subTextures": [ "cyborgSubTexture", "SpecularFullSubTexture" ],
+			"cubeMapTextures": [],"shader": "blinnPhong", "tint": [ 1.0, 1.0, 1.0, 1.0 ], "shininess": 32
 		},
 		{ 
-			"name": "defaultMaterial2D", 
-			"subTextures": [
-				"defaultSubTexture"
-			],
-			"cubeMapTextures": [
-			],			
-			"shader": "quad", 
-			"tint": [ 1.0, 1.0, 1.0, 1.0 ],
-			"shininess": 32
-		},
-		{ 
-			"name": "menuImageMaterial", 
-			"subTextures": [
-				"menuImageSubTexture"
-			],
-			"cubeMapTextures": [
-			],			
-			"shader": "quad", 
-			"tint": [ 1.0, 1.0, 1.0, 1.0 ],
-			"shininess": 32
-		},
-		{ 
-			"name": "mapMaterial", 
-			"subTextures": [
-				"mapSubTexture"
-			],
-			"cubeMapTextures": [
-			],	
-			"shader": "quad", 
-			"tint": [ 1.0, 1.0, 1.0, 1.0 ],
-			"shininess": 32
-		},
-		{ 
-			"name": "hotbarMaterial", 
-			"subTextures": [
-				"hotbarSubTexture"
-			],
-			"cubeMapTextures": [
-			],	
-			"shader": "quad", 
-			"tint": [ 1.0, 1.0, 1.0, 1.0 ],
-			"shininess": 32
-		},
-		{ 
-			"name": "cyborgMaterial", 
-			"subTextures": [
-				"cyborgSubTexture", "SpecularFullSubTexture"
-			],
-			"cubeMapTextures": [
-			],	
-			"shader": "blinnPhong", 
-			"tint": [ 1.0, 1.0, 1.0, 1.0 ],
-			"shininess": 32
+			"name": "skyboxMaterial", "subTextures": [],
+			"cubeMapTextures": [ "sky" ],"shader": "skyboxShader", "tint": [ 1.0, 1.0, 1.0, 1.0 ], "shininess": 32
 		},
 		{
-			"name": "signMaterial",
-			"subTextures": [
-				"defaultSubTexture", "SpecularNoneSubTexture"
-			],
-			"shader": "blinnPhong",
-			"tint": [ 1.0, 1.0, 1.0, 1.0],
-			"shininess": 32
-		},
-		{ 
-			"name": "skyboxMaterial", 
-			"subTextures": [
-			],
-			"cubeMapTextures": [
-				"sky"
-			],	
-			"shader": "skyboxShader", 
-			"tint": [ 1.0, 1.0, 1.0, 1.0 ],
-			"shininess": 32
+			"name": "lightSourceMaterial", "subTextures": [],
+			"cubeMapTextures": [], "shader": "lightSource", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
 		},
 		{
-			"name": "lightSourceMaterial",
-			"subTextures": [
-			],
-			"shader": "lightSource",
-			"tint": [ 1.0, 1.0, 1.0, 1.0],
-			"shininess": 32
-		},
-		{
-		  "name": "streetMaterial",
-		  "subTextures": [
-			"streetSubTexture",
-			"SpecularNoneSubTexture"
-		  ],
-		  "cubeMapTextures": [
-		  ],
-		  "shader": "blinnPhong",
-		  "tint": [ 1.0, 1.0, 1.0, 1.0 ],
-		  "shininess": 32
-		},
-		{
-		  "name": "tunnelMaterial",
-		  "subTextures": [
-			"tunnelSubTexture", "SpecularNoneSubTexture"
-		  ],
-		  "cubeMapTextures": [
-		  ],
-		  "shader": "blinnPhong",
-		  "tint": [ 1.0, 1.0, 1.0, 1.0 ],
-		  "shininess": 32
-		},
-		{
-			"name": "TerrainMaterial",
-			"subTextures": [ "defaultSubTexture"
-			],
-			"shader": "terrainShader",
-			"tint": [ 1.0, 1.0, 1.0, 1.0],
-			"shininess": 32
+			"name": "TerrainMaterial", "subTextures": [ "cyborgSubTexture" ],
+			"cubeMapTextures": [], "shader": "terrainShader", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
 		}
 	]
 }

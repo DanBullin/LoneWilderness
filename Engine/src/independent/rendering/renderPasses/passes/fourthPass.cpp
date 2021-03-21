@@ -22,18 +22,10 @@ namespace Engine
 	{
 		m_frameBuffer = ResourceManager::getResource<FrameBuffer>("defaultFBO");
 		m_cameraUBO = ResourceManager::getResource<UniformBuffer>("CameraUBO");
-
 		m_subTexture = ResourceManager::getResource<SubTexture>("screenQuadSubTexture1");
-
-		if (!s_initialised)
-		{
-			Material* screenMaterial = new Material("screenMaterial", { m_subTexture }, {}, ResourceManager::getResource<ShaderProgram>("quad"), { 1.f, 1.f, 1.f, 1.f }, 32.f);
-			ResourceManager::registerResource("screenMaterial", screenMaterial);
-			m_screenQuadMaterial = ResourceManager::getResource<Material>("screenMaterial");
-			s_initialised = true;
-		}
-
+		m_screenQuadMaterial = ResourceManager::getResource<Material>("screenMaterial");
 		m_previousFBO = nullptr;
+		s_initialised = true;
 	}
 
 	//! ~FourthPass()

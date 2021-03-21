@@ -125,8 +125,7 @@ namespace Engine
 	*/
 	void Entity::setParentEntity(Entity* parent)
 	{
-		if (parent)
-			m_parentEntity = parent;
+		m_parentEntity = parent;
 	}
 
 	//! getParentEntity()

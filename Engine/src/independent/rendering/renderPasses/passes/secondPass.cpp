@@ -23,25 +23,11 @@ namespace Engine
 		m_frameBuffers[1] = ResourceManager::getResource<FrameBuffer>("pingPongFBO2");
 		m_cameraUBO = ResourceManager::getResource<UniformBuffer>("CameraUBO");
 		m_bloomUBO = ResourceManager::getResource<UniformBuffer>("BloomUBO");
+		m_subTexture = ResourceManager::getResource<SubTexture>("screenQuadSubTexture1");
+		m_blurMaterial = ResourceManager::getResource<Material>("BlurMaterial");
 		m_previousFBO = nullptr;
 		m_horizontal = 1;
-
-		if (!s_initialised)
-		{
-			// Now, we need to create the blurring shader and the material which uses it
-			ShaderProgram* newShader = ShaderProgram::create("blurBrightnessShader");
-			newShader->build(ResourceManager::getResource<VertexArray>("QuadArray"), "assets/shaders/blurBright/vertex.vs", "assets/shaders/blurBright/fragment.fs", "", "", "");
-			newShader->setUniforms({ "u_textures" });
-			newShader->setUniformBuffers({ { "Camera", m_cameraUBO }, { "Bloom", m_bloomUBO } });
-			newShader->setOrderImportance(0);
-			ResourceManager::registerResource("blurBrightnessShader", newShader);
-
-			m_subTexture = ResourceManager::getResource<SubTexture>("screenQuadSubTexture1");
-
-			m_blurMaterial = new Material("BlurMaterial", { m_subTexture }, {}, ResourceManager::getResource<ShaderProgram>("blurBrightnessShader"), { 1.f, 1.f, 1.f, 1.f }, 32.f);
-			ResourceManager::registerResource("BlurMaterial", m_blurMaterial);
-			s_initialised = true;
-		}
+		s_initialised = true;
 	}
 
 	//! ~SecondPass()

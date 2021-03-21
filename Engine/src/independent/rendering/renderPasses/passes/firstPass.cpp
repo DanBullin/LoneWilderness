@@ -195,13 +195,16 @@ namespace Engine
 
 		Renderer3D::end();
 
-		Renderer3D::begin();
-		RenderUtils::enableWireframe(true);
-		RenderUtils::enablePatchDrawing(true);
-		m_attachedScene->getEntity("Terrain1")->getComponent<NativeScript>()->onRender(Renderers::Renderer3D);
-		Renderer3D::end();
-		RenderUtils::enableWireframe(false);
-		RenderUtils::enablePatchDrawing(false);
+		if (m_attachedScene->getEntity("Terrain1"))
+		{
+			Renderer3D::begin();
+			RenderUtils::enableWireframe(true);
+			RenderUtils::enablePatchDrawing(true);
+			m_attachedScene->getEntity("Terrain1")->getComponent<NativeScript>()->onRender(Renderers::Renderer3D);
+			Renderer3D::end();
+			RenderUtils::enableWireframe(false);
+			RenderUtils::enablePatchDrawing(false);
+		}
 	}
 
 	//! getFrameBuffer()

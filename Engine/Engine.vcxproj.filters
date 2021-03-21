@@ -258,6 +258,12 @@
     <ClCompile Include="src\independent\systems\systems\threadManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\independent\rendering\renderPasses\passes\UIPass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\independent\rendering\renderPasses\passes\blurPass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\independent\core\application.h">
@@ -540,6 +546,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\independent\systems\systems\threadManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\independent\rendering\renderPasses\passes\UIPass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\independent\rendering\renderPasses\passes\blurPass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
