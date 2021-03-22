@@ -12,11 +12,6 @@
 			"materialFilePath": ""
 		},
 		{ 
-			"name": "cube2", 
-			"modelFilePath": "assets/models/cube2/cube2.obj",
-			"materialFilePath": "assets/models/cube2/cube2.txt"
-		},
-		{ 
 			"name": "sphere", 
 			"modelFilePath": "assets/models/sphere/sphere.obj",
 			"materialFilePath": ""

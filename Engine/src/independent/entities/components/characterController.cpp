@@ -75,7 +75,7 @@ namespace Engine
 	*/
 	void CharacterController::setSpeed(const float speed)
 	{
-		if (speed >= 0.f && speed <= 100.f)
+		if (speed >= 0.f && speed <= 1000.f)
 			m_movementSpeed = speed;
 		else
 		{

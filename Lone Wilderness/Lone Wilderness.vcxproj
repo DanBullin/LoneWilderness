@@ -144,25 +144,27 @@
     <ClInclude Include="include\loaders\sceneLoader.h" />
     <ClInclude Include="include\scripts\terrain.h" />
     <ClInclude Include="include\terrain\chunk.h" />
+    <ClInclude Include="include\terrain\chunkManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Engine\Engine.vcxproj">
+      <Project>{5ca6f5c0-1614-4a2e-822c-6febb34a1e19}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\gameApplication.cpp" />
+    <ClCompile Include="src\layers\defaultLayer.cpp" />
+    <ClCompile Include="src\layers\UILayer.cpp" />
+    <ClCompile Include="src\loaders\sceneLoader.cpp" />
     <ClCompile Include="src\scripts\cyborg.cpp" />
     <ClCompile Include="src\scripts\FPSCounter.cpp" />
     <ClCompile Include="src\scripts\lightTest.cpp" />
     <ClCompile Include="src\scripts\mainMenu\menuText.cpp" />
     <ClCompile Include="src\scripts\player.cpp" />
     <ClCompile Include="src\scripts\rectangleShape.cpp" />
-    <ClCompile Include="src\gameApplication.cpp" />
-    <ClCompile Include="src\layers\defaultLayer.cpp" />
-    <ClCompile Include="src\layers\UILayer.cpp" />
-    <ClCompile Include="src\loaders\sceneLoader.cpp" />
     <ClCompile Include="src\scripts\terrain.cpp" />
     <ClCompile Include="src\terrain\chunk.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Engine\Engine.vcxproj">
-      <Project>{5ca6f5c0-1614-4a2e-822c-6febb34a1e19}</Project>
-    </ProjectReference>
+    <ClCompile Include="src\terrain\chunkManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

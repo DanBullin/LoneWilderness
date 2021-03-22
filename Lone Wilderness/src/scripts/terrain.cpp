@@ -7,16 +7,16 @@
 */
 #include "scripts/terrain.h"
 #include "independent/entities/entity.h"
-#include "independent/systems/systems/log.h"
 #include "independent/systems/components/scene.h"
 #include "independent/rendering/renderers/renderer3D.h"
+
+ChunkManager* Terrain::s_chunkManager = nullptr;
 
 //! Terrain()
 Terrain::Terrain()
 {
-	m_chunkSize = { 50, 50 };
-	m_chunkStepSize = 10;
-	Chunk::createGeometry(m_chunkSize.x, m_chunkSize.y, m_chunkStepSize);
+	s_chunkManager = new ChunkManager;
+	s_chunkManager->start();
 
 	m_tessUBO = ResourceManager::getResource<UniformBuffer>("TessellationUBO");
 	m_drawWireframe = false;
@@ -28,26 +28,30 @@ Terrain::Terrain()
 	m_amplitude = 100.f;
 	m_amplitudeDivisor = 2.f;
 	m_frequencyMultiplier = 2.f;
+	m_playerTransform = nullptr;
 
-	m_chunk = Chunk({ 0.f, 0.f, 0.f });
 }
 
 //! ~Terrain()
 Terrain::~Terrain()
 {
+	if (s_chunkManager)
+		delete s_chunkManager;
+
+	s_chunkManager = nullptr;
 }
 
-//! onAttach()
-void Terrain::onAttach()
-{
-}
-
+//! onPostUpdate()
+/*!
+\param timestep a const float - The timestep
+\param totalTime a const float - The total time of the application
+*/
 void Terrain::onPostUpdate(const float timestep, const float totalTime)
 {
-	glm::vec3 playerPos = getParent()->getParentScene()->getEntity("Player1")->getComponent<Transform>()->getPosition();
-	int chunkX = round(playerPos.x / (m_chunkSize.x * m_chunkStepSize));
-	int chunkY = round(playerPos.z / (m_chunkSize.y * m_chunkStepSize));
-	ENGINE_INFO("{0}, {1}", chunkX, chunkY);
+	if (!m_playerTransform) m_playerTransform = getParent()->getParentScene()->getEntity("Player1")->getComponent<Transform>();
+
+	glm::vec3 playerPos = m_playerTransform->getPosition();
+	s_chunkManager->updateChunks({ playerPos.x, playerPos.z });
 }
 
 //! onRender
@@ -70,7 +74,7 @@ void Terrain::onRender(const Renderers renderer, const std::string& renderState)
 		if (m_drawWireframe) RenderUtils::enableWireframe(true);
 
 		// Draw all chunks
-		m_chunk.onRender(renderer, renderState);
+		s_chunkManager->onRender(renderer, renderState);
 	}
 }
 
@@ -109,11 +113,12 @@ void Terrain::onKeyRelease(KeyReleasedEvent & e, const float timestep, const flo
 
 	if (e.getKeyCode() == Keys::K)
 	{
-		m_amplitude += 20.f;
+		ChunkManager::setChunksSize(ChunkManager::getChunksSize() + 1);
 	}
 
 	if (e.getKeyCode() == Keys::L)
 	{
-		m_amplitude -= 20.f;
+		int size = ChunkManager::getChunksSize();
+		if(size > 1) ChunkManager::setChunksSize(size - 1);
 	}
 }

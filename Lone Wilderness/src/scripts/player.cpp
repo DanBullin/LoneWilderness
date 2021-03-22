@@ -104,7 +104,7 @@ void Player::onKeyRelease(KeyReleasedEvent & e, const float timestep, const floa
 {
 	if (e.getKeyCode() == Keys::B)
 	{
-		getParent()->getParentScene()->getEntity("Cyborg1")->getComponent<MeshRender3D>()->setModel(ResourceManager::getResource<Model3D>("cube2"));
+		//getParent()->getParentScene()->getEntity("Cyborg1")->getComponent<MeshRender3D>()->setModel(ResourceManager::getResource<Model3D>("cube2"));
 	}
 }
 

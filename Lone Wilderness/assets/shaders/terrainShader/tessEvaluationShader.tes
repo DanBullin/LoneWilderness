@@ -46,6 +46,8 @@ out TES_OUT {
 	vec2 TexCoords;
 	flat int TexUnit;
 	vec4 Tint;
+	vec3 ViewPos;
+	vec3 FragPos;
 } tes_out;
 
 void main()
@@ -56,6 +58,7 @@ void main()
    tes_out.TexUnit = tes_in[0].TexUnit;
    tes_out.Tint = tes_in[0].Tint;
    vec3 pos = interpolate3D(tes_in[0].FragPos, tes_in[1].FragPos, tes_in[2].FragPos);
+   vec3 Normals = vec3(0.0, 1.0, 0.0);
    
    if(u_generateY == true)
    {
@@ -73,6 +76,10 @@ void main()
 		
 		pos.y = noise(pos, u_octaves);
    }
+   
+   tes_out.FragPos = pos;
+   tes_out.ViewPos = u_viewPos;
+   tes_out.Normals = Normals;
 
    // transform vertex position to clip space  - NOTE: WE NEED TO DO IT HERE NOW and not in vertex shader
    gl_Position = u_projection * u_view * vec4(pos, 1.0);

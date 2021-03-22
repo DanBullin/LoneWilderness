@@ -22,11 +22,6 @@
 			"name": "Arial",
 			"filePath": "assets/fonts/arial/arial.ttf",
 			"characterSize": 38
-		},
-		{
-			"name": "Forte",
-			"filePath": "assets/fonts/Forte/forte.ttf",
-			"characterSize": 38
 		}
 	],
 	"maximumSubTexturesPerMaterial": 10,

@@ -9,7 +9,8 @@
 #define TERRAIN_H
 
 #include "independent/entities/components/nativeScript.h"
-#include "terrain/chunk.h"
+#include "independent/entities/components/transform.h"
+#include "terrain/chunkManager.h"
 
 using namespace Engine;
 
@@ -19,9 +20,7 @@ using namespace Engine;
 class Terrain : public NativeScript
 {
 private:
-	Chunk m_chunk;
-	glm::ivec2 m_chunkSize; //!< The width and height of a chunk
-	uint32_t m_chunkStepSize; //!< The stepsize of a chunk
+	static ChunkManager* s_chunkManager; //!< A chunk manager
 
 	UniformBuffer* m_tessUBO; //!< The tessellation UBO
 	bool m_drawWireframe; //!< Draw the terrain in wireframe
@@ -33,11 +32,12 @@ private:
 	float m_amplitude; //!< The amplitude
 	float m_amplitudeDivisor; //!< The amplitude divisor
 	float m_frequencyMultiplier; //!< The frequency multiplier
+
+	Transform* m_playerTransform; //!< The player's transform
 public:
 	Terrain(); //!< Constructor
 	~Terrain(); //!< Destructor
 
-	void onAttach() override; //!< Called when attached to the entity
 	void onPostUpdate(const float timestep, const float totalTime) override; //!< Call after game update
 	void onRender(const Renderers renderer, const std::string& renderState); //!< On Render
 	void onKeyRelease(KeyReleasedEvent& e, const float timestep, const float totalTime) override; //!< Call upon key release

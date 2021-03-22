@@ -8,7 +8,8 @@
 #ifndef CHUNK_H
 #define CHUNK_H
 
-#include "independent/systems/systems/resourceManager.h"
+#include <glm/glm.hpp>
+#include "independent/entities/components/nativeScript.h"
 
 using namespace Engine;
 
@@ -18,22 +19,12 @@ using namespace Engine;
 class Chunk
 {
 private:
-	static int s_width; //!< The total number of tiles in the x axis
-	static int s_height; //!< The total number of tiles in the z axis
-	static int s_stepSize; //!< The size of a tile in width
-	static Model3D* s_model; //!< The model of the terrain
-
-	glm::vec3 m_chunkPosition; //!< The position of the chunk
+	glm::ivec2 m_chunkPosition; //!< The position of the chunk
 	glm::vec3 m_chunkWorldPosition; //!< The world position of the chunk
-
-	static TerrainVertex makeVertex(int x, int z, float xTotalLength, float zTotalLength);
 public:
 	Chunk(); //!< Constructor
-	Chunk(glm::vec3 worldPos); //!< Constructor
 	~Chunk(); //!< Destructor
-
-	static void createGeometry(int width, int height, int stepSize);
-
-	void onRender(const Renderers renderer, const std::string& renderState); //!< On Render
+	void setChunkPosition(const glm::ivec2& chunkPos, const float positionMultiplier); //!< Set the chunk's position
+	glm::vec3 getWorldPositon(); //!< Get chunk's world position
 };
 #endif

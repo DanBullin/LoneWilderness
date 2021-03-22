@@ -34,7 +34,7 @@
 			"tessEvaluationShader": "assets/shaders/terrainShader/tessEvaluationShader.tes",
 			"vertexArray": "vertexArray3",
 			"uniforms": [ "u_diffuseMap" ],
-			"uniformBuffers": [ "Camera", "CameraUBO", "Tessellation", "TessellationUBO" ],
+			"uniformBuffers": [ "Camera", "CameraUBO", "Tessellation", "TessellationUBO", "DirectionalLights", "DirLightUBO", "PointLights", "PointLightUBO", "SpotLights", "SpotLightUBO" ],
 			"orderImportance": 0
 		},
 		{ 
