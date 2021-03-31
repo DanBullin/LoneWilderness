@@ -10,6 +10,7 @@
 #include "independent/systems/systems/sceneManager.h"
 #include "independent/systems/systems/eventManager.h"
 #include "independent/systems/systems/threadManager.h"
+#include "scripts/terrain.h"
 
 //! Player()
 Player::Player()
@@ -52,6 +53,14 @@ void Player::onPreUpdate(const float timestep, const float totalTime)
 */
 void Player::onPostUpdate(const float timestep, const float totalTime)
 {
+	if (getParent()->getParentScene()->getName() != "mainMenu")
+	{
+		Transform* trans = getParent()->getComponent<Transform>();
+		Terrain* terrain = static_cast<Terrain*>(getParent()->getParentScene()->getEntity("Terrain1")->getComponent<NativeScript>());
+		ENGINE_INFO("Player Position: {0}, {1}, {2}.", trans->getPosition().x, trans->getPosition().y, trans->getPosition().z);
+		ENGINE_INFO("Generated Y: {0}.", terrain->getYCoord(trans->getPosition().x, trans->getPosition().z));
+		trans->setPosition({ trans->getPosition().x, terrain->getYCoord(trans->getPosition().x, trans->getPosition().z) , trans->getPosition().z});
+	}
 }
 
 //! onKeyPress()
@@ -104,7 +113,7 @@ void Player::onKeyRelease(KeyReleasedEvent & e, const float timestep, const floa
 {
 	if (e.getKeyCode() == Keys::B)
 	{
-		//getParent()->getParentScene()->getEntity("Cyborg1")->getComponent<MeshRender3D>()->setModel(ResourceManager::getResource<Model3D>("cube2"));
+		ResourceManager::setConfigValue(Config::ApplyFog, !ResourceManager::getConfigValue(Config::ApplyFog));
 	}
 }
 

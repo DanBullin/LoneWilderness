@@ -136,6 +136,7 @@
     <ClInclude Include="include\scripts\FPSCounter.h" />
     <ClInclude Include="include\scripts\lightTest.h" />
     <ClInclude Include="include\scripts\mainMenu\menuText.h" />
+    <ClInclude Include="include\scripts\placeObject.h" />
     <ClInclude Include="include\scripts\player.h" />
     <ClInclude Include="include\scripts\rectangleShape.h" />
     <ClInclude Include="include\gameApplication.h" />
@@ -160,6 +161,7 @@
     <ClCompile Include="src\scripts\FPSCounter.cpp" />
     <ClCompile Include="src\scripts\lightTest.cpp" />
     <ClCompile Include="src\scripts\mainMenu\menuText.cpp" />
+    <ClCompile Include="src\scripts\placeObject.cpp" />
     <ClCompile Include="src\scripts\player.cpp" />
     <ClCompile Include="src\scripts\rectangleShape.cpp" />
     <ClCompile Include="src\scripts\terrain.cpp" />

@@ -29,12 +29,12 @@
 			"name": "terrainShader", 
 			"vertexShader": "assets/shaders/terrainShader/vertex.vs", 
 			"fragmentShader": "assets/shaders/terrainShader/fragment.fs", 
-			"geometryShader": "",
+			"geometryShader": "assets/shaders/terrainShader/geometry.gs",
 			"tessControlShader": "assets/shaders/terrainShader/tessControlShader.tcs",
 			"tessEvaluationShader": "assets/shaders/terrainShader/tessEvaluationShader.tes",
 			"vertexArray": "vertexArray3",
 			"uniforms": [ "u_diffuseMap" ],
-			"uniformBuffers": [ "Camera", "CameraUBO", "Tessellation", "TessellationUBO", "DirectionalLights", "DirLightUBO", "PointLights", "PointLightUBO", "SpotLights", "SpotLightUBO" ],
+			"uniformBuffers": [ "Camera", "CameraUBO", "Settings", "SettingsUBO", "Tessellation", "TessellationUBO", "DirectionalLights", "DirLightUBO", "PointLights", "PointLightUBO", "SpotLights", "SpotLightUBO" ],
 			"orderImportance": 0
 		},
 		{ 

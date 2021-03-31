@@ -16,6 +16,10 @@
 		{
 			"name": "TerrainMaterial", "subTextures": [ "heightSubTexture" ],
 			"cubeMapTextures": [], "shader": "terrainShader", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
+		},
+		{
+		  "name": "crossHairsMaterial", "subTextures": [ "crossHairsSubTexture" ],
+		  "cubeMapTextures": [], "shader": "quad", "tint": [ 1.0, 1.0, 1.0, 1.0 ], "shininess": 32
 		}
 	]
 }

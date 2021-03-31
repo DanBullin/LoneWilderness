@@ -291,6 +291,7 @@ namespace Engine
 
 			// Bind VAO
 			submissionList.at(0).shader->getVertexArray()->bind();
+			ResourceManager::getResource<IndexBuffer>("QuadIBuffer")->bind();
 
 			// Issue the draw call
 			// The number of submissions for the shader that we want to render * 6 indices

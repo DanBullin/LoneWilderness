@@ -6,6 +6,10 @@
 			"layout": [ "u_view", "Mat4", "u_projection", "Mat4", "u_viewPos", "Float3" ]
 		},
 		{ 
+			"name": "SettingsUBO",
+			"layout": [ "u_applyFog", "Bool" ]
+		},
+		{ 
 			"name": "BloomUBO",
 			"layout": [ "u_horizontal", "Bool", "u_enableBloom", "Bool" ]
 		},

@@ -15,6 +15,7 @@
 #include "scripts/mainMenu/menuText.h"
 #include "scripts/lightTest.h"
 #include "scripts/terrain.h"
+#include "scripts/placeObject.h"
 
 #include "layers/defaultLayer.h"
 #include "layers/UILayer.h"
@@ -43,6 +44,7 @@ namespace Engine
 		else if (scriptName == "MenuText") return new MenuText;
 		else if (scriptName == "LightTest") return new LightTest;
 		else if (scriptName == "Terrain") return new Terrain;
+		else if (scriptName == "PlaceObject") return new PlaceObject;
 		return nullptr;
 	}
 

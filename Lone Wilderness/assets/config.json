@@ -35,5 +35,6 @@
 	"useBloom": 1,
 	"bloomBlurFactor": 50,
 	"printResourcesInDestructor": 0,
-	"printOpenGLDebugMessages": 0
+	"printOpenGLDebugMessages": 0,
+	"applyFog": 0
 }

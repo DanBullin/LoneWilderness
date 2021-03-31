@@ -31,6 +31,17 @@ namespace Engine
 	//! setupPass()
 	void UIPass::setupPass()
 	{
+		if (m_previousFBO->getName() == "defaultFBO")
+		{
+			RenderUtils::clearBuffers(RenderParameter::COLOR_AND_DEPTH_BUFFER_BIT, m_attachedScene->getMainCamera()->getClearColour());
+			RenderUtils::setDepthComparison(RenderParameter::LESS_THAN_OR_EQUAL);
+			RenderUtils::enableDepthTesting(true);
+
+			Camera* cam = m_attachedScene->getMainCamera();
+			ResourceManager::getResource<UniformBuffer>("CameraUBO")->uploadData("u_view", static_cast<void*>(&cam->getViewMatrix(false)));
+			ResourceManager::getResource<UniformBuffer>("CameraUBO")->uploadData("u_projection", static_cast<void*>(&cam->getProjectionMatrix(false)));
+		}
+
 		RenderUtils::enableBlending(true);
 	}
 
@@ -43,7 +54,13 @@ namespace Engine
 	//! onAttach()
 	void UIPass::onAttach()
 	{
-		if (!m_previousFBO) m_previousFBO = m_attachedScene->getRenderPass(m_index - 1)->getFrameBuffer();
+		if (!m_previousFBO)
+		{
+			if (m_index != 0)
+				m_previousFBO = m_attachedScene->getRenderPass(m_index - 1)->getFrameBuffer();
+			else
+				m_previousFBO = ResourceManager::getResource<FrameBuffer>("defaultFBO");
+		}
 	}
 
 	//! onRender()

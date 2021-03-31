@@ -2,6 +2,9 @@
 	"subTextures": 
 	[
 		{ 
+			"name": "crossHairsSubTexture", "baseTextureName": "crossHairs_diffuse", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
+		},
+		{ 
 			"name": "cyborgSubTexture", "baseTextureName": "cyborg_diffuse", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 0.5 ], "ConvertBottomLeft": false
 		},
 		{ 

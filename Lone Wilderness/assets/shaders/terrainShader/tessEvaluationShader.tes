@@ -63,16 +63,16 @@ void main()
    if(u_generateY == true)
    {
 		// Use the central difference method to calculate the normals
-		vec3 right = vec3(pos.x+tes_in[0].TessLevel, pos.y, pos.z);
-		vec3 left = vec3(pos.x-tes_in[0].TessLevel, pos.y, pos.z);
-		vec3 up = vec3(pos.x, pos.y, pos.z+tes_in[0].TessLevel);
-		vec3 down = vec3(pos.x, pos.y, pos.z-tes_in[0].TessLevel);
+		vec3 right = vec3(pos.x+1, pos.y, pos.z);
+		vec3 left = vec3(pos.x-1, pos.y, pos.z);
+		vec3 up = vec3(pos.x, pos.y, pos.z+1);
+		vec3 down = vec3(pos.x, pos.y, pos.z-1);
 	    
 		float r = noise(right, u_octaves);
 		float l = noise(left, u_octaves);
 		float u = noise(up, u_octaves);
 		float d = noise(down, u_octaves);
-		vec3 Normals = normalize(vec3(-(l-r), -2.0, -(d-u)));
+		Normals = normalize(vec3((l-r), 2.0, (u-d)));
 		
 		pos.y = noise(pos, u_octaves);
    }

@@ -6,8 +6,10 @@
 *
 */
 #include "independent/entities/components/transform.h"
+#include "independent/entities/components/camera.h"
 #include "independent/entities/entity.h"
 #include "independent/systems/systems/log.h"
+#include "independent/systems/systems/sceneManager.h"
 
 namespace Engine
 {
@@ -27,7 +29,7 @@ namespace Engine
 		: EntityComponent(ComponentType::Transform)
 	{
 		setPosition(xPos, yPos, zPos);
-		setOrientation(xRotation, yRotation, xRotation);
+		setOrientation(xRotation, yRotation, zRotation);
 		setScale(sX, sY, sZ);
 	}
 
@@ -172,6 +174,29 @@ namespace Engine
 			m_scale = newScale;
 		else
 			ENGINE_ERROR("[Transform::setScale] An invalid scale value was provided. Scale: {0}, {1}, {2}.", newScale.x, newScale.y, newScale.z);
+	}
+
+	// distance()
+	/*
+	\param otherTransform a Transform* - The other transform
+	\return a float - The distance between the two transforms in world space
+	*/
+	float Transform::distance(Transform* otherTransform)
+	{
+		return glm::distance(getPosition(), otherTransform->getPosition());
+	}
+
+	// angle()
+	/*
+	\param otherTransform a Transform* - The other transform
+	\return a float - The angle between the two transforms using the camera's front direction
+	*/
+	float Transform::angle(Transform* otherTransform)
+	{
+		auto camDir = SceneManager::getActiveScene()->getMainCamera()->getCameraData().Front;
+		glm::vec3 playerCamVector = glm::normalize((getPosition() + camDir) - getPosition());
+		glm::vec3 playerObjVector = glm::normalize(otherTransform->getPosition() - getPosition());
+		return glm::degrees(glm::acos(glm::dot(playerCamVector, playerObjVector)));
 	}
 
 	//! getModelMatrix()

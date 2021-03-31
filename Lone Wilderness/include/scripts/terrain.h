@@ -34,6 +34,11 @@ private:
 	float m_frequencyMultiplier; //!< The frequency multiplier
 
 	Transform* m_playerTransform; //!< The player's transform
+
+	float hash(float n);
+	double mix(double a, double b, double weight);
+	float snoise(glm::vec3 x);
+	float noise(glm::vec3 position, int octaves);
 public:
 	Terrain(); //!< Constructor
 	~Terrain(); //!< Destructor
@@ -41,5 +46,7 @@ public:
 	void onPostUpdate(const float timestep, const float totalTime) override; //!< Call after game update
 	void onRender(const Renderers renderer, const std::string& renderState); //!< On Render
 	void onKeyRelease(KeyReleasedEvent& e, const float timestep, const float totalTime) override; //!< Call upon key release
+
+	float getYCoord(float x, float z); //!< Get the y coordinate
 };
 #endif

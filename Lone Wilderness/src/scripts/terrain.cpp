@@ -122,3 +122,50 @@ void Terrain::onKeyRelease(KeyReleasedEvent & e, const float timestep, const flo
 		if(size > 1) ChunkManager::setChunksSize(size - 1);
 	}
 }
+
+float Terrain::getYCoord(float x, float z)
+{
+	return noise({ x, 0.f, z}, m_octaves);
+}
+
+float Terrain::hash(float n)
+{
+	double x = sin(n) * 753.5453123;
+	return x - floor(x);
+}
+
+double Terrain::mix(double a, double b, double weight)
+{
+	return a * (1 - weight) + b * weight;
+}
+
+float Terrain::snoise(glm::vec3 x)
+{
+	glm::vec3 p = floor(x);
+	glm::vec3 f = fract(x);
+	f = f * f * (3.0f - (2.0f * f));
+
+	float n = p.x + p.y * 157.0f + 113.0f * p.z;
+	return mix(mix(mix(hash(n + 0.0f), hash(n + 1.0f), f.x),
+		mix(hash(n + 157.0f), hash(n + 158.0f), f.x), f.y),
+		mix(mix(hash(n + 113.0f), hash(n + 114.0f), f.x),
+			mix(hash(n + 270.0f), hash(n + 271.0f), f.x), f.y), f.z);
+}
+
+float Terrain::noise(glm::vec3 position, int octaves)
+{
+	float total = 0.0;
+	float frequency = m_frequency;
+	float maxAmplitude = 0.0;
+	float amplitude = m_amplitude;
+	float scale = m_scale;
+
+	for (int i = 0; i < octaves; i++)
+	{
+		total += snoise(position * frequency) * amplitude;
+		frequency *= m_frequencyMultiplier;
+		amplitude /= m_amplitudeDivisor;
+		maxAmplitude += amplitude;
+	}
+	return (total / maxAmplitude) * scale;
+}

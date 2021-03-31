@@ -155,6 +155,9 @@ namespace Engine
 		m_cameraUBO->uploadData("u_view", static_cast<void*>(&cam->getViewMatrix(true)));
 		m_cameraUBO->uploadData("u_projection", static_cast<void*>(&cam->getProjectionMatrix(true)));
 		m_cameraUBO->uploadData("u_viewPos", static_cast<void*>(&cam->getWorldPosition()));
+
+		uint32_t fog = ResourceManager::getConfigValue(Config::ApplyFog);
+		ResourceManager::getResource<UniformBuffer>("SettingsUBO")->uploadData("u_applyFog", static_cast<void*>(&fog));
 	}
 
 	//! onRender()
@@ -190,7 +193,7 @@ namespace Engine
 
 		Renderer3D::end();
 
-		//RenderUtils::enableFaceCulling(true);
+		RenderUtils::enableFaceCulling(true);
 		RenderUtils::enablePatchDrawing(true);
 
 		Renderer3D::begin();
@@ -211,7 +214,7 @@ namespace Engine
 
 		RenderUtils::enablePatchDrawing(false);
 		RenderUtils::enableWireframe(false);
-		//RenderUtils::enableFaceCulling(false);
+		RenderUtils::enableFaceCulling(false);
 	}
 
 	//! getFrameBuffer()

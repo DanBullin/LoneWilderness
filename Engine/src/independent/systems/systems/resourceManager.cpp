@@ -48,6 +48,8 @@ namespace Engine
 			return "[PrintResourcesInDestructor]";
 		case Config::ConfigData::PrintOpenGLDebugMessages:
 			return "[PrintOpenGLDebugMessages]";
+		case Config::ConfigData::ApplyFog:
+			return "[ApplyFog]";
 		default: return 0;
 		}
 	}
@@ -85,6 +87,7 @@ namespace Engine
 			s_configValues.push_back(configData["bloomBlurFactor"]);
 			s_configValues.push_back(configData["printResourcesInDestructor"]);
 			s_configValues.push_back(configData["printOpenGLDebugMessages"]);
+			s_configValues.push_back(configData["applyFog"]);
 		}
 	}
 
