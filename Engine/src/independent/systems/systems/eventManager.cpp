@@ -113,7 +113,8 @@ namespace Engine
 			auto framebuffers = ResourceManager::getResourcesOfType<FrameBuffer>(ResourceType::FrameBuffer);
 			for (auto& fbo : framebuffers)
 			{
-				fbo->resize(e.getSize());
+				if (fbo->useSceneSize())
+					fbo->resize(e.getSize());
 			}
 
 			// Pass input event to layers and entities 
