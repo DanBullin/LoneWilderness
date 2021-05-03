@@ -101,8 +101,12 @@ namespace Engine
 			std::vector<int32_t> units;
 			units.resize(subTextures.size());
 
+			std::string name = "Submission";
+			if (subTextures.size() != 0)
+				name = subTextures.at(0)->getName();
+
 			// Add to the back of the queue [SHADER, SUBTEXTURES, UNITS, MODELMATRIX, TINT]
-			s_batchQueue.push_back({ shaderProgram, subTextures, units, modelMatrix, tint });
+			s_batchQueue.push_back({ name, shaderProgram, subTextures, units, modelMatrix, tint });
 		}
 	}
 

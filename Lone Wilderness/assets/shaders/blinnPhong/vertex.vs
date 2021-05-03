@@ -31,6 +31,12 @@ layout(std140) uniform Camera
 	vec3 u_viewPos;
 };
 
+layout(std140) uniform Clip
+{
+	vec4 u_plane;
+	float u_mode;
+};
+
 void main()
 {
     // Output the texture coordinates
@@ -54,5 +60,6 @@ void main()
 	
 	vs_out.Shininess = aShininess;
 
+	gl_ClipDistance[0] = dot(vec4(vs_out.FragPos,1.0), u_plane);
     gl_Position = u_projection * u_view * aModel * vec4(aPos, 1.0);
 }

@@ -30,9 +30,10 @@ namespace Engine
 		void onUpdate(const float timestep, const float totalTime) override; //!< Update the component
 		void printComponentDetails() override; //!< Print component details
 	
-		glm::vec3 getPosition(); //!< Get the position of the entity in the world
-		void setPosition(const float xPos, const float yPos, const float zPos); //!< Set the position of the entity in the world
-		void setPosition(const glm::vec3& newPos); //!< Set the position of the entity in the world
+		glm::vec3 getWorldPosition(); //!< Get the position of the entity in the world
+		glm::vec3 getLocalPosition(); //!< Get the position of the entity in local space
+		void setLocalPosition(const float xPos, const float yPos, const float zPos); //!< Set the position of the entity in the world
+		void setLocalPosition(const glm::vec3& newPos); //!< Set the position of the entity in the world
 
 		glm::vec3 getOrientation(); //!< Get the orientation of the entity in the world
 		void setOrientation(const float xRotation, const float yRotation, const float zRotation); //!< Set the orientation of the entity in the world

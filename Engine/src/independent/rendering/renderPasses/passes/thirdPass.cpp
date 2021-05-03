@@ -27,7 +27,7 @@ namespace Engine
 
 		m_subTexture1 = ResourceManager::getResource<SubTexture>("screenQuadSubTexture1");
 		m_subTexture2 = ResourceManager::getResource<SubTexture>("screenQuadSubTexture2");
-		m_bloomMaterial = ResourceManager::getResource<Material>("bloomMaterial");;
+		m_bloomMaterial = ResourceManager::getResource<Material>("bloomMaterial");
 		s_initialised = true;
 	}
 

@@ -28,7 +28,7 @@ namespace Engine
 	Transform::Transform(const float xPos, const float yPos, const float zPos, const float xRotation, const float yRotation, const float zRotation, const float sX, const float sY, const float sZ)
 		: EntityComponent(ComponentType::Transform)
 	{
-		setPosition(xPos, yPos, zPos);
+		setLocalPosition(xPos, yPos, zPos);
 		setOrientation(xRotation, yRotation, zRotation);
 		setScale(sX, sY, sZ);
 	}
@@ -77,34 +77,43 @@ namespace Engine
 		ENGINE_TRACE("====================================================");
 	}
 
-	//! getPosition()
+	//! getWorldPosition()
 	/*!
 	\return a glm::vec3 - The position of the entity in the game world
 	*/
-	glm::vec3 Transform::getPosition()
+	glm::vec3 Transform::getWorldPosition()
 	{
 		if (getParent()->getParentEntity())
-			return getParent()->getParentEntity()->getComponent<Transform>()->getPosition() + m_position;
+			return getParent()->getParentEntity()->getComponent<Transform>()->getWorldPosition() + m_position;
 		else
 			return m_position;
 	}
 
-	//! setPosition()
+	//! getLocalPosition()
+	/*!
+	\return a glm::vec3 - The local position of the entity
+	*/
+	glm::vec3 Transform::getLocalPosition()
+	{
+		return m_position;
+	}
+
+	//! setLocalPosition()
 	/*!
 	\param xPos a const float - The x position of the entity
 	\param yPos a const float - The y position of the entity
 	\param zPos a const float - The z position of the entity
 	*/
-	void Transform::setPosition(const float xPos, const float yPos, const float zPos)
+	void Transform::setLocalPosition(const float xPos, const float yPos, const float zPos)
 	{
-		setPosition({ xPos, yPos, zPos });
+		setLocalPosition({ xPos, yPos, zPos });
 	}
 
-	//! setPosition()
+	//! setLocalPosition()
 	/*!
 	\param newPos a const glm::vec3& - The position of the entity
 	*/
-	void Transform::setPosition(const glm::vec3& newPos)
+	void Transform::setLocalPosition(const glm::vec3& newPos)
 	{
 		m_position = newPos;
 	}
@@ -183,7 +192,7 @@ namespace Engine
 	*/
 	float Transform::distance(Transform* otherTransform)
 	{
-		return glm::distance(getPosition(), otherTransform->getPosition());
+		return glm::distance(getWorldPosition(), otherTransform->getWorldPosition());
 	}
 
 	// angle()
@@ -194,8 +203,8 @@ namespace Engine
 	float Transform::angle(Transform* otherTransform)
 	{
 		auto camDir = SceneManager::getActiveScene()->getMainCamera()->getCameraData().Front;
-		glm::vec3 playerCamVector = glm::normalize((getPosition() + camDir) - getPosition());
-		glm::vec3 playerObjVector = glm::normalize(otherTransform->getPosition() - getPosition());
+		glm::vec3 playerCamVector = glm::normalize((getWorldPosition() + camDir) - getWorldPosition());
+		glm::vec3 playerObjVector = glm::normalize(otherTransform->getWorldPosition() - getWorldPosition());
 		return glm::degrees(glm::acos(glm::dot(playerCamVector, playerObjVector)));
 	}
 
@@ -207,7 +216,7 @@ namespace Engine
 	{
 		// Order: Translate then Rotation then Scale
 		glm::mat4 model = glm::mat4(1.f);
-		model = glm::translate(model, getPosition());
+		model = glm::translate(model, getWorldPosition());
 		model = glm::rotate(model, glm::radians(getOrientation().x), glm::vec3(1.f, 0.f, 0.f));
 		model = glm::rotate(model, glm::radians(getOrientation().y), glm::vec3(0.f, 1.f, 0.f));
 		model = glm::rotate(model, glm::radians(getOrientation().z), glm::vec3(0.f, 0.f, 1.f));

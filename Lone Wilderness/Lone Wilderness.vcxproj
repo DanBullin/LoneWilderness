@@ -132,20 +132,36 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\scripts\cyborg.h" />
+    <ClInclude Include="include\layers\pauseLayer.h" />
+    <ClInclude Include="include\layers\settingsLayer.h" />
+    <ClInclude Include="include\scripts\engineScript.h" />
+    <ClInclude Include="include\scripts\gameObjects\cyborg.h" />
     <ClInclude Include="include\scripts\FPSCounter.h" />
-    <ClInclude Include="include\scripts\lightTest.h" />
-    <ClInclude Include="include\scripts\mainMenu\menuText.h" />
-    <ClInclude Include="include\scripts\placeObject.h" />
-    <ClInclude Include="include\scripts\player.h" />
-    <ClInclude Include="include\scripts\rectangleShape.h" />
+    <ClInclude Include="include\scripts\gameObjects\environment.h" />
+    <ClInclude Include="include\scripts\gameObjects\player\hotbar.h" />
+    <ClInclude Include="include\scripts\gameObjects\player\inventory.h" />
+    <ClInclude Include="include\scripts\gameObjects\staticLight.h" />
+    <ClInclude Include="include\scripts\layerControl.h" />
+    <ClInclude Include="include\scripts\loading\resourcesScript.h" />
+    <ClInclude Include="include\scripts\mainMenu\cameraRotationScript.h" />
+    <ClInclude Include="include\scripts\gameObjects\placeObject.h" />
+    <ClInclude Include="include\scripts\gameObjects\player.h" />
     <ClInclude Include="include\gameApplication.h" />
     <ClInclude Include="include\layers\defaultLayer.h" />
     <ClInclude Include="include\layers\UILayer.h" />
     <ClInclude Include="include\loaders\sceneLoader.h" />
-    <ClInclude Include="include\scripts\terrain.h" />
+    <ClInclude Include="include\scripts\menus\mainMenuText.h" />
+    <ClInclude Include="include\scripts\menus\pauseMenuText.h" />
+    <ClInclude Include="include\scripts\menus\pauseScript.h" />
+    <ClInclude Include="include\scripts\menus\settingsMenuText.h" />
+    <ClInclude Include="include\scripts\menus\settingsScript.h" />
+    <ClInclude Include="include\scripts\menus\settings\keybindText.h" />
+    <ClInclude Include="include\scripts\gameObjects\terrain.h" />
+    <ClInclude Include="include\scripts\testing\testScript.h" />
+    <ClInclude Include="include\settings\settings.h" />
     <ClInclude Include="include\terrain\chunk.h" />
     <ClInclude Include="include\terrain\chunkManager.h" />
+    <ClInclude Include="include\scripts\gameObjects\water.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.vcxproj">
@@ -155,16 +171,32 @@
   <ItemGroup>
     <ClCompile Include="src\gameApplication.cpp" />
     <ClCompile Include="src\layers\defaultLayer.cpp" />
+    <ClCompile Include="src\layers\pauseLayer.cpp" />
+    <ClCompile Include="src\layers\settingsLayer.cpp" />
     <ClCompile Include="src\layers\UILayer.cpp" />
     <ClCompile Include="src\loaders\sceneLoader.cpp" />
-    <ClCompile Include="src\scripts\cyborg.cpp" />
+    <ClCompile Include="src\scripts\engineScript.cpp" />
+    <ClCompile Include="src\scripts\gameObjects\cyborg.cpp" />
     <ClCompile Include="src\scripts\FPSCounter.cpp" />
-    <ClCompile Include="src\scripts\lightTest.cpp" />
-    <ClCompile Include="src\scripts\mainMenu\menuText.cpp" />
-    <ClCompile Include="src\scripts\placeObject.cpp" />
-    <ClCompile Include="src\scripts\player.cpp" />
-    <ClCompile Include="src\scripts\rectangleShape.cpp" />
-    <ClCompile Include="src\scripts\terrain.cpp" />
+    <ClCompile Include="src\scripts\gameObjects\environment.cpp" />
+    <ClCompile Include="src\scripts\gameObjects\player\hotbar.cpp" />
+    <ClCompile Include="src\scripts\gameObjects\player\inventory.cpp" />
+    <ClCompile Include="src\scripts\gameObjects\staticLight.cpp" />
+    <ClCompile Include="src\scripts\gameObjects\water.cpp" />
+    <ClCompile Include="src\scripts\layerControl.cpp" />
+    <ClCompile Include="src\scripts\loading\resourcesScript.cpp" />
+    <ClCompile Include="src\scripts\mainMenu\cameraRotationScript.cpp" />
+    <ClCompile Include="src\scripts\gameObjects\placeObject.cpp" />
+    <ClCompile Include="src\scripts\gameObjects\player.cpp" />
+    <ClCompile Include="src\scripts\gameObjects\terrain.cpp" />
+    <ClCompile Include="src\scripts\menus\mainMenuText.cpp" />
+    <ClCompile Include="src\scripts\menus\pauseMenuText.cpp" />
+    <ClCompile Include="src\scripts\menus\pauseScript.cpp" />
+    <ClCompile Include="src\scripts\menus\settingsMenuText.cpp" />
+    <ClCompile Include="src\scripts\menus\settingsScript.cpp" />
+    <ClCompile Include="src\scripts\menus\settings\keybindText.cpp" />
+    <ClCompile Include="src\scripts\testing\testScript.cpp" />
+    <ClCompile Include="src\settings\settings.cpp" />
     <ClCompile Include="src\terrain\chunk.cpp" />
     <ClCompile Include="src\terrain\chunkManager.cpp" />
   </ItemGroup>

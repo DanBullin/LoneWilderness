@@ -42,6 +42,7 @@ namespace Engine
 
 		void addEntity(const std::string& name, Entity* entity); //!< Add an entity to the scene
 		Entity* getEntity(const std::string& name); //!< Get an entity in the scene
+		std::map<std::string, Entity*> getRootEntities() const; //!< Get only the root entities of the scene
 		std::vector<Entity*> getEntities(); //!< Get a list of all entities in the scene
 
 		std::vector<PointLight*> getClosestPointLights(); //!< Get a list of the closest point lights

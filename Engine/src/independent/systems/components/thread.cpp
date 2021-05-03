@@ -22,6 +22,7 @@ namespace Engine
 	//! ~Thread()
 	Thread::~Thread()
 	{
+		m_thread.detach();
 		ENGINE_INFO("[Thread::~Thread] Deleting thread: {0}.", m_threadName);
 	}
 

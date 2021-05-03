@@ -18,10 +18,11 @@ namespace Engine
 	\param speed a const float - The speed of the character
 	\param sensitivity a const float - The mouse sensitivity of the character
 	*/
-	CharacterController::CharacterController(const float speed, const float sensitivity) : EntityComponent(ComponentType::CharacterController)
+	CharacterController::CharacterController(const float speed, const float sensitivity, const bool freeze) : EntityComponent(ComponentType::CharacterController)
 	{
 		m_mouseSensitivity = 0.f;
 		m_movementSpeed = 0.f;
+		m_freeze = freeze;
 		setSpeed(speed);
 		setSensitivity(sensitivity);
 	}
@@ -48,6 +49,7 @@ namespace Engine
 	*/
 	void CharacterController::onUpdate(const float timestep, const float totalTime)
 	{
+		
 	}
 
 	//! printComponentDetails()
@@ -128,32 +130,35 @@ namespace Engine
 	*/
 	void CharacterController::move(const Movement direction, const float deltaTime)
 	{
-		Entity* parent = getParent();
-
-		if (!parent)
+		if (!m_freeze)
 		{
-			ENGINE_ERROR("[CharacterController::move] This component does not have a valid parent entity. Component Name: {0}.", m_name);
-			return;
+			Entity* parent = getParent();
+
+			if (!parent)
+			{
+				ENGINE_ERROR("[CharacterController::move] This component does not have a valid parent entity. Component Name: {0}.", m_name);
+				return;
+			}
+
+			// Translate the entity
+			Transform* trans = parent->getComponent<Transform>();
+
+			if (trans)
+			{
+				float velocity = m_movementSpeed * deltaTime;
+
+				if (direction == Movement::FORWARD)
+					trans->setLocalPosition(trans->getWorldPosition() += getParent()->getParentScene()->getMainCamera()->getCameraData().Front * velocity);
+				if (direction == Movement::BACKWARD)
+					trans->setLocalPosition(trans->getWorldPosition() -= getParent()->getParentScene()->getMainCamera()->getCameraData().Front * velocity);
+				if (direction == Movement::LEFT)
+					trans->setLocalPosition(trans->getWorldPosition() -= getParent()->getParentScene()->getMainCamera()->getCameraData().Right * velocity);
+				if (direction == Movement::RIGHT)
+					trans->setLocalPosition(trans->getWorldPosition() += getParent()->getParentScene()->getMainCamera()->getCameraData().Right * velocity);
+			}
+			else
+				ENGINE_ERROR("[CharacterController::move] This character controller cannot detect a valid transform. Entity Name: {0}.", parent->getName());
 		}
-
-		// Translate the entity
-		Transform* trans = parent->getComponent<Transform>();
-
-		if (trans)
-		{
-			float velocity = m_movementSpeed * deltaTime;
-
-			if (direction == Movement::FORWARD)
-				trans->setPosition(trans->getPosition() += getParent()->getParentScene()->getMainCamera()->getCameraData().Front * velocity);
-			if (direction == Movement::BACKWARD)
-				trans->setPosition(trans->getPosition() -= getParent()->getParentScene()->getMainCamera()->getCameraData().Front * velocity);
-			if (direction == Movement::LEFT)
-				trans->setPosition(trans->getPosition() -= getParent()->getParentScene()->getMainCamera()->getCameraData().Right * velocity);
-			if (direction == Movement::RIGHT)
-				trans->setPosition(trans->getPosition() += getParent()->getParentScene()->getMainCamera()->getCameraData().Right * velocity);
-		}
-		else
-			ENGINE_ERROR("[CharacterController::move] This character controller cannot detect a valid transform. Entity Name: {0}.", parent->getName());
 	}
 
 	//! rotate()
@@ -164,46 +169,49 @@ namespace Engine
 	*/
 	void CharacterController::rotate(float xoffset, float yoffset, bool constrainPitch)
 	{
-		Entity* parent = getParent();
-
-		if (!parent)
+		if (!m_freeze)
 		{
-			ENGINE_ERROR("[CharacterController::rotate] This component does not have a valid parent entity. Component Name: {0}.", m_name);
-			return;
-		}
+			Entity* parent = getParent();
 
-		Scene* scene = parent->getParentScene();
-
-		if (!scene)
-		{
-			ENGINE_ERROR("[CharacterController::rotate] The entity this component is attached to does not belong to a valid scene. Entity Name: {0}.", parent->getName());
-			return;
-		}
-
-		// Rotate the camera
-		xoffset *= m_mouseSensitivity;
-		yoffset *= m_mouseSensitivity;
-
-		Camera* cam = scene->getMainCamera();
-		if (cam)
-		{
-			cam->getCameraData().Yaw += xoffset;
-			cam->getCameraData().Pitch += yoffset;
-
-			// Makes sure that when pitch is out of bounds, screen doesn't get flipped
-			if (constrainPitch)
+			if (!parent)
 			{
-				if (cam->getCameraData().Pitch > 89.0f)
-					cam->getCameraData().Pitch = 89.0f;
-				if (cam->getCameraData().Pitch < -89.0f)
-					cam->getCameraData().Pitch = -89.0f;
+				ENGINE_ERROR("[CharacterController::rotate] This component does not have a valid parent entity. Component Name: {0}.", m_name);
+				return;
 			}
 
-			// update Front, Right and Up Vectors using the updated Euler angles
-			cam->updateCameraVectors();
+			Scene* scene = parent->getParentScene();
+
+			if (!scene)
+			{
+				ENGINE_ERROR("[CharacterController::rotate] The entity this component is attached to does not belong to a valid scene. Entity Name: {0}.", parent->getName());
+				return;
+			}
+
+			// Rotate the camera
+			xoffset *= m_mouseSensitivity;
+			yoffset *= m_mouseSensitivity;
+
+			Camera* cam = scene->getMainCamera();
+			if (cam)
+			{
+				cam->getCameraData().Yaw += xoffset;
+				cam->getCameraData().Pitch += yoffset;
+
+				// Makes sure that when pitch is out of bounds, screen doesn't get flipped
+				if (constrainPitch)
+				{
+					if (cam->getCameraData().Pitch > 89.0f)
+						cam->getCameraData().Pitch = 89.0f;
+					if (cam->getCameraData().Pitch < -89.0f)
+						cam->getCameraData().Pitch = -89.0f;
+				}
+
+				// update Front, Right and Up Vectors using the updated Euler angles
+				cam->updateCameraVectors();
+			}
+			else
+				ENGINE_ERROR("[CharacterController::rotate] The scene does not have a valid main camera. Scene Name: {0}.", scene->getName());
 		}
-		else
-			ENGINE_ERROR("[CharacterController::rotate] The scene does not have a valid main camera. Scene Name: {0}.", scene->getName());
 	}
 
 	//! zoom()
@@ -212,33 +220,54 @@ namespace Engine
 	*/
 	void CharacterController::zoom(float yoffset)
 	{
-		Entity* parent = getParent();
-
-		if (!parent)
+		if (!m_freeze)
 		{
-			ENGINE_ERROR("[CharacterController::zoom] This component does not have a valid parent entity. Component Name: {0}.", m_name);
-			return;
-		}
+			Entity* parent = getParent();
 
-		Scene* scene = parent->getParentScene();
+			if (!parent)
+			{
+				ENGINE_ERROR("[CharacterController::zoom] This component does not have a valid parent entity. Component Name: {0}.", m_name);
+				return;
+			}
 
-		if (!scene)
-		{
-			ENGINE_ERROR("[CharacterController::zoom] The entity this component is attached to does not belong to a valid scene. Entity Name: {0}.", parent->getName());
-			return;
-		}
+			Scene* scene = parent->getParentScene();
 
-		Camera* cam = scene->getMainCamera();
-		// Affect the zoom
-		if (cam)
-		{
-			cam->getCameraData().Zoom -= (float)yoffset;
-			if (cam->getCameraData().Zoom < 1.0f)
-				cam->getCameraData().Zoom = 1.0f;
-			if (cam->getCameraData().Zoom > 45.0f)
-				cam->getCameraData().Zoom = 45.0f;
+			if (!scene)
+			{
+				ENGINE_ERROR("[CharacterController::zoom] The entity this component is attached to does not belong to a valid scene. Entity Name: {0}.", parent->getName());
+				return;
+			}
+
+			Camera* cam = scene->getMainCamera();
+			// Affect the zoom
+			if (cam)
+			{
+				cam->getCameraData().Zoom -= (float)yoffset;
+				if (cam->getCameraData().Zoom < 1.0f)
+					cam->getCameraData().Zoom = 1.0f;
+				if (cam->getCameraData().Zoom > 45.0f)
+					cam->getCameraData().Zoom = 45.0f;
+			}
+			else
+				ENGINE_ERROR("[CharacterController::zoom] The scene does not have a valid main camera. Scene Name: {0}.", scene->getName());
 		}
-		else
-			ENGINE_ERROR("[CharacterController::zoom] The scene does not have a valid main camera. Scene Name: {0}.", scene->getName());
+	}
+
+	//! setFrozen()
+	/*!
+	\param frozen a bool - Should the controller be frozen
+	*/
+	void CharacterController::setFrozen(bool frozen)
+	{
+		m_freeze = frozen;
+	}
+
+	//! getFrozen
+	/*!
+	\return a bool - Is the character controller frozen
+	*/
+	bool CharacterController::getFrozen() const
+	{
+		return m_freeze;
 	}
 }

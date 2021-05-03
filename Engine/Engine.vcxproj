@@ -136,6 +136,7 @@
     <ClCompile Include="src\independent\entities\components\nativeScript.cpp" />
     <ClCompile Include="src\independent\entities\components\text.cpp" />
     <ClCompile Include="src\independent\entities\components\transform.cpp" />
+    <ClCompile Include="src\independent\entities\components\UIElement.cpp" />
     <ClCompile Include="src\independent\entities\entity.cpp" />
     <ClCompile Include="src\independent\entities\entityComponent.cpp" />
     <ClCompile Include="src\independent\events\inputPoller.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="src\independent\rendering\renderPasses\passes\secondPass.cpp" />
     <ClCompile Include="src\independent\rendering\renderPasses\passes\thirdPass.cpp" />
     <ClCompile Include="src\independent\rendering\renderPasses\passes\UIPass.cpp" />
+    <ClCompile Include="src\independent\rendering\renderPasses\passes\waterPass.cpp" />
     <ClCompile Include="src\independent\rendering\renderPasses\renderPass.cpp" />
     <ClCompile Include="src\independent\rendering\renderUtils.cpp" />
     <ClCompile Include="src\independent\rendering\shaders\shaderProgram.cpp" />
@@ -222,6 +224,7 @@
     <ClInclude Include="include\independent\entities\components\nativeScript.h" />
     <ClInclude Include="include\independent\entities\components\text.h" />
     <ClInclude Include="include\independent\entities\components\transform.h" />
+    <ClInclude Include="include\independent\entities\components\UIElement.h" />
     <ClInclude Include="include\independent\entities\entity.h" />
     <ClInclude Include="include\independent\entities\entityComponent.h" />
     <ClInclude Include="include\independent\events\event.h" />
@@ -253,6 +256,7 @@
     <ClInclude Include="include\independent\rendering\renderPasses\passes\secondPass.h" />
     <ClInclude Include="include\independent\rendering\renderPasses\passes\thirdPass.h" />
     <ClInclude Include="include\independent\rendering\renderPasses\passes\UIPass.h" />
+    <ClInclude Include="include\independent\rendering\renderPasses\passes\waterPass.h" />
     <ClInclude Include="include\independent\rendering\renderPasses\renderPass.h" />
     <ClInclude Include="include\independent\rendering\renderUtils.h" />
     <ClInclude Include="include\independent\rendering\shaders\shaderDataType.h" />

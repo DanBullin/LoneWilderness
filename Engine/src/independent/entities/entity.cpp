@@ -21,6 +21,7 @@ namespace Engine
 		m_parentEntity = nullptr;
 		m_layer = nullptr;
 		m_display = true;
+		m_selected = false;
 	}
 
 	//! ~Entity()
@@ -282,7 +283,7 @@ namespace Engine
 
 		if (transform)
 		{
-			glm::vec2 pos = { transform->getPosition().x, transform->getPosition().y };
+			glm::vec2 pos = { transform->getWorldPosition().x, transform->getWorldPosition().y };
 			glm::vec2 topLeft = pos - glm::vec2(0.f, transform->getScale().y);
 			glm::vec2 bottomRight = pos + glm::vec2(transform->getScale().x, 0.f);
 
@@ -314,6 +315,9 @@ namespace Engine
 				return false;
 			}
 
+			if (entity->getParentEntity() != nullptr)
+				entity->getParentEntity()->getChildEntities().erase(entity->getName());
+
 			// Set the parent scene of the entity and its name
 			m_childEntities[childName] = entity;
 			entity->setParentScene(getParentScene());
@@ -340,11 +344,21 @@ namespace Engine
 		return false;
 	}
 
+	void Entity::setSelected(bool select)
+	{
+		m_selected = select;
+	}
+
+	bool Entity::getSelected()
+	{
+		return m_selected;
+	}
+
 	//! getAllComponents()
 	/*!
-	\return a const std::vector<EntityComponent*>& - A reference to the list of all components
+	\return a std::vector<EntityComponent*>& - A reference to the list of all components
 	*/
-	const std::vector<EntityComponent*>& Entity::getAllComponents()
+	std::vector<EntityComponent*>& Entity::getAllComponents()
 	{
 		return m_components;
 	}
@@ -364,6 +378,22 @@ namespace Engine
 		}
 		else
 			ENGINE_ERROR("[Entity::detach] The entity does not have a component of this type. Entity Name: {0}, Component Type: {1}.", m_entityName, Components::toString(component->getComponentType()));
+	}
+
+	//! detachDelayDeletion()
+	/*
+	\param component an EntityComponent* - A pointer to the component
+	*/
+	void Entity::detachDelayDeletion(EntityComponent* component)
+	{
+		if (component)
+		{
+			// If it does, detach and delete
+			component->onDetach();
+			m_components.erase(std::remove(m_components.begin(), m_components.end(), component), m_components.end());
+		}
+		else
+			ENGINE_ERROR("[Entity::detachDelayDeletion] The entity does not have a component of this type. Entity Name: {0}, Component Type: {1}.", m_entityName, Components::toString(component->getComponentType()));
 	}
 
 	//! printEntityDetails()

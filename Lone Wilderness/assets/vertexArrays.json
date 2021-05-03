@@ -27,6 +27,11 @@
 			"indexBuffer": "IndexBuffer3D"
 		},
 		{ 
+			"name": "normalArray",
+			"vertexBuffers": [ "Vertex3DBuffer", "ModelInstanceBuffer", "TexUnit1InstanceBuffer", "TexUnit2InstanceBuffer", "TexUnit3InstanceBuffer", "TintInstanceBuffer", "ShininessInstanceBuffer", "UV1InstanceBuffer" ],
+			"indexBuffer": "IndexBuffer3D"
+		},
+		{ 
 			"name": "vertexArray3",
 			"vertexBuffers": [ "TerrainVertexBuffer", "ModelInstanceBuffer", "TexUnit1InstanceBuffer", "TintInstanceBuffer", "UV1InstanceBuffer" ],
 			"indexBuffer": "IndexBuffer3D"

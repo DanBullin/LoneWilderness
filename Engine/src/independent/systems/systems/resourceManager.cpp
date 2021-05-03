@@ -14,6 +14,7 @@ namespace Engine
 	bool ResourceManager::s_enabled = false; //!< Set to false
 	std::vector<uint32_t> ResourceManager::s_configValues; //!< The list of config values
 	std::map<std::string, Resource*> ResourceManager::s_loadedResources; //!< A list of loaded resources
+	std::string ResourceManager::s_resBeingLoaded = "None"; //!< The name of the resource
 
 	//! getConfigAsString()
 	/*
@@ -197,10 +198,10 @@ namespace Engine
 		}
 	}
 
-	//! loadResources()
-	void ResourceManager::loadResources()
+	//! loadNTResources()
+	void ResourceManager::loadNTResources()
 	{
-		ENGINE_INFO("[ResourceManager::start] Loading common resources.");
+		ENGINE_INFO("[ResourceManager::start] Loading non-threaded resources.");
 		ResourceLoader::loadVertexBuffers("assets/vertexBuffers.json");
 		ResourceLoader::loadVertexArrays("assets/vertexArrays.json");
 		ResourceLoader::loadUniformBuffers("assets/uniformBuffers.json");
@@ -213,6 +214,12 @@ namespace Engine
 		ResourceLoader::loadSubTextures("assets/engine/subTextures.json");
 		ResourceLoader::loadMaterials("assets/materials.json");
 		ResourceLoader::loadMaterials("assets/engine/materials.json");
+	}
+
+	//! loadTResources()
+	void ResourceManager::loadTResources()
+	{
+		ENGINE_INFO("[ResourceManager::start] Loading threaded resources.");
 		ResourceLoader::load3DModels("assets/models.json");
 
 		printResourceManagerDetails();
@@ -266,6 +273,24 @@ namespace Engine
 			}
 		}
 		return nullptr;
+	}
+
+	//! getResBeingLoaded()
+	/*!
+	\return a const std::string& - The name of the resource being loaded
+	*/
+	const std::string& ResourceManager::getResBeingLoaded()
+	{
+		return s_resBeingLoaded;
+	}
+
+	//! setResBeingLoaded()
+	/*!
+	\param name a const std::string& - The name of the resource being loaded
+	*/
+	void ResourceManager::setResBeingLoaded(const std::string& name)
+	{
+		s_resBeingLoaded = name;
 	}
 
 #pragma region "File System stuff"

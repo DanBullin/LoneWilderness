@@ -13,11 +13,13 @@
 namespace Engine
 {
 	bool OpenGLRenderUtils::s_depthTesting = false; //!< Is depth testing enabled
+	bool OpenGLRenderUtils::s_stencilTesting = false; //!< Is stencil testing enabled
 	bool OpenGLRenderUtils::s_faceCulling = false; //!< Is face culling enabled
 	bool OpenGLRenderUtils::s_depthWriting = true; //!< Is depth writing enabled
 	bool OpenGLRenderUtils::s_wireframeMode = false; //!< Is wireframe mode enabled
 	bool OpenGLRenderUtils::s_blending = false; //!< Is blending enabled
 	bool OpenGLRenderUtils::s_patchDrawing = false; //!< Is patch drawing enabled
+	bool OpenGLRenderUtils::s_clipDistance = false; //!< Is clip distance enabled
 
 	namespace RenderParameters
 	{
@@ -30,18 +32,22 @@ namespace Engine
 		{
 			switch (type)
 			{
-				case RenderParameter::COLOR_BUFFER_BIT: return GL_COLOR_BUFFER_BIT;
-				case RenderParameter::DEPTH_BUFFER_BIT: return GL_DEPTH_BUFFER_BIT;
-				case RenderParameter::COLOR_AND_DEPTH_BUFFER_BIT: return GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
-				case RenderParameter::NEVER: return GL_NEVER;
-				case RenderParameter::LESS: return GL_LESS;
-				case RenderParameter::EQUAL: return GL_EQUAL;
-				case RenderParameter::LESS_THAN_OR_EQUAL: return GL_LEQUAL;
-				case RenderParameter::GREATER: return GL_GREATER;
-				case RenderParameter::NOTEQUAL: return GL_NOTEQUAL;
-				case RenderParameter::GREATER_THAN_OR_EQUAL: return GL_GEQUAL;
-				case RenderParameter::ALWAYS: return GL_ALWAYS;
-				default: return GL_INVALID_ENUM;
+			case RenderParameter::COLOR_BUFFER_BIT: return GL_COLOR_BUFFER_BIT;
+			case RenderParameter::DEPTH_BUFFER_BIT: return GL_DEPTH_BUFFER_BIT;
+			case RenderParameter::STENCIL_BUFFER_BIT: return GL_STENCIL_BUFFER_BIT;
+			case RenderParameter::COLOR_AND_DEPTH_BUFFER_BIT: return GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
+			case RenderParameter::COLOR_AND_DEPTH_AND_STENCIL_BUFFER_BIT: return GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
+			case RenderParameter::NEVER: return GL_NEVER;
+			case RenderParameter::LESS: return GL_LESS;
+			case RenderParameter::EQUAL: return GL_EQUAL;
+			case RenderParameter::LESS_THAN_OR_EQUAL: return GL_LEQUAL;
+			case RenderParameter::GREATER: return GL_GREATER;
+			case RenderParameter::NOTEQUAL: return GL_NOTEQUAL;
+			case RenderParameter::GREATER_THAN_OR_EQUAL: return GL_GEQUAL;
+			case RenderParameter::ALWAYS: return GL_ALWAYS;
+			case RenderParameter::KEEP: return GL_KEEP;
+			case RenderParameter::REPLACE: return GL_REPLACE;
+			default: return GL_INVALID_ENUM;
 			}
 		}
 	}
@@ -57,9 +63,8 @@ namespace Engine
 		if (enable && !s_faceCulling)
 		{
 			glEnable(GL_CULL_FACE);
-			glCullFace(GL_FRONT);
 			s_faceCulling = true;
-			if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages)) 
+			if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
 				ENGINE_TRACE("[OpenGLRenderUtils::enableFaceCulling] Enabled face culling.");
 		}
 		else if (!enable && s_depthTesting)
@@ -92,6 +97,30 @@ namespace Engine
 			s_depthTesting = false;
 			if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
 				ENGINE_TRACE("[OpenGLRenderUtils::enableDepthTesting] Disabled depth testing.");
+		}
+	}
+
+	//! enableStencilTesting()
+	/*!
+	\param enable a bool - Enable stencil testing
+	*/
+	void OpenGLRenderUtils::enableStencilTesting(const bool enable)
+	{
+		// Check if the value passed is the currently set value
+		// Change if so, otherwise settings already set
+		if (enable && !s_stencilTesting)
+		{
+			glEnable(GL_STENCIL_TEST);
+			s_stencilTesting = true;
+			if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
+				ENGINE_TRACE("[OpenGLRenderUtils::enableStencilTesting] Enabled stencil testing.");
+		}
+		else if (!enable && s_stencilTesting)
+		{
+			glDisable(GL_STENCIL_TEST);
+			s_stencilTesting = false;
+			if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
+				ENGINE_TRACE("[OpenGLRenderUtils::enableStencilTesting] Disabled stencil testing.");
 		}
 	}
 
@@ -186,6 +215,24 @@ namespace Engine
 		}
 	}
 
+	void OpenGLRenderUtils::enableClipDistance(const bool enable)
+	{
+		if (enable && !s_clipDistance)
+		{
+			glEnable(GL_CLIP_DISTANCE0);
+			s_clipDistance = true;
+			if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
+				ENGINE_TRACE("[OpenGLRenderUtils::enableClipDistance] Enabled Clip Distance.");
+		}
+		else if (!enable && s_clipDistance)
+		{
+			glDisable(GL_CLIP_DISTANCE0);
+			s_clipDistance = false;
+			if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
+				ENGINE_TRACE("[OpenGLRenderUtils::enableClipDistance] Disabled Clip distance.");
+		}
+	}
+
 	//! clearBuffers()
 	/*!
 	\param buffers a const RenderParameter - The buffers to clear
@@ -208,6 +255,37 @@ namespace Engine
 		glDepthFunc(RenderParameters::toGLType(comparison));
 		if (ResourceManager::getConfigValue(Config::PrintOpenGLDebugMessages))
 			ENGINE_TRACE("[OpenGLRenderUtils::setDepthComparison] Setting depth comparison to {0}.", static_cast<uint32_t>(comparison));
+	}
+
+	//! setStencilFunc()
+	/*!
+	\param comparison a const RenderParameter - The stencil test comparison value
+	\param ref an int - The reference value for the stencil testt
+	\param mask an uint32_t - The mask that is ANDed with the ref value and the stored stencil value
+	*/
+	void OpenGLRenderUtils::setStencilFunc(const RenderParameter comparison, int ref, uint32_t mask)
+	{
+		glStencilFunc(RenderParameters::toGLType(comparison), ref, mask);
+	}
+
+	//! setStencilOp()
+	/*!
+	\param sfail a const RenderParameter - The action to take when the stencil test fails
+	\param dpfail a const RenderParameter - The action to take when the stencil test passes but depth fails
+	\param dppass a const RenderParameter - The action to take when the stencil test passes
+	*/
+	void OpenGLRenderUtils::setStencilOp(const RenderParameter sfail, const RenderParameter dpfail, const RenderParameter dppass)
+	{
+		glStencilOp(RenderParameters::toGLType(sfail), RenderParameters::toGLType(dpfail), RenderParameters::toGLType(dppass));
+	}
+
+	//! setStencilMask()
+	/*
+	\param mask an uint32_t - The mask
+	*/
+	void OpenGLRenderUtils::setStencilMask(uint32_t mask)
+	{
+		glStencilMask(mask);
 	}
 
 	//! resizeViewport()
@@ -245,7 +323,7 @@ namespace Engine
 	*/
 	void OpenGLRenderUtils::drawMultiIndirect(const uint32_t commandsSize)
 	{
-		if(s_patchDrawing)
+		if (s_patchDrawing)
 			glMultiDrawElementsIndirect(GL_PATCHES, GL_UNSIGNED_INT, (GLvoid*)0, commandsSize, 0);
 		else
 			glMultiDrawElementsIndirect(GL_TRIANGLES, GL_UNSIGNED_INT, (GLvoid*)0, commandsSize, 0);

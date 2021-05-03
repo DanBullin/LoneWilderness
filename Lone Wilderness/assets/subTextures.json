@@ -2,13 +2,37 @@
 	"subTextures": 
 	[
 		{ 
+			"name": "iconSubTexture", "baseTextureName": "icon", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
+		},
+		{ 
 			"name": "crossHairsSubTexture", "baseTextureName": "crossHairs_diffuse", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
+		},
+		{ 
+			"name": "playerDataSubTexture", "baseTextureName": "playerDataUI", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
+		},
+		{ 
+			"name": "hotbarSubTexture", "baseTextureName": "hotbar", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
+		},
+		{ 
+			"name": "hotbarCurrentSubTexture", "baseTextureName": "hotbar_current", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
 		},
 		{ 
 			"name": "cyborgSubTexture", "baseTextureName": "cyborg_diffuse", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 0.5 ], "ConvertBottomLeft": false
 		},
 		{ 
-			"name": "heightSubTexture", "baseTextureName": "heightMap", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
+			"name": "barkSubTexture", "baseTextureName": "bark", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
+		},
+		{ 
+			"name": "leavesSubTexture", "baseTextureName": "leaves", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
+		},
+		{ 
+			"name": "rockSubTexture", "baseTextureName": "rockDiffuse", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
+		},
+		{ 
+			"name": "refractionSubTexture", "baseTextureName": "refractionTexture", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
+		},
+		{ 
+			"name": "reflectionSubTexture", "baseTextureName": "reflectionTexture", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
 		}
 	]
 }

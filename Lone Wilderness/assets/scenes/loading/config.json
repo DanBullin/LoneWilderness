@@ -1,0 +1,10 @@
+{
+	"layers": 
+	[
+		{ "name": "UI", "active": true, "displayed": true }
+	],
+	"renderPasses":
+	[
+		{ "name": "UIPass", "enabled": true }
+	]
+}

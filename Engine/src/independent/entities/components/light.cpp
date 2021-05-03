@@ -103,7 +103,7 @@ namespace Engine
 			Transform* trans = parent->getComponent<Transform>();
 
 			if (trans)
-				return trans->getPosition();
+				return trans->getWorldPosition();
 			else
 				ENGINE_ERROR("[DirectionalLight::getWorldPosition] The entity this component is attached to does not have a valid transform. Entity: {0}.", parent->getName());
 		}
@@ -246,7 +246,7 @@ namespace Engine
 			Transform* trans = parent->getComponent<Transform>();
 
 			if (trans)
-				return trans->getPosition();
+				return trans->getWorldPosition();
 			else
 				ENGINE_ERROR("[PointLight::getWorldPosition] The entity this component is attached to does not have a valid transform. Entity: {0}.", parent->getName());
 		}
@@ -449,7 +449,7 @@ namespace Engine
 			Transform* trans = parent->getComponent<Transform>();
 
 			if (trans)
-				return trans->getPosition();
+				return trans->getWorldPosition();
 			else
 				ENGINE_ERROR("[SpotLight::getWorldPosition] The entity this component is attached to does not have a valid transform. Entity: {0}.", parent->getName());
 		}

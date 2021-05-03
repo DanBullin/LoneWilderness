@@ -20,6 +20,21 @@
 			"name": "cyborg", 
 			"modelFilePath": "assets/models/cyborg/cyborg.obj",
 			"materialFilePath": "assets/models/cyborg/cyborg.txt"
+		},
+		{ 
+			"name": "tree", 
+			"modelFilePath": "assets/models/tree/tree.obj",
+			"materialFilePath": "assets/models/tree/tree.txt"
+		},
+		{ 
+			"name": "rock", 
+			"modelFilePath": "assets/models/rock/rock.obj",
+			"materialFilePath": "assets/models/tree/tree.txt"
+		},
+		{ 
+			"name": "water", 
+			"modelFilePath": "assets/models/water/water.obj",
+			"materialFilePath": ""
 		}
 	]	
 }

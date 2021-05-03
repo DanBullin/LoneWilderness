@@ -118,7 +118,7 @@ namespace Engine
 			{
 				if (getParent()->containsComponent<NativeScript>())
 				{
-					getParent()->getComponent<NativeScript>()->onSubmit(Renderers::Renderer3D);
+					getParent()->getComponent<NativeScript>()->onSubmit(Renderers::Renderer3D, "Default");
 				}
 
 				for (auto& mesh : m_model->getMeshes())
@@ -128,7 +128,7 @@ namespace Engine
 			{
 				if (getParent()->containsComponent<NativeScript>())
 				{
-					getParent()->getComponent<NativeScript>()->onSubmit(Renderers::Renderer3D);
+					getParent()->getComponent<NativeScript>()->onSubmit(Renderers::Renderer3D, "Default");
 				}
 
 				for (auto& mesh : m_model->getMeshes())

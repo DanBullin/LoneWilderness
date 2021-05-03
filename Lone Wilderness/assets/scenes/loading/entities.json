@@ -1,0 +1,114 @@
+{
+	"entities": 
+	[
+		{
+			"name": "Player1",
+			"layer": "UI",
+			"display": true,
+			"save": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 0.0, 0.0, 0.0],
+					"rotation": [ 0.0, 0.0, 0.0],
+					"scale": [ 1.0, 1.0, 1.0 ]
+				},
+				{
+					"name": "Camera",
+					"type": "Camera",
+					"clearColour": [ 0.1, 0.2, 0.3, 1.0],
+					"front": [ 0.0, 0.0, -1.0],
+					"up": [ 0.0, 1.0, 0.0],
+					"worldUp": [ 0.0, 1.0, 0.0],
+					"Yaw": 90.0,
+					"Pitch": 0.0,
+					"Zoom": 70.0,
+					"setMainCamera": true
+				}
+			]
+		},
+		{
+			"name": "BackgroundImage",
+			"layer": "UI",
+			"display": true,
+			"save": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 512.0, 384.0, 0.0 ],
+					"rotation": [ 0.0, 0.0, 0.0],
+					"scale": [ 300.0, 300.0, 1.0 ]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender2D",
+					"materialName": "iconMaterial"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.0 ],
+					"offset": [ 0.0, 200.0 ],
+					"scale": [ 1.0, 1.0 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "LoadingText",
+			"layer": "UI",
+			"display": true,
+			"save": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 20.0, 40.0, 0.5 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 68.0, 30.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "Loading Resources...",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu24"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ -135.0, 50.0 ],
+					"scale": [ 1.0, 1.0 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "LoadingEnt",
+			"layer": "UI",
+			"display": true,
+			"save": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 0.0, 0.0, 0.0 ],
+					"rotation": [ 0.0, 0.0, 0.0],
+					"scale": [ 0.0, 0.0, 0.0 ]
+				},
+				{
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "ResourcesScript"
+				}
+			]
+		}
+	]
+}

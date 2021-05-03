@@ -97,10 +97,7 @@ namespace Engine
 	*/
 	void Text::setColour(const glm::vec4& colour)
 	{
-		if (colour.r >= 0.f && colour.g >= 0.f && colour.b >= 0.f && colour.a >= 0.f)
-			m_tint = colour;
-		else
-			ENGINE_ERROR("Text::setClearColour] An invalid colour was provided. Cannot set.");
+		m_tint = colour;
 	}
 
 	//! getColour()
@@ -142,7 +139,7 @@ namespace Engine
 		{
 			if (getParent()->containsComponent<NativeScript>())
 			{
-				getParent()->getComponent<NativeScript>()->onSubmit(Renderers::Renderer2D);
+				getParent()->getComponent<NativeScript>()->onSubmit(Renderers::Renderer2D, "Default");
 			}
 
 			Renderer2D::submitText(this, getParent()->getComponent<Transform>()->getModelMatrix());

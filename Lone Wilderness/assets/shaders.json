@@ -10,7 +10,7 @@
 			"tessEvaluationShader": "",
 			"vertexArray": "vertexArray1",
 			"uniforms": [ "u_diffuseMap" ],
-			"uniformBuffers": [ "Camera", "CameraUBO", "DirectionalLights", "DirLightUBO", "PointLights", "PointLightUBO", "SpotLights", "SpotLightUBO" ],
+			"uniformBuffers": [ "Camera", "CameraUBO", "DirectionalLights", "DirLightUBO", "PointLights", "PointLightUBO", "SpotLights", "SpotLightUBO", "Settings", "SettingsUBO", "Clip", "ClipUBO" ],
 			"orderImportance": 0
 		},
 		{ 
@@ -34,7 +34,7 @@
 			"tessEvaluationShader": "assets/shaders/terrainShader/tessEvaluationShader.tes",
 			"vertexArray": "vertexArray3",
 			"uniforms": [ "u_diffuseMap" ],
-			"uniformBuffers": [ "Camera", "CameraUBO", "Settings", "SettingsUBO", "Tessellation", "TessellationUBO", "DirectionalLights", "DirLightUBO", "PointLights", "PointLightUBO", "SpotLights", "SpotLightUBO" ],
+			"uniformBuffers": [ "Camera", "CameraUBO", "Settings", "SettingsUBO", "Tessellation", "TessellationUBO", "DirectionalLights", "DirLightUBO", "PointLights", "PointLightUBO", "SpotLights", "SpotLightUBO", "Clip", "ClipUBO" ],
 			"orderImportance": 0
 		},
 		{ 
@@ -48,6 +48,18 @@
 			"uniforms": [ "u_cubeMap" ],
 			"uniformBuffers": [ "Camera", "CameraUBO" ],
 			"orderImportance": 2
+		},
+		{ 
+			"name": "normalMapShader", 
+			"vertexShader": "assets/shaders/normalMapShader/vertex.vs", 
+			"fragmentShader": "assets/shaders/normalMapShader/fragment.fs", 
+			"geometryShader": "",
+			"tessControlShader": "",
+			"tessEvaluationShader": "",
+			"vertexArray": "normalArray",
+			"uniforms": [ "u_diffuseMap" ],
+			"uniformBuffers": [ "Camera", "CameraUBO", "Settings", "SettingsUBO", "DirectionalLights", "DirLightUBO", "PointLights", "PointLightUBO", "SpotLights", "SpotLightUBO" ],
+			"orderImportance": 0
 		}
 	]	
 }

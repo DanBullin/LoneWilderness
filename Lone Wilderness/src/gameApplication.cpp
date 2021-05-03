@@ -11,8 +11,7 @@
 //! GameApplication()
 GameApplication::GameApplication()
 {
-	SceneLoader::load("mainMenu", "assets/scenes/mainMenu/");
-	SceneLoader::load("gameScene", "assets/scenes/gameScene/");
+	SceneLoader::load("loading", "assets/scenes/loading/");
 }
 
 //! ~GameApplication()

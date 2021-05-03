@@ -65,7 +65,7 @@ namespace Engine
 		inline std::unordered_map<std::string, UniformBuffer*>& getUniformBuffers() { return m_uniformBuffers; } //!< Get the uniform buffers
 			/*!< \return a std::unordered_map<std::string, UniformBuffer*>& - The uniform buffers */
 		inline void setOrderImportance(const uint32_t value) { m_order = value; }; //!< Set the shader's order priority
-			/*!< \param value a const uint32_T - The order priority (0 is lowest) */
+			/*!< \param value a const uint32_t - The order priority (0 is lowest) */
 		inline const uint32_t getOrderImportance() const { return m_order; } //!< Get the shader's order priority
 			/*!< \return a const uint32_t - The shader's order priority */
 

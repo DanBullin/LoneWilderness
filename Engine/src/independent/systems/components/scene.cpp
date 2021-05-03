@@ -9,6 +9,7 @@
 #include "independent/systems/systems/log.h"
 #include "independent/systems/systems/resourceManager.h"
 #include "independent/systems/systems/windowManager.h"
+#include "independent/systems/systems/eventManager.h"
 
 namespace Engine
 {
@@ -159,6 +160,9 @@ namespace Engine
 				return;
 			}
 
+			if (entity->getParentEntity() != nullptr)
+				entity->getParentEntity()->getChildEntities().erase(entity->getName());
+
 			// Set the parent scene of the entity and its name
 			m_rootEntities[name] = entity;
 			entity->setParentScene(this);
@@ -218,6 +222,15 @@ namespace Engine
 			m_entityListUpdated = false;
 		}
 		return m_entitiesList;
+	}
+
+	//! getRootEntities()
+	/*!
+	\return a std::map<std::string, Entity*> - Returns the list of root entities
+	*/
+	std::map<std::string, Entity*> Scene::getRootEntities() const
+	{
+		return m_rootEntities;
 	}
 
 	//! getClosestPointLights()

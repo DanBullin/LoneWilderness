@@ -49,6 +49,20 @@
 			"layout": [ "Colour", true, "DepthAndStencil", false ],
 			"dimensions": [],
 			"useSceneSize": true
+		},
+		{ 
+			"name": "reflectionFBO",
+			"useDefault": false,
+			"layout": [ "Colour", true, "Depth", false ],
+			"dimensions": [ 320, 180 ],
+			"useSceneSize": false
+		},
+		{ 
+			"name": "refractionFBO",
+			"useDefault": false,
+			"layout": [ "Colour", true, "Depth", true ],
+			"dimensions": [ 1280, 720 ],
+			"useSceneSize": false
 		}
 	]	
 }

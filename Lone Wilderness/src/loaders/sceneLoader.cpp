@@ -8,17 +8,29 @@
 #include "loaders/sceneLoader.h"
 #include "independent/systems/systems/sceneManager.h"
 
-#include "scripts/player.h"
-#include "scripts/cyborg.h"
-#include "scripts/rectangleShape.h"
+#include "scripts/gameObjects/player.h"
+#include "scripts/gameObjects/cyborg.h"
+#include "scripts/menus/mainMenuText.h"
+#include "scripts/menus/pauseMenuText.h"
+#include "scripts/menus/settingsMenuText.h"
+#include "scripts/menus/settings/keybindText.h"
+#include "scripts/gameObjects/staticLight.h"
+#include "scripts/loading/resourcesScript.h"
+#include "scripts/mainMenu/cameraRotationScript.h"
+#include "scripts/menus/pauseScript.h"
+#include "scripts/menus/settingsScript.h"
+#include "scripts/engineScript.h"
+#include "scripts/testing/testScript.h"
 #include "scripts/FPSCounter.h"
-#include "scripts/mainMenu/menuText.h"
-#include "scripts/lightTest.h"
-#include "scripts/terrain.h"
-#include "scripts/placeObject.h"
+#include "scripts/gameObjects/terrain.h"
+#include "scripts/gameObjects/placeObject.h"
+#include "scripts/gameObjects/environment.h"
+#include "scripts/gameObjects/water.h"
 
 #include "layers/defaultLayer.h"
 #include "layers/UILayer.h"
+#include "layers/pauseLayer.h"
+#include "layers/settingsLayer.h"
 
 #include "independent/rendering/renderPasses/passes/firstPass.h"
 #include "independent/rendering/renderPasses/passes/secondPass.h"
@@ -26,6 +38,7 @@
 #include "independent/rendering/renderPasses/passes/fourthPass.h"
 #include "independent/rendering/renderPasses/passes/UIPass.h"
 #include "independent/rendering/renderPasses/passes/blurPass.h"
+#include "independent/rendering/renderPasses/passes/waterPass.h"
 
 namespace Engine
 {
@@ -34,17 +47,34 @@ namespace Engine
 	\param scriptName a const std::string& - The name of the script
 	\return a NativeScript* - A pointer to the script
 	*/
-	NativeScript* SceneLoader::createNewScript(const std::string& scriptName)
+	NativeScript* SceneLoader::createNewScript(const std::string& scriptName, nlohmann::json scriptData)
 	{
+		// All subclasses of Entity must be added and returned here
 		// All subclasses of Entity must be added and returned here
 		if (scriptName == "Player") return new Player;
 		else if (scriptName == "Cyborg") return new Cyborg;
-		else if (scriptName == "Rectangle") return new RectangleShape;
 		else if (scriptName == "FPSCounter") return new FPSCounter;
-		else if (scriptName == "MenuText") return new MenuText;
-		else if (scriptName == "LightTest") return new LightTest;
+		else if (scriptName == "MainMenuText") return new MainMenuText;
+		else if (scriptName == "PauseMenuText") return new PauseMenuText;
+		else if (scriptName == "SettingsMenuText") return new SettingsMenuText;
+		else if (scriptName == "StaticLight") return new StaticLight;
+		else if (scriptName == "CameraRotationScript") return new CameraRotationScript;
+		else if (scriptName == "ResourcesScript") return new ResourcesScript;
+		else if (scriptName == "PauseScript") return new PauseScript;
+		else if (scriptName == "SettingsScript") return new SettingsScript;
+		else if (scriptName == "EngineScript") return new EngineScript;
+		else if (scriptName == "KeybindText")
+		{
+			if (scriptData.empty())
+				return new KeybindText;
+			else
+				return new KeybindText(scriptData);
+		}
+		else if (scriptName == "TestScript") return new TestScript;
 		else if (scriptName == "Terrain") return new Terrain;
+		else if (scriptName == "Water") return new Water;
 		else if (scriptName == "PlaceObject") return new PlaceObject;
+		else if (scriptName == "Environment") return new Environment;
 		return nullptr;
 	}
 
@@ -58,6 +88,8 @@ namespace Engine
 		// All subclasses of layers should be return here from a string
 		if (layerName == "Default") return new DefaultLayer;
 		else if (layerName == "UI") return new UILayer;
+		else if (layerName == "Settings") return new SettingsLayer;
+		else if (layerName == "Pause") return new PauseLayer;
 		else return nullptr;
 	}
 
@@ -75,6 +107,7 @@ namespace Engine
 		else if (passName == "FourthPass") return new FourthPass;
 		else if (passName == "UIPass") return new UIPass;
 		else if (passName == "BlurPass") return new BlurPass;
+		else if (passName == "WaterPass") return new WaterPass;
 		else return nullptr;
 	}
 
@@ -234,7 +267,7 @@ namespace Engine
 			}
 			case ComponentType::CharacterController:
 			{
-				entity->attach<CharacterController>(compName, component["speed"], component["sensitivity"]);
+				entity->attach<CharacterController>(compName, component["speed"], component["sensitivity"], component["frozen"].get<bool>());
 				break;
 			}
 			case ComponentType::MeshRender3D:
@@ -262,9 +295,14 @@ namespace Engine
 				entity->attach<DirectionalLight>(compName, glm::vec3(component["direction"][0], component["direction"][1], component["direction"][2]), glm::vec3(component["ambient"][0], component["ambient"][1], component["ambient"][2]), glm::vec3(component["diffuse"][0], component["diffuse"][1], component["diffuse"][2]), glm::vec3(component["specular"][0], component["specular"][1], component["specular"][2]));
 				break;
 			}
+			case ComponentType::UIElement:
+			{
+				entity->attach<UIElement>(compName, glm::vec2(component["anchor"][0], component["anchor"][1]), glm::vec2(component["offset"][0], component["offset"][1]), glm::vec2(component["scale"][0], component["scale"][1]), component["useAbsoluteSize"].get<bool>());
+				break;
+			}
 			case ComponentType::NativeScript:
 			{
-				NativeScript* script = createNewScript(component["scriptName"].get<std::string>());
+				NativeScript* script = createNewScript(component["scriptName"].get<std::string>(), component);
 				script->setName(compName);
 
 				if (script)
@@ -310,24 +348,34 @@ namespace Engine
 			json sceneData = ResourceManager::getJSON(sceneFolderPath + "config.json");
 			bool coreLoadSuccess = loadSceneProperties(scene, sceneData);
 
-			/////
-			// Loading Entities
-			/////
-			sceneData = ResourceManager::getJSON(sceneFolderPath + "entities.json");
-
-			// Go through each entity and add its components
-			for (auto& rootEntity : sceneData["entities"])
-			{
-				std::string rootEntityName = rootEntity["name"].get<std::string>();
-				if (!scene->checkRootEntityNameTaken(rootEntityName))
-				{
-					loadEntity(scene, nullptr, rootEntity);
-				}
-				else
-					ENGINE_ERROR("[SceneLoader::load] This root entity name is already taken. Name: {0}.", rootEntityName);
-			}
+			loadEntities(scene, sceneFolderPath + "entities.json");
 		}
 		else
 			ENGINE_ERROR("[SceneLoader::load] An invalid scene was created. Scene Name: {0}.", sceneName);
+	}
+
+	//! loadEntities()
+	/*!
+	\param scene a Scene* - A pointer to the scene
+	\param entityFilePath a const std::string& - The filepath to the entity json file to load
+	*/
+	void SceneLoader::loadEntities(Scene* scene, const std::string& entityFilePath)
+	{
+		/////
+		// Loading Entities
+		/////
+		json sceneData = ResourceManager::getJSON(entityFilePath);
+
+		// Go through each entity and add its components
+		for (auto& rootEntity : sceneData["entities"])
+		{
+			std::string rootEntityName = rootEntity["name"].get<std::string>();
+			if (!scene->checkRootEntityNameTaken(rootEntityName))
+			{
+				loadEntity(scene, nullptr, rootEntity);
+			}
+			else
+				ENGINE_ERROR("[SceneLoader::loadEntities] This root entity name is already taken. Name: {0}.", rootEntityName);
+		}
 	}
 }

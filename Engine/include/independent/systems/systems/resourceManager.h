@@ -49,6 +49,7 @@ namespace Engine
 		static bool s_enabled; //!< Is this system enabled
 		static std::map<std::string, Resource*> s_loadedResources; //!< A list of loaded resources
 		static std::vector<uint32_t> s_configValues; //!< The config values
+		static std::string s_resBeingLoaded; //!< The name of the resource being loaded
 	public:
 		ResourceManager(); //!< Constructor
 		~ResourceManager(); //!< Destructor
@@ -59,7 +60,8 @@ namespace Engine
 
 		static void registerResource(const std::string& resourceName, Resource* resource); //!< Register a resource
 		static void destroyResource(const std::string& resourceName = ""); //!< Destroy a resource by name or all of them
-		static void loadResources(); //!< Load resources
+		static void loadNTResources(); //!< Load non-threaded resources
+		static void loadTResources(); //!< Load threaded resources
 
 		template<typename T> static T* getResource(const std::string& resourceName); //!< Get a resource by name
 		template<typename T> static std::vector<T*> getResourcesOfType(const ResourceType type); //!< Get all resources of a certain type
@@ -74,6 +76,9 @@ namespace Engine
 		static void setConfigValue(const Config::ConfigData data, const uint32_t value); //!< Set a config value
 
 		static FrameBuffer* getDefaultFrameBuffer(); //!< Get the default framebuffer
+
+		static const std::string& getResBeingLoaded(); //!< Get the name of the resource being loaded
+		static void setResBeingLoaded(const std::string& name); //!< Set the name of the resource being loaded
 
 		static void printResourceManagerDetails(); //!< Print resource manager details
 		static void printResourceDetails(const std::string& resourceName = ""); //!< Print resource details

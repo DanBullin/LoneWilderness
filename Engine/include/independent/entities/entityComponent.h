@@ -30,7 +30,8 @@ namespace Engine
 		DirectionalLight = 7,	 //!< A directional light source
 		PointLight = 8,		     //!< A point light source
 		SpotLight = 9,			 //!< A spot light source
-		NativeScript = 10		 //!< A native script
+		NativeScript = 10,		 //!< A native script
+		UIElement = 11		     //!< A UI Elementt
 	};
 
 	/*! \class EntityComponent
@@ -90,6 +91,7 @@ namespace Engine
 			case ComponentType::PointLight: return "PointLight";
 			case ComponentType::SpotLight: return "SpotLight";
 			case ComponentType::NativeScript: return "NativeScript";
+			case ComponentType::UIElement: return "UIElement";
 			default: return "Not a valid component type.";
 			}
 		}
@@ -122,6 +124,8 @@ namespace Engine
 				return ComponentType::DirectionalLight;
 			else if (classType == "class Engine::NativeScript" || classType == "NativeScript")
 				return ComponentType::NativeScript;
+			else if (classType == "class Engine::UIElement" || classType == "UIElement")
+				return ComponentType::UIElement;
 			else
 				return ComponentType::None;
 		}

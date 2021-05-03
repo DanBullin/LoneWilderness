@@ -84,6 +84,8 @@ namespace Engine
 		const glm::vec4& getClearColour(); //!< Get the clear colour
 		void setClearColour(const glm::vec4& colour); //!< Set the clear colour
 
+		void inversePitch(); //!< Inverse the pitch
+
 		glm::mat4 getViewMatrix(const bool perspective); //!< Get the view matrix
 		glm::mat4 getProjectionMatrix(const bool perspective); //!< Get the projection matrix
 		glm::vec3 getWorldPosition(); //!< Get the world position of the camera
@@ -100,6 +102,7 @@ namespace Engine
 		Skybox* getSkybox(); //!< Get the attatched skybox
 
 		void updateCameraVectors(); //!< Update all camera vectors
+		void updateProjection(); //!< Update the projection
 		void updateProjection(const glm::vec2& size); //!< Update the projection aspect ratio
 	};
 }

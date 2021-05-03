@@ -22,6 +22,26 @@
 			"name": "Arial",
 			"filePath": "assets/fonts/arial/arial.ttf",
 			"characterSize": 38
+		},
+		{
+			"name": "Ubuntu24",
+			"filePath": "assets/fonts/ubuntu/Ubuntu-Regular.ttf",
+			"characterSize": 24
+		},
+		{
+			"name": "Ubuntu20",
+			"filePath": "assets/fonts/ubuntu/Ubuntu-Regular.ttf",
+			"characterSize": 20
+		},
+		{
+			"name": "Ubuntu34",
+			"filePath": "assets/fonts/ubuntu/Ubuntu-Regular.ttf",
+			"characterSize": 34
+		},
+		{
+			"name": "Ubuntu40B",
+			"filePath": "assets/fonts/ubuntu/Ubuntu-Bold.ttf",
+			"characterSize": 40
 		}
 	],
 	"maximumSubTexturesPerMaterial": 10,
@@ -36,5 +56,5 @@
 	"bloomBlurFactor": 50,
 	"printResourcesInDestructor": 0,
 	"printOpenGLDebugMessages": 0,
-	"applyFog": 0
+	"applyFog": 1
 }

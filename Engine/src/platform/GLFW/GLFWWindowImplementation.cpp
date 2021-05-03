@@ -371,7 +371,7 @@ namespace Engine
 			int refresh = mode->refreshRate;
 
 			// Set video to fullscreen
-			glfwSetWindowMonitor(m_native, m_monitor, 0, 0, width, height, refresh);
+			glfwSetWindowMonitor(m_native, glfwGetPrimaryMonitor(), 0, 0, width, height, refresh);
 			m_properties.setFullScreen(true);
 		}
 		else

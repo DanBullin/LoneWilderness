@@ -81,14 +81,14 @@ float GetTessLevel(float Distance0, float Distance1)
 	// Get the average distance of the two distances
 	float AvgDistance = (Distance0 + Distance1) / 2.0;
 	
-	if (AvgDistance <= 100.0)
-        return 10.0;
-    else if (AvgDistance <= 200.0)
-        return 7.0;
-	else if (AvgDistance <= 500.0)
+	if (AvgDistance <= 40.0)
         return 5.0;
-	else if (AvgDistance <= 800.0)
+    else if (AvgDistance <= 80.0)
+        return 4.0;
+	else if (AvgDistance <= 120.0)
         return 3.0;
+	else if (AvgDistance <= 200.0)
+        return 2.0;
     else
         return 1.0;
 }

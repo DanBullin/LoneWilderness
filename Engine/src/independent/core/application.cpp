@@ -34,7 +34,7 @@ namespace Engine
 		SystemManager::addSystem(SystemType::RenderSystem);
 		SystemManager::addSystem(SystemType::ThreadManager);
 		
-		ResourceManager::loadResources();
+		ResourceManager::loadNTResources();
 
 		// Start timers for FPS and total application time
 		TimerSystem::startTimer("FPS");

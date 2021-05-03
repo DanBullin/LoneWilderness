@@ -25,7 +25,7 @@ Chunk::~Chunk()
 void Chunk::setChunkPosition(const glm::ivec2& chunkPos, const float positionMultiplier)
 {
 	m_chunkPosition = chunkPos;
-	m_chunkWorldPosition = { static_cast<float>(m_chunkPosition.x) * positionMultiplier, 50.f, static_cast<float>(m_chunkPosition.y) * positionMultiplier };
+	m_chunkWorldPosition = { static_cast<float>(m_chunkPosition.x) * positionMultiplier, 0.f, static_cast<float>(m_chunkPosition.y) * positionMultiplier };
 }
 
 //! getWorldPosition

@@ -43,6 +43,10 @@ namespace Engine
 		}
 
 		RenderUtils::enableBlending(true);
+
+		Camera* cam = m_attachedScene->getMainCamera();
+		ResourceManager::getResource<UniformBuffer>("CameraUBO")->uploadData("u_view", static_cast<void*>(&cam->getViewMatrix(false)));
+		ResourceManager::getResource<UniformBuffer>("CameraUBO")->uploadData("u_projection", static_cast<void*>(&cam->getProjectionMatrix(false)));
 	}
 
 	//! endPass()
@@ -57,7 +61,7 @@ namespace Engine
 		if (!m_previousFBO)
 		{
 			if (m_index != 0)
-				m_previousFBO = m_attachedScene->getRenderPass(m_index - 1)->getFrameBuffer();
+				m_previousFBO = m_attachedScene->getRenderPass(m_index - 2)->getFrameBuffer();
 			else
 				m_previousFBO = ResourceManager::getResource<FrameBuffer>("defaultFBO");
 		}

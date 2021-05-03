@@ -34,8 +34,9 @@ namespace Engine
 	private:
 		float m_movementSpeed; //!< The movement speed
 		float m_mouseSensitivity; //!< The mouse sensitivity
+		bool m_freeze; //!< Freeze the controller
 	public:
-		CharacterController(const float speed, const float sensitivity); //!< Default constructor
+		CharacterController(const float speed, const float sensitivity, const bool freeze); //!< Default constructor
 		~CharacterController(); //!< Destructor
 
 		void onAttach() override; //!< Occurs when component is attached to an entity
@@ -47,6 +48,9 @@ namespace Engine
 		void setSensitivity(const float sensitivity); //!< Set the sensitivity
 		float getSpeed() const; //!< Get the speed
 		float getSensitivity() const; //!< Get the sensitivity
+
+		void setFrozen(bool frozen); //!< Freeze the controller
+		bool getFrozen() const; //!< Get whether the controller is frozen
 
 		void move(const Movement direction, const float deltaTime); //!< Move the entity
 		void rotate(float xoffset, float yoffset, bool constrainPitch = true); //!< Rotate the entity

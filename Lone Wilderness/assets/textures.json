@@ -1,13 +1,31 @@
 {
 	"textures2D": 
 	[	
+		{ "name": "icon", "filePath": "assets/textures/icon.png", "width": 0, "height": 0, "channels": 0, "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
+			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
+			
 		{ "name": "cyborg_diffuse", "filePath": "assets/textures/cyborg/cyborg_diffuse.png", "width": 0, "height": 0, "channels": 0, "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
 			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
 			
-		{ "name": "heightMap", "filePath": "assets/textures/heightMap.jpg", "width": 0, "height": 0, "channels": 0, "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
+		{ "name": "crossHairs_diffuse", "filePath": "assets/textures/crossHairs.png", "width": 0, "height": 0, "channels": 0, "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
 			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
 			
-		{ "name": "crossHairs_diffuse", "filePath": "assets/textures/crossHairs.png", "width": 0, "height": 0, "channels": 0, "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
+		{ "name": "playerDataUI", "filePath": "assets/textures/UI/playerData.png", "width": 0, "height": 0, "channels": 0, "wrapS": "ClampToEdge", "wrapT": "ClampToEdge", "wrapR": "ClampToEdge", 
+			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
+			
+		{ "name": "hotbar", "filePath": "assets/textures/UI/Hotbar.png", "width": 0, "height": 0, "channels": 0, "wrapS": "ClampToEdge", "wrapT": "ClampToEdge", "wrapR": "ClampToEdge", 
+			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
+			
+		{ "name": "hotbar_current", "filePath": "assets/textures/UI/Hotbar_Current.png", "width": 0, "height": 0, "channels": 0, "wrapS": "ClampToEdge", "wrapT": "ClampToEdge", "wrapR": "ClampToEdge", 
+			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
+			
+		{ "name": "bark", "filePath": "assets/textures/tree/bark.jpg", "width": 0, "height": 0, "channels": 0, "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
+			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
+			
+		{ "name": "leaves", "filePath": "assets/textures/tree/leaves.png", "width": 0, "height": 0, "channels": 0, "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
+			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
+			
+		{ "name": "rockDiffuse", "filePath": "assets/textures/rock.jpg", "width": 0, "height": 0, "channels": 0, "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
 			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false}
 			
 	],

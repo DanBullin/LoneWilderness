@@ -67,6 +67,12 @@ namespace Engine
 			ENGINE_ERROR("Camera::setClearColour] An invalid colour was provided. Cannot set.");
 	}
 
+	void Camera::inversePitch()
+	{
+		m_cameraData.Pitch = -m_cameraData.Pitch;
+		updateCameraVectors();
+	}
+
 	//! getViewMatrix()
 	/*!
 	\param perspective a const bool - Use the perspective projection, false for orthographic
@@ -82,7 +88,7 @@ namespace Engine
 			if (trans)
 			{
 				if (perspective)
-					return glm::lookAt(trans->getPosition(), trans->getPosition() + m_cameraData.Front, m_cameraData.Up);
+					return glm::lookAt(trans->getWorldPosition(), trans->getWorldPosition() + m_cameraData.Front, m_cameraData.Up);
 				else
 					return glm::mat4(1.f);
 			}
@@ -119,7 +125,7 @@ namespace Engine
 		{
 			Transform* trans = parent->getComponent<Transform>();
 			if (trans)
-				return trans->getPosition();
+				return trans->getWorldPosition();
 			else
 				ENGINE_ERROR("[Camera::getWorldPosition] The entity the camera is attached to does not have a transform. Entity Name: {0}.", parent->getName());
 		}
@@ -297,13 +303,22 @@ namespace Engine
 	}
 
 	//! updateProjection()
+	void Camera::updateProjection()
+	{
+		glm::ivec2 size = WindowManager::getFocusedWindow()->getProperties().getSize();
+		m_projection.Right = static_cast<float>(size.x);
+		m_projection.Bottom = static_cast<float>(size.y);
+		m_projection.AspectRatio = static_cast<float>(size.x) / static_cast<float>(size.y);
+	}
+
+	//! updateProjection()
 	/*
 	\param size a const glm::vec2& - The new size of the matrix
 	*/
 	void Camera::updateProjection(const glm::vec2& size)
 	{
-		m_projection.Right = size.x;
-		m_projection.Bottom = size.y;
-		m_projection.AspectRatio = size.x / size.y;
+		m_projection.Right = static_cast<float>(size.x);
+		m_projection.Bottom = static_cast<float>(size.y);
+		m_projection.AspectRatio = static_cast<float>(size.x) / static_cast<float>(size.y);
 	}
 }

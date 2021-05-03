@@ -34,7 +34,7 @@ namespace Engine
 		virtual void addVertexBuffer(VertexBuffer* vertexBuffer) = 0; //!< Add vertex buffer to array
 			/*!< \param vertexBuffer a VertexBuffer* - A pointer to a vertex buffer */
 		virtual void setIndexBuffer(IndexBuffer* indexBuffer) = 0; //!< Set the index buffer
-			/*!< \param vertexBuffer an IndexBuffer* - A pointer to a index buffer */
+			/*!< \param indexBuffer an IndexBuffer* - A pointer to a index buffer */
 		inline const uint32_t getDrawCount() const { if (m_indexBuffer) { return m_indexBuffer->getIndicesCount(); } else { return 0; } } //!< Get the indices count
 			/*!< \return a const uint32_t - The number of indices */
 		inline const uint32_t getID() const { return m_arrayID; } //!< Get the array ID

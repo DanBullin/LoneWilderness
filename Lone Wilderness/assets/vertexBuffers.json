@@ -51,6 +51,13 @@
 			"usage": 1
 		},
 		{ 
+			"name": "TexUnit3InstanceBuffer",
+			"layout": [ "FlatInt", false, 1 ],
+			"dataType": "uint32_t",
+			"size": "Batch3DCapacity",
+			"usage": 1
+		},
+		{ 
 			"name": "TintInstanceBuffer",
 			"layout": [ "Float4", false, 1 ],
 			"dataType": "Vec4",

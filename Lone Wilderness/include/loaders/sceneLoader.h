@@ -27,7 +27,6 @@ namespace Engine
 	class SceneLoader
 	{
 	private:
-		static NativeScript* createNewScript(const std::string& scriptName); //!< Create a new script
 		static Layer* createLayer(const std::string& layerName); //!< Create a new layer by converting string layer name literal
 		static RenderPass* createRenderPass(const std::string& passName); //!< Create a new render pass by converting string pass name literal
 		static bool loadSceneProperties(Scene* scene, json sceneData); //!< Load the scenes properties/core data
@@ -35,7 +34,9 @@ namespace Engine
 		static void loadEntity(Scene* scene, Entity* parent, json entityData); //!< Load an entity
 		static void loadComponents(Scene* scene, Entity* entity, json componentData); //!< Load components
 	public:
+		static NativeScript* createNewScript(const std::string& scriptName, nlohmann::json scriptData = nlohmann::json()); //!< Create a new script
 		static void load(const std::string& sceneName, const std::string& sceneFolderPath); //!< Load the scene
+		static void loadEntities(Scene* scene, const std::string& entityFilePath); //!< Load entities into the scene
 	};
 }
 

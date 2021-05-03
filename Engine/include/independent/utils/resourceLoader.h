@@ -31,6 +31,8 @@ namespace Engine
 		static void loadSubTextures(const std::string& filePath); //!< Load the subtextures needed in this scene
 		static void load3DModels(const std::string& filePath); //!< Load the 3D Models needed in this scene
 		static void loadMaterials(const std::string& filePath); //!< Load the Materials needed in this scene
+
+		static void uploadModels(); //!< Upload all model data to GPU
 	};
 }
 #endif

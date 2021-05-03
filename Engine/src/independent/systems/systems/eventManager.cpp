@@ -340,20 +340,6 @@ namespace Engine
 					}
 				}
 			}
-
-			if (e.getKeyCode() == Keys::ESC)
-			{
-				if (SceneManager::getScene("mainMenu"))
-				{
-					SceneManager::setActiveScene("mainMenu", false);
-					window->setCursorInputMode(CursorInputMode::Visible);
-				}
-			}
-
-			if (e.getKeyCode() == Keys::F5)
-			{
-				window->setFullscreen(!window->getProperties().getFullScreen());
-			}
 		}
 	}
 

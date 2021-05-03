@@ -59,6 +59,12 @@ layout(std140) uniform Tessellation
 	float u_frequencyMultiplier;
 };
 
+layout(std140) uniform Clip
+{
+	vec4 u_plane;
+	float u_mode;
+};
+
 layout(std140) uniform DirectionalLights
 {
 	DirectionalLight dirLight;
@@ -147,6 +153,17 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec
 
 void main()
 {
+	if(u_mode == 1.0)
+	{
+		if(fs_in.FragPos.y > u_plane.w)
+			discard;
+	}
+	else if(u_mode == 2.0)
+	{
+		if(fs_in.FragPos.y < abs(u_plane.w))
+			discard;
+	}
+	
 	vec3 col = vec3(0.0, 0.0, 0.0);
 	
 	float height = fs_in.FragPos.y / u_scale;
@@ -195,7 +212,9 @@ void main()
 	}
 	
 	float distanceFromCamera = distance(fs_in.ViewPos, fs_in.FragPos);
-	float visibility = exp(-pow((distanceFromCamera*0.02), 1.2));
+	float visibility = 1.0;
+	
+	visibility = max(0, pow(2.71828, -0.01*(distanceFromCamera-150)));
 	visibility = clamp(visibility, 0.0, 1.0);
 	
 	if(u_applyFog == true)

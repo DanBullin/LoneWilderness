@@ -35,6 +35,18 @@
 			"vertexArray": "lightSourceArray",
 			"uniforms": [ ],
 			"uniformBuffers": [ "Camera", "CameraUBO" ],
+			"orderImportance": 3
+		},
+		{ 
+			"name": "flatColourQuad", 
+			"vertexShader": "assets/shaders/flatColourQuad/vertex.vs", 
+			"fragmentShader": "assets/shaders/flatColourQuad/fragment.fs", 
+			"geometryShader": "",
+			"tessControlShader": "",
+			"tessEvaluationShader": "",
+			"vertexArray": "QuadArray",
+			"uniforms": [ ],
+			"uniformBuffers": [ "Camera", "CameraUBO" ],
 			"orderImportance": 0
 		},
 		{ 

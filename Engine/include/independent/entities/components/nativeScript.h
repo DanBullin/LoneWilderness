@@ -76,8 +76,9 @@ namespace Engine
 			/* \param e a MouseMovedEvent& - Reference to the mouse move event
 			   \param timestep a const float - The timestep
 			   \param totalTime a const float - The total runtime of the application */
-		virtual void onSubmit(const Renderers renderer) {} //!< On submit to the renderer
-			/* \param renderer a const Renderers  - The renderer currently being used */
+		virtual void onSubmit(const Renderers renderer, const std::string& renderState) {} //!< On submit to the renderer
+			/* \param renderer a const Renderers  - The renderer currently being used
+			   \param renderState a const std::string& - The render state */
 		virtual void onRender(const Renderers renderer, const std::string& renderState) {} //!< Call upon rendering
 			/* \param renderer a const Renderers  - The renderer currently being used 
 			   \param renderState a const std::string& - The render state */

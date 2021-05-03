@@ -34,15 +34,22 @@ namespace Engine
 	class Mesh3D
 	{
 	private:
+		std::vector<Vertex3D> m_vertices; //!< The vertices of the mesh
+		std::vector<uint32_t> m_indices; //!< The indices of the mesh
 		Geometry3D m_geometry; //!< The geometry of this 3D mesh
 		Material* m_material; //!< The material to apply to this mesh
 	public:
 		Mesh3D(const Geometry3D& geometry); //!< Constructor
+		Mesh3D(std::vector<Vertex3D>& vertices, std::vector<uint32_t> indices); //!< Constructor
 		~Mesh3D(); //!< Destructor
 
 		const Geometry3D& getGeometry() const; //!< Get the geometry
+		Geometry3D& getGeometryRef(); //!< Get the geometry
 		Material* getMaterial(); //!< Get the material applied to this mesh
 		void setMaterial(Material* material); //!< Set the material to apply to this mesh
+
+		std::vector<Vertex3D>& getVertices(); //!< Get the vertex list
+		std::vector<uint32_t>& getIndices(); //!< Get the indices list
 	};
 }
 #endif

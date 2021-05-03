@@ -94,7 +94,7 @@ namespace Engine
 			{
 				if (getParent()->containsComponent<NativeScript>())
 				{
-					getParent()->getComponent<NativeScript>()->onSubmit(Renderers::Renderer2D);
+					getParent()->getComponent<NativeScript>()->onSubmit(Renderers::Renderer2D, "Default");
 				}
 
 				Renderer2D::submit(m_material->getShader(), m_material->getSubTextures(), getParent()->getComponent<Transform>()->getModelMatrix(), m_material->getTint());

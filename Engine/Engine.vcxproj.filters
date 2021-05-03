@@ -261,6 +261,12 @@
     <ClCompile Include="src\independent\rendering\renderPasses\passes\blurPass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\independent\entities\components\UIElement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\independent\rendering\renderPasses\passes\waterPass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\independent\core\application.h">
@@ -546,6 +552,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\independent\rendering\renderPasses\passes\blurPass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\independent\entities\components\UIElement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\independent\rendering\renderPasses\passes\waterPass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

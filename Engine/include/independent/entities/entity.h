@@ -20,6 +20,7 @@
 #include "independent/entities/components/characterController.h"
 #include "independent/entities/components/light.h"
 #include "independent/entities/components/nativeScript.h"
+#include "independent/entities/components/UIElement.h"
 
 #include "independent/systems/systems/log.h"
 
@@ -41,6 +42,7 @@ namespace Engine
 		std::map<std::string, Entity*> m_childEntities; //!< List of child entities
 		std::vector<EntityComponent*> m_components; //!< List of components attached to this entity
 		bool m_display; //!< Should the entity be displayed
+		bool m_selected; //!< Is the entity selected
 	public:
 		Entity(); //!< Constructor
 		virtual ~Entity(); //!< Destructor
@@ -70,11 +72,15 @@ namespace Engine
 		bool addChildEntity(const std::string& childName, Entity* entity); //!< Add a child entity
 		bool checkChildEntityNameTaken(const std::string& name) const; //!< Returns whether the entity name has been taken
 
-		const std::vector<EntityComponent*>& getAllComponents(); //!< Get list of all components
+		void setSelected(bool select);
+		bool getSelected();
+
+		std::vector<EntityComponent*>& getAllComponents(); //!< Get list of all components
 		template<typename T> void attach(EntityComponent* component); //!< Attach an already created component
 		template<typename T, typename ...Args> void attach(const std::string& componentName, Args&&... args); //!< Attach a component to the entity
 		template<typename T> void detach(); //!< Delete a component from the entity
 		void detach(EntityComponent* component); //!< Delete a component from the entity
+		void detachDelayDeletion(EntityComponent* component); //!< Delete a component from the entity
 		template<typename T> T* getComponent(); //!< Get first instance of component by template type
 		template<typename T> bool containsComponent(); //!< Check if the entity has a type of component attached
 

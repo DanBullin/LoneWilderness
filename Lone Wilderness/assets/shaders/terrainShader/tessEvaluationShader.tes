@@ -80,7 +80,7 @@ void main()
    tes_out.FragPos = pos;
    tes_out.ViewPos = u_viewPos;
    tes_out.Normals = Normals;
-
+   
    // transform vertex position to clip space  - NOTE: WE NEED TO DO IT HERE NOW and not in vertex shader
    gl_Position = u_projection * u_view * vec4(pos, 1.0);
 } 

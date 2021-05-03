@@ -1,7 +1,21 @@
 {
 	"layers": 
 	[
-		{ "name": "UI", "active": true, "displayed": true }
+		{
+            "name": "Default",
+            "active": true,
+            "displayed": true
+        },
+        {
+            "name": "UI",
+            "active": true,
+            "displayed": true
+        },
+        {
+            "name": "Settings",
+            "active": false,
+            "displayed": false
+        }
 	],
 	"renderPasses":
 	[

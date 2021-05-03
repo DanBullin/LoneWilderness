@@ -22,6 +22,7 @@ namespace Engine
 	*/
 	struct BatchEntry2D
 	{
+		std::string submissionName; //!< The name of the submission
 		ShaderProgram* shader; //!< The shader program
 		std::vector<SubTexture*> subTextures; //!< The list of subtextures in this entry
 		std::vector<int32_t> textureUnits; //!< The list of texture units used

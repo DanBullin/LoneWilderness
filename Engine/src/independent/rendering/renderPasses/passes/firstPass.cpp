@@ -141,11 +141,16 @@ namespace Engine
 	//! setupPass()
 	void FirstPass::setupPass()
 	{
-		RenderUtils::clearBuffers(RenderParameter::COLOR_AND_DEPTH_BUFFER_BIT, m_attachedScene->getMainCamera()->getClearColour());
+		RenderUtils::clearBuffers(RenderParameter::COLOR_AND_DEPTH_AND_STENCIL_BUFFER_BIT, m_attachedScene->getMainCamera()->getClearColour());
 
 		// Set some rendering settings
 		RenderUtils::setDepthComparison(RenderParameter::LESS_THAN_OR_EQUAL);
 		RenderUtils::enableDepthTesting(true);
+		RenderUtils::enableBlending(true);
+		RenderUtils::setStencilMask(0x00);
+		RenderUtils::enableStencilTesting(true);
+		RenderUtils::setStencilFunc(RenderParameter::NOTEQUAL, 1, 0xFF);
+		RenderUtils::setStencilOp(RenderParameter::KEEP, RenderParameter::KEEP, RenderParameter::REPLACE);
 
 		// Upload light data to the light UBO
 		uploadLightData();
@@ -172,11 +177,36 @@ namespace Engine
 		// Set settings
 		setupPass();
 
+		//RenderUtils::enableFaceCulling(true);
+		RenderUtils::enablePatchDrawing(true);
+
 		Renderer3D::begin();
+
+		for (auto& entity : entities)
+		{
+			if (entity->getLayer()->getDisplayed() && entity->getDisplay())
+			{
+
+				if (entity->containsComponent<NativeScript>())
+					entity->getComponent<NativeScript>()->onRender(Renderers::Renderer3D, "Terrain");
+			}
+		}
+
+		Renderer3D::end();
+
+		RenderUtils::enablePatchDrawing(false);
+		RenderUtils::enableWireframe(false);
+		RenderUtils::enableFaceCulling(false);
+
+		Renderer3D::begin();
+
+		Entity* selectedEnt = nullptr;
 
 		// Go through each 3D object (including light source objects) + skybox and render them to HDR buffer + brightness texture
 		for (auto& entity : entities)
 		{
+			if (entity->getSelected()) selectedEnt = entity;
+
 			if (entity->getLayer()->getDisplayed() && entity->getDisplay())
 			{
 				if (entity->containsComponent<MeshRender3D>())
@@ -193,28 +223,52 @@ namespace Engine
 
 		Renderer3D::end();
 
-		RenderUtils::enableFaceCulling(true);
-		RenderUtils::enablePatchDrawing(true);
+		// Selected Entity
+		if (selectedEnt)
+			if (!selectedEnt->containsComponent<MeshRender3D>())
+				selectedEnt = nullptr;
 
-		Renderer3D::begin();
-
-		for (auto& entity : entities)
+		if (selectedEnt)
 		{
-			if (entity->getLayer()->getDisplayed() && entity->getDisplay())
-			{
-				if (entity->containsComponent<MeshRender3D>())
-					entity->getComponent<MeshRender3D>()->onRender();
+			RenderUtils::setStencilFunc(RenderParameter::ALWAYS, 1, 0xFF);
+			RenderUtils::setStencilMask(0xFF);
 
-				if (entity->containsComponent<NativeScript>())
-					entity->getComponent<NativeScript>()->onRender(Renderers::Renderer3D, "Terrain");
+			Renderer3D::begin();
+
+			if (selectedEnt->getLayer()->getDisplayed() && selectedEnt->getDisplay())
+			{
+				if (selectedEnt->containsComponent<MeshRender3D>())
+					selectedEnt->getComponent<MeshRender3D>()->onRender();
+
+				if (selectedEnt->containsComponent<NativeScript>())
+					selectedEnt->getComponent<NativeScript>()->onRender(Renderers::Renderer3D, "Default");
 			}
+
+			Renderer3D::end();
 		}
 
-		Renderer3D::end();
+		if (selectedEnt)
+		{
+			RenderUtils::setStencilFunc(RenderParameter::NOTEQUAL, 1, 0xFF);
+			RenderUtils::setStencilMask(0x00);
 
-		RenderUtils::enablePatchDrawing(false);
-		RenderUtils::enableWireframe(false);
-		RenderUtils::enableFaceCulling(false);
+			Renderer3D::begin();
+
+			if (selectedEnt->getLayer()->getDisplayed() && selectedEnt->getDisplay())
+			{
+				Model3D* model = selectedEnt->getComponent<MeshRender3D>()->getModel();
+				for (auto& mesh : model->getMeshes())
+				{
+					glm::mat4 model = selectedEnt->getComponent<Transform>()->getModelMatrix();
+					model = glm::scale(model, glm::vec3(1.03f));
+					Renderer3D::submit("Outline", mesh.getGeometry(), ResourceManager::getResource<Material>("selectedMaterial"), model);
+				}
+			}
+
+			Renderer3D::end();
+			RenderUtils::setStencilFunc(RenderParameter::ALWAYS, 0, 0xFF);
+			RenderUtils::setStencilMask(0xFF);
+		}
 	}
 
 	//! getFrameBuffer()

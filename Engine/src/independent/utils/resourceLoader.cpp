@@ -10,6 +10,7 @@
 #include "independent/rendering/geometry/vertex.h"
 #include "independent/utils/assimpLoader.h"
 #include "independent/systems/systems/windowManager.h"
+#include "independent/rendering/renderers/renderer3D.h"
 
 namespace Engine
 {
@@ -291,12 +292,12 @@ namespace Engine
 							dimensions = WindowManager::getFocusedWindow()->getProperties().getSize();
 						else
 						{
-							dimensions = glm::ivec2(buffer["size"][0], buffer["size"][1]);
+							dimensions = glm::ivec2(buffer["dimensions"][0], buffer["dimensions"][1]);
 							ENGINE_ERROR("[ResourceLoader::loadFrameBuffers] There isn't a valid focused window, cannot retrieve window dimensions.");
 						}
 					}
 					else
-						dimensions = glm::ivec2(buffer["size"][0], buffer["size"][1]);
+						dimensions = glm::ivec2(buffer["dimensions"][0], buffer["dimensions"][1]);
 
 					// Only need to provide the layout
 					newBuffer = FrameBuffer::create(name, buffer["useSceneSize"].get<bool>(), dimensions, layout);
@@ -467,6 +468,14 @@ namespace Engine
 				// Get the base texture name
 				Texture2D* baseTexture = ResourceManager::getResource<Texture2D>(subTexture["baseTextureName"].get<std::string>());
 
+				if (subTexture["baseTextureName"].get<std::string>() == "refractionTexture")
+					baseTexture = ResourceManager::getResource<FrameBuffer>("refractionFBO")->getSampledTarget("Colour0");
+				else if (subTexture["baseTextureName"].get<std::string>() == "reflectionTexture")
+						baseTexture = ResourceManager::getResource<FrameBuffer>("reflectionFBO")->getSampledTarget("Colour0");
+				else
+					baseTexture = ResourceManager::getResource<Texture2D>(subTexture["baseTextureName"].get<std::string>());
+
+
 				if (baseTexture)
 				{
 					// Create new subtexture
@@ -504,6 +513,7 @@ namespace Engine
 			// Check if it exists
 			if (!ResourceManager::resourceExists(name))
 			{
+				ResourceManager::setResBeingLoaded(name);
 				// Model name doesn't exist, we can use it. Now let's load the model
 				Model3D* newModel = new Model3D(name);
 
@@ -616,6 +626,32 @@ namespace Engine
 			}
 			else
 				ENGINE_ERROR("[ResourceLoader::loadMaterials] Resource name already taken. Name: {0}", name);
+		}
+	}
+
+	//! uploadModels()
+	void ResourceLoader::uploadModels()
+	{
+		auto modelList = ResourceManager::getResourcesOfType<Model3D>(ResourceType::Model3D);
+
+		for (auto& model : modelList)
+		{
+			auto& meshList = model->getMeshes();
+			for (auto& mesh : meshList)
+			{
+				// Create a piece of geometry using local vertices and indices information
+				Geometry3D geometry;
+				geometry.VertexBuffer = ResourceManager::getResource<VertexBuffer>("Vertex3DBuffer");
+				Renderer3D::addGeometry(mesh.getVertices(), mesh.getIndices(), geometry);
+
+				if (geometry.VertexCount == 0)
+					ENGINE_ERROR("[AssimpLoader::processMesh] Vertices were not uploaded to the vertex buffer correctly.");
+
+				mesh.getGeometryRef() = geometry;
+				mesh.getVertices().clear();
+				mesh.getIndices().clear();
+				ENGINE_TRACE("Uploaded mesh: {0}.", model->getName());
+			}
 		}
 	}
 }

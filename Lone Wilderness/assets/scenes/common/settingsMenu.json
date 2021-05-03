@@ -1,0 +1,280 @@
+{
+	"entities": 
+	[
+		{
+			"name": "SettingsMenuImage",
+			"layer": "Settings",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 512.0, 384.0, -1.0 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 1024.0, 768.0, 1.0 ]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender2D",
+					"materialName": "darkTranslucentMaterial"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ 0.0, 0.0 ],
+					"scale": [ 1.0, 1.0 ],
+					"useAbsoluteSize": false
+				}
+			]
+		},
+		{
+			"name": "Settings_InfoText",
+			"layer": "Settings",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 416.0, 100.0, 0.5 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 188.0, 28.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "SETTINGS",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu40B"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ -94.5, -300.0 ],
+					"scale": [ 1.0, 1.0 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "Settings_InfoText1",
+			"layer": "Settings",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 243.0, 150.0, 0.5 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 400.0, 400.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "Click on the key value and press a new key.",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu24"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ -268.5, -200.0 ],
+					"scale": [ 1.0, 1.0 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "Settings_MoveForward",
+			"layer": "Settings",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 45.0, 200.0, 0.5 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 197.0, 17.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "Move Forward: _",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu24"
+				},
+				{
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "KeybindText",
+					"playerConfig": "MoveForward"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.0, 0.5 ],
+					"offset": [ 50.0, -125.0 ],
+					"scale": [ 1.0, 1.0 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "Settings_MoveLeft",
+			"layer": "Settings",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 45.0, 230.0, 0.5 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 150.0, 17.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "Move Left: _",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu24"
+				},
+				{
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "KeybindText",
+					"playerConfig": "MoveLeft"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.0, 0.5 ],
+					"offset": [ 50.0, -75.0 ],
+					"scale": [ 1.0, 1.0 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "Settings_MoveBack",
+			"layer": "Settings",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 45.0, 260.0, 0.5 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 152.0, 17.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "Move Back: _",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu24"
+				},
+				{
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "KeybindText",
+					"playerConfig": "MoveBack"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.0, 0.5 ],
+					"offset": [ 50.0, -25.0 ],
+					"scale": [ 1.0, 1.0 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "Settings_MoveRight",
+			"layer": "Settings",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 45.0, 290.0, 0.5 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 166.0, 17.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "Move Right: _",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu24"
+				},
+				{
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "KeybindText",
+					"playerConfig": "MoveRight"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.0, 0.5 ],
+					"offset": [ 50.0, 25.0 ],
+					"scale": [ 1.0, 1.0 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "Settings_Quit",
+			"layer": "Settings",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 409.0, 710.0, 0.5 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 204.0, 25.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "Save & Quit",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu34"
+				},
+				{
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "SettingsMenuText"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 1.0 ],
+					"offset": [ -102.0, -60.0 ],
+					"scale": [ 1.0, 1.0 ],
+					"useAbsoluteSize": true
+				}
+			]
+		}
+	]
+}

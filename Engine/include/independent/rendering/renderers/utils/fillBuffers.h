@@ -20,6 +20,7 @@ namespace Engine
 	void generateInstanceData(std::vector<BatchEntry3D>& batchEntries); //!< Generate the instance data
 	void generateBasic3D(std::vector<BatchEntry3D>& batchEntries); //!< Generate the instance data
 	void generateSkybox(std::vector<BatchEntry3D>& batchEntries); //!< Generate the instance data
+	void generateNormal(std::vector<BatchEntry3D>& batchEntries); //!< Generate the instance data
 	void generateLightSource(std::vector<BatchEntry3D>& batchEntries); //!< Generate the instance data
 	void generateTerrain(std::vector<BatchEntry3D>& batchEntries); //!< Generate the instance data
 }

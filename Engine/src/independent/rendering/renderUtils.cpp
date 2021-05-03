@@ -20,26 +20,26 @@ namespace Engine
 	{
 		switch (RenderAPI::getAPI())
 		{
-			case GraphicsAPI::None:
-			{
-				ENGINE_ERROR("[RenderUtils::enableFaceCulling] No rendering API selected.");
-				break;
-			}
-			case GraphicsAPI::OpenGL:
-			{
-				OpenGLRenderUtils::enableFaceCulling(enable);
-				break;
-			}
-			case GraphicsAPI::Direct3D:
-			{
-				ENGINE_ERROR("[RenderUtils::enableFaceCulling] Direct3D not supported.");
-				break;
-			}
-			case GraphicsAPI::Vulkan:
-			{
-				ENGINE_ERROR("[RenderUtils::enableFaceCulling] Vulkan not supported.");
-				break;
-			}
+		case GraphicsAPI::None:
+		{
+			ENGINE_ERROR("[RenderUtils::enableFaceCulling] No rendering API selected.");
+			break;
+		}
+		case GraphicsAPI::OpenGL:
+		{
+			OpenGLRenderUtils::enableFaceCulling(enable);
+			break;
+		}
+		case GraphicsAPI::Direct3D:
+		{
+			ENGINE_ERROR("[RenderUtils::enableFaceCulling] Direct3D not supported.");
+			break;
+		}
+		case GraphicsAPI::Vulkan:
+		{
+			ENGINE_ERROR("[RenderUtils::enableFaceCulling] Vulkan not supported.");
+			break;
+		}
 		}
 	}
 
@@ -51,26 +51,57 @@ namespace Engine
 	{
 		switch (RenderAPI::getAPI())
 		{
-			case GraphicsAPI::None:
-			{
-				ENGINE_ERROR("[RenderUtils::enableDepthTesting] No rendering API selected.");
-				break;
-			}
-			case GraphicsAPI::OpenGL:
-			{
-				OpenGLRenderUtils::enableDepthTesting(enable);
-				break;
-			}
-			case GraphicsAPI::Direct3D:
-			{
-				ENGINE_ERROR("[RenderUtils::enableDepthTesting] Direct3D not supported.");
-				break;
-			}
-			case GraphicsAPI::Vulkan:
-			{
-				ENGINE_ERROR("[RenderUtils::enableDepthTesting] Vulkan not supported.");
-				break;
-			}
+		case GraphicsAPI::None:
+		{
+			ENGINE_ERROR("[RenderUtils::enableDepthTesting] No rendering API selected.");
+			break;
+		}
+		case GraphicsAPI::OpenGL:
+		{
+			OpenGLRenderUtils::enableDepthTesting(enable);
+			break;
+		}
+		case GraphicsAPI::Direct3D:
+		{
+			ENGINE_ERROR("[RenderUtils::enableDepthTesting] Direct3D not supported.");
+			break;
+		}
+		case GraphicsAPI::Vulkan:
+		{
+			ENGINE_ERROR("[RenderUtils::enableDepthTesting] Vulkan not supported.");
+			break;
+		}
+		}
+	}
+
+	//! enableStencilTesting()
+	/*!
+	\param enable a bool - Enable stencil testing
+	*/
+	void RenderUtils::enableStencilTesting(const bool enable)
+	{
+		switch (RenderAPI::getAPI())
+		{
+		case GraphicsAPI::None:
+		{
+			ENGINE_ERROR("[RenderUtils::enableStencilTesting] No rendering API selected.");
+			break;
+		}
+		case GraphicsAPI::OpenGL:
+		{
+			OpenGLRenderUtils::enableStencilTesting(enable);
+			break;
+		}
+		case GraphicsAPI::Direct3D:
+		{
+			ENGINE_ERROR("[RenderUtils::enableStencilTesting] Direct3D not supported.");
+			break;
+		}
+		case GraphicsAPI::Vulkan:
+		{
+			ENGINE_ERROR("[RenderUtils::enableStencilTesting] Vulkan not supported.");
+			break;
+		}
 		}
 	}
 
@@ -82,26 +113,26 @@ namespace Engine
 	{
 		switch (RenderAPI::getAPI())
 		{
-			case GraphicsAPI::None:
-			{
-				ENGINE_ERROR("[RenderUtils::enableWireframe] No rendering API selected.");
-				break;
-			}
-			case GraphicsAPI::OpenGL:
-			{
-				OpenGLRenderUtils::enableWireframe(enable);
-				break;
-			}
-			case GraphicsAPI::Direct3D:
-			{
-				ENGINE_ERROR("[RenderUtils::enableWireframe] Direct3D not supported.");
-				break;
-			}
-			case GraphicsAPI::Vulkan:
-			{
-				ENGINE_ERROR("[RenderUtils::enableWireframe] Vulkan not supported.");
-				break;
-			}
+		case GraphicsAPI::None:
+		{
+			ENGINE_ERROR("[RenderUtils::enableWireframe] No rendering API selected.");
+			break;
+		}
+		case GraphicsAPI::OpenGL:
+		{
+			OpenGLRenderUtils::enableWireframe(enable);
+			break;
+		}
+		case GraphicsAPI::Direct3D:
+		{
+			ENGINE_ERROR("[RenderUtils::enableWireframe] Direct3D not supported.");
+			break;
+		}
+		case GraphicsAPI::Vulkan:
+		{
+			ENGINE_ERROR("[RenderUtils::enableWireframe] Vulkan not supported.");
+			break;
+		}
 		}
 	}
 
@@ -113,26 +144,26 @@ namespace Engine
 	{
 		switch (RenderAPI::getAPI())
 		{
-			case GraphicsAPI::None:
-			{
-				ENGINE_ERROR("[RenderUtils::enableDepthWriting] No rendering API selected.");
-				break;
-			}
-			case GraphicsAPI::OpenGL:
-			{
-				OpenGLRenderUtils::enableDepthWriting(enable);
-				break;
-			}
-			case GraphicsAPI::Direct3D:
-			{
-				ENGINE_ERROR("[RenderUtils::enableDepthWriting] Direct3D not supported.");
-				break;
-			}
-			case GraphicsAPI::Vulkan:
-			{
-				ENGINE_ERROR("[RenderUtils::enableDepthWriting] Vulkan not supported.");
-				break;
-			}
+		case GraphicsAPI::None:
+		{
+			ENGINE_ERROR("[RenderUtils::enableDepthWriting] No rendering API selected.");
+			break;
+		}
+		case GraphicsAPI::OpenGL:
+		{
+			OpenGLRenderUtils::enableDepthWriting(enable);
+			break;
+		}
+		case GraphicsAPI::Direct3D:
+		{
+			ENGINE_ERROR("[RenderUtils::enableDepthWriting] Direct3D not supported.");
+			break;
+		}
+		case GraphicsAPI::Vulkan:
+		{
+			ENGINE_ERROR("[RenderUtils::enableDepthWriting] Vulkan not supported.");
+			break;
+		}
 		}
 	}
 
@@ -144,26 +175,26 @@ namespace Engine
 	{
 		switch (RenderAPI::getAPI())
 		{
-			case GraphicsAPI::None:
-			{
-				ENGINE_ERROR("[RenderUtils::enableBlending] No rendering API selected.");
-				break;
-			}
-			case GraphicsAPI::OpenGL:
-			{
-				OpenGLRenderUtils::enableBlending(enable);
-				break;
-			}
-			case GraphicsAPI::Direct3D:
-			{
-				ENGINE_ERROR("[RenderUtils::enableBlending] Direct3D not supported.");
-				break;
-			}
-			case GraphicsAPI::Vulkan:
-			{
-				ENGINE_ERROR("[RenderUtils::enableBlending] Vulkan not supported.");
-				break;
-			}
+		case GraphicsAPI::None:
+		{
+			ENGINE_ERROR("[RenderUtils::enableBlending] No rendering API selected.");
+			break;
+		}
+		case GraphicsAPI::OpenGL:
+		{
+			OpenGLRenderUtils::enableBlending(enable);
+			break;
+		}
+		case GraphicsAPI::Direct3D:
+		{
+			ENGINE_ERROR("[RenderUtils::enableBlending] Direct3D not supported.");
+			break;
+		}
+		case GraphicsAPI::Vulkan:
+		{
+			ENGINE_ERROR("[RenderUtils::enableBlending] Vulkan not supported.");
+			break;
+		}
 		}
 	}
 
@@ -198,6 +229,33 @@ namespace Engine
 		}
 	}
 
+	void RenderUtils::enableClipDistance(const bool enable)
+	{
+		switch (RenderAPI::getAPI())
+		{
+		case GraphicsAPI::None:
+		{
+			ENGINE_ERROR("[RenderUtils::enableClipDistance] No rendering API selected.");
+			break;
+		}
+		case GraphicsAPI::OpenGL:
+		{
+			OpenGLRenderUtils::enableClipDistance(enable);
+			break;
+		}
+		case GraphicsAPI::Direct3D:
+		{
+			ENGINE_ERROR("[RenderUtils::enableClipDistance] Direct3D not supported.");
+			break;
+		}
+		case GraphicsAPI::Vulkan:
+		{
+			ENGINE_ERROR("[RenderUtils::enableClipDistance] Vulkan not supported.");
+			break;
+		}
+		}
+	}
+
 	//! clearBuffers()
 	/*!
 	\param buffers a const RenderParameter - The buffers to clear
@@ -207,26 +265,26 @@ namespace Engine
 	{
 		switch (RenderAPI::getAPI())
 		{
-			case GraphicsAPI::None:
-			{
-				ENGINE_ERROR("[RenderUtils::clearBuffers] No rendering API selected.");
-				break;
-			}
-			case GraphicsAPI::OpenGL:
-			{
-				OpenGLRenderUtils::clearBuffers(buffers, colour);
-				break;
-			}
-			case GraphicsAPI::Direct3D:
-			{
-				ENGINE_ERROR("[RenderUtils::clearBuffers] Direct3D not supported.");
-				break;
-			}
-			case GraphicsAPI::Vulkan:
-			{
-				ENGINE_ERROR("[RenderUtils::clearBuffers] Vulkan not supported.");
-				break;
-			}
+		case GraphicsAPI::None:
+		{
+			ENGINE_ERROR("[RenderUtils::clearBuffers] No rendering API selected.");
+			break;
+		}
+		case GraphicsAPI::OpenGL:
+		{
+			OpenGLRenderUtils::clearBuffers(buffers, colour);
+			break;
+		}
+		case GraphicsAPI::Direct3D:
+		{
+			ENGINE_ERROR("[RenderUtils::clearBuffers] Direct3D not supported.");
+			break;
+		}
+		case GraphicsAPI::Vulkan:
+		{
+			ENGINE_ERROR("[RenderUtils::clearBuffers] Vulkan not supported.");
+			break;
+		}
 		}
 	}
 
@@ -238,26 +296,123 @@ namespace Engine
 	{
 		switch (RenderAPI::getAPI())
 		{
-			case GraphicsAPI::None:
-			{
-				ENGINE_ERROR("[RenderUtils::setDepthComparison] No rendering API selected.");
-				break;
-			}
-			case GraphicsAPI::OpenGL:
-			{
-				OpenGLRenderUtils::setDepthComparison(comparison);
-				break;
-			}
-			case GraphicsAPI::Direct3D:
-			{
-				ENGINE_ERROR("[RenderUtils::setDepthComparison] Direct3D not supported.");
-				break;
-			}
-			case GraphicsAPI::Vulkan:
-			{
-				ENGINE_ERROR("[RenderUtils::setDepthComparison] Vulkan not supported.");
-				break;
-			}
+		case GraphicsAPI::None:
+		{
+			ENGINE_ERROR("[RenderUtils::setDepthComparison] No rendering API selected.");
+			break;
+		}
+		case GraphicsAPI::OpenGL:
+		{
+			OpenGLRenderUtils::setDepthComparison(comparison);
+			break;
+		}
+		case GraphicsAPI::Direct3D:
+		{
+			ENGINE_ERROR("[RenderUtils::setDepthComparison] Direct3D not supported.");
+			break;
+		}
+		case GraphicsAPI::Vulkan:
+		{
+			ENGINE_ERROR("[RenderUtils::setDepthComparison] Vulkan not supported.");
+			break;
+		}
+		}
+	}
+
+	//! setStencilFunc()
+	/*!
+	\param comparison a const RenderParameter - The stencil test comparison value
+	\param ref an int - The reference value for the stencil testt
+	\param mask an uint32_t - The mask that is ANDed with the ref value and the stored stencil value
+	*/
+	void RenderUtils::setStencilFunc(const RenderParameter comparison, int ref, uint32_t mask)
+	{
+		switch (RenderAPI::getAPI())
+		{
+		case GraphicsAPI::None:
+		{
+			ENGINE_ERROR("[RenderUtils::setStencilFunc] No rendering API selected.");
+			break;
+		}
+		case GraphicsAPI::OpenGL:
+		{
+			OpenGLRenderUtils::setStencilFunc(comparison, ref, mask);
+			break;
+		}
+		case GraphicsAPI::Direct3D:
+		{
+			ENGINE_ERROR("[RenderUtils::setStencilFunc] Direct3D not supported.");
+			break;
+		}
+		case GraphicsAPI::Vulkan:
+		{
+			ENGINE_ERROR("[RenderUtils::setStencilFunc] Vulkan not supported.");
+			break;
+		}
+		}
+	}
+
+	//! setStencilOp()
+	/*!
+	\param sfail a const RenderParameter - The action to take when the stencil test fails
+	\param dpfail a const RenderParameter - The action to take when the stencil test passes but depth fails
+	\param dppass a const RenderParameter - The action to take when the stencil test passes
+	*/
+	void RenderUtils::setStencilOp(const RenderParameter sfail, const RenderParameter dpfail, const RenderParameter dppass)
+	{
+		switch (RenderAPI::getAPI())
+		{
+		case GraphicsAPI::None:
+		{
+			ENGINE_ERROR("[RenderUtils::setStencilOp] No rendering API selected.");
+			break;
+		}
+		case GraphicsAPI::OpenGL:
+		{
+			OpenGLRenderUtils::setStencilOp(sfail, dpfail, dppass);
+			break;
+		}
+		case GraphicsAPI::Direct3D:
+		{
+			ENGINE_ERROR("[RenderUtils::setStencilOp] Direct3D not supported.");
+			break;
+		}
+		case GraphicsAPI::Vulkan:
+		{
+			ENGINE_ERROR("[RenderUtils::setStencilOp] Vulkan not supported.");
+			break;
+		}
+		}
+	}
+
+	//! setStencilMask()
+	/*
+	\param mask an uint32_t - The mask
+	*/
+	void RenderUtils::setStencilMask(uint32_t mask)
+	{
+		switch (RenderAPI::getAPI())
+		{
+		case GraphicsAPI::None:
+		{
+			ENGINE_ERROR("[RenderUtils::setStencilMask] No rendering API selected.");
+			break;
+		}
+		case GraphicsAPI::OpenGL:
+		{
+			OpenGLRenderUtils::setStencilMask(mask);
+			break;
+		}
+		case GraphicsAPI::Direct3D:
+		{
+			ENGINE_ERROR("[RenderUtils::setStencilMask] Direct3D not supported.");
+			break;
+		}
+		case GraphicsAPI::Vulkan:
+		{
+			ENGINE_ERROR("[RenderUtils::setStencilMask] Vulkan not supported.");
+			break;
+		}
 		}
 	}
 
@@ -272,26 +427,26 @@ namespace Engine
 	{
 		switch (RenderAPI::getAPI())
 		{
-			case GraphicsAPI::None:
-			{
-				ENGINE_ERROR("[RenderUtils::setViewport] No rendering API selected.");
-				break;
-			}
-			case GraphicsAPI::OpenGL:
-			{
-				OpenGLRenderUtils::setViewport(x, y, width, height);
-				break;
-			}
-			case GraphicsAPI::Direct3D:
-			{
-				ENGINE_ERROR("[RenderUtils::setViewport] Direct3D not supported.");
-				break;
-			}
-			case GraphicsAPI::Vulkan:
-			{
-				ENGINE_ERROR("[RenderUtils::setViewport] Vulkan not supported.");
-				break;
-			}
+		case GraphicsAPI::None:
+		{
+			ENGINE_ERROR("[RenderUtils::setViewport] No rendering API selected.");
+			break;
+		}
+		case GraphicsAPI::OpenGL:
+		{
+			OpenGLRenderUtils::setViewport(x, y, width, height);
+			break;
+		}
+		case GraphicsAPI::Direct3D:
+		{
+			ENGINE_ERROR("[RenderUtils::setViewport] Direct3D not supported.");
+			break;
+		}
+		case GraphicsAPI::Vulkan:
+		{
+			ENGINE_ERROR("[RenderUtils::setViewport] Vulkan not supported.");
+			break;
+		}
 		}
 	}
 
@@ -303,26 +458,26 @@ namespace Engine
 	{
 		switch (RenderAPI::getAPI())
 		{
-			case GraphicsAPI::None:
-			{
-				ENGINE_ERROR("[RenderUtils::draw] No rendering API selected.");
-				break;
-			}
-			case GraphicsAPI::OpenGL:
-			{
-				OpenGLRenderUtils::draw(drawCount);
-				break;
-			}
-			case GraphicsAPI::Direct3D:
-			{
-				ENGINE_ERROR("[RenderUtils::draw] Direct3D not supported.");
-				break;
-			}
-			case GraphicsAPI::Vulkan:
-			{
-				ENGINE_ERROR("[RenderUtils::draw] Vulkan not supported.");
-				break;
-			}
+		case GraphicsAPI::None:
+		{
+			ENGINE_ERROR("[RenderUtils::draw] No rendering API selected.");
+			break;
+		}
+		case GraphicsAPI::OpenGL:
+		{
+			OpenGLRenderUtils::draw(drawCount);
+			break;
+		}
+		case GraphicsAPI::Direct3D:
+		{
+			ENGINE_ERROR("[RenderUtils::draw] Direct3D not supported.");
+			break;
+		}
+		case GraphicsAPI::Vulkan:
+		{
+			ENGINE_ERROR("[RenderUtils::draw] Vulkan not supported.");
+			break;
+		}
 		}
 	}
 
@@ -334,26 +489,26 @@ namespace Engine
 	{
 		switch (RenderAPI::getAPI())
 		{
-			case GraphicsAPI::None:
-			{
-				ENGINE_ERROR("[RenderUtils::drawMultiIndirect] No rendering API selected.");
-				break;
-			}
-			case GraphicsAPI::OpenGL:
-			{
-				OpenGLRenderUtils::drawMultiIndirect(commandsSize);
-				break;
-			}
-			case GraphicsAPI::Direct3D:
-			{
-				ENGINE_ERROR("[RenderUtils::drawMultiIndirect] Direct3D not supported.");
-				break;
-			}
-			case GraphicsAPI::Vulkan:
-			{
-				ENGINE_ERROR("[RenderUtils::drawMultiIndirect] Vulkan not supported.");
-				break;
-			}
+		case GraphicsAPI::None:
+		{
+			ENGINE_ERROR("[RenderUtils::drawMultiIndirect] No rendering API selected.");
+			break;
+		}
+		case GraphicsAPI::OpenGL:
+		{
+			OpenGLRenderUtils::drawMultiIndirect(commandsSize);
+			break;
+		}
+		case GraphicsAPI::Direct3D:
+		{
+			ENGINE_ERROR("[RenderUtils::drawMultiIndirect] Direct3D not supported.");
+			break;
+		}
+		case GraphicsAPI::Vulkan:
+		{
+			ENGINE_ERROR("[RenderUtils::drawMultiIndirect] Vulkan not supported.");
+			break;
+		}
 		}
 	}
 }
