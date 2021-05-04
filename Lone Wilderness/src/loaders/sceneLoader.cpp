@@ -22,10 +22,12 @@
 #include "scripts/engineScript.h"
 #include "scripts/testing/testScript.h"
 #include "scripts/FPSCounter.h"
+#include "scripts/gameTimer.h"
 #include "scripts/gameObjects/terrain.h"
 #include "scripts/gameObjects/placeObject.h"
 #include "scripts/gameObjects/environment.h"
 #include "scripts/gameObjects/water.h"
+#include "scripts/gameObjects/sun.h"
 
 #include "layers/defaultLayer.h"
 #include "layers/UILayer.h"
@@ -75,6 +77,8 @@ namespace Engine
 		else if (scriptName == "Water") return new Water;
 		else if (scriptName == "PlaceObject") return new PlaceObject;
 		else if (scriptName == "Environment") return new Environment;
+		else if (scriptName == "GameTimer") return new GameTimer;
+		else if (scriptName == "Sun") return new Sun;
 		return nullptr;
 	}
 

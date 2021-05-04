@@ -195,6 +195,11 @@ namespace Engine
 		return glm::distance(getWorldPosition(), otherTransform->getWorldPosition());
 	}
 
+	float Transform::distance(const glm::vec3 & pos)
+	{
+		return glm::distance(getWorldPosition(), pos);
+	}
+
 	// angle()
 	/*
 	\param otherTransform a Transform* - The other transform
@@ -205,6 +210,14 @@ namespace Engine
 		auto camDir = SceneManager::getActiveScene()->getMainCamera()->getCameraData().Front;
 		glm::vec3 playerCamVector = glm::normalize((getWorldPosition() + camDir) - getWorldPosition());
 		glm::vec3 playerObjVector = glm::normalize(otherTransform->getWorldPosition() - getWorldPosition());
+		return glm::degrees(glm::acos(glm::dot(playerCamVector, playerObjVector)));
+	}
+
+	float Transform::angle(const glm::vec3 & pos)
+	{
+		auto camDir = SceneManager::getActiveScene()->getMainCamera()->getCameraData().Front;
+		glm::vec3 playerCamVector = glm::normalize((getWorldPosition() + camDir) - getWorldPosition());
+		glm::vec3 playerObjVector = glm::normalize(pos - getWorldPosition());
 		return glm::degrees(glm::acos(glm::dot(playerCamVector, playerObjVector)));
 	}
 

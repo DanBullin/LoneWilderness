@@ -21,6 +21,7 @@ namespace Engine
 
 		RenderUtils::clearBuffers(RenderParameter::COLOR_AND_DEPTH_BUFFER_BIT, m_attachedScene->getMainCamera()->getClearColour());
 		RenderUtils::setDepthComparison(RenderParameter::LESS_THAN_OR_EQUAL);
+		RenderUtils::enableFaceCulling(true);
 
 		m_clipUBO->uploadData("u_plane", &reflecPlane);
 		m_clipUBO->uploadData("u_mode", &reflectMode);
@@ -38,6 +39,7 @@ namespace Engine
 
 		RenderUtils::clearBuffers(RenderParameter::COLOR_AND_DEPTH_BUFFER_BIT, m_attachedScene->getMainCamera()->getClearColour());
 		RenderUtils::setDepthComparison(RenderParameter::LESS_THAN_OR_EQUAL);
+		RenderUtils::enableFaceCulling(false);
 
 		m_clipUBO->uploadData("u_plane", &refracPlane);
 		m_clipUBO->uploadData("u_mode", &refractMode);
@@ -75,6 +77,8 @@ namespace Engine
 		m_reflectionFrameBuffer->bind();
 		
 		glm::vec3 pos = m_attachedScene->getMainCamera()->getParent()->getParentEntity()->getComponent<Transform>()->getWorldPosition();
+		//pos += m_attachedScene->getMainCamera()->getParent()->getComponent<Transform>()->getLocalPosition();
+
 		float distance = 2 * (pos.y - 20.f);
 		pos.y -= distance;
 		m_attachedScene->getMainCamera()->getParent()->getParentEntity()->getComponent<Transform>()->setLocalPosition(pos);

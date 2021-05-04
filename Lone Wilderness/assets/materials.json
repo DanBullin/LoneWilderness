@@ -58,8 +58,8 @@
 			"subTextures": [ "rockSubTexture", "SpecularNoneSubTexture" ], "cubeMapTextures": [], "shader": "blinnPhong", "tint": [ 1.0, 0.5, 0.0, 1.0], "shininess": 32
 		},
 		{
-			"name": "blueMaterial",
-			"subTextures": [ ], "cubeMapTextures": [], "shader": "flatColourShader", "tint": [ 0.0, 0.0, 1.0, 1.0], "shininess": 32
+			"name": "waterMaterial",
+			"subTextures": [ "reflectionSubTexture", "refractionSubTexture", "dudvSubTexture" ], "cubeMapTextures": [], "shader": "waterShader", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
 		},
 		{
 			"name": "reflectionMaterial",

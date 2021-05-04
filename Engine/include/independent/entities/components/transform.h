@@ -44,7 +44,9 @@ namespace Engine
 		void setScale(const glm::vec3& newScale); //!< Set the scale of the entity in the world
 
 		float distance(Transform* otherTransform); //!< Get the distance between this transform and the position of another
+		float distance(const glm::vec3& pos); //!< Get the distance between this transform and the position of another
 		float angle(Transform* otherTransform); //!< Get the angle between this transform and another based on camera's front direction
+		float angle(const glm::vec3& pos); //!< Get the angle between this transform and another based on camera's front direction
 
 		glm::mat4 getModelMatrix(); //!< Get the model matrix of the geometry
 	};

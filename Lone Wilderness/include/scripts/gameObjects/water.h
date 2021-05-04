@@ -21,6 +21,7 @@ class Water : public NativeScript
 {
 private:
 	static ChunkManager* s_chunkManager; //!< A chunk manager
+	float m_moveFactor;
 public:
 	Water(); //!< Constructor
 	~Water(); //!< Destructor

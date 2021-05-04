@@ -105,6 +105,12 @@
     <ClInclude Include="include\scripts\gameObjects\water.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\scripts\gameTimer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scripts\gameObjects\sun.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\layers\defaultLayer.cpp">
@@ -195,6 +201,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\scripts\gameObjects\water.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scripts\gameTimer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scripts\gameObjects\sun.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

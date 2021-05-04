@@ -141,6 +141,8 @@
     <ClInclude Include="include\scripts\gameObjects\player\hotbar.h" />
     <ClInclude Include="include\scripts\gameObjects\player\inventory.h" />
     <ClInclude Include="include\scripts\gameObjects\staticLight.h" />
+    <ClInclude Include="include\scripts\gameObjects\sun.h" />
+    <ClInclude Include="include\scripts\gameTimer.h" />
     <ClInclude Include="include\scripts\layerControl.h" />
     <ClInclude Include="include\scripts\loading\resourcesScript.h" />
     <ClInclude Include="include\scripts\mainMenu\cameraRotationScript.h" />
@@ -182,7 +184,9 @@
     <ClCompile Include="src\scripts\gameObjects\player\hotbar.cpp" />
     <ClCompile Include="src\scripts\gameObjects\player\inventory.cpp" />
     <ClCompile Include="src\scripts\gameObjects\staticLight.cpp" />
+    <ClCompile Include="src\scripts\gameObjects\sun.cpp" />
     <ClCompile Include="src\scripts\gameObjects\water.cpp" />
+    <ClCompile Include="src\scripts\gameTimer.cpp" />
     <ClCompile Include="src\scripts\layerControl.cpp" />
     <ClCompile Include="src\scripts\loading\resourcesScript.cpp" />
     <ClCompile Include="src\scripts\mainMenu\cameraRotationScript.cpp" />

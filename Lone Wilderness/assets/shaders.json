@@ -14,6 +14,18 @@
 			"orderImportance": 0
 		},
 		{ 
+			"name": "waterShader", 
+			"vertexShader": "assets/shaders/waterShader/vertex.vs", 
+			"fragmentShader": "assets/shaders/waterShader/fragment.fs", 
+			"geometryShader": "",
+			"tessControlShader": "",
+			"tessEvaluationShader": "",
+			"vertexArray": "vertexArray4",
+			"uniforms": [ "u_diffuseMap" ],
+			"uniformBuffers": [ "Camera", "CameraUBO", "Water", "WaterUBO" ],
+			"orderImportance": 0
+		},
+		{ 
 			"name": "lightSource", 
 			"vertexShader": "assets/shaders/lightSource/vertex.vs", 
 			"fragmentShader": "assets/shaders/lightSource/fragment.fs", 

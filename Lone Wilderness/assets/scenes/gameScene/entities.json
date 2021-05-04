@@ -2,6 +2,46 @@
 	"entities": 
 	[
 		{
+			"name": "ReflectionImage",
+			"layer": "UI",
+			"display": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 300.0, 300.0, 0.2 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 300.0, 300.0, 1.0 ]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender2D",
+					"materialName": "reflectionMaterial"
+				}
+			]
+		},
+		{
+			"name": "RefractionImage",
+			"layer": "UI",
+			"display": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 700.0, 300.0, 0.2 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 300.0, 300.0, 1.0 ]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender2D",
+					"materialName": "refractionMaterial"
+				}
+			]
+		},
+		{
 			"name": "Player1",
 			"layer": "UI",
 			"display": true,
@@ -13,20 +53,6 @@
 					"position": [ -2.0, 130.0, 0.0],
 					"rotation": [ 0.0, 0.0, 0.0],
 					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"name": "MeshRender1",
-					"type": "MeshRender3D",
-					"modelName": "cyborg",
-					"materialName": ""
-				},
-				{
-					"name": "Light1",
-					"type": "DirectionalLight",
-					"direction": [ -0.2, -1.0, -0.3 ],
-					"ambient": [ 0.01, 0.01, 0.01 ],
-					"diffuse": [ 0.8, 0.8, 0.8 ],
-					"specular": [ 0.1, 0.1, 0.1 ]
 				},
 				{
 					"name": "CController",
@@ -76,6 +102,48 @@
 				}
 			]
 		},
+		{
+            "name": "TimerEntity",
+            "layer": "Default",
+            "display": true,
+            "save": true,
+            "components": [
+                {
+                    "name": "Transform",
+                    "type": "Transform",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "forward": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                },
+                {
+                    "name": "Script1",
+                    "type": "NativeScript",
+                    "scriptName": "GameTimer"
+                }
+            ]
+        },
 		{
             "name": "EngineEnt",
             "layer": "Default",
@@ -173,23 +241,44 @@
             ]
         },
 		{
-			"name": "Cyborg1",
+			"name": "Tree1",
 			"layer": "Default",
-			"display": true,
+			"display": false,
 			"components": 
 			[
 				{
 					"name": "Transform",
 					"type": "Transform",
-					"position": [ -2.0, 12.0, 4.0 ],
+					"position": [ -2.0, 40.0, 4.0 ],
+					"rotation": [ 0.0, 0.0, 0.0],
+					"scale": [ 6.0, 6.0, 6.0 ]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender3D",
+					"modelName": "tree",
+					"materialName": ""
+				}
+			]
+		},
+		{
+			"name": "Rock1",
+			"layer": "Default",
+			"display": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ -2.0, 40.0, 4.0 ],
 					"rotation": [ 0.0, 0.0, 0.0],
 					"scale": [ 0.25, 0.25, 0.25 ]
 				},
 				{
 					"name": "MeshRender1",
 					"type": "MeshRender3D",
-					"modelName": "cyborg",
-					"materialName": "defaultMaterial3D"
+					"modelName": "rock",
+					"materialName": ""
 				}
 			]
 		},
@@ -230,7 +319,7 @@
 			]
 		},
 		{
-			"name": "LightSource6",
+			"name": "Sun",
 			"layer": "Default",
 			"display": true,
 			"components": 
@@ -238,7 +327,7 @@
 				{
 					"name": "Transform",
 					"type": "Transform",
-					"position": [ -12.5, 300.12, 2.3],
+					"position": [ 0.0, 500.12, 0.0 ],
 					"rotation": [ 0.0, 0.0, 0.0],
 					"scale": [ 5.0, 5.0, 5.0 ]
 				},
@@ -259,9 +348,17 @@
 					"quadratic": 0.032
 				},
 				{
+					"name": "Light1",
+					"type": "DirectionalLight",
+					"direction": [ -0.2, -1.0, -0.3 ],
+					"ambient": [ 0.01, 0.01, 0.01 ],
+					"diffuse": [ 0.8, 0.8, 0.8 ],
+					"specular": [ 0.1, 0.1, 0.1 ]
+				},
+				{
 					"name": "Script1",
 					"type": "NativeScript",
-					"scriptName": "StaticLight"
+					"scriptName": "Sun"
 				}
 			]
 		},
@@ -317,46 +414,6 @@
 					"offset": [ 0.0, 0.0 ],
 					"scale": [ 1.0, 0.5 ],
 					"useAbsoluteSize": true
-				}
-			]
-		},
-		{
-			"name": "ReflectionImage",
-			"layer": "UI",
-			"display": true,
-			"components": 
-			[
-				{
-					"name": "Transform",
-					"type": "Transform",
-					"position": [ 300.0, 300.0, 0.2 ],
-					"rotation": [ 0.0, 0.0, 0.0 ],
-					"scale": [ 300.0, 300.0, 1.0 ]
-				},
-				{
-					"name": "MeshRender1",
-					"type": "MeshRender2D",
-					"materialName": "reflectionMaterial"
-				}
-			]
-		},
-		{
-			"name": "RefractionImage",
-			"layer": "UI",
-			"display": true,
-			"components": 
-			[
-				{
-					"name": "Transform",
-					"type": "Transform",
-					"position": [ 700.0, 300.0, 0.2 ],
-					"rotation": [ 0.0, 0.0, 0.0 ],
-					"scale": [ 300.0, 300.0, 1.0 ]
-				},
-				{
-					"name": "MeshRender1",
-					"type": "MeshRender2D",
-					"materialName": "refractionMaterial"
 				}
 			]
 		},
@@ -486,7 +543,7 @@
 					"name": "MeshRender1",
 					"type": "MeshRender3D",
 					"modelName": "water",
-					"materialName": "blueMaterial"
+					"materialName": "waterMaterial"
 				}
 			]
 		},

@@ -26,6 +26,9 @@
 			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
 			
 		{ "name": "rockDiffuse", "filePath": "assets/textures/rock.jpg", "width": 0, "height": 0, "channels": 0, "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
+			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
+			
+		{ "name": "dudv", "filePath": "assets/textures/dudv.png", "width": 0, "height": 0, "channels": 0, "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
 			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false}
 			
 	],

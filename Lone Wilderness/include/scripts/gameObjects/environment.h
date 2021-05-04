@@ -32,7 +32,10 @@ private:
 	Model3D* m_rockModel;
 	std::vector<std::pair<glm::vec3, bool>> m_treePositions;
 	std::vector<BoundingBox> m_treeBB;
-	std::vector<glm::vec3> m_rockPositions;
+	std::vector<std::pair<glm::vec3, bool>> m_rockPositions;
+	std::vector<BoundingBox> m_rockBB;
+	Entity* m_treeHighlightedEntity;
+	Entity* m_rockHighlightedEntity;
 
 	bool existsInsideBB(BoundingBox bb, Transform* otherTransform);
 public:

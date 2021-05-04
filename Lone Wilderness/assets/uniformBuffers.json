@@ -10,6 +10,10 @@
 			"layout": [ "u_applyFog", "Bool" ]
 		},
 		{ 
+			"name": "WaterUBO",
+			"layout": [ "u_moveFactor", "Float" ]
+		},
+		{ 
 			"name": "BloomUBO",
 			"layout": [ "u_horizontal", "Bool", "u_enableBloom", "Bool" ]
 		},

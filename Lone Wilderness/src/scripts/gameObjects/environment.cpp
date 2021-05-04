@@ -14,12 +14,11 @@
 
 bool Environment::existsInsideBB(BoundingBox bb, Transform* otherTransform)
 {
-	auto camDir = SceneManager::getActiveScene()->getMainCamera()->getCameraData().Front * 4.f;
+	auto camDir = SceneManager::getActiveScene()->getMainCamera()->getCameraData().Front * 1.f;
 	glm::vec3 playerCamVector = otherTransform->getWorldPosition() + camDir;
 
 	if (playerCamVector.x > bb.TopLeft && playerCamVector.x < bb.TopRight && playerCamVector.z > bb.BottomLeft && playerCamVector.z < bb.BottomRight && playerCamVector.y < bb.Height)
 	{
-		ENGINE_INFO("YES");
 		return true;
 	}
 	return false;
@@ -27,6 +26,8 @@ bool Environment::existsInsideBB(BoundingBox bb, Transform* otherTransform)
 
 Environment::Environment()
 {
+	m_treeHighlightedEntity = nullptr;
+	m_rockHighlightedEntity = nullptr;
 }
 
 Environment::~Environment()
@@ -35,6 +36,8 @@ Environment::~Environment()
 
 void Environment::onAttach()
 {
+	m_treeHighlightedEntity = getParent()->getParentScene()->getEntity("Tree1");
+	m_rockHighlightedEntity = getParent()->getParentScene()->getEntity("Rock1");
 	m_treeModel = ResourceManager::getResource<Model3D>("tree");
 	m_rockModel = ResourceManager::getResource<Model3D>("rock");
 
@@ -56,7 +59,8 @@ void Environment::onAttach()
 		{
 			generatedPos = generatePoint();
 		}
-		m_rockPositions.push_back(generatedPos);
+		m_rockPositions.push_back({generatedPos, false});
+		m_rockBB.push_back(generateBB(m_rockPositions.back().first));
 	}
 }
 
@@ -69,9 +73,51 @@ void Environment::onPostUpdate(const float timestep, const float totalTime)
 
 	for (int i = 0; i < m_treePositions.size(); i++)
 	{
-		m_treePositions[i].second = existsInsideBB(m_treeBB[i], trans);
+		bool previous = m_treePositions[i].second;
+		float angle = trans->angle(m_treePositions[i].first);
+		float distance = trans->distance(m_treePositions[i].first);
+
+		if (angle < 10.f && distance < 16.f)
+			m_treePositions[i].second = true;
+		else
+			m_treePositions[i].second = false;
+
+		if (m_treePositions[i].second)
+		{
+			m_treeHighlightedEntity->getComponent<Transform>()->setLocalPosition(m_treePositions[i].first);
+			m_treeHighlightedEntity->setDisplay(true);
+			m_treeHighlightedEntity->setSelected(true);
+		}
+
+		if (!m_treePositions[i].second && previous)
+		{
+			m_treeHighlightedEntity->setSelected(false);
+		}
 	}
 
+	for (int i = 0; i < m_rockPositions.size(); i++)
+	{
+		bool previous = m_rockPositions[i].second;
+		float angle = trans->angle(m_rockPositions[i].first);
+		float distance = trans->distance(m_rockPositions[i].first);
+
+		if (angle < 10.f && distance < 16.f)
+			m_rockPositions[i].second = true;
+		else
+			m_rockPositions[i].second = false;
+
+		if (m_rockPositions[i].second)
+		{
+			m_rockHighlightedEntity->getComponent<Transform>()->setLocalPosition(m_rockPositions[i].first);
+			m_rockHighlightedEntity->setDisplay(true);
+			m_rockHighlightedEntity->setSelected(true);
+		}
+
+		if (!m_rockPositions[i].second && previous)
+		{
+			m_rockHighlightedEntity->setSelected(false);
+		}
+	}
 }
 
 void Environment::onKeyRelease(KeyReleasedEvent& e, const float timestep, const float totalTime)
@@ -94,7 +140,7 @@ void Environment::onRender(const Renderers renderer, const std::string& renderSt
 		{
 			for (auto& mesh : m_rockModel->getMeshes())
 			{
-				Renderer3D::submit("Rock", mesh.getGeometry(), mesh.getMaterial(), MathUtils::getModelMatrix(pos, { 0.25f, 0.25f, 0.25f }));
+				Renderer3D::submit("Rock", mesh.getGeometry(), mesh.getMaterial(), MathUtils::getModelMatrix(pos.first, { 0.25f, 0.25f, 0.25f }));
 			}
 		}
 	}
@@ -108,7 +154,20 @@ void Environment::onMousePress(MousePressedEvent & e, const float timestep, cons
 		{
 			if (m_treePositions[i].second)
 			{
+				m_treeHighlightedEntity->setDisplay(false);
+				m_treeHighlightedEntity->setSelected(false);
 				m_treePositions.erase(m_treePositions.begin()+i);
+				return;
+			}
+		}
+
+		for (int i = 0; i < m_rockPositions.size(); i++)
+		{
+			if (m_rockPositions[i].second)
+			{
+				m_rockHighlightedEntity->setDisplay(false);
+				m_rockHighlightedEntity->setSelected(false);
+				m_rockPositions.erase(m_rockPositions.begin() + i);
 				return;
 			}
 		}
@@ -129,5 +188,5 @@ glm::vec3 Environment::generatePoint()
 
 BoundingBox Environment::generateBB(glm::vec3 pos)
 {
-	return {pos.x - 2, pos.x + 2, pos.z - 2, pos.z + 2, pos.y + 10};
+	return {pos.x - 3, pos.x + 3, pos.z - 3, pos.z + 3, pos.y + 15};
 }
