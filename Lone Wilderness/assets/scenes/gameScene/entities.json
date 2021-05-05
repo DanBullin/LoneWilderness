@@ -2,46 +2,6 @@
 	"entities": 
 	[
 		{
-			"name": "ReflectionImage",
-			"layer": "UI",
-			"display": false,
-			"components": 
-			[
-				{
-					"name": "Transform",
-					"type": "Transform",
-					"position": [ 300.0, 300.0, 0.2 ],
-					"rotation": [ 0.0, 0.0, 0.0 ],
-					"scale": [ 300.0, 300.0, 1.0 ]
-				},
-				{
-					"name": "MeshRender1",
-					"type": "MeshRender2D",
-					"materialName": "reflectionMaterial"
-				}
-			]
-		},
-		{
-			"name": "RefractionImage",
-			"layer": "UI",
-			"display": false,
-			"components": 
-			[
-				{
-					"name": "Transform",
-					"type": "Transform",
-					"position": [ 700.0, 300.0, 0.2 ],
-					"rotation": [ 0.0, 0.0, 0.0 ],
-					"scale": [ 300.0, 300.0, 1.0 ]
-				},
-				{
-					"name": "MeshRender1",
-					"type": "MeshRender2D",
-					"materialName": "refractionMaterial"
-				}
-			]
-		},
-		{
 			"name": "Player1",
 			"layer": "UI",
 			"display": true,
@@ -237,6 +197,38 @@
                     "name": "Script1",
                     "type": "NativeScript",
                     "scriptName": "InventoryMenu"
+                }
+            ]
+        },
+		{
+            "name": "CraftingEnt",
+            "layer": "Default",
+            "display": true,
+            "save": true,
+            "components": [
+                {
+                    "name": "Transform",
+                    "type": "Transform",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                },
+                {
+                    "name": "Script1",
+                    "type": "NativeScript",
+                    "scriptName": "CraftingMenu"
                 }
             ]
         },

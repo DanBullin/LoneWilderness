@@ -53,6 +53,15 @@ void InventoryMenu::onKeyRelease(KeyReleasedEvent & e, const float timestep, con
 			WindowManager::getFocusedWindow()->setCursorInputMode(CursorInputMode::Disabled);
 			SceneManager::getActiveScene()->getEntity("Player1")->getComponent<CharacterController>()->setFrozen(false);
 			LayerControl::show("UI", scene);
+
+			for (int i = 0; i < INVENLIMIT; i++)
+			{
+				InventoryElement* element = static_cast<InventoryElement*>(getParent()->getParentScene()->getEntity("InvenItem" + std::to_string(i) + "Image")->getComponent<NativeScript>());
+				if (element)
+				{
+					element->resetSlot();
+				}
+			}
 		}
 		else if(LayerControl::isShow("UI", getParent()->getParentScene()))
 		{

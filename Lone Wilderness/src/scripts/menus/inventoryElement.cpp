@@ -102,6 +102,8 @@ void InventoryElement::resetSlot()
 {
 	m_inventorySlot = 0;
 	m_inventoryCurrent->setDisplay(false);
+	m_selectedTint = { 1.f, 1.f, 1.f, 1.f };
+	getParent()->getComponent<MeshRender2D>()->getMaterial()->setTint(m_selectedTint);
 }
 
 uint32_t InventoryElement::getInvenIndex()

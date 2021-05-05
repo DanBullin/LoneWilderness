@@ -12,6 +12,7 @@
 		{ "function": "Hotbar3", "key1": 51, "key2": 0 },
 		{ "function": "Hotbar4", "key1": 52, "key2": 0 },
 		{ "function": "Hotbar5", "key1": 53, "key2": 0 },
-		{ "function": "Inventory", "key1": 69, "key2": 0 }
+		{ "function": "Inventory", "key1": 69, "key2": 0 },
+		{ "function": "Crafting", "key1": 67, "key2": 0 }
 	]
 }

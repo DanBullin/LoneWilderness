@@ -1,0 +1,65 @@
+{
+	"entities": 
+	[
+		{
+			"name": "CraftingImage",
+			"layer": "Crafting",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 512.0, 384.0, -1.0 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 1024.0, 768.0, 1.0 ]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender2D",
+					"materialName": "invenBackgroundMaterial"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ 0.0, 0.0 ],
+					"scale": [ 1.0, 1.0 ],
+					"useAbsoluteSize": false
+				}
+			]
+		},
+		{
+			"name": "Crafting_InfoText",
+			"layer": "Crafting",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 430.0, 100.0, 0.5 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 400.0, 400.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "CRAFTING",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu40B"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ -120.0, -300.0 ],
+					"scale": [ 1.0, 0.5 ],
+					"useAbsoluteSize": true
+				}
+			]
+		}
+	]
+}

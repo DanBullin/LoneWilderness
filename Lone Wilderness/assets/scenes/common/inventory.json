@@ -1068,7 +1068,7 @@
 		{
 			"name": "inventoryCurrent",
 			"layer": "Inven",
-			"display": true,
+			"display": false,
 			"components": 
 			[
 				{

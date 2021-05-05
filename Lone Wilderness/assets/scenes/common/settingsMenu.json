@@ -241,6 +241,80 @@
 			]
 		},
 		{
+			"name": "Settings_Inventory",
+			"layer": "Settings",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 45.0, 200.0, 0.5 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 197.0, 17.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "Inventory: _",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu24"
+				},
+				{
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "KeybindText",
+					"playerConfig": "Inventory"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.0, 0.5 ],
+					"offset": [ 50.0, 75.0 ],
+					"scale": [ 1.0, 1.0 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "Settings_Crafting",
+			"layer": "Settings",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 45.0, 200.0, 0.5 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 197.0, 17.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "Crafting: _",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu24"
+				},
+				{
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "KeybindText",
+					"playerConfig": "Crafting"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.0, 0.5 ],
+					"offset": [ 50.0, 125.0 ],
+					"scale": [ 1.0, 1.0 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
 			"name": "Settings_Quit",
 			"layer": "Settings",
 			"display": true,

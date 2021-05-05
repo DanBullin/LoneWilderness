@@ -16,6 +16,11 @@
             "active": false,
             "displayed": false
         },
+		{
+            "name": "Crafting",
+            "active": false,
+            "displayed": false
+        },
         {
             "name": "Pause",
             "active": false,

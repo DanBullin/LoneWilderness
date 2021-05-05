@@ -21,6 +21,7 @@
 #include "scripts/menus/inventoryElement.h"
 #include "scripts/menus/settingsScript.h"
 #include "scripts/menus/inventoryMenu.h"
+#include "scripts/menus/craftingMenu.h"
 #include "scripts/engineScript.h"
 #include "scripts/testing/testScript.h"
 #include "scripts/FPSCounter.h"
@@ -36,6 +37,7 @@
 #include "layers/pauseLayer.h"
 #include "layers/settingsLayer.h"
 #include "layers/inventoryLayer.h"
+#include "layers/craftingLayer.h"
 
 #include "independent/rendering/renderPasses/passes/firstPass.h"
 #include "independent/rendering/renderPasses/passes/secondPass.h"
@@ -83,6 +85,7 @@ namespace Engine
 		else if (scriptName == "GameTimer") return new GameTimer;
 		else if (scriptName == "Sun") return new Sun;
 		else if (scriptName == "InventoryMenu") return new InventoryMenu;
+		else if (scriptName == "CraftingMenu") return new CraftingMenu;
 		else if (scriptName == "InventoryElement")
 		{
 			if (scriptData.empty())
@@ -106,6 +109,7 @@ namespace Engine
 		else if (layerName == "Settings") return new SettingsLayer;
 		else if (layerName == "Pause") return new PauseLayer;
 		else if (layerName == "Inven") return new InventoryLayer;
+		else if (layerName == "Crafting") return new CraftingLayer;
 		else return nullptr;
 	}
 
