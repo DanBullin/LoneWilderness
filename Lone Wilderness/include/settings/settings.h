@@ -21,7 +21,7 @@ namespace Engine
 		*/
 		enum ConfigData
 		{
-			None, MoveForward, MoveLeft, MoveRight, MoveBack, Pause, FullscreenWindow, Hotbar1, Hotbar2, Hotbar3, Hotbar4, Hotbar5
+			None, MoveForward, MoveLeft, MoveRight, MoveBack, Pause, FullscreenWindow, Hotbar1, Hotbar2, Hotbar3, Hotbar4, Hotbar5, Inventory
 		};
 
 		//! toType()
@@ -42,6 +42,7 @@ namespace Engine
 			if (configType == "Hotbar3") return ConfigData::Hotbar3;
 			if (configType == "Hotbar4") return ConfigData::Hotbar4;
 			if (configType == "Hotbar5") return ConfigData::Hotbar5;
+			if (configType == "Inventory") return ConfigData::Inventory;
 			else return ConfigData::None;
 		}
 	}

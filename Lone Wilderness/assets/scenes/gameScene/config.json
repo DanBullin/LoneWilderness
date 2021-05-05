@@ -11,6 +11,11 @@
             "active": true,
             "displayed": true
         },
+		{
+            "name": "Inven",
+            "active": false,
+            "displayed": false
+        },
         {
             "name": "Pause",
             "active": false,

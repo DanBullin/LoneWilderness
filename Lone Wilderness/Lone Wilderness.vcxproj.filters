@@ -114,6 +114,12 @@
     <ClInclude Include="include\scripts\gameObjects\player\item.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\scripts\menus\inventoryMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\layers\inventoryLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\layers\defaultLayer.cpp">
@@ -213,6 +219,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\scripts\gameObjects\player\item.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scripts\menus\inventoryMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\layers\inventoryLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

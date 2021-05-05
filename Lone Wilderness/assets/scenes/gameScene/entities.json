@@ -209,6 +209,38 @@
             ]
         },
 		{
+            "name": "InvenEnt",
+            "layer": "Default",
+            "display": true,
+            "save": true,
+            "components": [
+                {
+                    "name": "Transform",
+                    "type": "Transform",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                },
+                {
+                    "name": "Script1",
+                    "type": "NativeScript",
+                    "scriptName": "InventoryMenu"
+                }
+            ]
+        },
+		{
             "name": "SettingsMenuEnt",
             "layer": "Default",
             "display": true,

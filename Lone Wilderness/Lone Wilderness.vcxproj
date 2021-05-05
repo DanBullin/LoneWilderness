@@ -132,6 +132,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\layers\inventoryLayer.h" />
     <ClInclude Include="include\layers\pauseLayer.h" />
     <ClInclude Include="include\layers\settingsLayer.h" />
     <ClInclude Include="include\scripts\engineScript.h" />
@@ -153,6 +154,7 @@
     <ClInclude Include="include\layers\defaultLayer.h" />
     <ClInclude Include="include\layers\UILayer.h" />
     <ClInclude Include="include\loaders\sceneLoader.h" />
+    <ClInclude Include="include\scripts\menus\inventoryMenu.h" />
     <ClInclude Include="include\scripts\menus\mainMenuText.h" />
     <ClInclude Include="include\scripts\menus\pauseMenuText.h" />
     <ClInclude Include="include\scripts\menus\pauseScript.h" />
@@ -174,6 +176,7 @@
   <ItemGroup>
     <ClCompile Include="src\gameApplication.cpp" />
     <ClCompile Include="src\layers\defaultLayer.cpp" />
+    <ClCompile Include="src\layers\inventoryLayer.cpp" />
     <ClCompile Include="src\layers\pauseLayer.cpp" />
     <ClCompile Include="src\layers\settingsLayer.cpp" />
     <ClCompile Include="src\layers\UILayer.cpp" />
@@ -195,6 +198,7 @@
     <ClCompile Include="src\scripts\gameObjects\placeObject.cpp" />
     <ClCompile Include="src\scripts\gameObjects\player.cpp" />
     <ClCompile Include="src\scripts\gameObjects\terrain.cpp" />
+    <ClCompile Include="src\scripts\menus\inventoryMenu.cpp" />
     <ClCompile Include="src\scripts\menus\mainMenuText.cpp" />
     <ClCompile Include="src\scripts\menus\pauseMenuText.cpp" />
     <ClCompile Include="src\scripts\menus\pauseScript.cpp" />

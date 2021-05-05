@@ -70,3 +70,13 @@ void LayerControl::deactivate(const std::string & layerName, Scene* scene)
 		layer->setActive(false);
 	}
 }
+
+bool LayerControl::isShow(const std::string& layerName, Scene* scene)
+{
+	auto layer = scene->getLayerManager()->getLayer(layerName);
+	if (layer)
+	{
+		return layer->getDisplayed();
+	}
+	return false;
+}

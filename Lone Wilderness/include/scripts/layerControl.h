@@ -25,5 +25,6 @@ public:
 	static void show(const std::string& layerName, Scene* scene); //!< Hide a layer
 	static void activate(const std::string& layerName, Scene* scene); //!< Activate a layer
 	static void deactivate(const std::string& layerName, Scene* scene); //!< Deactivate a layer
+	static bool isShow(const std::string& layerName, Scene* scene); //!< Is the layer enabled
 };
 #endif

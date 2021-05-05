@@ -46,6 +46,10 @@
 			"cubeMapTextures": [], "shader": "flatColourQuad", "tint": [ 0.0, 0.0, 0.0, 0.7 ], "shininess": 32
 		},
 		{
+			"name": "invenBackgroundMaterial", "subTextures": [ "defaultSubTexture" ],
+			"cubeMapTextures": [], "shader": "flatColourQuad", "tint": [ 0.0, 0.0, 0.0, 0.3 ], "shininess": 32
+		},
+		{
 			"name": "BarkMaterial", "subTextures": [ "barkSubTexture", "SpecularNoneSubTexture"  ],
 			"cubeMapTextures": [], "shader": "blinnPhong", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
 		},
@@ -92,6 +96,10 @@
 		{
 			"name": "axeMaterial",
 			"subTextures": [ "axeSubTexture" ], "cubeMapTextures": [], "shader": "quad", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
+		},
+		{
+			"name": "inventoryUIMaterial",
+			"subTextures": [ "inventoryUISubTexture" ], "cubeMapTextures": [], "shader": "quad", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
 		}
 	]
 }

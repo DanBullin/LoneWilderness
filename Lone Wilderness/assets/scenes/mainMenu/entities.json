@@ -63,7 +63,7 @@
 			]
 		},
 		{
-			"name": "Continue",
+			"name": "Play",
 			"layer": "UI",
 			"display": true,
 			"components": 
@@ -78,7 +78,7 @@
 				{
 					"name": "Text1",
 					"type": "Text",
-					"text": "Continue",
+					"text": "Play",
 					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
 					"fontName": "Ubuntu40B"
 				},
@@ -91,42 +91,7 @@
 					"name": "UIElement",
 					"type": "UIElement",
 					"anchor": [ 0.5, 0.5 ],
-					"offset": [ -86.0, -100.0 ],
-					"scale": [ 1.0, 1.0 ],
-					"useAbsoluteSize": true
-				}
-			]
-		},
-		{
-			"name": "New",
-			"layer": "UI",
-			"display": true,
-			"components": 
-			[
-				{
-					"name": "Transform",
-					"type": "Transform",
-					"position": [ 240.0, 130.0, 1.0 ],
-					"rotation": [ 0.0, 0.0, 0.0 ],
-					"scale": [ 226.0, 28.0, 1.0 ]
-				},
-				{
-					"name": "Text1",
-					"type": "Text",
-					"text": "New World",
-					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
-					"fontName": "Ubuntu40B"
-				},
-				{
-					"name": "Script1",
-					"type": "NativeScript",
-					"scriptName": "MainMenuText"
-				},
-				{
-					"name": "UIElement",
-					"type": "UIElement",
-					"anchor": [ 0.5, 0.5 ],
-					"offset": [ -113.0, 0.0 ],
+					"offset": [ -37.5, -100.0 ],
 					"scale": [ 1.0, 1.0 ],
 					"useAbsoluteSize": true
 				}
@@ -179,58 +144,6 @@
 					"type": "UIElement",
 					"anchor": [ 0.5, 0.5 ],
 					"offset": [ -79.0, 100.0 ],
-					"scale": [ 1.0, 1.0 ],
-					"useAbsoluteSize": true
-				}
-            ]
-        },
-		{
-            "name": "MM_Credits",
-            "layer": "UI",
-            "display": true,
-            "save": true,
-            "components": [
-                {
-                    "name": "Transform",
-                    "type": "Transform",
-                    "position": [
-                        432.0,
-                        450.0,
-                        0.5
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        136.0,
-                        28.0,
-                        1.0
-                    ]
-                },
-                {
-                    "name": "Text1",
-                    "type": "Text",
-                    "text": "Credits",
-                    "colour": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "fontName": "Ubuntu40B"
-                },
-                {
-                    "name": "Script1",
-                    "type": "NativeScript",
-                    "scriptName": "MainMenuText"
-                },
-				{
-					"name": "UIElement",
-					"type": "UIElement",
-					"anchor": [ 0.5, 0.5 ],
-					"offset": [ -68.0, 200.0 ],
 					"scale": [ 1.0, 1.0 ],
 					"useAbsoluteSize": true
 				}

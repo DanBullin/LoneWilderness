@@ -72,15 +72,11 @@ void MainMenuText::onMouseRelease(MouseReleasedEvent& e, const float timestep, c
 
 	if (e.getButton() == Mouse::LEFTBUTTON && containsMouse)
 	{
-		if (entityName == "Continue")
+		if (entityName == "Play")
 		{
 			loadScene("gameScene");
 			WindowManager::getFocusedWindow()->setCursorInputMode(CursorInputMode::Disabled);
 			//static_cast<StartingMessage*>(SceneManager::getActiveScene()->getEntity("StartingMessageEnt1")->getComponent<NativeScript>())->play();
-		}
-		else if (getParent()->getName() == "New")
-		{
-			
 		}
 		else if (getParent()->getName() == "MM_Settings")
 		{
@@ -88,10 +84,6 @@ void MainMenuText::onMouseRelease(MouseReleasedEvent& e, const float timestep, c
 			LayerControl::deactivate("UI", scene);
 			LayerControl::show("Settings", scene);
 			LayerControl::activate("Settings", scene);
-		}
-		else if (getParent()->getName() == "MM_Credits")
-		{
-			
 		}
 		else if (getParent()->getName() == "MM_Quit")
 		{

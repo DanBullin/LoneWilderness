@@ -19,6 +19,7 @@
 #include "scripts/mainMenu/cameraRotationScript.h"
 #include "scripts/menus/pauseScript.h"
 #include "scripts/menus/settingsScript.h"
+#include "scripts/menus/inventoryMenu.h"
 #include "scripts/engineScript.h"
 #include "scripts/testing/testScript.h"
 #include "scripts/FPSCounter.h"
@@ -33,6 +34,7 @@
 #include "layers/UILayer.h"
 #include "layers/pauseLayer.h"
 #include "layers/settingsLayer.h"
+#include "layers/inventoryLayer.h"
 
 #include "independent/rendering/renderPasses/passes/firstPass.h"
 #include "independent/rendering/renderPasses/passes/secondPass.h"
@@ -79,6 +81,7 @@ namespace Engine
 		else if (scriptName == "Environment") return new Environment;
 		else if (scriptName == "GameTimer") return new GameTimer;
 		else if (scriptName == "Sun") return new Sun;
+		else if (scriptName == "InventoryMenu") return new InventoryMenu;
 		return nullptr;
 	}
 
@@ -94,6 +97,7 @@ namespace Engine
 		else if (layerName == "UI") return new UILayer;
 		else if (layerName == "Settings") return new SettingsLayer;
 		else if (layerName == "Pause") return new PauseLayer;
+		else if (layerName == "Inven") return new InventoryLayer;
 		else return nullptr;
 	}
 

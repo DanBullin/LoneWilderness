@@ -47,6 +47,9 @@
 			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
 			
 		{ "name": "stone", "filePath": "assets/textures/UI/stone.png", "width": 0, "height": 0, "channels": 0, "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
+			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
+			
+		{ "name": "inventoryUI", "filePath": "assets/textures/UI/inventoryUI.png", "width": 0, "height": 0, "channels": 0, "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
 			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false}
 			
 	],

@@ -54,6 +54,9 @@
 		},
 		{ 
 			"name": "axeSubTexture", "baseTextureName": "axe", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
+		},
+		{ 
+			"name": "inventoryUISubTexture", "baseTextureName": "inventoryUI", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
 		}
 	]
 }

@@ -39,7 +39,7 @@ void PauseScript::onKeyRelease(KeyReleasedEvent & e, const float timestep, const
 {
 	Scene* scene = getParent()->getParentScene();
 
-	if (e.getKeyCode() == Settings::getKeys(PlayerConfig::Pause).first)
+	if (e.getKeyCode() == Settings::getKeys(PlayerConfig::Pause).first && LayerControl::isShow("UI", getParent()->getParentScene()))
 	{
 		LayerControl::show("Pause", scene);
 		LayerControl::activate("Pause", scene);
