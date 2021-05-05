@@ -30,7 +30,7 @@
 			
 		{ "name": "DUDV", "filePath": "assets/textures/dudv.png", "width": 0, "height": 0, "channels": 0, "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
 			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
-			
+
 		{ "name": "log", "filePath": "assets/textures/UI/log.png", "width": 0, "height": 0, "channels": 0, "wrapS": "Repeat", "wrapT": "Repeat", "wrapR": "Repeat", 
 			"minFilter": "Linear", "maxFilter": "Linear", "gammaCorrect": false, "flipUV": false},
 			

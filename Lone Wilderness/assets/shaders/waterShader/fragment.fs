@@ -10,7 +10,6 @@ in VS_OUT {
 	flat int TexUnit3;
 	vec4 ClipSpace;
 	vec2 TexCoords;
-	vec3 toCameraVector;
 } fs_in;
 
 layout(std140) uniform Water
@@ -28,9 +27,9 @@ void main()
 	vec2 refractTexCoords = vec2(NDC.x, NDC.y);
 	vec2 reflecTexCoords = vec2(NDC.x, -NDC.y);
 	
-	vec2 distortion1 = (texture(u_diffuseMap[fs_in.TexUnit3], vec2(fs_in.TexCoords.x + u_moveFactor, fs_in.TexCoords.y)).rg * 2.0 - 1.0) * waveStrength;
-	vec2 distortion2 = (texture(u_diffuseMap[fs_in.TexUnit3], vec2(-fs_in.TexCoords.x + u_moveFactor, fs_in.TexCoords.y + u_moveFactor)).rg * 2.0 - 1.0) * waveStrength;
-	vec2 totalDistortion = distortion1 + distortion2;
+	vec2 distortedTexCoords = texture(u_diffuseMap[fs_in.TexUnit3], vec2(fs_in.TexCoords.x + u_moveFactor, fs_in.TexCoords.y)).rg * 0.1;
+	distortedTexCoords = fs_in.TexCoords + vec2(distortedTexCoords.x, distortedTexCoords.y + u_moveFactor);
+	vec2 totalDistortion = (texture(u_diffuseMap[fs_in.TexUnit3], distortedTexCoords).rg * 2.0 - 1.0) * waveStrength;
 	
 	refractTexCoords += totalDistortion;
 	reflecTexCoords += totalDistortion;
@@ -42,11 +41,7 @@ void main()
 	vec4 reflectColour = texture(u_diffuseMap[fs_in.TexUnit1], reflecTexCoords);
 	vec4 refractColour = texture(u_diffuseMap[fs_in.TexUnit2], refractTexCoords);
 	
-	vec3 viewVector = normalize(fs_in.toCameraVector);
-	float refractiveFactor = dot(viewVector, vec3(0.0, 1.0, 0.0));
-	refractiveFactor = pow(refractiveFactor, 10.0);
-	
-    FragColor = mix(reflectColour, refractColour, refractiveFactor);
+    FragColor = mix(reflectColour, refractColour, 0.5);
     FragColor = mix(FragColor, vec4(0.0, 0.3, 0.5, 1.0), 0.2);
 	BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
 }

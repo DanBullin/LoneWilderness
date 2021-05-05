@@ -18,7 +18,6 @@ out VS_OUT {
 	flat int TexUnit3;
 	vec4 ClipSpace;
 	vec2 TexCoords;
-	vec3 toCameraVector;
 } vs_out;
 
 layout(std140) uniform Camera
@@ -41,8 +40,5 @@ void main()
 	//vs_out.TexCoords = vec2(aPos.x/2.0 + 0.5, aPos.y/2.0 + 0.5) * tiling;
 	vs_out.TexCoords = aTexCoords;
 	
-	vec4 worldPos = aModel * vec4(aPos, 1.0);
-	vs_out.toCameraVector = u_viewPos - worldPos.xyz;
-
     gl_Position = vs_out.ClipSpace;
 }
