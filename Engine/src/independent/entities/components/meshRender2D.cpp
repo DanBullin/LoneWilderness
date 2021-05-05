@@ -105,4 +105,23 @@ namespace Engine
 		else
 			ENGINE_ERROR("[MeshRender2D::onRender] This mesh render does not have a valid material attached. Entity Name: {0}.", getParent()->getName());
 	}
+
+	bool MeshRender2D::containsPoint(const glm::vec2 point)
+	{
+		// Need to convert bottom left origin to calc top left and right, manually input scale and tune values size isnt known
+		auto transform = getParent()->getComponent<Transform>();
+
+		if (transform)
+		{
+			glm::vec2 pos = { transform->getWorldPosition().x, transform->getWorldPosition().y };
+			glm::vec2 topLeft = pos - glm::vec2(transform->getScale().x / 2.f, transform->getScale().y / 2.f);
+			glm::vec2 bottomRight = pos + glm::vec2(transform->getScale().x / 2.f, transform->getScale().y / 2.f);
+
+			if (point.x >= topLeft.x && point.x <= bottomRight.x)
+				if (point.y >= topLeft.y && point.y <= bottomRight.y)
+					return true;
+		}
+
+		return false;
+	}
 }

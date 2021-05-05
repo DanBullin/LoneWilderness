@@ -33,6 +33,8 @@ namespace Engine
 		Material* getMaterial(); //!< Get the material
 
 		void onRender(); //!< A render submission command
+
+		bool containsPoint(const glm::vec2 point); //!< Contains a point in the geometry
 	};
 }
 #endif

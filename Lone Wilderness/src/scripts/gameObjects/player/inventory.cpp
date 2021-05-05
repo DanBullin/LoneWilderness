@@ -142,6 +142,14 @@ bool Inventory::containsItem(Items::Items itemType, const uint32_t state, const 
 	return false;
 }
 
+void Inventory::swapItems(const uint32_t index1, const uint32_t index2)
+{
+	auto item1 = m_items.at(index1);
+	auto item2 = m_items.at(index2);
+	m_items.at(index1) = item2;
+	m_items.at(index2) = item1;
+}
+
 void Inventory::print()
 {
 	for (int i = 0; i < INVENLIMIT; i++)

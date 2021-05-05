@@ -38,6 +38,8 @@ public:
 	bool containsItem(Items::Items itemType, const uint32_t state); //!< Contains item
 	bool containsItem(Items::Items itemType, const uint32_t state, const int amount); //!< Contains item
 
+	void swapItems(const uint32_t index1, const uint32_t index2);
+
 	void print();
 };
 #endif

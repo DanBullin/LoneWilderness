@@ -83,7 +83,13 @@ namespace Engine
 		else if (scriptName == "GameTimer") return new GameTimer;
 		else if (scriptName == "Sun") return new Sun;
 		else if (scriptName == "InventoryMenu") return new InventoryMenu;
-		else if (scriptName == "InventoryElement") return new InventoryElement;
+		else if (scriptName == "InventoryElement")
+		{
+			if (scriptData.empty())
+				return new InventoryElement;
+			else
+				return new InventoryElement(scriptData);
+		}
 		return nullptr;
 	}
 

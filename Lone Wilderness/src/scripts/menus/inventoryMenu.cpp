@@ -14,6 +14,7 @@
 #include "scripts/layerControl.h"
 #include "scripts/gameObjects/player.h"
 #include "scripts/gameObjects/player/inventory.h"
+#include "scripts/menus/inventoryElement.h"
 
 //! InventoryMenu()
 InventoryMenu::InventoryMenu()
@@ -110,6 +111,37 @@ void InventoryMenu::onPreUpdate(const float timestep, const float totalTime)
 				}
 			}
 		}
+	}
+
+	InventoryElement* slot1 = nullptr;
+	InventoryElement* slot2 = nullptr;
+	for (int i = 0; i < INVENLIMIT; i++)
+	{
+		InventoryElement* element = static_cast<InventoryElement*>(getParent()->getParentScene()->getEntity("InvenItem" + std::to_string(i) + "Image")->getComponent<NativeScript>());
+		if (element)
+		{
+			if (element->getSlot())
+			{
+				if (!slot1)
+				{
+					slot1 = element;
+					continue;
+				}
+				if (!slot2)
+				{
+					slot2 = element;
+					continue;
+				}
+			}
+		}
+	}
+
+	if (slot1 && slot2)
+	{
+		// Swap
+		m_player->getInventory()->swapItems(slot1->getInvenIndex(), slot2->getInvenIndex());
+		slot1->resetSlot();
+		slot2->resetSlot();
 	}
 
 }
