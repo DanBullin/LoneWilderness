@@ -12,6 +12,7 @@
 #include "independent/rendering/renderers/renderer2D.h"
 #include "independent/utils/mathUtils.h"
 #include "scripts/gameObjects/terrain.h"
+#include "settings/settings.h"
 
 //! Player()
 Player::Player()
@@ -28,6 +29,9 @@ Player::~Player()
 {
 	if (m_hotbar) delete m_hotbar;
 	m_hotbar = nullptr;
+
+	if (m_inventory) delete m_inventory;
+	m_inventory = nullptr;
 }
 
 
@@ -35,6 +39,9 @@ void Player::onAttach()
 {
 	m_controller = getParent()->getComponent<CharacterController>();
 	m_hotbar = new Hotbar;
+	m_inventory = new Inventory;
+
+	m_inventory->onAttach();
 }
 
 //! onPreUpdate()
@@ -45,6 +52,7 @@ void Player::onAttach()
 void Player::onPreUpdate(const float timestep, const float totalTime)
 {
 	m_hotbar->onPreUpdate(timestep, totalTime);
+	m_inventory->onPreUpdate(timestep, totalTime);
 
 	Transform* trans = getParent()->getComponent<Transform>();
 	Terrain* terrain = static_cast<Terrain*>(getParent()->getParentScene()->getEntity("Terrain1")->getComponent<NativeScript>());
@@ -72,36 +80,25 @@ void Player::onKeyPress(KeyPressedEvent& e, const float timestep, const float to
 {
 	m_hotbar->onKeyPress(e, timestep, totalTime);
 
-	if (e.getKeyCode() == Keys::U)
-	{
-		SceneManager::getActiveScene()->getEntity("NewObj0")->setSelected(true);
-	}
-
-	if (e.getKeyCode() == Keys::W)
+	if (e.getKeyCode() == Settings::getKeys(PlayerConfig::MoveForward).first)
 	{
 		if (m_controller)
 			m_controller->move(FORWARD, timestep);
 	}
-	if (e.getKeyCode() == Keys::A)
+	if (e.getKeyCode() == Settings::getKeys(PlayerConfig::MoveLeft).first)
 	{
 		if (m_controller)
 			m_controller->move(LEFT, timestep);
 	}
-	if (e.getKeyCode() == Keys::S)
+	if (e.getKeyCode() == Settings::getKeys(PlayerConfig::MoveBack).first)
 	{
 		if (m_controller)
 			m_controller->move(BACKWARD, timestep);
 	}
-	if (e.getKeyCode() == Keys::D)
+	if (e.getKeyCode() == Settings::getKeys(PlayerConfig::MoveRight).first)
 	{
 		if (m_controller)
 			m_controller->move(RIGHT, timestep);
-	}
-
-	if (e.getKeyCode() == Keys::LEFT_CONTROL)
-	{
-		if (m_controller)
-			m_controller->move(DOWN, timestep);
 	}
 }
 
@@ -113,9 +110,23 @@ void Player::onKeyPress(KeyPressedEvent& e, const float timestep, const float to
 */
 void Player::onKeyRelease(KeyReleasedEvent & e, const float timestep, const float totalTime)
 {
-	if (e.getKeyCode() == Keys::B)
+	if (e.getKeyCode() == Keys::J)
 	{
-		ResourceManager::setConfigValue(Config::ApplyFog, !ResourceManager::getConfigValue(Config::ApplyFog));
+		m_inventory->print();
+	}
+
+	if (e.getKeyCode() == Keys::K)
+	{
+		m_inventory->giveItem(Items::Log, 0, 7);
+		m_inventory->giveItem(Items::Axe, 1, 12);
+		m_inventory->giveItem(Items::Axe, 2, 3);
+		m_inventory->giveItem(Items::Axe, 3, 3);
+		m_inventory->giveItem(Items::Axe, 4, 3);
+	}
+
+	if (e.getKeyCode() == Keys::L)
+	{
+		m_inventory->takeItem(Items::Log, 0, 7);
 	}
 }
 
@@ -178,4 +189,14 @@ uint32_t Player::getHealth()
 uint32_t Player::getAttackDamage()
 {
 	return m_atkDmg;
+}
+
+Hotbar * Player::getHotbar()
+{
+	return m_hotbar;
+}
+
+Inventory * Player::getInventory()
+{
+	return m_inventory;
 }

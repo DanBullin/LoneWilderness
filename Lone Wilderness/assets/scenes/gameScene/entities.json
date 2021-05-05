@@ -474,6 +474,146 @@
 			]
 		},
 		{
+			"name": "Item0Image",
+			"layer": "UI",
+			"display": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 100.0, 50.5, 0.2 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 64.0, 62.0, 1.0 ]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender2D",
+					"materialName": "logMaterial"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.0, 0.5 ],
+					"offset": [ 35.0, -132.0 ],
+					"scale": [ -1, -1 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "Item1Image",
+			"layer": "UI",
+			"display": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 100.0, 100.5, 0.2 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 64.0, 62.0, 1.0 ]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender2D",
+					"materialName": "axeMaterial"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.0, 0.5 ],
+					"offset": [ 35.0, -66.0 ],
+					"scale": [ -1, -1 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "Item2Image",
+			"layer": "UI",
+			"display": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 100.0, 200.5, 0.2 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 64.0, 62.0, 1.0 ]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender2D",
+					"materialName": "stoneMaterial"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.0, 0.5 ],
+					"offset": [ 35.0, 0.0 ],
+					"scale": [ -1, -1 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "Item3Image",
+			"layer": "UI",
+			"display": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 100.0, 300.5, 0.2 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 64.0, 62.0, 1.0 ]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender2D",
+					"materialName": "logMaterial"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.0, 0.5 ],
+					"offset": [ 35.0, 66.0 ],
+					"scale": [ -1, -1 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "Item4Image",
+			"layer": "UI",
+			"display": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 100.0, 400.5, 0.2 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 64.0, 62.0, 1.0 ]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender2D",
+					"materialName": "axeMaterial"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.0, 0.5 ],
+					"offset": [ 35.0, 132.0 ],
+					"scale": [ -1, -1 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
 			"name": "hotbarCurrent",
 			"layer": "UI",
 			"display": true,
@@ -482,7 +622,7 @@
 				{
 					"name": "Transform",
 					"type": "Transform",
-					"position": [ 174.0, 280.0, 0.0 ],
+					"position": [ 174.0, 280.0, 0.5 ],
 					"rotation": [ 0.0, 0.0, 0.0 ],
 					"scale": [ 64.0, 63.0, 1.0 ]
 				},
@@ -532,7 +672,7 @@
 					"type": "Transform",
 					"position": [ 0.0, 20.0, 0.0 ],
 					"rotation": [ 0.0, 0.0, 0.0],
-					"scale": [ 1.0, 1.0, 1.0 ]
+					"scale": [ 2.0, 2.0, 2.0 ]
 				},
 				{
 					"name": "Script1",

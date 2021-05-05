@@ -35,7 +35,16 @@
 			"name": "reflectionSubTexture", "baseTextureName": "reflectionTexture", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
 		},
 		{ 
-			"name": "dudvSubTexture", "baseTextureName": "dudv", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
+			"name": "DUDVSubTexture", "baseTextureName": "DUDV", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
+		},
+		{ 
+			"name": "logSubTexture", "baseTextureName": "log", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
+		},
+		{ 
+			"name": "stoneSubTexture", "baseTextureName": "stone", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
+		},
+		{ 
+			"name": "axeSubTexture", "baseTextureName": "axe", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
 		}
 	]
 }

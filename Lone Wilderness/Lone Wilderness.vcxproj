@@ -140,6 +140,7 @@
     <ClInclude Include="include\scripts\gameObjects\environment.h" />
     <ClInclude Include="include\scripts\gameObjects\player\hotbar.h" />
     <ClInclude Include="include\scripts\gameObjects\player\inventory.h" />
+    <ClInclude Include="include\scripts\gameObjects\player\item.h" />
     <ClInclude Include="include\scripts\gameObjects\staticLight.h" />
     <ClInclude Include="include\scripts\gameObjects\sun.h" />
     <ClInclude Include="include\scripts\gameTimer.h" />
@@ -183,6 +184,7 @@
     <ClCompile Include="src\scripts\gameObjects\environment.cpp" />
     <ClCompile Include="src\scripts\gameObjects\player\hotbar.cpp" />
     <ClCompile Include="src\scripts\gameObjects\player\inventory.cpp" />
+    <ClCompile Include="src\scripts\gameObjects\player\item.cpp" />
     <ClCompile Include="src\scripts\gameObjects\staticLight.cpp" />
     <ClCompile Include="src\scripts\gameObjects\sun.cpp" />
     <ClCompile Include="src\scripts\gameObjects\water.cpp" />

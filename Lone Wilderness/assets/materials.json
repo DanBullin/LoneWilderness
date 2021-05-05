@@ -59,7 +59,7 @@
 		},
 		{
 			"name": "waterMaterial",
-			"subTextures": [ "reflectionSubTexture", "refractionSubTexture", "dudvSubTexture" ], "cubeMapTextures": [], "shader": "waterShader", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
+			"subTextures": [ "reflectionSubTexture", "refractionSubTexture", "DUDVSubTexture" ], "cubeMapTextures": [], "shader": "waterShader", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
 		},
 		{
 			"name": "reflectionMaterial",
@@ -68,6 +68,18 @@
 		{
 			"name": "refractionMaterial",
 			"subTextures": [ "refractionSubTexture" ], "cubeMapTextures": [], "shader": "quad", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
+		},
+		{
+			"name": "logMaterial",
+			"subTextures": [ "logSubTexture" ], "cubeMapTextures": [], "shader": "quad", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
+		},
+		{
+			"name": "stoneMaterial",
+			"subTextures": [ "stoneSubTexture" ], "cubeMapTextures": [], "shader": "quad", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
+		},
+		{
+			"name": "axeMaterial",
+			"subTextures": [ "axeSubTexture" ], "cubeMapTextures": [], "shader": "quad", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
 		}
 	]
 }

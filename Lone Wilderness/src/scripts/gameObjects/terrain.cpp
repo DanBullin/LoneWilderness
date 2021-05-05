@@ -86,41 +86,6 @@ void Terrain::onRender(const Renderers renderer, const std::string& renderState)
 */
 void Terrain::onKeyRelease(KeyReleasedEvent & e, const float timestep, const float totalTime)
 {
-	if (e.getKeyCode() == Keys::Z)
-	{
-		m_drawWireframe = !m_drawWireframe;
-	}
-
-	if (e.getKeyCode() == Keys::X)
-	{
-		m_tessellationEquation = !m_tessellationEquation;
-	}
-
-	if (e.getKeyCode() == Keys::C)
-	{
-		m_generateY = !m_generateY;
-	}
-
-	if (e.getKeyCode() == Keys::N)
-	{
-		m_scale += 10.f;
-	}
-
-	if (e.getKeyCode() == Keys::M)
-	{
-		m_scale -= 10.f;
-	}
-
-	if (e.getKeyCode() == Keys::K)
-	{
-		ChunkManager::setChunksSize(ChunkManager::getChunksSize() + 1);
-	}
-
-	if (e.getKeyCode() == Keys::L)
-	{
-		int size = ChunkManager::getChunksSize();
-		if(size > 1) ChunkManager::setChunksSize(size - 1);
-	}
 }
 
 float Terrain::getYCoord(float x, float z)

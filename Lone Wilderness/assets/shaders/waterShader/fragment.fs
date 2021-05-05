@@ -40,7 +40,7 @@ void main()
 	
 	vec4 reflectColour = texture(u_diffuseMap[fs_in.TexUnit1], reflecTexCoords);
 	vec4 refractColour = texture(u_diffuseMap[fs_in.TexUnit2], refractTexCoords);
-	
+		
     FragColor = mix(reflectColour, refractColour, 0.5);
     FragColor = mix(FragColor, vec4(0.0, 0.3, 0.5, 1.0), 0.2);
 	BrightColor = vec4(0.0, 0.0, 0.0, 1.0);

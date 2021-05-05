@@ -12,6 +12,7 @@
 #include "independent/entities/components/text.h"
 #include "independent/entities/components/characterController.h"
 #include "scripts/gameObjects/player/hotbar.h"
+#include "scripts/gameObjects/player/inventory.h"
 
 
 using namespace Engine;
@@ -24,6 +25,7 @@ class Player : public NativeScript
 private:
 	CharacterController* m_controller; //!< A character controller
 	Hotbar* m_hotbar;
+	Inventory* m_inventory;
 
 	uint32_t m_health;
 	uint32_t m_atkDmg;
@@ -44,5 +46,7 @@ public:
 
 	uint32_t getHealth();
 	uint32_t getAttackDamage();
+	Hotbar* getHotbar();
+	Inventory* getInventory();
 };
 #endif
