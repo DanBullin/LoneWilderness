@@ -12,20 +12,23 @@
 
 using namespace Engine;
 
+class Player;
+
 /*! \class PlaceObject
 * \brief A script which places objects in the world
 */
 class PlaceObject : public NativeScript
 {
 private:
-	Entity* m_player;
+	Entity* m_camera;
+	Entity* m_currentEntity;
+	Player* m_player;
 	uint32_t number = 0;
 	bool m_final = false;
 public:
 	PlaceObject(); //!< Constructor
 	~PlaceObject(); //!< Destructor
 	void onPreUpdate(const float timestep, const float totalTime) override; //!< Call before game update
-	void onKeyPress(KeyPressedEvent& e, const float timestep, const float totalTime) override;
-	void onKeyRelease(KeyReleasedEvent& e, const float timestep, const float totalTime) override; //!< Call upon key release
+	void onMouseRelease(MouseReleasedEvent& e, const float timestep, const float totalTime) override;
 };
 #endif

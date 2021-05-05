@@ -45,11 +45,11 @@ void Hotbar::onPreUpdate(const float timestep, const float totalTime)
 
 	if (m_hotbarElements.size() == 0)
 	{
-		m_hotbarElements.push_back(SceneManager::getActiveScene()->getEntity("Item0Image")->getComponent<MeshRender2D>());
-		m_hotbarElements.push_back(SceneManager::getActiveScene()->getEntity("Item1Image")->getComponent<MeshRender2D>());
-		m_hotbarElements.push_back(SceneManager::getActiveScene()->getEntity("Item2Image")->getComponent<MeshRender2D>());
-		m_hotbarElements.push_back(SceneManager::getActiveScene()->getEntity("Item3Image")->getComponent<MeshRender2D>());
-		m_hotbarElements.push_back(SceneManager::getActiveScene()->getEntity("Item4Image")->getComponent<MeshRender2D>());
+		m_hotbarElements.push_back({ SceneManager::getActiveScene()->getEntity("Item0Image")->getComponent<MeshRender2D>(), SceneManager::getActiveScene()->getEntity("Item0Text")->getComponent<Text>() });
+		m_hotbarElements.push_back({ SceneManager::getActiveScene()->getEntity("Item1Image")->getComponent<MeshRender2D>(), SceneManager::getActiveScene()->getEntity("Item1Text")->getComponent<Text>() });
+		m_hotbarElements.push_back({ SceneManager::getActiveScene()->getEntity("Item2Image")->getComponent<MeshRender2D>(), SceneManager::getActiveScene()->getEntity("Item2Text")->getComponent<Text>() });
+		m_hotbarElements.push_back({ SceneManager::getActiveScene()->getEntity("Item3Image")->getComponent<MeshRender2D>(), SceneManager::getActiveScene()->getEntity("Item3Text")->getComponent<Text>() });
+		m_hotbarElements.push_back({ SceneManager::getActiveScene()->getEntity("Item4Image")->getComponent<MeshRender2D>(), SceneManager::getActiveScene()->getEntity("Item4Text")->getComponent<Text>() });
 	}
 	else
 	{
@@ -60,12 +60,15 @@ void Hotbar::onPreUpdate(const float timestep, const float totalTime)
 			{
 				if (m_player->getInventory()->getItem(i))
 				{
-					m_hotbarElements.at(i)->getParent()->setDisplay(true);
-					m_hotbarElements.at(i)->setMaterial(Items::getMaterial(m_player->getInventory()->getItem(i)->getType()));
+					m_hotbarElements.at(i).first->getParent()->setDisplay(true);
+					m_hotbarElements.at(i).second->getParent()->setDisplay(true);
+					m_hotbarElements.at(i).first->setMaterial(Items::getMaterial(m_player->getInventory()->getItem(i)->getType()));
+					m_hotbarElements.at(i).second->setText(std::to_string(m_player->getInventory()->getItemCount(i)));
 				}
 				else
 				{
-					m_hotbarElements.at(i)->getParent()->setDisplay(false);
+					m_hotbarElements.at(i).first->getParent()->setDisplay(false);
+					m_hotbarElements.at(i).second->getParent()->setDisplay(false);
 				}
 			}
 		}

@@ -11,6 +11,7 @@
 #include "independent/entities/components/nativeScript.h"
 #include "independent/entities/components/UIElement.h"
 #include "independent/entities/components/meshRender2D.h"
+#include "independent/entities/components/text.h"
 
 using namespace Engine;
 
@@ -26,7 +27,7 @@ private:
 	uint32_t m_currentItem = 0;
 	UIElement* m_currentElement;
 	bool m_updated; //!< Has the hotbar been updated
-	std::vector<MeshRender2D*> m_hotbarElements; //!< The images for the different hotbar items
+	std::vector<std::pair<MeshRender2D*, Text*>> m_hotbarElements; //!< The images for the different hotbar items and text
 	Player* m_player; //!< A pointer to the player script
 public:
 	Hotbar(); //!< Constructor

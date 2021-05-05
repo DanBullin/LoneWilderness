@@ -34,6 +34,11 @@
 			"characterSize": 20
 		},
 		{
+			"name": "Ubuntu16B",
+			"filePath": "assets/fonts/ubuntu/Ubuntu-Bold.ttf",
+			"characterSize": 16
+		},
+		{
 			"name": "Ubuntu34",
 			"filePath": "assets/fonts/ubuntu/Ubuntu-Regular.ttf",
 			"characterSize": 34

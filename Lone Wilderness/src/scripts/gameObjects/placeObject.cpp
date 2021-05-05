@@ -10,10 +10,13 @@
 #include "independent/systems/systems/sceneManager.h"
 #include "independent/entities/entity.h"
 #include "scripts/gameObjects/terrain.h"
+#include "scripts/gameObjects/player.h"
 
 PlaceObject::PlaceObject()
 {
 	m_player = nullptr;
+	m_camera = nullptr;
+	m_currentEntity = nullptr;
 	m_final = true;
 }
 
@@ -23,50 +26,61 @@ PlaceObject::~PlaceObject()
 
 void PlaceObject::onPreUpdate(const float timestep, const float totalTime)
 {
-	if (!m_player)
-		m_player = getParent()->getParentScene()->getEntity("Player1")->getChildEntity("Camera1");
+	if (!m_camera)
+		m_camera = getParent()->getParentScene()->getEntity("Player1")->getChildEntity("Camera1");
 
-	if (!m_final)
+	if (!m_player)
+		m_player = static_cast<Player*>(getParent()->getParentScene()->getEntity("Player1")->getComponent<NativeScript>());
+
+	if (m_currentEntity)
 	{
-		Entity* ent = getParent()->getParentScene()->getEntity("NewObj" + std::to_string((number - 1)));
-		if (!ent) return;
-		glm::vec3 playerPos = m_player->getComponent<Transform>()->getWorldPosition();
-		glm::vec3 viewDir = m_player->getComponent<Camera>()->getCameraData().Front * 4.f;
-		auto trans = ent->getComponent<Transform>();
+		glm::vec3 playerPos = m_camera->getComponent<Transform>()->getWorldPosition();
+		glm::vec3 viewDir = m_camera->getComponent<Camera>()->getCameraData().Front * 4.f;
+		auto trans = m_currentEntity->getComponent<Transform>();
 
 		trans->setLocalPosition(playerPos.x + viewDir.x, playerPos.y + viewDir.y, playerPos.z + viewDir.z);
 	}
-}
 
-void PlaceObject::onKeyPress(KeyPressedEvent & e, const float timestep, const float totalTime)
-{
-}
-
-void PlaceObject::onKeyRelease(KeyReleasedEvent & e, const float timestep, const float totalTime)
-{
-	if (e.getKeyCode() == Keys::H)
+	if (m_player->getInventory()->getItem(m_player->getHotbar()->getSelectedItem()))
 	{
-		if (m_player && m_final)
+		if (Items::isPlaceable(m_player->getInventory()->getItem(m_player->getHotbar()->getSelectedItem())->getType()))
 		{
-			glm::vec3 playerPos = m_player->getComponent<Transform>()->getWorldPosition();
-			glm::vec3 viewDir = m_player->getComponent<Camera>()->getCameraData().Front * 4.f;
+			if (m_camera && !m_currentEntity)
+			{
+				glm::vec3 playerPos = m_camera->getComponent<Transform>()->getWorldPosition();
+				glm::vec3 viewDir = m_camera->getComponent<Camera>()->getCameraData().Front * 4.f;
 
-			Entity* ent = new Entity;
-			SceneManager::getActiveScene()->addEntity("NewObj" + std::to_string(number), ent);
-			ent->setDisplay(true);
-			ent->setLayer(SceneManager::getActiveScene()->getLayerManager()->getLayer("Default"));
-			ent->attach<Transform>("Transform1", playerPos.x + viewDir.x, playerPos.y + viewDir.y, playerPos.z + viewDir.z, 0.f, 0.f, 0.f, 0.5f, 0.5f, 0.5f);
-			ent->attach<MeshRender3D>("MeshR", ResourceManager::getResource<Model3D>("cyborg"), ResourceManager::getResource<Material>("placeObjectMaterial"));
-			number++;
-			m_final = false;
+				Entity* ent = new Entity;
+				SceneManager::getActiveScene()->addEntity("NewObj" + std::to_string(number), ent);
+				ent->setDisplay(true);
+				ent->setLayer(SceneManager::getActiveScene()->getLayerManager()->getLayer("Default"));
+				ent->attach<Transform>("Transform1", playerPos.x + viewDir.x, playerPos.y + viewDir.y, playerPos.z + viewDir.z, 0.f, 0.f, 0.f, 0.5f, 0.5f, 0.5f);
+				ent->attach<MeshRender3D>("MeshR", ResourceManager::getResource<Model3D>("cyborg"), ResourceManager::getResource<Material>("placeObjectMaterial"));
+				number++;
+				m_final = false;
+				m_currentEntity = ent;
+			}
 		}
 		else
 		{
-			m_final = true;
+			if (m_currentEntity)
+			{
+				m_currentEntity->destroy();
+				m_currentEntity = nullptr;
+			}
+		}
+	}
+}
 
-			Entity* ent = getParent()->getParentScene()->getEntity("NewObj" + std::to_string((number - 1)));
-			if (!ent) return;
-			ent->getComponent<MeshRender3D>()->setMaterial(ResourceManager::getResource<Material>("cyborgMaterial"));
+void PlaceObject::onMouseRelease(MouseReleasedEvent & e, const float timestep, const float totalTime)
+{
+	if (e.getButton() == Mouse::RIGHTBUTTON)
+	{
+		if (m_currentEntity)
+		{
+			m_currentEntity->getComponent<MeshRender3D>()->setMaterial(ResourceManager::getResource<Material>("cyborgMaterial"));
+			m_currentEntity = nullptr;
+			m_player->getInventory()->takeItem(m_player->getInventory()->getItem(m_player->getHotbar()->getSelectedItem())->getType(), 0, 1);
 		}
 	}
 }

@@ -107,6 +107,11 @@ Item * Inventory::getItem(const uint32_t hotbarIndex)
 	return nullptr;
 }
 
+int Inventory::getItemCount(const uint32_t itemIndex)
+{
+	return m_items[itemIndex].second;
+}
+
 bool Inventory::containsItem(Items::Items itemType, const uint32_t state)
 {
 	for (auto& items : m_items)

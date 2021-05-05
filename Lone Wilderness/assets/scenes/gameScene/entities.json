@@ -534,6 +534,37 @@
 			]
 		},
 		{
+			"name": "Item0Text",
+			"layer": "UI",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 430.0, 100.0, 0.8 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 400.0, 400.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "0",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu16B"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.0, 0.5 ],
+					"offset": [ 45.0, -110.0 ],
+					"scale": [ 1.0, 0.5 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
 			"name": "Item1Image",
 			"layer": "UI",
 			"display": true,
@@ -557,6 +588,36 @@
 					"anchor": [ 0.0, 0.5 ],
 					"offset": [ 35.0, -66.0 ],
 					"scale": [ -1, -1 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "Item1Text",
+			"layer": "UI",
+			"display": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 430.0, 100.0, 0.8 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 400.0, 400.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "0",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu16B"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.0, 0.5 ],
+					"offset": [ 45.0, -44.0 ],
+					"scale": [ 1.0, 0.5 ],
 					"useAbsoluteSize": true
 				}
 			]
@@ -590,6 +651,36 @@
 			]
 		},
 		{
+			"name": "Item2Text",
+			"layer": "UI",
+			"display": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 430.0, 100.0, 0.8 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 400.0, 400.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "0",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu16B"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.0, 0.5 ],
+					"offset": [ 45.0, 22.0 ],
+					"scale": [ 1.0, 0.5 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
 			"name": "Item3Image",
 			"layer": "UI",
 			"display": true,
@@ -618,6 +709,36 @@
 			]
 		},
 		{
+			"name": "Item3Text",
+			"layer": "UI",
+			"display": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 430.0, 100.0, 0.8 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 400.0, 400.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "0",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu16B"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.0, 0.5 ],
+					"offset": [ 45.0, 88.0 ],
+					"scale": [ 1.0, 0.5 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
 			"name": "Item4Image",
 			"layer": "UI",
 			"display": true,
@@ -641,6 +762,37 @@
 					"anchor": [ 0.0, 0.5 ],
 					"offset": [ 35.0, 132.0 ],
 					"scale": [ -1, -1 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "Item4Text",
+			"layer": "UI",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 430.0, 100.0, 0.8 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 400.0, 400.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "0",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu16B"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.0, 0.5 ],
+					"offset": [ 45.0, 154.0 ],
+					"scale": [ 1.0, 0.5 ],
 					"useAbsoluteSize": true
 				}
 			]

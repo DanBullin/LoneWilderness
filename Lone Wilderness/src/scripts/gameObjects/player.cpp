@@ -118,13 +118,10 @@ void Player::onKeyRelease(KeyReleasedEvent & e, const float timestep, const floa
 	if (e.getKeyCode() == Keys::K)
 	{
 		m_inventory->giveItem(Items::Log, 0, 7);
-		m_inventory->giveItem(Items::Axe, 1, 12);
-		m_inventory->giveItem(Items::Sword, 2, 3);
-		m_inventory->giveItem(Items::WoodenFloor, 3, 3);
-		m_inventory->giveItem(Items::Pickaxe, 4, 3);
-		m_inventory->giveItem(Items::Pickaxe, 1, 3);
-		m_inventory->giveItem(Items::Pickaxe, 2, 3);
-		m_inventory->giveItem(Items::Log, 6, 3);
+		m_inventory->giveItem(Items::Axe, 0, 12);
+		m_inventory->giveItem(Items::Sword, 0, 3);
+		m_inventory->giveItem(Items::WoodenFloor, 0, 3);
+		m_inventory->giveItem(Items::Pickaxe, 0, 3);
 	}
 
 	if (e.getKeyCode() == Keys::L)
