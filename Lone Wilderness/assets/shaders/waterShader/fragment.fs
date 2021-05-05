@@ -10,6 +10,7 @@ in VS_OUT {
 	flat int TexUnit3;
 	vec4 ClipSpace;
 	vec2 TexCoords;
+	vec3 toCameraVector;
 } fs_in;
 
 layout(std140) uniform Water
@@ -40,8 +41,12 @@ void main()
 	
 	vec4 reflectColour = texture(u_diffuseMap[fs_in.TexUnit1], reflecTexCoords);
 	vec4 refractColour = texture(u_diffuseMap[fs_in.TexUnit2], refractTexCoords);
-		
-    FragColor = mix(reflectColour, refractColour, 0.5);
+	
+	vec3 viewVector = normalize(fs_in.toCameraVector);
+	float refractiveFactor = dot(viewVector, vec3(0.0, 1.0, 0.0));
+	refractiveFactor = pow(refractiveFactor, 10.0);
+	
+    FragColor = mix(reflectColour, refractColour, refractiveFactor);
     FragColor = mix(FragColor, vec4(0.0, 0.3, 0.5, 1.0), 0.2);
 	BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
 }
