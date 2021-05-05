@@ -119,9 +119,9 @@ void Player::onKeyRelease(KeyReleasedEvent & e, const float timestep, const floa
 	{
 		m_inventory->giveItem(Items::Log, 0, 7);
 		m_inventory->giveItem(Items::Axe, 1, 12);
-		m_inventory->giveItem(Items::Axe, 2, 3);
-		m_inventory->giveItem(Items::Axe, 3, 3);
-		m_inventory->giveItem(Items::Axe, 4, 3);
+		m_inventory->giveItem(Items::Sword, 2, 3);
+		m_inventory->giveItem(Items::WoodenFloor, 3, 3);
+		m_inventory->giveItem(Items::Pickaxe, 4, 3);
 	}
 
 	if (e.getKeyCode() == Keys::L)

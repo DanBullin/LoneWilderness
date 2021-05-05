@@ -78,6 +78,18 @@
 			"subTextures": [ "stoneSubTexture" ], "cubeMapTextures": [], "shader": "quad", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
 		},
 		{
+			"name": "pickaxeMaterial",
+			"subTextures": [ "pickaxeSubTexture" ], "cubeMapTextures": [], "shader": "quad", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
+		},
+		{
+			"name": "woodenPlatformMaterial",
+			"subTextures": [ "woodenPlatformSubTexture" ], "cubeMapTextures": [], "shader": "quad", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
+		},
+		{
+			"name": "swordMaterial",
+			"subTextures": [ "swordSubTexture" ], "cubeMapTextures": [], "shader": "quad", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
+		},
+		{
 			"name": "axeMaterial",
 			"subTextures": [ "axeSubTexture" ], "cubeMapTextures": [], "shader": "quad", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
 		}

@@ -43,9 +43,9 @@ namespace Items
 		case Items::Log: return ResourceManager::getResource<Material>("logMaterial");
 		case Items::Stone: return ResourceManager::getResource<Material>("stoneMaterial");
 		case Items::Axe: return ResourceManager::getResource<Material>("axeMaterial");
-		case Items::Sword: return ResourceManager::getResource<Material>("logMaterial");
-		case Items::Pickaxe: return ResourceManager::getResource<Material>("logMaterial");
-		case Items::WoodenFloor: return ResourceManager::getResource<Material>("logMaterial");
+		case Items::Sword: return ResourceManager::getResource<Material>("swordMaterial");
+		case Items::Pickaxe: return ResourceManager::getResource<Material>("pickaxeMaterial");
+		case Items::WoodenFloor: return ResourceManager::getResource<Material>("woodenPlatformMaterial");
 		}
 	}
 }

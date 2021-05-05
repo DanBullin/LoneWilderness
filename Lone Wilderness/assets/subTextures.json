@@ -44,6 +44,15 @@
 			"name": "stoneSubTexture", "baseTextureName": "stone", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
 		},
 		{ 
+			"name": "pickaxeSubTexture", "baseTextureName": "pickaxe", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
+		},
+		{ 
+			"name": "swordSubTexture", "baseTextureName": "sword", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
+		},
+		{ 
+			"name": "woodenPlatformSubTexture", "baseTextureName": "woodenPlatform", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
+		},
+		{ 
 			"name": "axeSubTexture", "baseTextureName": "axe", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
 		}
 	]
