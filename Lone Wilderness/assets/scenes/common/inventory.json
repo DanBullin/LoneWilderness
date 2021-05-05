@@ -124,6 +124,37 @@
 			]
 		},
 		{
+			"name": "InvenItem0Text",
+			"layer": "Inven",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 430.0, 100.0, 0.8 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 400.0, 400.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "0",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu16B"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ -122.0, -62.0 ],
+					"scale": [ 1.0, 0.5 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
 			"name": "InvenItem1Image",
 			"layer": "Inven",
 			"display": true,
@@ -147,6 +178,37 @@
 					"anchor": [ 0.5, 0.5 ],
 					"offset": [ -69.0, -89.0 ],
 					"scale": [ -1, -1 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "InvenItem1Text",
+			"layer": "Inven",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 430.0, 100.0, 0.8 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 400.0, 400.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "0",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu16B"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ -53.0, -62.0 ],
+					"scale": [ 1.0, 0.5 ],
 					"useAbsoluteSize": true
 				}
 			]
@@ -180,6 +242,37 @@
 			]
 		},
 		{
+			"name": "InvenItem2Text",
+			"layer": "Inven",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 430.0, 100.0, 0.8 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 400.0, 400.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "0",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu16B"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ 16.0, -62.0 ],
+					"scale": [ 1.0, 0.5 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
 			"name": "InvenItem3Image",
 			"layer": "Inven",
 			"display": true,
@@ -203,6 +296,37 @@
 					"anchor": [ 0.5, 0.5 ],
 					"offset": [ 69.0, -89.0 ],
 					"scale": [ -1, -1 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "InvenItem3Text",
+			"layer": "Inven",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 430.0, 100.0, 0.8 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 400.0, 400.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "0",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu16B"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ 85.0, -62.0 ],
+					"scale": [ 1.0, 0.5 ],
 					"useAbsoluteSize": true
 				}
 			]
@@ -236,6 +360,37 @@
 			]
 		},
 		{
+			"name": "InvenItem4Text",
+			"layer": "Inven",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 430.0, 100.0, 0.8 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 400.0, 400.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "0",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu16B"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ 154.0, -62.0 ],
+					"scale": [ 1.0, 0.5 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
 			"name": "InvenItem5Image",
 			"layer": "Inven",
 			"display": true,
@@ -259,6 +414,37 @@
 					"anchor": [ 0.5, 0.5 ],
 					"offset": [ -138.0, 20.0 ],
 					"scale": [ -1, -1 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "InvenItem5Text",
+			"layer": "Inven",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 430.0, 100.0, 0.8 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 400.0, 400.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "0",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu16B"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ 154.0, 0.0 ],
+					"scale": [ 1.0, 0.5 ],
 					"useAbsoluteSize": true
 				}
 			]
@@ -292,6 +478,37 @@
 			]
 		},
 		{
+			"name": "InvenItem6Text",
+			"layer": "Inven",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 430.0, 100.0, 0.8 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 400.0, 400.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "0",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu16B"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ 154.0, 0.0 ],
+					"scale": [ 1.0, 0.5 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
 			"name": "InvenItem7Image",
 			"layer": "Inven",
 			"display": true,
@@ -315,6 +532,37 @@
 					"anchor": [ 0.5, 0.5 ],
 					"offset": [ 0.0, 20.0 ],
 					"scale": [ -1, -1 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "InvenItem7Text",
+			"layer": "Inven",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 430.0, 100.0, 0.8 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 400.0, 400.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "0",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu16B"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ 154.0, 0.0 ],
+					"scale": [ 1.0, 0.5 ],
 					"useAbsoluteSize": true
 				}
 			]
@@ -348,6 +596,37 @@
 			]
 		},
 		{
+			"name": "InvenItem8Text",
+			"layer": "Inven",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 430.0, 100.0, 0.8 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 400.0, 400.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "0",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu16B"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ 154.0, 0.0 ],
+					"scale": [ 1.0, 0.5 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
 			"name": "InvenItem9Image",
 			"layer": "Inven",
 			"display": true,
@@ -371,6 +650,37 @@
 					"anchor": [ 0.5, 0.5 ],
 					"offset": [ 138.0, 20.0 ],
 					"scale": [ -1, -1 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "InvenItem9Text",
+			"layer": "Inven",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 430.0, 100.0, 0.8 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 400.0, 400.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "0",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu16B"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ 154.0, 0.0 ],
+					"scale": [ 1.0, 0.5 ],
 					"useAbsoluteSize": true
 				}
 			]
@@ -404,6 +714,37 @@
 			]
 		},
 		{
+			"name": "InvenItem10Text",
+			"layer": "Inven",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 430.0, 100.0, 0.8 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 400.0, 400.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "0",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu16B"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ 154.0, 0.0 ],
+					"scale": [ 1.0, 0.5 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
 			"name": "InvenItem11Image",
 			"layer": "Inven",
 			"display": true,
@@ -427,6 +768,37 @@
 					"anchor": [ 0.5, 0.5 ],
 					"offset": [ -69.0, 86.0 ],
 					"scale": [ -1, -1 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "InvenItem11Text",
+			"layer": "Inven",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 430.0, 100.0, 0.8 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 400.0, 400.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "0",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu16B"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ 154.0, 0.0 ],
+					"scale": [ 1.0, 0.5 ],
 					"useAbsoluteSize": true
 				}
 			]
@@ -460,6 +832,37 @@
 			]
 		},
 		{
+			"name": "InvenItem12Text",
+			"layer": "Inven",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 430.0, 100.0, 0.8 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 400.0, 400.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "0",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu16B"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ 154.0, 0.0 ],
+					"scale": [ 1.0, 0.5 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
 			"name": "InvenItem13Image",
 			"layer": "Inven",
 			"display": true,
@@ -488,6 +891,37 @@
 			]
 		},
 		{
+			"name": "InvenItem13Text",
+			"layer": "Inven",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 430.0, 100.0, 0.8 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 400.0, 400.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "0",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu16B"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ 154.0, 0.0 ],
+					"scale": [ 1.0, 0.5 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
 			"name": "InvenItem14Image",
 			"layer": "Inven",
 			"display": true,
@@ -511,6 +945,37 @@
 					"anchor": [ 0.5, 0.5 ],
 					"offset": [ 138.0, 86.0 ],
 					"scale": [ -1, -1 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "InvenItem14Text",
+			"layer": "Inven",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 430.0, 100.0, 0.8 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 400.0, 400.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "0",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu16B"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ 154.0, 0.0 ],
+					"scale": [ 1.0, 0.5 ],
 					"useAbsoluteSize": true
 				}
 			]

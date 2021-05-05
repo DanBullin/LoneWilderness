@@ -10,6 +10,7 @@
 
 #include "independent/entities/components/nativeScript.h"
 #include "independent/entities/components/meshRender2D.h"
+#include "independent/entities/components/text.h"
 
 using namespace Engine;
 
@@ -22,7 +23,7 @@ class InventoryMenu : public NativeScript
 {
 private:
 	bool m_updated; //!< Has the inventory been updated
-	std::vector<MeshRender2D*> m_inventoryElements; //!< The images for the different inventory items
+	std::vector<std::pair<MeshRender2D*, Text*>> m_inventoryElements; //!< The images for the different inventory items
 	Player* m_player; //!< A pointer to the player script
 public:
 	InventoryMenu(); //!< Constructor

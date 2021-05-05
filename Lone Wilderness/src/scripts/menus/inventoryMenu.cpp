@@ -73,21 +73,21 @@ void InventoryMenu::onPreUpdate(const float timestep, const float totalTime)
 
 	if (m_inventoryElements.size() == 0)
 	{
-		m_inventoryElements.push_back(SceneManager::getActiveScene()->getEntity("InvenItem0Image")->getComponent<MeshRender2D>());
-		m_inventoryElements.push_back(SceneManager::getActiveScene()->getEntity("InvenItem1Image")->getComponent<MeshRender2D>());
-		m_inventoryElements.push_back(SceneManager::getActiveScene()->getEntity("InvenItem2Image")->getComponent<MeshRender2D>());
-		m_inventoryElements.push_back(SceneManager::getActiveScene()->getEntity("InvenItem3Image")->getComponent<MeshRender2D>());
-		m_inventoryElements.push_back(SceneManager::getActiveScene()->getEntity("InvenItem4Image")->getComponent<MeshRender2D>());
-		m_inventoryElements.push_back(SceneManager::getActiveScene()->getEntity("InvenItem5Image")->getComponent<MeshRender2D>());
-		m_inventoryElements.push_back(SceneManager::getActiveScene()->getEntity("InvenItem6Image")->getComponent<MeshRender2D>());
-		m_inventoryElements.push_back(SceneManager::getActiveScene()->getEntity("InvenItem7Image")->getComponent<MeshRender2D>());
-		m_inventoryElements.push_back(SceneManager::getActiveScene()->getEntity("InvenItem8Image")->getComponent<MeshRender2D>());
-		m_inventoryElements.push_back(SceneManager::getActiveScene()->getEntity("InvenItem9Image")->getComponent<MeshRender2D>());
-		m_inventoryElements.push_back(SceneManager::getActiveScene()->getEntity("InvenItem10Image")->getComponent<MeshRender2D>());
-		m_inventoryElements.push_back(SceneManager::getActiveScene()->getEntity("InvenItem11Image")->getComponent<MeshRender2D>());
-		m_inventoryElements.push_back(SceneManager::getActiveScene()->getEntity("InvenItem12Image")->getComponent<MeshRender2D>());
-		m_inventoryElements.push_back(SceneManager::getActiveScene()->getEntity("InvenItem13Image")->getComponent<MeshRender2D>());
-		m_inventoryElements.push_back(SceneManager::getActiveScene()->getEntity("InvenItem14Image")->getComponent<MeshRender2D>());
+		m_inventoryElements.push_back({ SceneManager::getActiveScene()->getEntity("InvenItem0Image")->getComponent<MeshRender2D>(), SceneManager::getActiveScene()->getEntity("InvenItem0Text")->getComponent<Text>() });
+		m_inventoryElements.push_back({ SceneManager::getActiveScene()->getEntity("InvenItem1Image")->getComponent<MeshRender2D>(), SceneManager::getActiveScene()->getEntity("InvenItem1Text")->getComponent<Text>() });
+		m_inventoryElements.push_back({ SceneManager::getActiveScene()->getEntity("InvenItem2Image")->getComponent<MeshRender2D>(), SceneManager::getActiveScene()->getEntity("InvenItem2Text")->getComponent<Text>() });
+		m_inventoryElements.push_back({ SceneManager::getActiveScene()->getEntity("InvenItem3Image")->getComponent<MeshRender2D>(), SceneManager::getActiveScene()->getEntity("InvenItem3Text")->getComponent<Text>() });
+		m_inventoryElements.push_back({ SceneManager::getActiveScene()->getEntity("InvenItem4Image")->getComponent<MeshRender2D>(), SceneManager::getActiveScene()->getEntity("InvenItem4Text")->getComponent<Text>() });
+		m_inventoryElements.push_back({ SceneManager::getActiveScene()->getEntity("InvenItem5Image")->getComponent<MeshRender2D>(), SceneManager::getActiveScene()->getEntity("InvenItem5Text")->getComponent<Text>() });
+		m_inventoryElements.push_back({ SceneManager::getActiveScene()->getEntity("InvenItem6Image")->getComponent<MeshRender2D>(), SceneManager::getActiveScene()->getEntity("InvenItem6Text")->getComponent<Text>() });
+		m_inventoryElements.push_back({ SceneManager::getActiveScene()->getEntity("InvenItem7Image")->getComponent<MeshRender2D>(), SceneManager::getActiveScene()->getEntity("InvenItem7Text")->getComponent<Text>() });
+		m_inventoryElements.push_back({ SceneManager::getActiveScene()->getEntity("InvenItem8Image")->getComponent<MeshRender2D>(), SceneManager::getActiveScene()->getEntity("InvenItem8Text")->getComponent<Text>() });
+		m_inventoryElements.push_back({ SceneManager::getActiveScene()->getEntity("InvenItem9Image")->getComponent<MeshRender2D>(), SceneManager::getActiveScene()->getEntity("InvenItem9Text")->getComponent<Text>() });
+		m_inventoryElements.push_back({ SceneManager::getActiveScene()->getEntity("InvenItem10Image")->getComponent<MeshRender2D>(), SceneManager::getActiveScene()->getEntity("InvenItem10Text")->getComponent<Text>() });
+		m_inventoryElements.push_back({ SceneManager::getActiveScene()->getEntity("InvenItem11Image")->getComponent<MeshRender2D>(), SceneManager::getActiveScene()->getEntity("InvenItem11Text")->getComponent<Text>() });
+		m_inventoryElements.push_back({ SceneManager::getActiveScene()->getEntity("InvenItem12Image")->getComponent<MeshRender2D>(), SceneManager::getActiveScene()->getEntity("InvenItem12Text")->getComponent<Text>() });
+		m_inventoryElements.push_back({ SceneManager::getActiveScene()->getEntity("InvenItem13Image")->getComponent<MeshRender2D>(), SceneManager::getActiveScene()->getEntity("InvenItem13Text")->getComponent<Text>() });
+		m_inventoryElements.push_back({ SceneManager::getActiveScene()->getEntity("InvenItem14Image")->getComponent<MeshRender2D>(), SceneManager::getActiveScene()->getEntity("InvenItem14Text")->getComponent<Text>() });
 	}
 	else
 	{
@@ -98,12 +98,15 @@ void InventoryMenu::onPreUpdate(const float timestep, const float totalTime)
 			{
 				if (m_player->getInventory()->getItem(i))
 				{
-					m_inventoryElements.at(i)->getParent()->setDisplay(true);
-					m_inventoryElements.at(i)->setMaterial(Items::getMaterial(m_player->getInventory()->getItem(i)->getType()));
+					m_inventoryElements.at(i).first->getParent()->setDisplay(true);
+					m_inventoryElements.at(i).second->getParent()->setDisplay(true);
+					m_inventoryElements.at(i).first->setMaterial(Items::getMaterial(m_player->getInventory()->getItem(i)->getType()));
+					m_inventoryElements.at(i).second->setText(std::to_string(m_player->getInventory()->getItemCount(i)));
 				}
 				else
 				{
-					m_inventoryElements.at(i)->getParent()->setDisplay(false);
+					m_inventoryElements.at(i).first->getParent()->setDisplay(false);
+					m_inventoryElements.at(i).second->getParent()->setDisplay(false);
 				}
 			}
 		}
