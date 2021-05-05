@@ -154,6 +154,7 @@
     <ClInclude Include="include\layers\defaultLayer.h" />
     <ClInclude Include="include\layers\UILayer.h" />
     <ClInclude Include="include\loaders\sceneLoader.h" />
+    <ClInclude Include="include\scripts\menus\inventoryElement.h" />
     <ClInclude Include="include\scripts\menus\inventoryMenu.h" />
     <ClInclude Include="include\scripts\menus\mainMenuText.h" />
     <ClInclude Include="include\scripts\menus\pauseMenuText.h" />
@@ -198,6 +199,7 @@
     <ClCompile Include="src\scripts\gameObjects\placeObject.cpp" />
     <ClCompile Include="src\scripts\gameObjects\player.cpp" />
     <ClCompile Include="src\scripts\gameObjects\terrain.cpp" />
+    <ClCompile Include="src\scripts\menus\inventoryElement.cpp" />
     <ClCompile Include="src\scripts\menus\inventoryMenu.cpp" />
     <ClCompile Include="src\scripts\menus\mainMenuText.cpp" />
     <ClCompile Include="src\scripts\menus\pauseMenuText.cpp" />

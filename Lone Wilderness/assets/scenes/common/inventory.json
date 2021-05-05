@@ -115,6 +115,11 @@
 					"offset": [ -138.0, -89.0 ],
 					"scale": [ -1, -1 ],
 					"useAbsoluteSize": true
+				},
+				{
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "InventoryElement"
 				}
 			]
 		},

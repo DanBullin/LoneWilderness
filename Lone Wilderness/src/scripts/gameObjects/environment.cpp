@@ -6,6 +6,7 @@
 *
 */
 #include "scripts/gameObjects/environment.h"
+#include "scripts/gameObjects/player.h"
 #include "independent/rendering/renderers/renderer3D.h"
 #include "independent/utils/mathUtils.h"
 #include "scripts/gameObjects/terrain.h"
@@ -150,6 +151,8 @@ void Environment::onMousePress(MousePressedEvent & e, const float timestep, cons
 {
 	if (e.getButton() == Mouse::LEFTBUTTON)
 	{
+		Player* player = static_cast<Player*>(getParent()->getParentScene()->getEntity("Player1")->getComponent<NativeScript>());
+
 		for (int i = 0; i < m_treePositions.size(); i++)
 		{
 			if (m_treePositions[i].second)
@@ -157,6 +160,7 @@ void Environment::onMousePress(MousePressedEvent & e, const float timestep, cons
 				m_treeHighlightedEntity->setDisplay(false);
 				m_treeHighlightedEntity->setSelected(false);
 				m_treePositions.erase(m_treePositions.begin()+i);
+				player->getInventory()->giveItem(Items::Log, 0, 1);
 				return;
 			}
 		}
@@ -168,6 +172,7 @@ void Environment::onMousePress(MousePressedEvent & e, const float timestep, cons
 				m_rockHighlightedEntity->setDisplay(false);
 				m_rockHighlightedEntity->setSelected(false);
 				m_rockPositions.erase(m_rockPositions.begin() + i);
+				player->getInventory()->giveItem(Items::Stone, 0, 1);
 				return;
 			}
 		}

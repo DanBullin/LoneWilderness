@@ -120,6 +120,9 @@
     <ClInclude Include="include\layers\inventoryLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\scripts\menus\inventoryElement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\layers\defaultLayer.cpp">
@@ -225,6 +228,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\layers\inventoryLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scripts\menus\inventoryElement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -18,6 +18,7 @@
 #include "scripts/loading/resourcesScript.h"
 #include "scripts/mainMenu/cameraRotationScript.h"
 #include "scripts/menus/pauseScript.h"
+#include "scripts/menus/inventoryElement.h"
 #include "scripts/menus/settingsScript.h"
 #include "scripts/menus/inventoryMenu.h"
 #include "scripts/engineScript.h"
@@ -82,6 +83,7 @@ namespace Engine
 		else if (scriptName == "GameTimer") return new GameTimer;
 		else if (scriptName == "Sun") return new Sun;
 		else if (scriptName == "InventoryMenu") return new InventoryMenu;
+		else if (scriptName == "InventoryElement") return new InventoryElement;
 		return nullptr;
 	}
 
