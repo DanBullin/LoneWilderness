@@ -15,6 +15,7 @@
 
 CraftingMenu::CraftingMenu()
 {
+	m_itemSelected = Items::None;
 }
 
 CraftingMenu::~CraftingMenu()
@@ -53,4 +54,14 @@ void CraftingMenu::onKeyRelease(KeyReleasedEvent & e, const float timestep, cons
 
 void CraftingMenu::onPreUpdate(const float timestep, const float totalTime)
 {
+}
+
+void CraftingMenu::selectItem(Items::Items item)
+{
+	m_itemSelected = item;
+}
+
+Items::Items CraftingMenu::getSelectedItem()
+{
+	return m_itemSelected;
 }

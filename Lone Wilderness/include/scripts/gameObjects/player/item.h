@@ -20,7 +20,7 @@ namespace Items
 	*/
 	enum Items
 	{
-		Log, Stone, Axe, Sword, Pickaxe, WoodenFloor
+		Log, Stone, Axe, Sword, Pickaxe, WoodenFloor, None
 	};
 
 	static bool isPlaceable(Items item)

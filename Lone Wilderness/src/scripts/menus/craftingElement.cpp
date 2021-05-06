@@ -10,6 +10,7 @@
 #include "independent/systems/components/scene.h"
 #include "independent/rendering/renderers/renderer2D.h"
 #include "scripts/gameObjects/player.h"
+#include "scripts/menus/craftingMenu.h"
 
 CraftingElement::CraftingElement()
 {
@@ -42,9 +43,10 @@ void CraftingElement::onMouseRelease(MouseReleasedEvent & e, const float timeste
 	glm::vec2 mousePosition = InputPoller::getMousePosition();
 	bool containsMouse = m_render->containsPoint(mousePosition);
 
-	if (e.getButton() == Mouse::LEFTBUTTON && containsMouse)
+	if (e.getButton() == Mouse::LEFTBUTTON && containsMouse && m_itemIndex != -1)
 	{
-		
+		auto crafting = static_cast<CraftingMenu*>(getParent()->getParentScene()->getEntity("CraftingEnt")->getComponent<NativeScript>());
+		crafting->selectItem(static_cast<Items::Items>(m_itemIndex));
 	}
 }
 
@@ -67,6 +69,17 @@ void CraftingElement::onMouseMoved(MouseMovedEvent & e, const float timestep, co
 
 void CraftingElement::onPreUpdate(const float timestep, const float totalTime)
 {
+	if (getParent()->getName() == "C_ItemInfoImage")
+	{
+		auto crafting = static_cast<CraftingMenu*>(getParent()->getParentScene()->getEntity("CraftingEnt")->getComponent<NativeScript>());
+		if (crafting->getSelectedItem() != Items::None)
+		{
+			getParent()->setDisplay(true);
+			m_render->setMaterial(Items::getMaterial(crafting->getSelectedItem()));
+		}
+		else
+			getParent()->setDisplay(false);
+	}
 }
 
 void CraftingElement::onSubmit(const Renderers renderer, const std::string & renderState)

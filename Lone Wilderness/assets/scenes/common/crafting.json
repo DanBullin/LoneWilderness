@@ -212,7 +212,7 @@
 					"name": "Script1",
 					"type": "NativeScript",
 					"scriptName": "CraftingElement",
-					"index": 0
+					"index": 2
 				}
 			]
 		},
@@ -247,7 +247,7 @@
 					"name": "Script1",
 					"type": "NativeScript",
 					"scriptName": "CraftingElement",
-					"index": 0
+					"index": 4
 				}
 			]
 		},
@@ -282,7 +282,7 @@
 					"name": "Script1",
 					"type": "NativeScript",
 					"scriptName": "CraftingElement",
-					"index": 0
+					"index": 5
 				}
 			]
 		},
@@ -317,7 +317,7 @@
 					"name": "Script1",
 					"type": "NativeScript",
 					"scriptName": "CraftingElement",
-					"index": 0
+					"index": 3
 				}
 			]
 		},

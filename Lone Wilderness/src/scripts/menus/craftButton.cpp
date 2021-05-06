@@ -10,6 +10,7 @@
 #include "independent/systems/components/scene.h"
 #include "independent/rendering/renderers/renderer2D.h"
 #include "scripts/gameObjects/player.h"
+#include "scripts/menus/craftingMenu.h"
 
 CraftButton::CraftButton()
 {
@@ -34,7 +35,13 @@ void CraftButton::onMouseRelease(MouseReleasedEvent & e, const float timestep, c
 
 	if (e.getButton() == Mouse::LEFTBUTTON && containsMouse)
 	{
-
+		auto crafting = static_cast<CraftingMenu*>(getParent()->getParentScene()->getEntity("CraftingEnt")->getComponent<NativeScript>());
+		
+		if (crafting->getSelectedItem() != Items::None)
+		{
+			Player* player = static_cast<Player*>(getParent()->getParentScene()->getEntity("Player1")->getComponent<NativeScript>());
+			player->getInventory()->giveItem(crafting->getSelectedItem(), 0, 1);
+		}
 	}
 }
 
