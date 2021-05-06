@@ -19,9 +19,11 @@
 #include "scripts/mainMenu/cameraRotationScript.h"
 #include "scripts/menus/pauseScript.h"
 #include "scripts/menus/inventoryElement.h"
+#include "scripts/menus/craftingElement.h"
 #include "scripts/menus/settingsScript.h"
 #include "scripts/menus/inventoryMenu.h"
 #include "scripts/menus/craftingMenu.h"
+#include "scripts/menus/craftButton.h"
 #include "scripts/engineScript.h"
 #include "scripts/testing/testScript.h"
 #include "scripts/FPSCounter.h"
@@ -86,12 +88,20 @@ namespace Engine
 		else if (scriptName == "Sun") return new Sun;
 		else if (scriptName == "InventoryMenu") return new InventoryMenu;
 		else if (scriptName == "CraftingMenu") return new CraftingMenu;
+		else if (scriptName == "CraftButton") return new CraftButton;
 		else if (scriptName == "InventoryElement")
 		{
 			if (scriptData.empty())
 				return new InventoryElement;
 			else
 				return new InventoryElement(scriptData);
+		}
+		else if (scriptName == "CraftingElement")
+		{
+			if (scriptData.empty())
+				return new CraftingElement;
+			else
+				return new CraftingElement(scriptData);
 		}
 		return nullptr;
 	}

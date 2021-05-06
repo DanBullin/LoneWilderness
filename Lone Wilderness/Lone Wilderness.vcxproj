@@ -155,6 +155,8 @@
     <ClInclude Include="include\layers\defaultLayer.h" />
     <ClInclude Include="include\layers\UILayer.h" />
     <ClInclude Include="include\loaders\sceneLoader.h" />
+    <ClInclude Include="include\scripts\menus\craftButton.h" />
+    <ClInclude Include="include\scripts\menus\craftingElement.h" />
     <ClInclude Include="include\scripts\menus\craftingMenu.h" />
     <ClInclude Include="include\scripts\menus\inventoryElement.h" />
     <ClInclude Include="include\scripts\menus\inventoryMenu.h" />
@@ -202,6 +204,8 @@
     <ClCompile Include="src\scripts\gameObjects\placeObject.cpp" />
     <ClCompile Include="src\scripts\gameObjects\player.cpp" />
     <ClCompile Include="src\scripts\gameObjects\terrain.cpp" />
+    <ClCompile Include="src\scripts\menus\craftButton.cpp" />
+    <ClCompile Include="src\scripts\menus\craftingElement.cpp" />
     <ClCompile Include="src\scripts\menus\craftingMenu.cpp" />
     <ClCompile Include="src\scripts\menus\inventoryElement.cpp" />
     <ClCompile Include="src\scripts\menus\inventoryMenu.cpp" />
