@@ -45,7 +45,7 @@ ChunkManager::~ChunkManager()
 void ChunkManager::start()
 {
 	createGeometry(CHUNKSIZE, CHUNKSTEPSIZE);
-	s_chunksSize = 5;
+	s_chunksSize = 6;
 }
 
 //! createGeometry

@@ -110,25 +110,10 @@ void Player::onKeyPress(KeyPressedEvent& e, const float timestep, const float to
 */
 void Player::onKeyRelease(KeyReleasedEvent & e, const float timestep, const float totalTime)
 {
-	if (e.getKeyCode() == Keys::J)
-	{
-		m_inventory->print();
-	}
-
 	if (e.getKeyCode() == Keys::K)
 	{
-		m_inventory->giveItem(Items::Log, 0, 7);
-		m_inventory->giveItem(Items::Axe, 0, 12);
-		m_inventory->giveItem(Items::Sword, 0, 3);
-		m_inventory->giveItem(Items::WoodenFloor, 0, 3);
-		m_inventory->giveItem(Items::Pickaxe, 0, 3);
-	}
-
-	if (e.getKeyCode() == Keys::L)
-	{
-		glm::vec2 point = InputPoller::getMousePosition();
-		point -= (WindowManager::getFocusedWindow()->getProperties().getSizef() / 2.f);
-		ENGINE_INFO("Pos: {0}, {1}", point.x, point.y);
+		m_inventory->giveItem(Items::Log, 0, 4);
+		m_inventory->giveItem(Items::Stone, 0, 1);
 	}
 }
 

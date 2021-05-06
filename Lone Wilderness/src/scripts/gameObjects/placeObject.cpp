@@ -70,6 +70,14 @@ void PlaceObject::onPreUpdate(const float timestep, const float totalTime)
 			}
 		}
 	}
+	else
+	{
+		if (m_currentEntity)
+		{
+			m_currentEntity->destroy();
+			m_currentEntity = nullptr;
+		}
+	}
 }
 
 void PlaceObject::onMouseRelease(MouseReleasedEvent & e, const float timestep, const float totalTime)
