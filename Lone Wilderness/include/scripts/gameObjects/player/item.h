@@ -28,11 +28,29 @@ namespace Items
 		switch (item)
 		{
 			case Items::Log: return false;
-			case Items::Stone: return false;
+			case Items::Stone: return true;
 			case Items::Axe: return false;
 			case Items::Sword: return false;
 			case Items::Pickaxe: return false;
 			case Items::WoodenFloor: return true;
+		}
+	}
+
+	static Model3D* getModel(Items item)
+	{
+		switch (item)
+		{
+		case Items::WoodenFloor: return ResourceManager::getResource<Model3D>("cube");
+		case Items::Stone: return ResourceManager::getResource<Model3D>("cube");
+		}
+	}
+
+	static Material* getWorldMaterial(Items item)
+	{
+		switch (item)
+		{
+		case Items::WoodenFloor: return ResourceManager::getResource<Material>("woodWMaterial");
+		case Items::Stone: return ResourceManager::getResource<Material>("stoneWMaterial");
 		}
 	}
 

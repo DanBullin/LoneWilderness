@@ -126,7 +126,9 @@ void Player::onKeyRelease(KeyReleasedEvent & e, const float timestep, const floa
 
 	if (e.getKeyCode() == Keys::L)
 	{
-		m_inventory->takeItem(Items::Log, 0, 7);
+		glm::vec2 point = InputPoller::getMousePosition();
+		point -= (WindowManager::getFocusedWindow()->getProperties().getSizef() / 2.f);
+		ENGINE_INFO("Pos: {0}, {1}", point.x, point.y);
 	}
 }
 

@@ -100,6 +100,30 @@
 		{
 			"name": "inventoryUIMaterial",
 			"subTextures": [ "inventoryUISubTexture" ], "cubeMapTextures": [], "shader": "quad", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
+		},
+		{
+			"name": "craftingUIMaterial",
+			"subTextures": [ "crafingMenuSubTexture" ], "cubeMapTextures": [], "shader": "quad", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
+		},
+		{
+			"name": "itemInfoMaterial",
+			"subTextures": [ "itemInfoSubTexture" ], "cubeMapTextures": [], "shader": "quad", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
+		},
+		{
+			"name": "craftButtonUMaterial",
+			"subTextures": [ "craftButtonUSubTexture" ], "cubeMapTextures": [], "shader": "quad", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
+		},
+		{
+			"name": "craftButtonHMaterial",
+			"subTextures": [ "craftButtonHSubTexture" ], "cubeMapTextures": [], "shader": "quad", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
+		},
+		{
+			"name": "stoneWMaterial",
+			"subTextures": [ "stoneWSubTexture", "SpecularNoneSubTexture" ], "cubeMapTextures": [], "shader": "blinnPhong", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
+		},
+		{
+			"name": "woodWMaterial",
+			"subTextures": [ "woodWSubTexture", "SpecularNoneSubTexture" ], "cubeMapTextures": [], "shader": "blinnPhong", "tint": [ 1.0, 1.0, 1.0, 1.0], "shininess": 32
 		}
 	]
 }

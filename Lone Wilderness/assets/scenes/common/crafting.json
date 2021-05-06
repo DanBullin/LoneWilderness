@@ -55,8 +55,273 @@
 					"name": "UIElement",
 					"type": "UIElement",
 					"anchor": [ 0.5, 0.5 ],
-					"offset": [ -120.0, -300.0 ],
+					"offset": [ -100.0, -300.0 ],
 					"scale": [ 1.0, 0.5 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "Crafting_InfoText1",
+			"layer": "Crafting",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 430.0, 100.0, 0.5 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 400.0, 400.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "Available Items",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu24"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ -288.0, -183.0 ],
+					"scale": [ 1.0, 0.5 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "Crafting_InfoText2",
+			"layer": "Crafting",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 430.0, 100.0, 0.5 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 400.0, 400.0, 1.0 ]
+				},
+				{
+					"name": "Text1",
+					"type": "Text",
+					"text": "Item Info",
+					"colour": [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontName": "Ubuntu24"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ 142.0, -183.0 ],
+					"scale": [ 1.0, 0.5 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "C_CraftingUI",
+			"layer": "Crafting",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 512.0, 384.0, -1.0 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 477.0, 355.0, 1.0 ]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender2D",
+					"materialName": "craftingUIMaterial"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ -200.0, 0.0 ],
+					"scale": [ 1.0, 1.0 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "C_ItemInfo",
+			"layer": "Crafting",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 512.0, 384.0, -1.0 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 254.0, 355.0, 1.0 ]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender2D",
+					"materialName": "itemInfoMaterial"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ 200.0, 0.0 ],
+					"scale": [ 1.0, 1.0 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "C_AxeOption",
+			"layer": "Crafting",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 512.0, 384.0, -1.0 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 64.0, 62.0, 1.0 ]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender2D",
+					"materialName": "axeMaterial"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ -370.0, -105.0 ],
+					"scale": [ 1.0, 1.0 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "C_PickaxeOption",
+			"layer": "Crafting",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 512.0, 384.0, -1.0 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 64.0, 62.0, 1.0 ]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender2D",
+					"materialName": "pickaxeMaterial"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ -255.0, -105.0 ],
+					"scale": [ 1.0, 1.0 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "C_WoodenPlatformOption",
+			"layer": "Crafting",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 512.0, 384.0, -1.0 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 64.0, 62.0, 1.0 ]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender2D",
+					"materialName": "woodenPlatformMaterial"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ -143.0, -105.0 ],
+					"scale": [ 1.0, 1.0 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "C_SwordOption",
+			"layer": "Crafting",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 512.0, 384.0, -1.0 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 64.0, 62.0, 1.0 ]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender2D",
+					"materialName": "swordMaterial"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ -30.0, -105.0 ],
+					"scale": [ 1.0, 1.0 ],
+					"useAbsoluteSize": true
+				}
+			]
+		},
+		{
+			"name": "C_ItemInfoImage",
+			"layer": "Crafting",
+			"display": true,
+			"save": false,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 512.0, 384.0, -1.0 ],
+					"rotation": [ 0.0, 0.0, 0.0 ],
+					"scale": [ 64.0, 62.0, 1.0 ]
+				},
+				{
+					"name": "MeshRender1",
+					"type": "MeshRender2D",
+					"materialName": "swordMaterial"
+				},
+				{
+					"name": "UIElement",
+					"type": "UIElement",
+					"anchor": [ 0.5, 0.5 ],
+					"offset": [ 200.0, -73.0 ],
+					"scale": [ 1.0, 1.0 ],
 					"useAbsoluteSize": true
 				}
 			]

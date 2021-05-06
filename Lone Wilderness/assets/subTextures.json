@@ -41,7 +41,13 @@
 			"name": "logSubTexture", "baseTextureName": "log", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
 		},
 		{ 
+			"name": "woodWSubTexture", "baseTextureName": "woodWorldTexture", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
+		},
+		{ 
 			"name": "stoneSubTexture", "baseTextureName": "stone", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
+		},
+		{ 
+			"name": "stoneWSubTexture", "baseTextureName": "stoneWorldTexture", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
 		},
 		{ 
 			"name": "pickaxeSubTexture", "baseTextureName": "pickaxe", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
@@ -57,6 +63,18 @@
 		},
 		{ 
 			"name": "inventoryUISubTexture", "baseTextureName": "inventoryUI", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
+		},
+		{ 
+			"name": "crafingMenuSubTexture", "baseTextureName": "craftingUI", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
+		},
+		{ 
+			"name": "itemInfoSubTexture", "baseTextureName": "itemInfo", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
+		},
+		{ 
+			"name": "craftButtonUSubTexture", "baseTextureName": "craftButtonU", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
+		},
+		{ 
+			"name": "craftButtonHSubTexture", "baseTextureName": "craftButtonH", "UVStart": [ 0.0, 0.0 ], "UVEnd": [ 1.0, 1.0 ], "ConvertBottomLeft": false
 		}
 	]
 }

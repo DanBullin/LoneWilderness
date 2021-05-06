@@ -54,8 +54,8 @@ void PlaceObject::onPreUpdate(const float timestep, const float totalTime)
 				SceneManager::getActiveScene()->addEntity("NewObj" + std::to_string(number), ent);
 				ent->setDisplay(true);
 				ent->setLayer(SceneManager::getActiveScene()->getLayerManager()->getLayer("Default"));
-				ent->attach<Transform>("Transform1", playerPos.x + viewDir.x, playerPos.y + viewDir.y, playerPos.z + viewDir.z, 0.f, 0.f, 0.f, 0.5f, 0.5f, 0.5f);
-				ent->attach<MeshRender3D>("MeshR", ResourceManager::getResource<Model3D>("cyborg"), ResourceManager::getResource<Material>("placeObjectMaterial"));
+				ent->attach<Transform>("Transform1", playerPos.x + viewDir.x, playerPos.y + viewDir.y, playerPos.z + viewDir.z, 0.f, 0.f, 0.f, 1.f, 1.f, 1.f);
+				ent->attach<MeshRender3D>("MeshR", Items::getModel(m_player->getInventory()->getItem(m_player->getHotbar()->getSelectedItem())->getType()), ResourceManager::getResource<Material>("placeObjectMaterial"));
 				number++;
 				m_final = false;
 				m_currentEntity = ent;
@@ -78,7 +78,7 @@ void PlaceObject::onMouseRelease(MouseReleasedEvent & e, const float timestep, c
 	{
 		if (m_currentEntity)
 		{
-			m_currentEntity->getComponent<MeshRender3D>()->setMaterial(ResourceManager::getResource<Material>("cyborgMaterial"));
+			m_currentEntity->getComponent<MeshRender3D>()->setMaterial(Items::getWorldMaterial(m_player->getInventory()->getItem(m_player->getHotbar()->getSelectedItem())->getType()));
 			m_currentEntity = nullptr;
 			m_player->getInventory()->takeItem(m_player->getInventory()->getItem(m_player->getHotbar()->getSelectedItem())->getType(), 0, 1);
 		}

@@ -315,7 +315,7 @@
 				{
 					"name": "Transform",
 					"type": "Transform",
-					"position": [ 10.0, 32.0, 10.0 ],
+					"position": [ -20.0, 40.0, 0.0 ],
 					"rotation": [ 0.0, 0.0, 0.0],
 					"scale": [ 0.25, 0.25, 0.25 ]
 				},
@@ -374,7 +374,7 @@
 				{
 					"name": "Light1",
 					"type": "DirectionalLight",
-					"direction": [ -0.2, -1.0, -0.3 ],
+					"direction": [ -0.2, -0.6, -0.3 ],
 					"ambient": [ 0.01, 0.01, 0.01 ],
 					"diffuse": [ 0.8, 0.8, 0.8 ],
 					"specular": [ 0.1, 0.1, 0.1 ]
