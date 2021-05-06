@@ -40,7 +40,25 @@ void CraftButton::onMouseRelease(MouseReleasedEvent & e, const float timestep, c
 		if (crafting->getSelectedItem() != Items::None)
 		{
 			Player* player = static_cast<Player*>(getParent()->getParentScene()->getEntity("Player1")->getComponent<NativeScript>());
-			player->getInventory()->giveItem(crafting->getSelectedItem(), 0, 1);
+			auto cost = Items::getCost(static_cast<Items::Items>(crafting->getSelectedItem()));
+
+			bool canMake = false;
+			for (int i = 0; i < cost.size(); i++)
+			{
+				if (player->getInventory()->getItemCount(cost.at(i).first, 0) < cost.at(i).second)
+				{
+					break;
+				}
+
+				if (i == cost.size() - 1)
+					canMake = true;
+			}
+
+			if(canMake) player->getInventory()->giveItem(crafting->getSelectedItem(), 0, 1);
+			for (auto& item : cost)
+			{
+				player->getInventory()->takeItem(item.first, 0, item.second);
+			}
 		}
 	}
 }

@@ -112,6 +112,16 @@ int Inventory::getItemCount(const uint32_t itemIndex)
 	return m_items[itemIndex].second;
 }
 
+int Inventory::getItemCount(const Items::Items item, const uint32_t state)
+{
+	for (auto& items : m_items)
+	{
+		if (items.first->getType() == item && items.first->getState() == state)
+			return items.second;
+	}
+	return 0;
+}
+
 bool Inventory::containsItem(Items::Items itemType, const uint32_t state)
 {
 	for (auto& items : m_items)

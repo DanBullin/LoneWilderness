@@ -22,6 +22,7 @@ private:
 	GameTimer* m_timer;
 	float m_cycleTime;
 	Material* m_skyboxMaterial;
+	bool m_approachingNight;
 public:
 	Sun(); //!< Constructor
 	~Sun(); //!< Destructor

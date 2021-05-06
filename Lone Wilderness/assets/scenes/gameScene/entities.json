@@ -375,7 +375,7 @@
 					"name": "Light1",
 					"type": "DirectionalLight",
 					"direction": [ -0.2, -0.6, -0.3 ],
-					"ambient": [ 0.01, 0.01, 0.01 ],
+					"ambient": [ 0.1, 0.1, 0.1 ],
 					"diffuse": [ 0.8, 0.8, 0.8 ],
 					"specular": [ 0.1, 0.1, 0.1 ]
 				},

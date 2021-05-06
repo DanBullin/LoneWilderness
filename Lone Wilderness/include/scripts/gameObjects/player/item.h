@@ -66,6 +66,30 @@ namespace Items
 		case Items::WoodenFloor: return ResourceManager::getResource<Material>("woodenPlatformMaterial");
 		}
 	}
+
+	static std::string getString(Items item)
+	{
+		switch (item)
+		{
+		case Items::Log: return "Log";
+		case Items::Stone: return "Stone";
+		case Items::Axe: return "Axe";
+		case Items::Sword: return "Sword";
+		case Items::Pickaxe: return "Pickaxe";
+		case Items::WoodenFloor: return "Wood Floor";
+		}
+	}
+
+	static std::vector<std::pair<Items, uint32_t>> getCost(Items item)
+	{
+		switch (item)
+		{
+			case Items::Axe: return { { Items::Log, 3 }, { Items::Stone, 1 } };
+			case Items::Sword: return { { Items::Log, 1 }, { Items::Stone, 1 } };
+			case Items::Pickaxe: return { { Items::Log, 3 }, { Items::Stone, 3 } };
+			case Items::WoodenFloor: return { { Items::Log, 1 } };
+		}
+	}
 }
 
 /*! \class Item

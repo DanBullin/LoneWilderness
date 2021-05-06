@@ -16,8 +16,6 @@ CraftingElement::CraftingElement()
 {
 	m_render = nullptr;
 	m_selectedTint = { 1.f, 1.f, 1.f, 1.f };
-	m_inventorySlot = nullptr;
-	m_inventoryCurrent = nullptr;
 	m_itemIndex = -1;
 }
 
@@ -25,8 +23,6 @@ CraftingElement::CraftingElement(nlohmann::json scriptData)
 {
 	m_render = nullptr;
 	m_selectedTint = { 1.f, 1.f, 1.f, 1.f };
-	m_inventorySlot = nullptr;
-	m_inventoryCurrent = nullptr;
 	m_itemIndex = scriptData["index"].get<int>();
 }
 
@@ -90,20 +86,7 @@ void CraftingElement::onSubmit(const Renderers renderer, const std::string & ren
 	}
 }
 
-Entity * CraftingElement::getSlot()
-{
-	return m_inventorySlot;
-}
-
-void CraftingElement::resetSlot()
-{
-	m_inventorySlot = 0;
-	m_inventoryCurrent->setDisplay(false);
-	m_selectedTint = { 1.f, 1.f, 1.f, 1.f };
-	getParent()->getComponent<MeshRender2D>()->getMaterial()->setTint(m_selectedTint);
-}
-
-uint32_t CraftingElement::getInvenIndex()
+uint32_t CraftingElement::getItemIndex()
 {
 	return m_itemIndex;
 }

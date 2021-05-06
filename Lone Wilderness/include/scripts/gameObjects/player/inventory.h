@@ -35,6 +35,7 @@ public:
 	Item* getItem(Items::Items itemType, const uint32_t state); //!< Get the index by type
 	Item* getItem(const uint32_t hotbarIndex); //!< Get the item by hotbar index
 	int getItemCount(const uint32_t itemIndex); //!< Get an item count
+	int getItemCount(const Items::Items item, const uint32_t state); //!< Get an item count
 	bool containsItem(Items::Items itemType, const uint32_t state); //!< Contains item
 	bool containsItem(Items::Items itemType, const uint32_t state, const int amount); //!< Contains item
 

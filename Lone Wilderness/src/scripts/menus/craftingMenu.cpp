@@ -12,6 +12,7 @@
 #include "independent/entities/entity.h"
 #include "loaders/sceneLoader.h"
 #include "scripts/layerControl.h"
+#include "scripts/gameObjects/player.h"
 
 CraftingMenu::CraftingMenu()
 {
@@ -54,6 +55,39 @@ void CraftingMenu::onKeyRelease(KeyReleasedEvent & e, const float timestep, cons
 
 void CraftingMenu::onPreUpdate(const float timestep, const float totalTime)
 {
+	Text* costText = getParent()->getParentScene()->getEntity("Crafting_MaterialCost")->getComponent<Text>();
+	Text* playerText = getParent()->getParentScene()->getEntity("Crafting_PlayerMaterial")->getComponent<Text>();
+	auto cost = Items::getCost(m_itemSelected);
+	std::string costStr = "";
+	for (auto& item : cost)
+	{
+		if (costStr == "")
+			costStr = Items::getString(item.first) + ": " + std::to_string(item.second);
+		else
+			costStr.append(", " + Items::getString(item.first) + ": " + std::to_string(item.second));
+	}
+	costText->setText("Cost: " + costStr);
+
+	Player* player = static_cast<Player*>(getParent()->getParentScene()->getEntity("Player1")->getComponent<NativeScript>());
+	std::string playerItemsStr = "";
+	std::vector<std::pair<Items::Items, uint32_t>> playerItems;
+	for (auto& item : cost)
+	{
+		auto itemInst = player->getInventory()->getItem(item.first);
+		if (itemInst)
+			playerItems.push_back({ item.first, player->getInventory()->getItemCount(item.first, 0) });
+		else
+			playerItems.push_back({ item.first, 0 });
+	}
+
+	for (auto& item : playerItems)
+	{
+		if (playerItemsStr == "")
+			playerItemsStr = Items::getString(item.first) + ": " + std::to_string(item.second);
+		else
+			playerItemsStr.append(", " + Items::getString(item.first) + ": " + std::to_string(item.second));
+	}
+	playerText->setText("Have: " + playerItemsStr);
 }
 
 void CraftingMenu::selectItem(Items::Items item)

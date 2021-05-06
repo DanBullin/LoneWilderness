@@ -24,8 +24,6 @@ private:
 	MeshRender2D* m_render;
 	glm::vec4 m_selectedTint;
 	Player* m_player; //!< A pointer to the player script
-	Entity* m_inventorySlot;
-	Entity* m_inventoryCurrent;
 	int m_itemIndex;
 public:
 	CraftingElement(); //!< Constructor
@@ -37,8 +35,6 @@ public:
 	void onPreUpdate(const float timestep, const float totalTime) override; //!< Call before game update
 	void onSubmit(const Renderers renderer, const std::string& renderState) override; //!< Call upon render if mesh render component attached
 
-	Entity* getSlot();
-	void resetSlot();
-	uint32_t getInvenIndex();
+	uint32_t getItemIndex();
 };
 #endif
