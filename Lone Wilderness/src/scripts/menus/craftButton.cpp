@@ -54,10 +54,14 @@ void CraftButton::onMouseRelease(MouseReleasedEvent & e, const float timestep, c
 					canMake = true;
 			}
 
-			if(canMake) player->getInventory()->giveItem(crafting->getSelectedItem(), 0, 1);
-			for (auto& item : cost)
+			if (canMake)
 			{
-				player->getInventory()->takeItem(item.first, 0, item.second);
+				for (auto& item : cost)
+				{
+					player->getInventory()->takeItem(item.first, 0, item.second);
+				}
+
+				player->getInventory()->giveItem(crafting->getSelectedItem(), 0, 1);
 			}
 		}
 	}
