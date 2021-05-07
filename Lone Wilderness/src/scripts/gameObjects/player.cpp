@@ -110,11 +110,6 @@ void Player::onKeyPress(KeyPressedEvent& e, const float timestep, const float to
 */
 void Player::onKeyRelease(KeyReleasedEvent & e, const float timestep, const float totalTime)
 {
-	if (e.getKeyCode() == Keys::K)
-	{
-		m_inventory->giveItem(Items::Log, 0, 4);
-		m_inventory->giveItem(Items::Stone, 0, 1);
-	}
 }
 
 //! onMouseScrolled()
