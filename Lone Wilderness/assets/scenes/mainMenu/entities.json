@@ -242,7 +242,7 @@
 				{
 					"name": "Transform",
 					"type": "Transform",
-					"position": [ 0.0, 3.0, 0.0],
+					"position": [ 0.0, 50.0, 0.0],
 					"rotation": [ 0.0, 0.0, 0.0],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
@@ -258,6 +258,39 @@
 					"Pitch": 0.0,
 					"Zoom": 70.0,
 					"setMainCamera": true
+				},
+				{
+					"name": "Light1",
+					"type": "DirectionalLight",
+					"direction": [ -0.2, -0.6, -0.3 ],
+					"ambient": [ 0.1, 0.1, 0.1 ],
+					"diffuse": [ 0.8, 0.8, 0.8 ],
+					"specular": [ 0.1, 0.1, 0.1 ]
+				},
+				{
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "CameraRotationScript"
+				}
+			]
+		},
+		{
+			"name": "Terrain1",
+			"layer": "Default",
+			"display": true,
+			"components": 
+			[
+				{
+					"name": "Transform",
+					"type": "Transform",
+					"position": [ 0.0, 0.0, 0.0 ],
+					"rotation": [ 0.0, 0.0, 0.0],
+					"scale": [ 1.0, 1.0, 1.0 ]
+				},
+				{
+					"name": "Script1",
+					"type": "NativeScript",
+					"scriptName": "Terrain"
 				}
 			]
 		}
